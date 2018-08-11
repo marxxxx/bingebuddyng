@@ -38,7 +38,7 @@ namespace BingeBuddyNg.Services
 
             var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityTableName, whereClause);
 
-            var activitys = result.Select(r => EntityConverters.Activitys.EntityToModel(r)).ToList();
+            var activitys = result.Select(r => EntityConverters.Activitys.EntityToModel(r)).OrderByDescending(a=>a.Timestamp).ToList();
             return activitys;
         }
 
@@ -53,7 +53,7 @@ namespace BingeBuddyNg.Services
 
             var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityPerUserTableName, whereClause);
 
-            var activitys = result.Select(r => EntityConverters.Activitys.EntityToModel(r)).ToList();
+            var activitys = result.Select(r => EntityConverters.Activitys.EntityToModel(r)).OrderBy(a=>a.Timestamp).ToList();
             return activitys;
         }
 
