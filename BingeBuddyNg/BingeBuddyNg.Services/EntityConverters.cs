@@ -43,12 +43,12 @@ namespace BingeBuddyNg.Services
                     entity.Message, entity.DrinkName, entity.ImageUrl);
             }
 
-            public static ActivityTableEntity ModelToEntity(Activity activity)
+            public static ActivityTableEntity ModelToEntity(Activity activity, string partitionKey)
             {
                 if (activity == null)
                     throw new ArgumentNullException(nameof(activity));
 
-                return new ActivityTableEntity(activity.Timestamp, activity.ActivityType, 
+                return new ActivityTableEntity(partitionKey, activity.Timestamp, activity.ActivityType, 
                     activity.Location?.Latitude, activity.Location?.Longitude,
                     activity.UserId, activity.UserName, activity.UserProfileImageUrl,
                     activity.Message, activity.DrinkName, activity.ImageUrl);

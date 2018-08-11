@@ -22,11 +22,12 @@ namespace BingeBuddyNg.Services.Entitys
         public ActivityTableEntity()
         { }
 
-        public ActivityTableEntity(DateTime activityTimestamp, ActivityType type, 
+
+        public ActivityTableEntity(string partitionKey, DateTime activityTimestamp, ActivityType type, 
             double? latitude, double? longitude,
             string userId, string userName, string userProfileImageUrl, string message, string drinkName, string imageUrl)
         {
-            this.PartitionKey = activityTimestamp.ToString("yyyyMM");
+            this.PartitionKey = partitionKey;
             this.RowKey = activityTimestamp.ToString("yyyyMMddHHmmss");
 
             this.ActivityTimestamp = activityTimestamp;

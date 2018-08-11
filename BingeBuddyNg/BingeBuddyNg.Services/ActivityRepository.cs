@@ -13,7 +13,9 @@ namespace BingeBuddyNg.Services
 {
     public class ActivityRepository : IActivityRepository
     {
-        private const string TableName = "activity";
+        private const string ActivityTableName = "activity";
+        private const string ActivityPerUserTableName = "activityperuser";
+
 
         public StorageAccessService StorageAccessService { get; }
 
@@ -26,7 +28,7 @@ namespace BingeBuddyNg.Services
         public async Task<List<Activity>> GetActivitysAsync()
         {
             string currentPartition = DateTime.UtcNow.ToString("yyyyMM");
-            string previousPartition = DateTime.UtcNow.AddDays(-(DateTime.UtcNow.Day+1)).ToString("yyyyMM");
+            string previousPartition = DateTime.UtcNow.AddDays(-(DateTime.UtcNow.Day + 1)).ToString("yyyyMM");
             var whereClause =
                 TableQuery.CombineFilters(
                 TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, currentPartition),
@@ -34,20 +36,44 @@ namespace BingeBuddyNg.Services
                 TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, previousPartition));
 
 
-            var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(TableName, whereClause);
+            var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityTableName, whereClause);
 
             var activitys = result.Select(r => EntityConverters.Activitys.EntityToModel(r)).ToList();
             return activitys;
         }
 
-        public Task AddActivityAsync(Activity activity)
+        public async Task<List<Activity>> GetActivitysForUser(string userId)
         {
-            var table = this.StorageAccessService.GetTableReference(TableName);
+            var whereClause =
+                TableQuery.CombineFilters(
+                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId),
+                TableOperators.And,
+                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, DateTime.UtcNow.AddDays(-30).ToString("yyyyMMddHHmmss")));
 
-            var entity = EntityConverters.Activitys.ModelToEntity(activity);
+
+            var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityPerUserTableName, whereClause);
+
+            var activitys = result.Select(r => EntityConverters.Activitys.EntityToModel(r)).ToList();
+            return activitys;
+        }
+
+
+
+        public async Task AddActivityAsync(Activity activity)
+        {
+            var activityTable = this.StorageAccessService.GetTableReference(ActivityTableName);
+
+            var entity = EntityConverters.Activitys.ModelToEntity(activity, activity.Timestamp.ToString("yyyyMM"));
 
             TableOperation operation = TableOperation.Insert(entity);
-            return table.ExecuteAsync(operation);
+            await activityTable.ExecuteAsync(operation);
+
+            var perUserActivityTable = this.StorageAccessService.GetTableReference(ActivityPerUserTableName);
+
+            var perUserEntity = EntityConverters.Activitys.ModelToEntity(activity, activity.UserId);
+
+            TableOperation perUserOperation = TableOperation.Insert(perUserEntity);
+            await perUserActivityTable.ExecuteAsync(perUserOperation);
         }
 
     }

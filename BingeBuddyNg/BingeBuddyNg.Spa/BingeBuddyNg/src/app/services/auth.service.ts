@@ -29,6 +29,8 @@ export class AuthService {
 
   public handleAuthentication(): void {
 
+    const successRoute = '/activity-feed';
+
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         window.location.hash = '';
@@ -38,12 +40,14 @@ export class AuthService {
           this.isLoggedIn$.next(true);
         }
 
-        this.router.navigate(['/']);
+        this.router.navigate([successRoute]);
       } else if (err) {
         this.router.navigate(['/']);
         console.log(err);
       } else {
-        this.checkAuthenticated();
+        if (this.checkAuthenticated() === true) {
+          this.router.navigate([successRoute]);
+        }
 
         console.log(this.getAccessToken());
       }
@@ -74,11 +78,14 @@ export class AuthService {
     localStorage.setItem('expires_at', expiresAt);
   }
 
-  public checkAuthenticated(): void {
-    if (this.isAuthenticated()) {
+  public checkAuthenticated(): boolean {
+    const isAuth = this.isAuthenticated();
+    if (isAuth) {
       console.log('user is authenticated');
       this.isLoggedIn$.next(true);
     }
+
+    return isAuth;
   }
 
   public getAccessToken(): string {

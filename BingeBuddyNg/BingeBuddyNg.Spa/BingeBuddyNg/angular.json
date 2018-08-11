@@ -28,7 +28,7 @@
               },
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": ["node_modules/chart.js/src/chart.js"]
           },
           "configurations": {
             "production": {

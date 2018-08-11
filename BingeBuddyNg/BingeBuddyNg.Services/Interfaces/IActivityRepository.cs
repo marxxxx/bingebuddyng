@@ -10,6 +10,7 @@ namespace BingeBuddyNg.Services.Interfaces
     public interface IActivityRepository
     {
         Task<List<Activity>> GetActivitysAsync();
+        Task<List<Activity>> GetActivitysForUser(string userId);
         Task AddActivityAsync(Activity activity);
     }
 }

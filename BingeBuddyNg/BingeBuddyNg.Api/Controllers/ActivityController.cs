@@ -32,6 +32,14 @@ namespace BingeBuddyNg.Api.Controllers
             return result;
         }
 
+        [HttpGet("[action]")]
+        public async Task<ActionResult<List<ActivityAggregationDTO>>> GetActivityAggregation()
+        {
+
+            var result = await this.ActivityService.GetActivityAggregationAsync();
+            return result;
+        }
+
         [HttpPost]
         public async Task Post([FromBody] AddMessageActivityDTO request)
         {

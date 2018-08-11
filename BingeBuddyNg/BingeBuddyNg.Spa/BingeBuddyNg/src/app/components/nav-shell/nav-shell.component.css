@@ -26,3 +26,7 @@ app-user-info {
 mat-toolbar {
   z-index: 1;
 }
+
+mat-icon {
+  margin-left: 10px;
+}
