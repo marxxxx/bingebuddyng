@@ -1,0 +1,31 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
+    <mat-toolbar color="primary">Menu</mat-toolbar>
+    <mat-nav-list (click)="onNavListItemClicked()">
+      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/activity-feed">Activity</a>
+      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/stats">Statistics</a>
+      <button *ngIf="auth.isAuthenticated()" mat-flat-button mat-list-item (click)="onLogout()">{{'Logout' | translate }}</button>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+
+      <span fxHide.lt-lg="true">BingeBuddy Next Generation</span>
+      <div class="right" fxLayout fxLayoutAlign="space-between center">
+        <mat-icon *ngFor="let icon of shellInteraction.shellIcons" [matTooltip]="icon.tooltip">
+          {{icon.name}}
+        </mat-icon>
+        <app-user-info></app-user-info>
+      </div>
+
+    </mat-toolbar>
+    <div class="content-container">
+      <router-outlet></router-outlet>
+    </div>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

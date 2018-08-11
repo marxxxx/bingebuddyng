@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace BingeBuddyNg.Services.Models
+{
+    public class Location
+    {
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+
+        public Location()
+        {
+
+        }
+
+        public Location(double latitude, double longitude)
+        {
+            this.Latitude = latitude;
+            this.Longitude = longitude;
+        }
+
+        public override string ToString()
+        {
+            return $"{nameof(Latitude)}: {Latitude}, {nameof(Longitude)}: {Longitude}";
+        }
+    }
+}

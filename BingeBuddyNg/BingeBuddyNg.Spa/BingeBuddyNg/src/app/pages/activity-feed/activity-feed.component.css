@@ -1,0 +1,30 @@
+.bottom-right {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+}
+
+mat-card {
+    margin: 5px;
+}
+
+.user-profile-image {
+    width: 32px;
+    height: 32px;
+}
+
+.timestamp {
+    font-size: small;
+}
+
+.message {
+    font-size: medium;
+}
+
+.metadata {
+    margin-top: 15px;
+}
+
+.user-name {
+    margin-left: 15px;
+}

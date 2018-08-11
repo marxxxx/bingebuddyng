@@ -1,0 +1,6 @@
+<ng-container *ngIf="profile">
+  <div fxLayout fxLayoutAlign="space-between center">
+    <img src="{{profile?.picture}}" class="avatar" alt="avatar">
+    <h3 fxHide.lt-lg="true" class="nickname">{{ profile?.nickname }}</h3>
+  </div>
+</ng-container>

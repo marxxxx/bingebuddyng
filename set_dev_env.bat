@@ -1,0 +1,1 @@
+SET ConnectionStrings__Storage="DefaultEndpointsProtocol=https;AccountName=bingebuddystorage;AccountKey=CTAsHG2So5YA3iak5YQ2n9qirpGaefNwmFIUlxV8ipHxYetOAb4oeTRkynNGL6rQA02WtoEAYctaK/1LFm8yaQ==;EndpointSuffix=core.windows.net"

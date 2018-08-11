@@ -1,0 +1,22 @@
+<mat-progress-bar mode="indeterminate" *ngIf="isBusy"></mat-progress-bar>
+<mat-card *ngFor="let a of activitys">
+  <mat-card-title fxLayout fxLayoutAlign="start center">
+    <img class="user-profile-image" [src]="a.userProfileImageUrl">
+    <span class="user-name">{{a.userName}}</span>
+  </mat-card-title>
+  <mat-card-content>
+    <span class="message">
+      {{a.message}}
+    </span>
+    <div class="metadata">
+      <span class="timestamp">{{a.timestamp | date:'dd.MM.yyyy HH:mm'}}</span>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<div class="bottom-right">
+  <button *ngIf="!isBusyAdding" mat-fab (click)="onAddActivity()">
+    <span>+</span>
+  </button>
+  <mat-progress-spinner *ngIf="isBusyAdding" mode="indeterminate" diameter="48"></mat-progress-spinner>
+</div>
