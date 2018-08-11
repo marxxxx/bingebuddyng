@@ -8,8 +8,6 @@ namespace BingeBuddyNg.Services.Entitys
 {
     public class ActivityTableEntity : TableEntity
     {
-        public const string PartitionKeyValue = "ActivityEntity";
-
         public DateTime ActivityTimestamp { get; set; }
         public string ActivityType { get; set; }
         public string UserId { get; set; }
@@ -28,7 +26,7 @@ namespace BingeBuddyNg.Services.Entitys
             double? latitude, double? longitude,
             string userId, string userName, string userProfileImageUrl, string message, string drinkName, string imageUrl)
         {
-            this.PartitionKey = PartitionKeyValue;
+            this.PartitionKey = activityTimestamp.ToString("yyyyMM");
             this.RowKey = activityTimestamp.ToString("yyyyMMddHHmmss");
 
             this.ActivityTimestamp = activityTimestamp;

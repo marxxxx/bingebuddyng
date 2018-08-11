@@ -25,7 +25,14 @@ namespace BingeBuddyNg.Services
 
         public async Task<List<Activity>> GetActivitysAsync()
         {
-            var whereClause = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, ActivityTableEntity.PartitionKeyValue);
+            string currentPartition = DateTime.UtcNow.ToString("yyyyMM");
+            string previousPartition = DateTime.UtcNow.AddDays(-(DateTime.UtcNow.Day+1)).ToString("yyyyMM");
+            var whereClause =
+                TableQuery.CombineFilters(
+                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, currentPartition),
+                TableOperators.Or,
+                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, previousPartition));
+
 
             var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(TableName, whereClause);
 
