@@ -10,22 +10,27 @@ namespace BingeBuddyNg.Services.Models
         public ActivityType ActivityType { get; set; }
         public DateTime Timestamp { get; set; }
         public Location Location { get; set; }
+        public string LocationAddress { get; set; }
         public string UserId { get; set; }
         public string UserName { get; set; }
         public string UserProfileImageUrl { get; set; }
         public string Message { get; set; }
         public string DrinkName { get; set; }
         public string ImageUrl { get; set; }
+        public string CountryLongName { get; set; }
+        public string CountryShortName { get; set; }
 
         public Activity()
         { }
 
-        public Activity(ActivityType type, DateTime timestamp, Location location, string userId, string userName, string userProfileImageUrl, string message, string drinkName = null, string imageUrl = null)
+        public Activity(ActivityType type, DateTime timestamp, Location location,
+            string userId, string userName, string userProfileImageUrl, string message, string drinkName = null, string imageUrl = null)
             : this(null, type, timestamp, location, userId, userName, userProfileImageUrl, message, drinkName, imageUrl)
         {
         }
 
-        public Activity(string id, ActivityType type, DateTime timestamp, Location location, string userId, string userName, string userProfileImageUrl, string message, string drinkName = null, string imageUrl = null)
+        public Activity(string id, ActivityType type, DateTime timestamp, Location location, 
+            string userId, string userName, string userProfileImageUrl, string message, string drinkName = null, string imageUrl = null)
         {
             this.Id = id;
             this.ActivityType = type;

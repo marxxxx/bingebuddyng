@@ -18,17 +18,18 @@ namespace BingeBuddyNg.Services.Entitys
         public string ImageUrl { get; set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
+        public string LocationAddress { get; set; }
 
         public ActivityTableEntity()
         { }
 
 
-        public ActivityTableEntity(string partitionKey, DateTime activityTimestamp, ActivityType type, 
+        public ActivityTableEntity(string partitionKey, string rowKey, DateTime activityTimestamp, ActivityType type, 
             double? latitude, double? longitude,
             string userId, string userName, string userProfileImageUrl, string message, string drinkName, string imageUrl)
         {
             this.PartitionKey = partitionKey;
-            this.RowKey = activityTimestamp.ToString("yyyyMMddHHmmss");
+            this.RowKey = rowKey;
 
             this.ActivityTimestamp = activityTimestamp;
             this.ActivityType = type.ToString();

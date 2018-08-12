@@ -1,6 +1,8 @@
 ﻿using BingeBuddyNg.Services.DTO;
 using BingeBuddyNg.Services.Interfaces;
+using BingeBuddyNg.Services.Messages;
 using BingeBuddyNg.Services.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +16,17 @@ namespace BingeBuddyNg.Services
         public IIdentityService IdentityService { get; }
         public IUserRepository UserRepository { get; }
         public IActivityRepository ActivityRepository { get; }
+        public StorageAccessService StorageAccessService { get; }
 
         public ActivityService(IIdentityService identityService,  
             IUserRepository userRepository,
-            IActivityRepository activityRepository)
+            IActivityRepository activityRepository, 
+            StorageAccessService storageAccessService)
         {
             this.IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             this.ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.StorageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
         }
                 
 
@@ -32,7 +37,11 @@ namespace BingeBuddyNg.Services
 
             var activity = new Activity(ActivityType.Message, DateTime.UtcNow, messageActivity.Location, userId, user.Name, user.ProfileImageUrl, messageActivity.Message);
 
-            await this.ActivityRepository.AddActivityAsync(activity);
+            var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
+
+            var queueClient = this.StorageAccessService.GetQueueReference(Constants.ActivityAddedQueueName);
+            var message = new ActivityAddedMessage(savedActivity);
+            await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
         }
 
         public async Task<List<ActivityAggregationDTO>> GetDrinkActivityAggregationAsync()

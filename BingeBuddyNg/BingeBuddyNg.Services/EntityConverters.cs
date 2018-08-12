@@ -35,20 +35,25 @@ namespace BingeBuddyNg.Services
                 if (entity == null)
                     throw new ArgumentNullException(nameof(entity));
 
-                return new Activity(entity.RowKey,
+                var model = new Activity(entity.RowKey,
                     (ActivityType)Enum.Parse(typeof(ActivityType), entity.ActivityType),
                     entity.ActivityTimestamp,
                     entity.Latitude != null && entity.Longitude != null ? new Location(entity.Latitude.Value, entity.Longitude.Value) : null,
                     entity.UserId, entity.UserName, entity.UserProfileImageUrl,
-                    entity.Message, entity.DrinkName, entity.ImageUrl);
+                    entity.Message, entity.DrinkName, entity.ImageUrl)
+                {
+                    LocationAddress = entity.LocationAddress
+                };
+
+                return model;
             }
 
-            public static ActivityTableEntity ModelToEntity(Activity activity, string partitionKey)
+            public static ActivityTableEntity ModelToEntity(Activity activity, string partitionKey, string rowKey)
             {
                 if (activity == null)
                     throw new ArgumentNullException(nameof(activity));
 
-                return new ActivityTableEntity(partitionKey, activity.Timestamp, activity.ActivityType, 
+                return new ActivityTableEntity(partitionKey, rowKey, activity.Timestamp, activity.ActivityType, 
                     activity.Location?.Latitude, activity.Location?.Longitude,
                     activity.UserId, activity.UserName, activity.UserProfileImageUrl,
                     activity.Message, activity.DrinkName, activity.ImageUrl);

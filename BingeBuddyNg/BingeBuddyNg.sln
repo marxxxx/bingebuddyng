@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingeBuddyNg.Api", "BingeBuddyNg.Api\BingeBuddyNg.Api.csproj", "{D7F2E6F5-93BE-4344-8A2C-CC07B4660194}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingeBuddyNg.Api", "BingeBuddyNg.Api\BingeBuddyNg.Api.csproj", "{D7F2E6F5-93BE-4344-8A2C-CC07B4660194}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingeBuddyNg.Services", "BingeBuddyNg.Services\BingeBuddyNg.Services.csproj", "{8BBCEFA1-A101-4A04-9FB4-DE94CE7FD628}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingeBuddyNg.Services", "BingeBuddyNg.Services\BingeBuddyNg.Services.csproj", "{8BBCEFA1-A101-4A04-9FB4-DE94CE7FD628}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingeBuddyNg.Functions", "BingeBuddyNg.Functions\BingeBuddyNg.Functions.csproj", "{A05C5311-33F3-47C1-B251-5358BE6E7D63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingeBuddyNg.Functions", "BingeBuddyNg.Functions\BingeBuddyNg.Functions.csproj", "{A05C5311-33F3-47C1-B251-5358BE6E7D63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

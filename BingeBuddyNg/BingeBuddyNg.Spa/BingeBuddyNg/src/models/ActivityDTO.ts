@@ -4,4 +4,5 @@ export class ActivityDTO {
     userProfileImageUrl: string;
     userName: string;
     message: string;
+    locationAddress: string;
 }

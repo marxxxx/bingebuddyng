@@ -8,9 +8,11 @@
     <span class="message">
       {{a.message}}
     </span>
-    <div class="metadata">
+    <div class="metadata" fxLayout fxLayoutAlign="space-between center">
       <span class="timestamp">{{a.timestamp | date:'dd.MM.yyyy HH:mm'}}</span>
+      <span class="address"> {{a.locationAddress}}</span>
     </div>
+
   </mat-card-content>
 </mat-card>
 

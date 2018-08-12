@@ -64,10 +64,12 @@ namespace BingeBuddyNg.Api
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+            services.AddHttpClient();
 
             // Add Configuration
             string storageConnString = Configuration.GetConnectionString("Storage");
-            services.AddSingleton(new AppConfiguration(storageConnString));
+            string googleApiKey = Configuration.GetValue<string>("Credentials:GoogleApiKey");
+            services.AddSingleton(new AppConfiguration(storageConnString, googleApiKey));
 
             // Add Application Services
             services.AddScoped<StorageAccessService>();

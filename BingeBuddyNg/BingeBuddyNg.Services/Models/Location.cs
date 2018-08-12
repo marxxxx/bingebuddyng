@@ -9,6 +9,11 @@ namespace BingeBuddyNg.Services.Models
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
+        public bool IsValid()
+        {
+            return Latitude != 0 && Longitude != 0;
+        }
+
         public Location()
         {
 
