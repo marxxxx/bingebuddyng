@@ -45,7 +45,7 @@ export class ActivityFeedComponent implements OnInit {
 
   load() {
     this.isBusy = true;
-    this.activityService.getActivitys().subscribe(d => {
+    this.activityService.getActivitys({onlyWithLocation: false}).subscribe(d => {
       this.activitys = d;
       this.isBusy = false;
       console.log('got data');

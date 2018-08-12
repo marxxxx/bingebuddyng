@@ -1,3 +1,4 @@
+import { BingemapComponent } from './pages/bingemap/bingemap.component';
 import { CallbackComponent } from './components/callback/callback.component';
 import { MeComponent } from './pages/me/me.component';
 import { StatsComponent } from './pages/stats/stats.component';
@@ -22,6 +23,10 @@ const routes: Routes = [{
 }, {
   path: 'stats',
   component: StatsComponent
+},
+{
+  path: 'bingemap',
+  component: BingemapComponent
 },
 {
   path: '',

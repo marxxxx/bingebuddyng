@@ -25,10 +25,10 @@ namespace BingeBuddyNg.Api.Controllers
         }
         
         
-        [HttpGet]
-        public async Task<ActionResult<List<Activity>>> Get()
+        [HttpGet("{onlyWithLocation}")]
+        public async Task<ActionResult<List<Activity>>> Get(bool onlyWithLocation)
         {
-            var result = await this.ActivityRepository.GetActivitysAsync();
+            var result = await this.ActivityRepository.GetActivitysAsync(new GetActivityFilterArgs(onlyWithLocation));
             return result;
         }
 

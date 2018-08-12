@@ -5,7 +5,8 @@
     <mat-nav-list (click)="onNavListItemClicked()">
       <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/activity-feed"><mat-icon>whatshot</mat-icon><span>{{'Activity' | translate }}</span></a>
       <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/stats"><mat-icon>show_chart</mat-icon><span>{{'Statistics' | translate }}</span></a>
-      <mat-divider></mat-divider>
+      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/bingemap"><mat-icon>map</mat-icon><span>{{'BingeMap' | translate }}</span></a>
+      <mat-divider *ngIf="auth.isAuthenticated()"></mat-divider>
       <a *ngIf="auth.isAuthenticated()" mat-list-item (click)="onLogout()"><mat-icon>exit_to_app</mat-icon><span>{{'Logout' | translate }}</span></a>
     </mat-nav-list>
   </mat-sidenav>

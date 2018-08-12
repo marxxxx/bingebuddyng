@@ -1,0 +1,3 @@
+<agm-map #AgmMap *ngIf="location" [latitude]="location.latitude" [longitude]="location.longitude">
+  <agm-marker *ngFor="let a of activitys" [title]="a.userName" [label]="formatLabel(a)" [latitude]="a.location.latitude" [longitude]="a.location.longitude"></agm-marker>
+</agm-map>

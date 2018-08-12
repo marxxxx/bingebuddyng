@@ -24,7 +24,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import 'hammerjs';
 import { ChartsModule } from 'ng2-charts';
 import { UserService } from './services/user.service';
-
+import { BingemapComponent } from './pages/bingemap/bingemap.component';
+import { AgmCoreModule} from '@agm/core';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -40,12 +41,16 @@ export function HttpLoaderFactory(http: HttpClient) {
     MeComponent,
     StatsComponent,
     UserInfoComponent,
-    CallbackComponent
+    CallbackComponent,
+    BingemapComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     ChartsModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyBlGceFBW7ykKMzNH4o0DwMBlxwt8NgWc8'
+    }),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
