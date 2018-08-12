@@ -1,7 +1,9 @@
+import { TranslateService } from '@ngx-translate/core';
 import { Subject, Subscription } from 'rxjs';
 import { ActivityService } from './../../services/activity.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-stats',
@@ -16,7 +18,30 @@ export class StatsComponent implements OnInit, OnDestroy {
   ];
   public lineChartLabels: Array<any> = [];
   public lineChartOptions: any = {
-    responsive: true
+    responsive: true,
+    scales: {
+      xAxes: [{
+        ticks: {
+          autoSkip: true,
+          maxTicksLimit: 10
+        },
+        scaleLabel: {
+          display: true,
+          labelString: 'Day'
+        }
+      }],
+      yAxes: [
+        {
+          ticks: {
+            min: 0
+          },
+          scaleLabel: {
+            display: true,
+            labelString: 'Drinks'
+          }
+        }
+      ]
+    },
   };
   public lineChartColors: Array<any> = [
     { // grey
@@ -33,7 +58,8 @@ export class StatsComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
 
-  constructor(private route: ActivatedRoute, private activityService: ActivityService) {
+  constructor(private route: ActivatedRoute, private activityService: ActivityService,
+    private translateService: TranslateService) {
   }
 
   ngOnInit() {
@@ -47,11 +73,14 @@ export class StatsComponent implements OnInit, OnDestroy {
 
   load(): void {
 
+    const drinksLabel = this.translateService.instant('Drinks');
+
     this.activityService.getActivityAggregation().subscribe(a => {
-      this.lineChartLabels = a.map(x => x.day.toString());
+      a.forEach(l => this.lineChartLabels.push(moment(l.day).format('DD.MM.YYYY')));
+
       this.lineChartData = [{
         data: a.map(x => x.count),
-        label: 'Drinks'
+        label: drinksLabel
       }
       ];
     });

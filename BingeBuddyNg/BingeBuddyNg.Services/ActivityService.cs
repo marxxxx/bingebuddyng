@@ -35,18 +35,33 @@ namespace BingeBuddyNg.Services
             await this.ActivityRepository.AddActivityAsync(activity);
         }
 
-        public async Task<List<ActivityAggregationDTO>> GetActivityAggregationAsync()
+        public async Task<List<ActivityAggregationDTO>> GetDrinkActivityAggregationAsync()
         {
             string userId = this.IdentityService.GetCurrentUserId();
 
-            var result = await this.ActivityRepository.GetActivitysForUser(userId);
+            var startTime = DateTime.UtcNow.AddDays(-30).Date;
+            // TODO: Change to correct type!
+            var result = await this.ActivityRepository.GetActivitysForUser(userId, startTime, ActivityType.Message);
 
             var groupedByDay = result.GroupBy(t => t.Timestamp.Date)
                 .OrderBy(t => t.Key)
                 .Select(t => new ActivityAggregationDTO() { Count = t.Count(), Day = t.Key })
                 .ToList();
 
-            return groupedByDay;
+            // now fill holes of last 30 days
+            for(int i=-30; i<0; i++)
+            {
+                var date = DateTime.UtcNow.AddDays(i).Date;
+                var hasData = groupedByDay.Any(d => d.Day == date);
+                if (hasData == false)
+                {
+                    groupedByDay.Add(new ActivityAggregationDTO(date, 0));
+                }
+            }
+
+            var sortedResult = groupedByDay.OrderBy(d => d.Day).ToList();
+
+            return sortedResult;
         }
     }
 }

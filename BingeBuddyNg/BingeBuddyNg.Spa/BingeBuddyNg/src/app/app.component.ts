@@ -17,11 +17,11 @@ export class AppComponent {
     translate.setDefaultLang('en');
 
     // the lang to use, if the lang isn't available, it will use the current loader to get them
-    translate.use(navigator.language);
+    translate.use(navigator.language.substr(0, 2));
 
-    if (auth.isAuthenticated()) {
-      router.navigate(['/activity-feed']);
-    }
+    // if (auth.isAuthenticated()) {
+    //   router.navigate(['/activity-feed']);
+    // }
   }
 }
 

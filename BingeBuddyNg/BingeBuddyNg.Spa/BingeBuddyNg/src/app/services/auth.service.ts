@@ -45,9 +45,7 @@ export class AuthService {
         this.router.navigate(['/']);
         console.log(err);
       } else {
-        if (this.checkAuthenticated() === true) {
-          this.router.navigate([successRoute]);
-        }
+        this.checkAuthenticated();
 
         console.log(this.getAccessToken());
       }

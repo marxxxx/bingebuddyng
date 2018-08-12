@@ -36,7 +36,7 @@ namespace BingeBuddyNg.Api.Controllers
         public async Task<ActionResult<List<ActivityAggregationDTO>>> GetActivityAggregation()
         {
 
-            var result = await this.ActivityService.GetActivityAggregationAsync();
+            var result = await this.ActivityService.GetDrinkActivityAggregationAsync();
             return result;
         }
 

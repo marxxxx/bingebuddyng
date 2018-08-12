@@ -1,13 +1,9 @@
 <div fxLayout>
-  <div>
-    <div style="display: block;">
-    <canvas baseChart width="400" height="400"
-                [datasets]="lineChartData"
-                [labels]="lineChartLabels"
-                [options]="lineChartOptions"
-                [colors]="lineChartColors"
-                [legend]="lineChartLegend"
-                [chartType]="lineChartType"></canvas>
+  <div fxFlex>
+    <div style="display: block">
+      <canvas baseChart [datasets]="lineChartData " [labels]="lineChartLabels " [options]="lineChartOptions " [colors]="lineChartColors "
+        [legend]="lineChartLegend " [chartType]="lineChartType ">
+      </canvas>
     </div>
   </div>
 </div>

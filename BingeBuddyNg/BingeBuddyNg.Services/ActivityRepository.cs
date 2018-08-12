@@ -42,13 +42,16 @@ namespace BingeBuddyNg.Services
             return activitys;
         }
 
-        public async Task<List<Activity>> GetActivitysForUser(string userId)
+        public async Task<List<Activity>> GetActivitysForUser(string userId, DateTime startTimeUtc, ActivityType activityType)
         {
             var whereClause =
                 TableQuery.CombineFilters(
                 TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId),
                 TableOperators.And,
-                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, DateTime.UtcNow.AddDays(-30).ToString("yyyyMMddHHmmss")));
+                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, startTimeUtc.ToString("yyyyMMddHHmmss")));
+
+            whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
+                TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.ActivityType), QueryComparisons.Equal, activityType.ToString()));
 
 
             var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityPerUserTableName, whereClause);
