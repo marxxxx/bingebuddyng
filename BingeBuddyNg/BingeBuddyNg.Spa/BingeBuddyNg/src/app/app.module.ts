@@ -26,6 +26,10 @@ import { ChartsModule } from 'ng2-charts';
 import { UserService } from './services/user.service';
 import { BingemapComponent } from './pages/bingemap/bingemap.component';
 import { AgmCoreModule} from '@agm/core';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
+import { EcoFabSpeedDialModule } from '@ecodev/fab-speed-dial';
+import { ActivityComponent } from './components/activity/activity.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -42,12 +46,14 @@ export function HttpLoaderFactory(http: HttpClient) {
     StatsComponent,
     UserInfoComponent,
     CallbackComponent,
-    BingemapComponent
+    BingemapComponent,
+    ActivityComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     ChartsModule,
+    EcoFabSpeedDialModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyBlGceFBW7ykKMzNH4o0DwMBlxwt8NgWc8'
     }),
@@ -62,7 +68,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     BrowserAnimationsModule,
     LayoutModule,
     FlexLayoutModule,
-    AppMaterialModule
+    AppMaterialModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [DataService, AuthService, UserService, ActivityService,
     {

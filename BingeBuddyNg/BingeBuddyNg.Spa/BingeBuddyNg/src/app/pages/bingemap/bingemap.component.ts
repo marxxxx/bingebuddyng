@@ -1,12 +1,13 @@
-import { ActivityDTO } from './../../../models/ActivityDTO';
-import { ActivityService } from './../../services/activity.service';
-import { LocationDTO } from './../../../models/LocationDTO';
+import { ActivatedRoute } from '@angular/router';
+import { ActivityDTO } from '../../../models/ActivityDTO';
+import { ActivityService } from '../../services/activity.service';
+import { LocationDTO } from '../../../models/LocationDTO';
 import { Subject } from 'rxjs';
-import { UtilService } from './../../services/util.service';
+import { UtilService } from '../../services/util.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AgmMap, LatLngBounds, LatLng, AgmMarker } from '@agm/core';
 import * as moment from 'moment';
-import {} from '@types/googlemaps';
+import {} from 'googlemaps';
 
 @Component({
   selector: 'app-bingemap',
@@ -21,7 +22,8 @@ export class BingemapComponent implements OnInit {
 
   @ViewChild('AgmMap') agmMap: any;
 
-  constructor(private activityService: ActivityService, private util: UtilService) { }
+  constructor(private activityService: ActivityService, private util: UtilService,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
 
@@ -30,7 +32,9 @@ export class BingemapComponent implements OnInit {
 
     });
 
-    this.load();
+    this.route.params.subscribe( p => {
+      this.load();
+    });
   }
 
   load() {
@@ -38,24 +42,24 @@ export class BingemapComponent implements OnInit {
     this.activityService.getActivitys({ onlyWithLocation: true }).subscribe(d => {
       this.activitys = d;
       this.isBusy = false;
-      console.log('got data');
-      console.log(d);
-
 
       // fit bounds
-      const bounds: google.maps.LatLngBounds = new google.maps.LatLngBounds();
-      for (const mm of this.activitys) {
-         bounds.extend({ lat: mm.location.latitude, lng: mm.location.longitude });
-       }
-      this.agmMap.fitBounds = bounds;
-      console.log('fitted bounds');
-      this.agmMap.triggerResize();
-
+      this.fitBounds();
 
     }, e => {
       this.isBusy = false;
       console.error(e);
     });
+  }
+
+  private fitBounds() {
+    const bounds: google.maps.LatLngBounds = new google.maps.LatLngBounds();
+    for (const mm of this.activitys) {
+      bounds.extend({ lat: mm.location.latitude, lng: mm.location.longitude });
+    }
+    this.agmMap.fitBounds = bounds;
+    console.log('fitted bounds');
+    this.agmMap.triggerResize();
   }
 
   formatLabel(a: ActivityDTO): string {

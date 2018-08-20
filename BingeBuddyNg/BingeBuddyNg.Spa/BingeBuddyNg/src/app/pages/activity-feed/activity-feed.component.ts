@@ -1,3 +1,7 @@
+import { DrinkType } from './../../../models/DrinkType';
+import { AddDrinkActivityDTO } from './../../../models/AddDrinkActivityDTO';
+import { Observable } from 'rxjs';
+import { AddActivityBaseDTO } from './../../../models/AddActivityBaseDTO';
 import { TranslateService } from '@ngx-translate/core';
 import { LocationDTO } from '../../../models/LocationDTO';
 import { ActivityDTO } from '../../../models/ActivityDTO';
@@ -32,20 +36,20 @@ export class ActivityFeedComponent implements OnInit {
     this.load();
 
 
-    this.shellInteraction.addShellIcon({id: this.locationIconId, name: 'not_listed_location', tooltip: 'QueryingLocation'});
+    this.shellInteraction.addShellIcon({ id: this.locationIconId, name: 'not_listed_location', tooltip: 'QueryingLocation' });
 
     this.util.getLocation().then(l => {
       this.location = l;
-      this.shellInteraction.addShellIcon({id: this.locationIconId, name: 'location_on', tooltip: `${l.longitude} / ${l.latitude}`});
+      this.shellInteraction.addShellIcon({ id: this.locationIconId, name: 'location_on', tooltip: `${l.longitude} / ${l.latitude}` });
     }, e => {
       // this.snackBar.open(this.transate.instant('NoGeolocationMessage'), 'OK', { duration: 3000 });
-      this.shellInteraction.addShellIcon({id: this.locationIconId, name: 'location_off', tooltip: 'NoGeolocationMessage'});
+      this.shellInteraction.addShellIcon({ id: this.locationIconId, name: 'location_off', tooltip: 'NoGeolocationMessage' });
     });
   }
 
   load() {
     this.isBusy = true;
-    this.activityService.getActivitys({onlyWithLocation: false}).subscribe(d => {
+    this.activityService.getActivitys({ onlyWithLocation: false }).subscribe(d => {
       this.activitys = d;
       this.isBusy = false;
       console.log('got data');
@@ -56,13 +60,28 @@ export class ActivityFeedComponent implements OnInit {
     });
   }
 
-  onAddActivity() {
+  // addActivity(activity: AddActivityBaseDTO, addMessageFunc: (activity: AddActivityBaseDTO) => Observable<any>) {
+  //   this.isBusyAdding = true;
+  //   addMessageFunc(activity).subscribe(r => {
+  //     this.isBusyAdding = false;
+  //     this.load();
+  //   }, e => {
+  //     this.isBusyAdding = false;
+  //   });
+  // }
+
+  onAddBeer() {
     this.isBusyAdding = true;
-    const activity: AddMessageActivityDTO = {
-      message: 'I had a drink! Cheers!',
+    const activity: AddDrinkActivityDTO = {
+      drinkId: '1',
+      drinkType: DrinkType.Beer,
+      drinkName: 'Beer',
+      alcPrc: 5,
+      volume: 500,
       location: this.location
     };
-    this.activityService.addActivity(activity).subscribe(r => {
+
+    this.activityService.addDrinkActivity(activity).subscribe(r => {
       this.isBusyAdding = false;
       this.load();
     }, e => {
@@ -70,4 +89,76 @@ export class ActivityFeedComponent implements OnInit {
     });
   }
 
+  onAddWine() {
+    this.isBusyAdding = true;
+    const activity: AddDrinkActivityDTO = {
+      drinkId: '2',
+      drinkType: DrinkType.Wine,
+      drinkName: 'Wine',
+      alcPrc: 9,
+      volume: 125,
+      location: this.location
+    };
+
+
+    this.activityService.addDrinkActivity(activity).subscribe(r => {
+      this.isBusyAdding = false;
+      this.load();
+    }, e => {
+      this.isBusyAdding = false;
+    });
+  }
+
+  onAddShot() {
+    this.isBusyAdding = true;
+    const activity: AddDrinkActivityDTO = {
+      drinkId: '3',
+      drinkType: DrinkType.Shot,
+      drinkName: 'Shot',
+      alcPrc: 20,
+      volume: 40,
+      location: this.location
+    };
+
+    this.activityService.addDrinkActivity(activity).subscribe(r => {
+      this.isBusyAdding = false;
+      this.load();
+    }, e => {
+      this.isBusyAdding = false;
+    });
+  }
+
+  onAddAnti() {
+    this.isBusyAdding = true;
+    const activity: AddDrinkActivityDTO = {
+      drinkId: '3',
+      drinkType: DrinkType.Anti,
+      drinkName: 'Antialcoholic Drink',
+      alcPrc: 0,
+      volume: 250,
+      location: this.location
+    };
+
+    this.activityService.addDrinkActivity(activity).subscribe(r => {
+      this.isBusyAdding = false;
+      this.load();
+    }, e => {
+      this.isBusyAdding = false;
+    });
+  }
+
+  onAddMessage() {
+    this.isBusyAdding = true;
+    const activity: AddMessageActivityDTO = {
+      message: 'Hello this is a message!',
+      location: this.location
+    };
+
+    this.activityService.addMessageActivity(activity).subscribe(r => {
+      this.isBusyAdding = false;
+      this.load();
+    }, e => {
+      this.isBusyAdding = false;
+    });
+  }
 }

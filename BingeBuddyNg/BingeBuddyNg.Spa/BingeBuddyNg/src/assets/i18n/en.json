@@ -6,5 +6,11 @@
     "Activity": "Activity",
     "Statistics": "Statistics",
     "Drinks": "Drinks",
-    "BingeMap": "BingeMap"
+    "BingeMap": "BingeMap",
+    "Beer": "Beer",
+    "Wine": "Wine",
+    "Shot": "Shot",
+    "Anti": "Antialcoholic",
+    "PostMessage": "Post message",
+    "IJustHadA": "I just had a {{value}}! Cheers!"
 }

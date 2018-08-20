@@ -1,0 +1,18 @@
+<mat-card>
+  <mat-card-title fxLayout fxLayoutAlign="start center">
+    <img class="user-profile-image" [src]="activity.userProfileImageUrl">
+    <span class="user-name">{{activity.userName}}</span>
+  </mat-card-title>
+  <mat-card-content>
+    <span class="message" *ngIf="isMessageActivity()">
+      {{activity.message}}
+    </span>
+    <span class="drink" *ngIf="isDrinkActivity()">
+      {{getDrinkMessage()}}
+    </span>
+    <div class="metadata" fxLayout fxLayoutAlign="space-between center">
+      <span class="timestamp">{{activity.timestamp | date:'dd.MM.yyyy HH:mm'}}</span>
+      <span class="address"> {{activity.locationAddress}}</span>
+    </div>
+  </mat-card-content>
+</mat-card>

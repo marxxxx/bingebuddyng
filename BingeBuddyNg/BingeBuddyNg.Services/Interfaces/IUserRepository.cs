@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services.Interfaces
 {
-    public interface  IUserRepository
+    public interface IUserRepository
     {
         Task<User> GetUserAsync(string id);
         Task SaveUserAsync(User user);

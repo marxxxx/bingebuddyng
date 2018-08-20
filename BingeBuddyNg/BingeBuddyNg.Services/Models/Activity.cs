@@ -15,7 +15,11 @@ namespace BingeBuddyNg.Services.Models
         public string UserName { get; set; }
         public string UserProfileImageUrl { get; set; }
         public string Message { get; set; }
+        public DrinkType DrinkType { get; set; }
+        public string DrinkId { get; set; }
         public string DrinkName { get; set; }
+        public double? DrinkAlcPrc { get; set; }
+        public double? DrinkVolume { get; set; }
         public string ImageUrl { get; set; }
         public string CountryLongName { get; set; }
         public string CountryShortName { get; set; }
@@ -24,13 +28,13 @@ namespace BingeBuddyNg.Services.Models
         { }
 
         public Activity(ActivityType type, DateTime timestamp, Location location,
-            string userId, string userName, string userProfileImageUrl, string message, string drinkName = null, string imageUrl = null)
-            : this(null, type, timestamp, location, userId, userName, userProfileImageUrl, message, drinkName, imageUrl)
+            string userId, string userName, string userProfileImageUrl)
+            : this(null, type, timestamp, location, userId, userName, userProfileImageUrl)
         {
         }
 
         public Activity(string id, ActivityType type, DateTime timestamp, Location location, 
-            string userId, string userName, string userProfileImageUrl, string message, string drinkName = null, string imageUrl = null)
+            string userId, string userName, string userProfileImageUrl)
         {
             this.Id = id;
             this.ActivityType = type;
@@ -39,9 +43,48 @@ namespace BingeBuddyNg.Services.Models
             this.UserId = userId;
             this.UserName = userName;
             this.UserProfileImageUrl = userProfileImageUrl;
-            this.Message = message;
-            this.DrinkName = drinkName;
-            this.ImageUrl = imageUrl;
+        }
+
+        public static Activity CreateDrinkActivity(DateTime activityTimestamp,
+           Location location, string userId, string userName, string userProfileImageUrl,
+           DrinkType drinkType, string drinkId, string drinkName,
+           double drinkAlcPrc, double drinkVolume)
+        {
+            var activity = new Activity( Models.ActivityType.Drink, activityTimestamp,
+                location, userId, userName, userProfileImageUrl)
+            {
+                DrinkType = drinkType,
+                DrinkId = drinkId,
+                DrinkName = drinkName,
+                DrinkAlcPrc = drinkAlcPrc,
+                DrinkVolume = drinkVolume
+            };
+
+            return activity;
+        }
+
+        public static Activity CreateMessageActivity(DateTime activityTimestamp,
+           Location location, string userId, string userName, string userProfileImageUrl, string message)
+        {
+            var activity = new Activity(BingeBuddyNg.Services.Models.ActivityType.Message, activityTimestamp,
+                location, userId, userName, userProfileImageUrl)
+            {
+                Message = message
+            };
+
+            return activity;
+        }
+
+        public static Activity CreateImageActivity(DateTime activityTimestamp,
+                    Location location, string userId, string userName, string userProfileImageUrl, string imageUrl)
+        {
+            var activity = new Activity(BingeBuddyNg.Services.Models.ActivityType.Drink, activityTimestamp,
+                location, userId, userName, userProfileImageUrl)
+            {
+                ImageUrl = imageUrl
+            };
+
+            return activity;
         }
 
         public override string ToString()

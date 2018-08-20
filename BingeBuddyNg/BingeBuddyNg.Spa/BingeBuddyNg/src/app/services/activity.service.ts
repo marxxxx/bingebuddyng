@@ -1,5 +1,6 @@
-import { GetActivityFilterArgs } from './../../models/GetActivityFilterArgs';
-import { ActivityAggregationDTO } from './../../models/ActivityAggregationDTO';
+import { AddDrinkActivityDTO } from './../../models/AddDrinkActivityDTO';
+import { GetActivityFilterArgs } from '../../models/GetActivityFilterArgs';
+import { ActivityAggregationDTO } from '../../models/ActivityAggregationDTO';
 import { ActivityDTO } from '../../models/ActivityDTO';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -17,7 +18,7 @@ export class ActivityService {
   constructor(private http: HttpClient) { }
 
   getActivitys(args: GetActivityFilterArgs): Observable<ActivityDTO[]> {
-      const url = `${this.baseUrl}/${args.onlyWithLocation}`;
+    const url = `${this.baseUrl}/${args.onlyWithLocation}`;
 
     return this.http.get<ActivityDTO[]>(url);
   }
@@ -27,10 +28,14 @@ export class ActivityService {
     return this.http.get<ActivityAggregationDTO[]>(url);
   }
 
-  addActivity(activity: AddMessageActivityDTO): Observable<{}> {
-    return this.http.post(this.baseUrl, activity);
+  addMessageActivity(activity: AddMessageActivityDTO): Observable<any> {
+    const url = `${this.baseUrl}/AddMessageActivity`;
+    return this.http.post(url, activity);
   }
 
-
+  addDrinkActivity(activity: AddDrinkActivityDTO): Observable<any> {
+    const url = `${this.baseUrl}/AddDrinkActivity`;
+    return this.http.post(url, activity);
+  }
 
 }

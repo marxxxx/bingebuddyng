@@ -14,7 +14,11 @@ namespace BingeBuddyNg.Services.Entitys
         public string UserName { get; set; }
         public string UserProfileImageUrl { get; set; }
         public string Message { get; set; }
+        public string DrinkType { get; set; }
+        public string DrinkId { get; set; }
         public string DrinkName { get; set; }
+        public double? DrinkAlcPrc { get; set; }
+        public double? DrinkMl { get; set; }
         public string ImageUrl { get; set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
@@ -23,10 +27,53 @@ namespace BingeBuddyNg.Services.Entitys
         public ActivityTableEntity()
         { }
 
+        //public static ActivityTableEntity CreateDrinkActivity(string partitionKey, string rowKey, DateTime activityTimestamp,
+        //    double? latitude, double? longitude, string userId, string userName, string userProfileImageUrl, 
+        //    DrinkType drinkType, string drinkId, string drinkName,
+        //    double drinkAlcPrc, double drinkMl)
+        //{
+        //    var activity = new ActivityTableEntity(partitionKey, rowKey, activityTimestamp, BingeBuddyNg.Services.Models.ActivityType.Drink,
+        //        latitude, longitude, userId, userName, userProfileImageUrl)
+        //    {
+        //        DrinkType = drinkType.ToString(),
+        //        DrinkId = drinkId,
+        //        DrinkName = drinkName,
+        //        DrinkAlcPrc = drinkAlcPrc,
+        //        DrinkMl = drinkMl
+        //    };
 
-        public ActivityTableEntity(string partitionKey, string rowKey, DateTime activityTimestamp, ActivityType type, 
+        //    return activity;
+        //}
+
+        //public static ActivityTableEntity CreateMessageActivity(string partitionKey, string rowKey, DateTime activityTimestamp,
+        //    double? latitude, double? longitude, string userId, string userName, string userProfileImageUrl, string message)
+        //{
+        //    var activity = new ActivityTableEntity(partitionKey, rowKey, activityTimestamp, BingeBuddyNg.Services.Models.ActivityType.Drink,
+        //        latitude, longitude, userId, userName, userProfileImageUrl)
+        //    {
+        //        Message = message
+        //    };
+
+        //    return activity;
+        //}
+
+        //public static ActivityTableEntity CreateImageActivity(string partitionKey, string rowKey, DateTime activityTimestamp,
+        //            double? latitude, double? longitude, string userId, string userName, string userProfileImageUrl, string imageUrl)
+        //{
+        //    var activity = new ActivityTableEntity(partitionKey, rowKey, activityTimestamp, BingeBuddyNg.Services.Models.ActivityType.Drink,
+        //        latitude, longitude, userId, userName, userProfileImageUrl)
+        //    {
+        //        ImageUrl = imageUrl
+        //    };
+
+        //    return activity;
+        //}
+
+
+
+        public ActivityTableEntity(string partitionKey, string rowKey, DateTime activityTimestamp, ActivityType type,
             double? latitude, double? longitude,
-            string userId, string userName, string userProfileImageUrl, string message, string drinkName, string imageUrl)
+            string userId, string userName, string userProfileImageUrl)
         {
             this.PartitionKey = partitionKey;
             this.RowKey = rowKey;
@@ -38,9 +85,7 @@ namespace BingeBuddyNg.Services.Entitys
             this.UserId = userId;
             this.UserName = userName;
             this.UserProfileImageUrl = userProfileImageUrl;
-            this.Message = message;
-            this.DrinkName = drinkName;
-            this.ImageUrl = imageUrl;
+
         }
     }
 }

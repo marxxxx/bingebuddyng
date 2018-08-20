@@ -35,15 +35,34 @@ namespace BingeBuddyNg.Api.Controllers
         [HttpGet("[action]")]
         public async Task<ActionResult<List<ActivityAggregationDTO>>> GetActivityAggregation()
         {
-
             var result = await this.ActivityService.GetDrinkActivityAggregationAsync();
             return result;
         }
 
-        [HttpPost]
-        public async Task Post([FromBody] AddMessageActivityDTO request)
+        [HttpPost("[action]")]
+        public async Task<ActionResult> AddMessageActivity([FromBody] AddMessageActivityDTO request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             await this.ActivityService.AddMessageActivityAsync(request);
+            return Ok();
+        }
+
+
+        [HttpPost("[action]")]
+        public async Task<ActionResult> AddDrinkActivity([FromBody] AddDrinkActivityDTO request)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            await this.ActivityService.AddDrinkActivityAsync(request);
+
+            return Ok();
         }
 
     }

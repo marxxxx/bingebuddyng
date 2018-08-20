@@ -1,5 +1,5 @@
 <mat-progress-bar mode="indeterminate" *ngIf="isBusy"></mat-progress-bar>
-<mat-card *ngFor="let a of activitys">
+<!-- <mat-card *ngFor="let a of activitys">
   <mat-card-title fxLayout fxLayoutAlign="start center">
     <img class="user-profile-image" [src]="a.userProfileImageUrl">
     <span class="user-name">{{a.userName}}</span>
@@ -14,11 +14,39 @@
     </div>
 
   </mat-card-content>
-</mat-card>
+</mat-card> -->
+
+<app-activity *ngFor="let a of activitys" [activity]="a"></app-activity>
 
 <div class="bottom-right">
-  <button *ngIf="!isBusyAdding" mat-fab (click)="onAddActivity()">
+  <eco-fab-speed-dial *ngIf="!isBusyAdding" animationMode="scale">
+    <eco-fab-speed-dial-trigger spin="true">
+      <button mat-fab>
+        <mat-icon>add</mat-icon>
+      </button>
+    </eco-fab-speed-dial-trigger>
+
+    <eco-fab-speed-dial-actions>
+      <button mat-mini-fab (click)="onAddBeer()" matTooltip="{{'Beer' | translate}}">
+        <img class="action-icon" src="../../assets/img/beer-32.png">
+      </button>
+      <button mat-mini-fab (click)="onAddWine()" matTooltip="{{'Wine' | translate}}">
+          <img class="action-icon" src="../../assets/img/wine-32.png">
+      </button>
+      <button mat-mini-fab (click)="onAddShot()" matTooltip="{{'Shot' | translate}}">
+          <img class="action-icon" src="../../assets/img/shot-32.png">
+      </button>
+      <button mat-mini-fab (click)="onAddAnti()" matTooltip="{{'Anti' | translate}}">
+          <img class="action-icon" src="../../assets/img/anti-32.png">
+      </button>
+      <button mat-mini-fab (click)="onAddMessage()" matTooltip="{{'PostMessage' | translate}}">
+          <mat-icon>message</mat-icon>
+      </button>
+      
+    </eco-fab-speed-dial-actions>
+  </eco-fab-speed-dial>
+  <!-- <button *ngIf="!isBusyAdding" mat-fab (click)="onAddActivity()">
     <span>+</span>
-  </button>
+  </button> -->
   <mat-progress-spinner *ngIf="isBusyAdding" mode="indeterminate" diameter="48"></mat-progress-spinner>
 </div>

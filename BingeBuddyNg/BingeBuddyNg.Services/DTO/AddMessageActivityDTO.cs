@@ -1,13 +1,14 @@
 ﻿using BingeBuddyNg.Services.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace BingeBuddyNg.Services.DTO
 {
-    public class AddMessageActivityDTO
+    public class AddMessageActivityDTO: AddActivityBaseDTO
     {
-        public string Message { get; set; }
-        public Location Location { get; set; }
+        [Required]
+        public string Message { get; set; }        
     }
 }

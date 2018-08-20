@@ -6,6 +6,12 @@
     "Activity": "Aktivitäten",
     "Statistics": "Statistiken",
     "Drinks": "Getränke",
-    "BingeMap": "Sauflandkarte"
+    "BingeMap": "Sauflandkarte",
+    "Beer": "Bier",
+    "Wine": "Wein",
+    "Shot": "Schnaps",
+    "Anti": "Antialkoholisch",
+    "PostMessage": "Nachricht posten",
+    "IJustHadA": "Ich habe gerade ein {{value}} getrunken! Prost!"
 
 }

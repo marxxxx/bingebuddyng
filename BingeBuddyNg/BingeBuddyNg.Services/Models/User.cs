@@ -9,6 +9,7 @@ namespace BingeBuddyNg.Services.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public int? Weight { get; set; }
+        public Gender Gender { get; set; }
         public string ProfileImageUrl { get; set; }
 
         public User()
@@ -16,12 +17,13 @@ namespace BingeBuddyNg.Services.Models
 
         }
 
-        public User(string id, string name, string profileImageUrl, int? weight=null)
+        public User(string id, string name, string profileImageUrl, Gender gender=Gender.Unknown, int? weight=null)
         {
             this.Id = !string.IsNullOrEmpty(id) ? id : throw new ArgumentNullException(nameof(id));
             this.Name = name;
             this.ProfileImageUrl = profileImageUrl;
             this.Weight = weight;
+            this.Gender = gender;
         }
     }
 }

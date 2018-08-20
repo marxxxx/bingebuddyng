@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.DTO;
 using BingeBuddyNg.Services.Interfaces;
 using BingeBuddyNg.Services.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +21,13 @@ namespace BingeBuddyNg.Api.Controllers
             this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
                 
-
-        // POST api/<controller>
         [HttpPost]
-        public async Task Post([FromBody]User user)
+        public async Task<UpdateUserResponseDTO> Post([FromBody]User user)
         {
             await this.UserRepository.SaveUserAsync(user);
+
+            var response = new UpdateUserResponseDTO(!user.Weight.HasValue, user.Gender == Gender.Unknown);
+            return response;
         }
 
     }

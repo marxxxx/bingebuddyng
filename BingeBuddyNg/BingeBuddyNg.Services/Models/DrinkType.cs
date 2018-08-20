@@ -4,11 +4,12 @@ using System.Text;
 
 namespace BingeBuddyNg.Services.Models
 {
-    public enum ActivityType
+    public enum DrinkType
     {
-        None = 0,
-        Message = 10,
-        Drink = 20,        
-        Image = 30
+        Unknown = 0,
+        Anti = 10,
+        Beer = 20,
+        Wine = 30,
+        Shot = 40
     }
 }
