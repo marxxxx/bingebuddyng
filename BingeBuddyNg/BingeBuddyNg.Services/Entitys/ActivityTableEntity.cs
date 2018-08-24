@@ -29,10 +29,10 @@ namespace BingeBuddyNg.Services.Entitys
                 this.ActivityType = Util.SafeParseEnum<ActivityType>(activityTypeValue.StringValue, ActivityType.None);
             }
 
-            if (properties.TryGetValue(nameof(HasLocation), out EntityProperty hasLocationValue))
-            {
-                this.HasLocation = activityTypeValue.BooleanValue.GetValueOrDefault();
-            }
+            //if (properties.TryGetValue(nameof(HasLocation), out EntityProperty hasLocationValue))
+            //{
+            //    this.HasLocation = hasLocationValue.BooleanValue.GetValueOrDefault();
+            //}
 
         }
 
@@ -40,7 +40,7 @@ namespace BingeBuddyNg.Services.Entitys
         {
             var properties = base.WriteEntity(operationContext);
             properties.Add(nameof(ActivityType), new EntityProperty(ActivityType.ToString()));
-            properties.Add(nameof(HasLocation), new EntityProperty(HasLocation));
+            //properties.Add(nameof(HasLocation), new EntityProperty(HasLocation));
             return properties;
         }
     }
