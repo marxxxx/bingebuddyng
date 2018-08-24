@@ -12,6 +12,7 @@ namespace BingeBuddyNg.Services
     public class UserRepository : IUserRepository
     {
         private const string TableName = "users";
+        private const string PartitionKeyValue = "User";
 
         public StorageAccessService StorageAccess { get; }
 
@@ -25,23 +26,19 @@ namespace BingeBuddyNg.Services
         {
             var table = StorageAccess.GetTableReference(TableName);
 
-            TableOperation retrieveOperation = TableOperation.Retrieve<UserTableEntity>(UserTableEntity.PartitionKeyValue, id);
-            
+            TableOperation retrieveOperation = TableOperation.Retrieve<JsonTableEntity<User>>(PartitionKeyValue, id);
+
             var result = await table.ExecuteAsync(retrieveOperation);
 
-            var userEntity = (UserTableEntity)result.Result;
-
-            var model = EntityConverters.Users.EntityToModel(userEntity);
-            return model;
+            var user = ((JsonTableEntity<User>)result.Result).Entity;
+            return user;
         }
 
         public Task SaveUserAsync(User user)
         {
             var table = StorageAccess.GetTableReference(TableName);
 
-            UserTableEntity userEntity = EntityConverters.Users.ModelToEntity(user);
-
-            TableOperation saveUserOperation = TableOperation.InsertOrReplace(userEntity);
+            TableOperation saveUserOperation = TableOperation.InsertOrReplace(new JsonTableEntity<User>(PartitionKeyValue, user.Id, user));
 
             return table.ExecuteAsync(saveUserOperation);            
         }

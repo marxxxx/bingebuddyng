@@ -35,20 +35,15 @@ namespace BingeBuddyNg.Services
                 TableOperators.Or,
                 TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, previousPartition));
 
-            if(args.OnlyWithLocation)
+            if (args.OnlyWithLocation)
             {
                 whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
-                    TableQuery.CombineFilters(
-                        TableQuery.GenerateFilterConditionForDouble(nameof(ActivityTableEntity.Latitude), QueryComparisons.GreaterThan, 0),
-                    TableOperators.And,
-                    TableQuery.GenerateFilterConditionForDouble(nameof(ActivityTableEntity.Longitude), QueryComparisons.GreaterThan, 0)));
-                    
+                        TableQuery.GenerateFilterConditionForBool(nameof(ActivityTableEntity.HasLocation), QueryComparisons.Equal, true));
             }
-
 
             var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityTableName, whereClause);
 
-            var activitys = result.Select(r => EntityConverters.Activitys.EntityToModel(r)).OrderByDescending(a=>a.Timestamp).ToList();
+            var activitys = result.Select(r => r.Entity).OrderByDescending(a => a.Timestamp).ToList();
             return activitys;
         }
 
@@ -66,7 +61,7 @@ namespace BingeBuddyNg.Services
 
             var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityPerUserTableName, whereClause);
 
-            var activitys = result.Select(r => EntityConverters.Activitys.EntityToModel(r)).OrderBy(a=>a.Timestamp).ToList();
+            var activitys = result.Select(r => r.Entity).OrderBy(a=>a.Timestamp).ToList();
             return activitys;
         }
 
@@ -77,14 +72,14 @@ namespace BingeBuddyNg.Services
             var activityTable = this.StorageAccessService.GetTableReference(ActivityTableName);
 
             string rowKey = GetRowKey(activity.Timestamp, activity.UserId);
-            var entity = EntityConverters.Activitys.ModelToEntity(activity, GetPartitionKey(activity.Timestamp), rowKey);
+            var entity = new ActivityTableEntity(GetPartitionKey(activity.Timestamp), rowKey, activity);
 
             TableOperation operation = TableOperation.Insert(entity);
             await activityTable.ExecuteAsync(operation);
 
             var perUserActivityTable = this.StorageAccessService.GetTableReference(ActivityPerUserTableName);
                         
-            var perUserEntity = EntityConverters.Activitys.ModelToEntity(activity, activity.UserId, rowKey);
+            var perUserEntity = new ActivityTableEntity(activity.UserId, rowKey, activity);
 
             TableOperation perUserOperation = TableOperation.Insert(perUserEntity);
             await perUserActivityTable.ExecuteAsync(perUserOperation);
@@ -97,8 +92,7 @@ namespace BingeBuddyNg.Services
         {
             ActivityTableEntity entity = await GetActivityEntity(id);
 
-            var activity = EntityConverters.Activitys.EntityToModel(entity);
-            return activity;
+            return entity.Entity;
         }
 
         private async Task<ActivityTableEntity> GetActivityEntity(string id)
@@ -122,9 +116,9 @@ namespace BingeBuddyNg.Services
             ActivityTableEntity entity = await GetActivityEntity(activity.Id);
             
             // extend to other propertys if needed
-            entity.LocationAddress = activity.LocationAddress;
+            entity.Entity.LocationAddress = activity.LocationAddress;
 
-            TableOperation updateOperation = TableOperation.InsertOrMerge(entity);
+            TableOperation updateOperation = TableOperation.InsertOrReplace(entity);
             await table.ExecuteAsync(updateOperation);
         }
 
