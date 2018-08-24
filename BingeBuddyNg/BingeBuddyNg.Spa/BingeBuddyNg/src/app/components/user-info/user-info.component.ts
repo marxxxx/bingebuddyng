@@ -32,24 +32,9 @@ export class UserInfoComponent implements OnInit {
   }
 
   loadProfile() {
-    if (this.authService.userProfile) {
-      console.log('having profile');
-      this.profile = this.authService.userProfile;
-    } else {
-      this.authService.getProfile((err, profile) => {
-        this.profile = profile;
-        console.log('got profile');
-        console.log(this.profile);
-
-        // register user
-        const user: UserDTO = {
-          id: profile.sub,
-          name: profile.nickname,
-          profileImageUrl: profile.picture
-        };
-        this.userService.saveUser(user).subscribe( _ => console.log('user registration completed'));
-      });
-    }
+    this.authService.getProfile((err, profile) => {
+      this.profile = profile;
+    });
   }
 
 }

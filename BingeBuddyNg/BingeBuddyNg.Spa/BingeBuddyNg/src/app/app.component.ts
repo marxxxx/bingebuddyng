@@ -1,3 +1,5 @@
+import { UserDTO } from './../models/UserDTO';
+import { UserService } from './services/user.service';
 import { DataService } from './services/data.service';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
@@ -5,6 +7,7 @@ import { AuthService } from './services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { SwPush, SwUpdate } from '@angular/service-worker';
+import { PushInfo } from '../models/PushInfo';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +21,7 @@ export class AppComponent implements OnInit {
   // private: 1NKizDYbqdvxaN_su5xvcC3GipJz65hD3UOmYGDFrRw
 
   constructor(public auth: AuthService, translate: TranslateService, router: Router,
-    private dataService: DataService,
+    private userService: UserService,
     private snackbar: MatSnackBar,
     private pushService: SwPush,
     private updateService: SwUpdate) {
@@ -41,24 +44,60 @@ export class AppComponent implements OnInit {
       this.snackbar.open(`Update ${e.current} activated!`, 'OK', { duration: 3000 });
     });
 
+    let pushInfo: PushInfo = null;
+
+    console.log('requesting push subscription ...');
+
     this.pushService.requestSubscription({
       serverPublicKey: this.VAPID_PUBLIC_KEY
     }).then(sub => {
       console.log('Subscription received');
       console.log(sub);
-      //this.dataService.setPushSubscription(sub);
 
-      console.log(sub.toJSON());
-      console.log(sub.getKey('p256dh'));
+      pushInfo = this.getPushInfo(sub);
+
     }).catch(err => {
       console.error(err);
-      this.snackbar.open('Failed to register for push notifications', 'OK', {duration: 1000});
+      this.snackbar.open('Failed to register for push notifications', 'OK', { duration: 1000 });
+    }).then(_ => {
+      console.log('registering user ...');
+      this.registerUser(pushInfo);
     });
 
     this.pushService.messages.subscribe((m: any) => {
       this.snackbar.open(m.notification.body, 'OK');
       // this.dataService.setBeerRequestApprovalResponse(m.notification.result);
       console.log(m);
+    });
+  }
+
+  getPushInfo(sub: PushSubscription): PushInfo {
+
+    const subJSObject = JSON.parse(JSON.stringify(sub));
+
+    const pushInfo: PushInfo = {
+      subscriptionEndpoint: sub.endpoint,
+      auth: subJSObject.keys.auth,
+      p256dh: subJSObject.keys.p256dh
+    };
+
+    return pushInfo;
+  }
+
+  registerUser(pushInfo: PushInfo) {
+    this.auth.isLoggedIn$.subscribe(isLoggedIn => {
+      if (isLoggedIn) {
+        this.auth.getProfile((err, profile) => {
+          // register user
+          const user: UserDTO = {
+            id: profile.sub,
+            name: profile.nickname,
+            profileImageUrl: profile.picture,
+            pushInfo: pushInfo
+          };
+          this.userService.saveUser(user).subscribe(_ => console.log('user registration completed'));
+        });
+      }
     });
   }
 }

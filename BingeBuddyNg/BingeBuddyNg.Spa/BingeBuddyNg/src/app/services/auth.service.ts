@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
 
-  userProfile: any;
+  private userProfile: any;
 
 
   auth0 = new auth0.WebAuth({
@@ -54,6 +54,12 @@ export class AuthService {
   }
 
   public getProfile(cb): void {
+
+    if (this.userProfile) {
+      cb(null, this.userProfile);
+      return;
+    }
+
     const accessToken = this.getAccessToken();
     if (!accessToken) {
       throw new Error('Access Token must exist to fetch profile');
@@ -95,6 +101,8 @@ export class AuthService {
     localStorage.removeItem('access_token');
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
+
+    this.userProfile = null;
     // Go back to the home route
     this.router.navigate(['/']);
 

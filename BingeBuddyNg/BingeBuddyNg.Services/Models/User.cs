@@ -11,6 +11,7 @@ namespace BingeBuddyNg.Services.Models
         public int? Weight { get; set; }
         public Gender Gender { get; set; }
         public string ProfileImageUrl { get; set; }
+        public PushInfo PushInfo { get; set; }
 
         public User()
         {
