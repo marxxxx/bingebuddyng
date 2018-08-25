@@ -26,14 +26,18 @@ namespace BingeBuddyNg.Services
             return table;
         }
 
-        public async Task<List<T>> QueryTableAsync<T>(string tableName, string whereClause) where T : ITableEntity, new()
+        public async Task<List<T>> QueryTableAsync<T>(string tableName, string whereClause=null) where T : ITableEntity, new()
         {
             // Initialize the continuation token to null to start from the beginning of the table.
             TableContinuationToken continuationToken = null;
 
             var table = GetTableReference(tableName);
 
-            TableQuery<T> tableQuery = new TableQuery<T>().Where(whereClause);
+            TableQuery<T> tableQuery = new TableQuery<T>();
+            if(whereClause != null)
+            {
+                tableQuery = tableQuery.Where(whereClause);
+            }
 
             // Retrieve a segment (up to 1,000 entities) -> we never want more at once!
             TableQuerySegment<T> tableQueryResult =

@@ -4,6 +4,7 @@ using BingeBuddyNg.Services.Models;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,6 +42,13 @@ namespace BingeBuddyNg.Services
             TableOperation saveUserOperation = TableOperation.InsertOrReplace(new JsonTableEntity<User>(PartitionKeyValue, user.Id, user));
 
             return table.ExecuteAsync(saveUserOperation);            
+        }
+
+        public async Task<List<User>> GetAllUsersAsync()
+        {
+            var result = await StorageAccess.QueryTableAsync<JsonTableEntity<User>>(TableName);
+            var users = result.Select(r => r.Entity).ToList();
+            return users;
         }
     }
 }

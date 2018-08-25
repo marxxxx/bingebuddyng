@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services.Interfaces
 {
-    public interface IUserRepository
+    public interface INotificationService
     {
-        Task<List<User>> GetAllUsersAsync();
-        Task<User> GetUserAsync(string id);
-        Task SaveUserAsync(User user);
-
+        void SendMessage(IEnumerable<PushInfo> receivers, NotificationMessage message);
     }
 }

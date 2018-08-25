@@ -25,7 +25,9 @@ namespace BingeBuddyNg.Functions
             services.AddSingleton<AppConfiguration>(new AppConfiguration(storageConnectionString, googleApiKey));
             services.AddScoped<StorageAccessService>();
             services.AddScoped<IActivityRepository, ActivityRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUtilityService, UtilityService>();
+            services.AddScoped<INotificationService, NotificationService>();
                                     
             return services.BuildServiceProvider(true);
         }

@@ -40,10 +40,6 @@ export class AppComponent implements OnInit {
       this.snackbar.open(`Update available! Press F5 to install.`, 'OK');
     });
 
-    this.updateService.activated.subscribe(e => {
-      this.snackbar.open(`Update ${e.current} activated!`, 'OK', { duration: 3000 });
-    });
-
     let pushInfo: PushInfo = null;
 
     console.log('requesting push subscription ...');
@@ -55,17 +51,18 @@ export class AppComponent implements OnInit {
       console.log(sub);
 
       pushInfo = this.getPushInfo(sub);
-
+      this.registerUser(pushInfo);
     }).catch(err => {
       console.error(err);
       this.snackbar.open('Failed to register for push notifications', 'OK', { duration: 1000 });
-    }).then(_ => {
-      console.log('registering user ...');
-      this.registerUser(pushInfo);
+      this.registerUser(null);
     });
 
     this.pushService.messages.subscribe((m: any) => {
-      this.snackbar.open(m.notification.body, 'OK');
+      console.log(m);
+      if (m.notification && m.notification.body) {
+        this.snackbar.open(m.notification.body, 'OK');
+      }
       // this.dataService.setBeerRequestApprovalResponse(m.notification.result);
       console.log(m);
     });
@@ -81,24 +78,31 @@ export class AppComponent implements OnInit {
       p256dh: subJSObject.keys.p256dh
     };
 
+    console.log('got push info');
+    console.log(pushInfo);
     return pushInfo;
   }
 
   registerUser(pushInfo: PushInfo) {
-    this.auth.isLoggedIn$.subscribe(isLoggedIn => {
-      if (isLoggedIn) {
-        this.auth.getProfile((err, profile) => {
-          // register user
-          const user: UserDTO = {
-            id: profile.sub,
-            name: profile.nickname,
-            profileImageUrl: profile.picture,
-            pushInfo: pushInfo
-          };
-          this.userService.saveUser(user).subscribe(_ => console.log('user registration completed'));
-        });
-      }
-    });
+
+    if (this.auth.isAuthenticated()) {
+
+      this.auth.getProfile((err, profile) => {
+        // register user
+        const user: UserDTO = {
+          id: profile.sub,
+          name: profile.nickname,
+          profileImageUrl: profile.picture,
+          pushInfo: pushInfo
+        };
+
+        console.log('registering user ...');
+        console.log(user);
+        this.userService.saveUser(user).subscribe(_ => console.log('user registration completed'));
+      });
+    } else {
+      console.warn('user not authenticated');
+    }
   }
 }
 

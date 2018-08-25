@@ -77,6 +77,7 @@ namespace BingeBuddyNg.Api
             services.AddScoped<IActivityRepository, ActivityRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IActivityService, ActivityService>();
+            services.AddScoped<INotificationService, NotificationService>();
 
             
             
