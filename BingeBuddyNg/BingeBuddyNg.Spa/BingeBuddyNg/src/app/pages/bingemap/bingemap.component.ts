@@ -37,6 +37,7 @@ export class BingemapComponent implements OnInit {
     });
   }
 
+
   load() {
     this.isBusy = true;
     this.activityService.getActivitys({ onlyWithLocation: true }).subscribe(d => {
@@ -44,7 +45,7 @@ export class BingemapComponent implements OnInit {
       this.isBusy = false;
 
       // fit bounds
-      this.fitBounds();
+      setTimeout(() => this.fitBounds(), 1500);
 
     }, e => {
       this.isBusy = false;
@@ -63,10 +64,7 @@ export class BingemapComponent implements OnInit {
   }
 
   formatLabel(a: ActivityDTO): string {
-    const time = moment(a.timestamp).format('DD.MM.YYYY HH:mm');
+    const time = moment(a.timestamp).fromNow();
     return `${a.userName} : ${time}`;
   }
-
-
-
 }
