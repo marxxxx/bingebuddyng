@@ -1,3 +1,4 @@
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { UserDTO } from './../models/UserDTO';
 import { UserService } from './services/user.service';
 import { DataService } from './services/data.service';
@@ -18,9 +19,7 @@ export class AppComponent implements OnInit {
 
   readonly VAPID_PUBLIC_KEY = 'BP7M6mvrmwidRr7II8ewUIRSg8n7_mKAlWagRziRRluXnMc_d_rPUoVWGHb79YexnD0olGIFe_xackYqe1fmoxo';
 
-  // private: 1NKizDYbqdvxaN_su5xvcC3GipJz65hD3UOmYGDFrRw
-
-  constructor(public auth: AuthService, translate: TranslateService, router: Router,
+  constructor(public auth: AuthService, private translate: TranslateService, router: Router,
     private userService: UserService,
     private snackbar: MatSnackBar,
     private pushService: SwPush,
@@ -37,7 +36,11 @@ export class AppComponent implements OnInit {
   ngOnInit() {
 
     this.updateService.available.subscribe(e => {
-      this.snackbar.open(`Update available! Press F5 to install.`, 'OK');
+      const message = this.translate.instant('UpdateAvailableMessage');
+      this.snackbar.open(message, 'OK')
+      .onAction().subscribe(r => {
+        location.reload(true);
+      });
     });
 
     let pushInfo: PushInfo = null;
