@@ -1,5 +1,5 @@
 import { ActivityType } from './../../../models/ActivityType';
-import { ActivityDTO } from './../../../models/ActivityDTO';
+import { ActivityStatsDTO } from '../../../models/ActivityStatsDTO';
 import { Component, OnInit, Input } from '@angular/core';
 import { TranslateService } from '../../../../node_modules/@ngx-translate/core';
 
@@ -11,7 +11,7 @@ import { TranslateService } from '../../../../node_modules/@ngx-translate/core';
 export class ActivityComponent implements OnInit {
 
   @Input()
-  activity: ActivityDTO;
+  activity: ActivityStatsDTO;
 
   constructor(private translate: TranslateService) { }
 
@@ -19,18 +19,19 @@ export class ActivityComponent implements OnInit {
   }
 
   isDrinkActivity(): boolean {
-    return this.activity.activityType === ActivityType.Drink;
+    return this.activity.activity.activityType === ActivityType.Drink;
   }
 
   isMessageActivity(): boolean {
-    return this.activity.activityType === ActivityType.Message;
+    return this.activity.activity.activityType === ActivityType.Message;
   }
 
   getDrinkMessage(): string {
-    if (!this.activity.drinkName) {
-      return this.activity.message;
+    if (!this.activity.activity.drinkName) {
+      return this.activity.activity.message;
     }
-    const message = this.translate.instant('IJustHadA', { value: this.translate.instant(this.activity.drinkName) });
+    const message = this.translate.instant('IJustHadA',
+    { value: this.translate.instant(this.activity.activity.drinkName) });
     return message;
   }
 }

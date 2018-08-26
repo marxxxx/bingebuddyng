@@ -20,6 +20,8 @@ namespace BingeBuddyNg.Functions
             [Inject]IActivityRepository activityRepository,
             [Inject]IUserRepository userRepository,
             [Inject]INotificationService notificationService,
+            [Inject]ICalculationService calculationService,
+            [Inject]IUserStatsRepository userStatsRepository,
             ILogger log)
         {
             var activityAddedMessage = JsonConvert.DeserializeObject<ActivityAddedMessage>(message);
@@ -37,18 +39,31 @@ namespace BingeBuddyNg.Functions
 
             try
             {
-                // send out push
+                // get all users
                 var users = await userRepository.GetAllUsersAsync();
+
+                // Immediately update Stats for current user
+                var currentUser = users.First(u => u.Id == activity.UserId);
+                await DrinkCalculatorFunction.UpdateStatsForUserasync(currentUser, calculationService, userStatsRepository);
+
+                // send out push
 
                 var otherUsersWithPushInfo = users.Where(u => u.PushInfo != null && u.Id != activity.UserId)
                     .Select(u => u.PushInfo).ToList();
 
+                string locationSnippet = null;
+                if(!string.IsNullOrEmpty(activity.LocationAddress))
+                {
+                    locationSnippet = $" in {activity.LocationAddress} ";
+                }
+
                 // TODO: Localize, configure icon
                 string iconUrl = "https://bingebuddystorage.z6.web.core.windows.net/favicon.ico";
                 var notificationMessage = new NotificationMessage(iconUrl, "BingeBuddy", 
-                    $"{activityAddedMessage.AddedActivity.UserName} hat ein {activity.DrinkName} geschnappt!");
-
+                    $"{activityAddedMessage.AddedActivity.UserName} hat {activity.DrinkName}{locationSnippet} geschnappt!");
+#if !DEBUG
                 notificationService.SendMessage(otherUsersWithPushInfo, notificationMessage);
+#endif
             }
             catch(Exception ex)
             {

@@ -1,5 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
-import { ActivityDTO } from '../../../models/ActivityDTO';
+import { Activity } from '../../../models/Activity';
 import { ActivityService } from '../../services/activity.service';
 import { LocationDTO } from '../../../models/LocationDTO';
 import { Subject } from 'rxjs';
@@ -18,7 +18,7 @@ export class BingemapComponent implements OnInit {
 
   location: LocationDTO;
   isBusy = false;
-  activitys: ActivityDTO[] = [];
+  activitys: Activity[] = [];
 
   @ViewChild('AgmMap') agmMap: any;
 
@@ -63,7 +63,7 @@ export class BingemapComponent implements OnInit {
     this.agmMap.triggerResize();
   }
 
-  formatLabel(a: ActivityDTO): string {
+  formatLabel(a: Activity): string {
     const time = moment(a.timestamp).fromNow();
     return `${a.userName} : ${time}`;
   }

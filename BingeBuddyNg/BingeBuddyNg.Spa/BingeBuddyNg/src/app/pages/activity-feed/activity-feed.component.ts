@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { AddActivityBaseDTO } from './../../../models/AddActivityBaseDTO';
 import { TranslateService } from '@ngx-translate/core';
 import { LocationDTO } from '../../../models/LocationDTO';
-import { ActivityDTO } from '../../../models/ActivityDTO';
+import { ActivityStatsDTO } from '../../../models/ActivityStatsDTO';
 import { ActivityService } from '../../services/activity.service';
 import { DataService } from '../../services/data.service';
 import { Component, OnInit } from '@angular/core';
@@ -20,7 +20,7 @@ import { ShellInteractionService } from '../../services/shell-interaction.servic
   styleUrls: ['./activity-feed.component.css']
 })
 export class ActivityFeedComponent implements OnInit {
-  activitys: ActivityDTO[] = [];
+  activitys: ActivityStatsDTO[] = [];
   isBusy = false;
   isBusyAdding = false;
   location: LocationDTO;
@@ -49,26 +49,16 @@ export class ActivityFeedComponent implements OnInit {
 
   load() {
     this.isBusy = true;
-    this.activityService.getActivitys({ onlyWithLocation: false }).subscribe(d => {
+    this.activityService.getActivityFeed().subscribe(d => {
       this.activitys = d;
       this.isBusy = false;
-      console.log('got data');
-      console.log(d);
     }, e => {
       this.isBusy = false;
       console.error(e);
     });
   }
 
-  // addActivity(activity: AddActivityBaseDTO, addMessageFunc: (activity: AddActivityBaseDTO) => Observable<any>) {
-  //   this.isBusyAdding = true;
-  //   addMessageFunc(activity).subscribe(r => {
-  //     this.isBusyAdding = false;
-  //     this.load();
-  //   }, e => {
-  //     this.isBusyAdding = false;
-  //   });
-  // }
+
 
   onAddBeer() {
     this.isBusyAdding = true;

@@ -1,5 +1,6 @@
 ﻿using BingeBuddyNg.Functions.DependencyInjection;
 using BingeBuddyNg.Services;
+using BingeBuddyNg.Services.Calculation;
 using BingeBuddyNg.Services.Configuration;
 using BingeBuddyNg.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +29,8 @@ namespace BingeBuddyNg.Functions
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUtilityService, UtilityService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<ICalculationService, CalculationService>();
+            services.AddScoped<IUserStatsRepository, UserStatsRepository>();
                                     
             return services.BuildServiceProvider(true);
         }

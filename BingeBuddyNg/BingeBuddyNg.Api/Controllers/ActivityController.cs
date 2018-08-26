@@ -33,6 +33,13 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
         [HttpGet("[action]")]
+        public async Task<List<ActivityStatsDTO>> GetActivityFeed()
+        {
+            var result = await this.ActivityService.GetActivitiesAsync();
+            return result;
+        }
+
+        [HttpGet("[action]")]
         public async Task<ActionResult<List<ActivityAggregationDTO>>> GetActivityAggregation()
         {
             var result = await this.ActivityService.GetDrinkActivityAggregationAsync();

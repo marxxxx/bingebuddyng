@@ -16,16 +16,19 @@ namespace BingeBuddyNg.Services
         public IIdentityService IdentityService { get; }
         public IUserRepository UserRepository { get; }
         public IActivityRepository ActivityRepository { get; }
+        public IUserStatsRepository UserStatsRepository { get; }
         public StorageAccessService StorageAccessService { get; }
 
         public ActivityService(IIdentityService identityService,  
             IUserRepository userRepository,
             IActivityRepository activityRepository, 
+            IUserStatsRepository userStatsRepository,
             StorageAccessService storageAccessService)
         {
             this.IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             this.ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.UserStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
             this.StorageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
         }
 
@@ -91,5 +94,14 @@ namespace BingeBuddyNg.Services
             await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
         }
 
+        public async Task<List<ActivityStatsDTO>> GetActivitiesAsync()
+        {
+            var activities = await this.ActivityRepository.GetActivitysAsync(new GetActivityFilterArgs(false));
+            var userIds = activities.Select(a => a.UserId).Distinct();
+            var userStats = await this.UserStatsRepository.GetStatisticsAsync(userIds);
+
+            var result = activities.Select(a => new ActivityStatsDTO(a, userStats.First(u => u.UserId == a.UserId))).ToList();
+            return result;
+        }
     }
 }

@@ -1,7 +1,8 @@
+import { ActivityStatsDTO } from './../../models/ActivityStatsDTO';
 import { AddDrinkActivityDTO } from './../../models/AddDrinkActivityDTO';
 import { GetActivityFilterArgs } from '../../models/GetActivityFilterArgs';
 import { ActivityAggregationDTO } from '../../models/ActivityAggregationDTO';
-import { ActivityDTO } from '../../models/ActivityDTO';
+import { Activity } from '../../models/Activity';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -17,10 +18,15 @@ export class ActivityService {
 
   constructor(private http: HttpClient) { }
 
-  getActivitys(args: GetActivityFilterArgs): Observable<ActivityDTO[]> {
+  getActivityFeed(): Observable<ActivityStatsDTO[]> {
+    const url = `${this.baseUrl}/GetActivityFeed`;
+    return this.http.get<ActivityStatsDTO[]>(url);
+  }
+
+  getActivitys(args: GetActivityFilterArgs): Observable<Activity[]> {
     const url = `${this.baseUrl}/${args.onlyWithLocation}`;
 
-    return this.http.get<ActivityDTO[]>(url);
+    return this.http.get<Activity[]>(url);
   }
 
   getActivityAggregation(): Observable<ActivityAggregationDTO[]> {

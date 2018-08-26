@@ -26,6 +26,16 @@ namespace BingeBuddyNg.Services
             return table;
         }
 
+        public async Task<T> GetTableEntityAsync<T>(string tableName, string partitionKey, string rowKey) where T:ITableEntity, new()
+        {
+            var table = GetTableReference(tableName);
+
+            var operation = TableOperation.Retrieve<T>(partitionKey, rowKey);
+            var result = await table.ExecuteAsync(operation);
+
+            return (T)result.Result;
+        }
+
         public async Task<List<T>> QueryTableAsync<T>(string tableName, string whereClause=null) where T : ITableEntity, new()
         {
             // Initialize the continuation token to null to start from the beginning of the table.

@@ -1,7 +1,7 @@
 import { DrinkType } from './DrinkType';
 import { LocationDTO } from './LocationDTO';
 import { ActivityType } from './ActivityType';
-export class ActivityDTO {
+export class Activity {
     id: string;
     activityType: ActivityType;
     timestamp: Date;

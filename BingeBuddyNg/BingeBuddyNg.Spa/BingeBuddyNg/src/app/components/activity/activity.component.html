@@ -1,18 +1,23 @@
 <mat-card>
   <mat-card-title fxLayout fxLayoutAlign="start center">
-    <img class="user-profile-image" [src]="activity.userProfileImageUrl">
-    <span class="user-name">{{activity.userName}}</span>
+    <img class="user-profile-image" [src]="activity.activity.userProfileImageUrl">
+    <span class="user-name">{{activity.activity.userName}}</span>
+    <mat-chip-list class="stats" *ngIf="activity.userStats.currentNightDrinks + activity.userStats.currentAlcoholization > 0">
+      <mat-chip>{{activity.userStats.currentNightDrinks}} <mat-icon fxHide fxShow.gt-xs>local_drink</mat-icon></mat-chip>
+      <mat-chip>{{activity.userStats.currentAlcoholization}}<mat-icon fxHide fxShow.gt-xs>opacity</mat-icon></mat-chip>
+    </mat-chip-list>
+
   </mat-card-title>
   <mat-card-content>
     <span class="message" *ngIf="isMessageActivity()">
-      {{activity.message}}
+      {{activity.activity.message}}
     </span>
     <span class="drink" *ngIf="isDrinkActivity()">
       {{getDrinkMessage()}}
     </span>
     <div class="metadata" fxLayout fxLayoutAlign="space-between center">
-      <span class="timestamp">{{activity.timestamp | date:'dd.MM.yyyy HH:mm'}}</span>
-      <span class="address"> {{activity.locationAddress}}</span>
+      <span class="timestamp">{{activity.activity.timestamp | date:'dd.MM.yyyy HH:mm'}}</span>
+      <span class="address"> {{activity.activity.locationAddress}}</span>
     </div>
   </mat-card-content>
 </mat-card>

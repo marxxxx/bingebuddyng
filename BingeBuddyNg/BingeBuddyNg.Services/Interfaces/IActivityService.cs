@@ -8,6 +8,7 @@ namespace BingeBuddyNg.Services.Interfaces
 {
     public interface IActivityService
     {
+        Task<List<ActivityStatsDTO>> GetActivitiesAsync();
         Task<List<ActivityAggregationDTO>> GetDrinkActivityAggregationAsync();
 
         Task AddMessageActivityAsync(AddMessageActivityDTO activity);
