@@ -54,7 +54,7 @@ namespace BingeBuddyNg.Services.Calculation
 
             currentAlcoholization = Math.Round(currentAlcoholization, 3);
 
-            return new DrinkCalculationResult(userDrinkActivity.UserId, currentAlcoholization, orderedDrinks.Count);
+            return new DrinkCalculationResult(userDrinkActivity.UserId, currentAlcoholization, orderedDrinks.Count-1);
         }
 
         public async Task<DrinkCalculationResult> CalculateStatsForUserAsync(User user)
@@ -65,7 +65,7 @@ namespace BingeBuddyNg.Services.Calculation
             var drinkActivity = activity.Select(a => new DrinkActivityItem(a.Timestamp, a.DrinkAlcPrc.GetValueOrDefault(),
                 a.DrinkVolume.GetValueOrDefault()));
                         
-            UserDrinkActivity userDrinkActivity = new UserDrinkActivity(user.Id, user.Gender, user.Weight.Value, drinkActivity);
+            UserDrinkActivity userDrinkActivity = new UserDrinkActivity(user.Id, user.Gender, user.Weight.GetValueOrDefault(), drinkActivity);
 
             DrinkCalculationResult result = CalculateStats(userDrinkActivity);
             

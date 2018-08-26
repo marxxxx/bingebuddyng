@@ -11,7 +11,7 @@ namespace BingeBuddyNg.Functions
     public static class DrinkCalculatorFunction
     {
         [FunctionName("DrinkCalculatorFunction")]
-        public static async Task Run([TimerTrigger("0 */15 * * * *")]TimerInfo myTimer,
+        public static async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo myTimer,
             [Inject]IUserRepository userRepository,
             [Inject]ICalculationService calculationService,
             [Inject]IUserStatsRepository userStatsRepository,
@@ -23,7 +23,7 @@ namespace BingeBuddyNg.Functions
             {
                 try
                 {
-                    await UpdateStatsForUserasync(u, calculationService, userStatsRepository);
+                    await UpdateStatsForUserasync(u, calculationService, userStatsRepository, log);
                 }
                 catch (Exception ex)
                 {
@@ -32,10 +32,13 @@ namespace BingeBuddyNg.Functions
             }
         }
 
-        public static async Task UpdateStatsForUserasync(User user, ICalculationService calculationService, IUserStatsRepository userStatsRepository)
+        public static async Task UpdateStatsForUserasync(User user, ICalculationService calculationService, IUserStatsRepository userStatsRepository, ILogger log)
         {
             var stats = await calculationService.CalculateStatsForUserAsync(user);
-            await userStatsRepository.SaveStatisticsForUserAsync(new UserStatistics(user.Id, stats.CurrentAlcLevel, stats.CurrentNightDrinks));
+            var userStats = new UserStatistics(user.Id, stats.CurrentAlcLevel, stats.CurrentNightDrinks);
+            await userStatsRepository.SaveStatisticsForUserAsync(userStats);
+
+            log.LogDebug($"Successfully updated stats for user {user}: {userStats}");
         }
     }
 }

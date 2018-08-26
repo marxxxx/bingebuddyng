@@ -44,7 +44,7 @@ namespace BingeBuddyNg.Functions
 
                 // Immediately update Stats for current user
                 var currentUser = users.First(u => u.Id == activity.UserId);
-                await DrinkCalculatorFunction.UpdateStatsForUserasync(currentUser, calculationService, userStatsRepository);
+                await DrinkCalculatorFunction.UpdateStatsForUserasync(currentUser, calculationService, userStatsRepository, log);
 
                 // send out push
 
