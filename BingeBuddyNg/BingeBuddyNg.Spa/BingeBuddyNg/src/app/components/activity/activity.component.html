@@ -29,12 +29,14 @@
     <!-- Action Area -->
     <div fxLayout fxLayoutAlign="space-between center" class="actions">
       <div fxLayout>
-        <button mat-icon-button (click)="onLike()">
-          <span *ngIf="activity.likes && activity.likes.length > 0">{{activity.likes.length}}</span>
+        <button *ngIf="!isBusyLiking" [disabled]="isLikedByMe()" mat-icon-button (click)="onLike()">
+          <span class="count" *ngIf="activity.activity.likes && activity.activity.likes.length > 0">{{activity.activity.likes.length}}</span>
           <mat-icon>thumb_up</mat-icon></button>
-        <button mat-icon-button (click)="onCheers()">
-            <span *ngIf="activity.cheers && activity.cheers.length > 0">{{activity.cheers.length}}</span>
+        <mat-progress-spinner *ngIf="isBusyLiking" color="accent" mode="indeterminate" diameter="32"></mat-progress-spinner>
+        <button *ngIf="!isBusyCheering" [disabled]="isCheeredByMe()" mat-icon-button (click)="onCheers()">
+          <span class="count" *ngIf="activity.activity.cheers && activity.activity.cheers.length > 0">{{activity.activity.cheers.length}}</span>
           <img src="../../assets/img/beer-white-32.png"></button>
+        <mat-progress-spinner *ngIf="isBusyCheering" color="accent" mode="indeterminate" diameter="32"></mat-progress-spinner>
       </div>
 
       <button mat-icon-button><mat-icon>comment</mat-icon></button>

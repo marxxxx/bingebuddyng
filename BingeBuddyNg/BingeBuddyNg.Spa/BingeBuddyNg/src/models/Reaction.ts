@@ -1,4 +1,4 @@
-import { ReactionType } from "./ReactionType";
+import { ReactionType } from './ReactionType';
 
 export class Reaction {
     type: ReactionType;

@@ -11,7 +11,7 @@ namespace BingeBuddyNg.Functions
     public static class DrinkCalculatorFunction
     {
         [FunctionName("DrinkCalculatorFunction")]
-        public static async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo myTimer,
+        public static async Task Run([TimerTrigger("0 */5 * * * *")]TimerInfo myTimer,
             ILogger log)
         {
             // we stick with poor man's DI for now

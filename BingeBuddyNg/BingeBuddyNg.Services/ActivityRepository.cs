@@ -127,6 +127,9 @@ namespace BingeBuddyNg.Services
             
             // extend to other propertys if needed
             entity.Entity.LocationAddress = activity.LocationAddress;
+            entity.Entity.Likes = activity.Likes;
+            entity.Entity.Comments = activity.Comments;
+            entity.Entity.Cheers = activity.Cheers;
 
             TableOperation updateOperation = TableOperation.InsertOrReplace(entity);
             await table.ExecuteAsync(updateOperation);
