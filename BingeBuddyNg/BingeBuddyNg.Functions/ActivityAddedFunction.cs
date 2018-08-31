@@ -1,29 +1,30 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using BingeBuddyNg.Functions.DependencyInjection;
 using BingeBuddyNg.Services.Interfaces;
 using BingeBuddyNg.Services.Messages;
 using BingeBuddyNg.Services.Models;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Functions
 {
     public static class ActivityAddedFunction
     {
         [FunctionName("ActivityAddedFunction")]
-        public static async Task Run([QueueTrigger("activity-added", Connection = "AzureWebJobsStorage")]string message, 
-            [Inject]IUtilityService utilityService,
-            [Inject]IActivityRepository activityRepository,
-            [Inject]IUserRepository userRepository,
-            [Inject]INotificationService notificationService,
-            [Inject]ICalculationService calculationService,
-            [Inject]IUserStatsRepository userStatsRepository,
+        public static async Task Run([QueueTrigger("activity-added", Connection = "AzureWebJobsStorage")]string message,
             ILogger log)
         {
+            // we stick with poor man's DI for now
+            IUtilityService utilityService = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUtilityService>();
+            IActivityRepository activityRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IActivityRepository>();
+            IUserRepository userRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
+            ICalculationService calculationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<ICalculationService>();
+            IUserStatsRepository userStatsRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserStatsRepository>();
+            INotificationService notificationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<INotificationService>();
+
             var activityAddedMessage = JsonConvert.DeserializeObject<ActivityAddedMessage>(message);
             var activity = activityAddedMessage.AddedActivity;
 
@@ -52,20 +53,18 @@ namespace BingeBuddyNg.Functions
                     .Select(u => u.PushInfo).ToList();
 
                 string locationSnippet = null;
-                if(!string.IsNullOrEmpty(activity.LocationAddress))
+                if (!string.IsNullOrEmpty(activity.LocationAddress))
                 {
                     locationSnippet = $" in {activity.LocationAddress} ";
                 }
 
-                // TODO: Localize, configure icon
-                string iconUrl = "https://bingebuddystorage.z6.web.core.windows.net/favicon.ico";
-                var notificationMessage = new NotificationMessage(iconUrl, "BingeBuddy", 
+                // TODO: Localize
+                var notificationMessage = new NotificationMessage(Constants.NotificationIconUrl, "BingeBuddy",
                     $"{activityAddedMessage.AddedActivity.UserName} hat {activity.DrinkName}{locationSnippet} geschnappt!");
-#if !DEBUG
+
                 notificationService.SendMessage(otherUsersWithPushInfo, notificationMessage);
-#endif
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 log.LogError($"Failed to send push notification: [{ex}]");
             }

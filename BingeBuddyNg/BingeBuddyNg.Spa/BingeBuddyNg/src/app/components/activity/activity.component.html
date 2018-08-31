@@ -3,8 +3,12 @@
     <img class="user-profile-image" [src]="activity.activity.userProfileImageUrl">
     <span class="user-name">{{activity.activity.userName}}</span>
     <mat-chip-list class="stats" *ngIf="activity.userStats.currentNightDrinks + activity.userStats.currentAlcoholization > 0">
-      <mat-chip>{{activity.userStats.currentNightDrinks}} <mat-icon fxHide fxShow.gt-xs>local_drink</mat-icon></mat-chip>
-      <mat-chip>{{activity.userStats.currentAlcoholization}}<mat-icon fxHide fxShow.gt-xs>opacity</mat-icon></mat-chip>
+      <mat-chip>{{activity.userStats.currentNightDrinks}}
+        <mat-icon fxHide fxShow.gt-xs>local_drink</mat-icon>
+      </mat-chip>
+      <mat-chip>{{activity.userStats.currentAlcoholization}}
+        <mat-icon fxHide fxShow.gt-xs>opacity</mat-icon>
+      </mat-chip>
     </mat-chip-list>
 
   </mat-card-title>
@@ -18,6 +22,22 @@
     <div class="metadata" fxLayout fxLayoutAlign="space-between center">
       <span class="timestamp">{{activity.activity.timestamp | date:'dd.MM.yyyy HH:mm'}}</span>
       <span class="address"> {{activity.activity.locationAddress}}</span>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Action Area -->
+    <div fxLayout fxLayoutAlign="space-between center" class="actions">
+      <div fxLayout>
+        <button mat-icon-button (click)="onLike()">
+          <span *ngIf="activity.likes && activity.likes.length > 0">{{activity.likes.length}}</span>
+          <mat-icon>thumb_up</mat-icon></button>
+        <button mat-icon-button (click)="onCheers()">
+            <span *ngIf="activity.cheers && activity.cheers.length > 0">{{activity.cheers.length}}</span>
+          <img src="../../assets/img/beer-white-32.png"></button>
+      </div>
+
+      <button mat-icon-button><mat-icon>comment</mat-icon></button>
     </div>
   </mat-card-content>
 </mat-card>

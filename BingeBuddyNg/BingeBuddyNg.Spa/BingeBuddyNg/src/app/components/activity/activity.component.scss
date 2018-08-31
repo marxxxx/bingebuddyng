@@ -1,0 +1,28 @@
+mat-card {
+    margin: 5px;
+}
+
+.user-profile-image {
+    width: 48px;
+    height: 48px;
+}
+
+.stats {
+    margin-left: auto;
+}
+
+span.user-name {
+    margin-left: 10px;
+}
+
+.actions {
+    button:hover {
+        transform: scale(1.1);
+    }
+
+    margin-top: 25px;
+}
+
+mat-divider {
+    margin-top: 15px;
+}

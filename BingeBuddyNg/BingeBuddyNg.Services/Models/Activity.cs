@@ -24,6 +24,10 @@ namespace BingeBuddyNg.Services.Models
         public string CountryLongName { get; set; }
         public string CountryShortName { get; set; }
 
+        public List<Reaction> Likes { get; set; } = new List<Reaction>();
+        public List<Reaction> Cheers { get; set; } = new List<Reaction>();
+        public List<CommentReaction> Comments { get; set; } = new List<CommentReaction>();
+        
         public Activity()
         { }
 
@@ -85,6 +89,21 @@ namespace BingeBuddyNg.Services.Models
             };
 
             return activity;
+        }
+
+        public void AddComment(CommentReaction reaction)
+        {
+            this.Comments.Add(reaction);
+        }
+
+        public void AddLike(Reaction reaction)
+        {
+            this.Likes.Add(reaction);
+        }
+
+        public void AddCheers(Reaction reaction)
+        {
+            this.Cheers.Add(reaction);
         }
 
         public override string ToString()

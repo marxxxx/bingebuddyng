@@ -9,7 +9,7 @@ import { MatSidenav } from '@angular/material';
 @Component({
   selector: 'app-nav-shell',
   templateUrl: './nav-shell.component.html',
-  styleUrls: ['./nav-shell.component.css']
+  styleUrls: ['./nav-shell.component.scss']
 })
 export class NavShellComponent {
 

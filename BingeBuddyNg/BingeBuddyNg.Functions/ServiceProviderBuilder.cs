@@ -1,10 +1,8 @@
-﻿using BingeBuddyNg.Functions.DependencyInjection;
-using BingeBuddyNg.Services;
+﻿using BingeBuddyNg.Services;
 using BingeBuddyNg.Services.Calculation;
 using BingeBuddyNg.Services.Configuration;
 using BingeBuddyNg.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
 
 namespace BingeBuddyNg.Functions
@@ -12,9 +10,11 @@ namespace BingeBuddyNg.Functions
     /// <summary>
     /// Builds the dependency injection container and registers all services.
     /// </summary>
-    public class ServiceProviderBuilder : IServiceProviderBuilder
-    {        
-        public IServiceProvider BuildServiceProvider()
+    public static class ServiceProviderBuilder 
+    {
+        public static Lazy<IServiceProvider> Instance = new Lazy<IServiceProvider>(() => BuildServiceProvider(), false);
+
+        private static IServiceProvider BuildServiceProvider()
         {
             var services = new ServiceCollection();
 
@@ -32,7 +32,7 @@ namespace BingeBuddyNg.Functions
             services.AddScoped<ICalculationService, CalculationService>();
             services.AddScoped<IUserStatsRepository, UserStatsRepository>();
                                     
-            return services.BuildServiceProvider(true);
+            return services.BuildServiceProvider();
         }
     }
 }

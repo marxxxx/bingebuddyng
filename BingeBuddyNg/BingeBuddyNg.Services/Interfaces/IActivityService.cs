@@ -1,4 +1,5 @@
 ﻿using BingeBuddyNg.Services.DTO;
+using BingeBuddyNg.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,5 +14,7 @@ namespace BingeBuddyNg.Services.Interfaces
 
         Task AddMessageActivityAsync(AddMessageActivityDTO activity);
         Task AddDrinkActivityAsync(AddDrinkActivityDTO request);
+
+        Task AddReactionAsync(ReactionDTO reaction);
     }
 }

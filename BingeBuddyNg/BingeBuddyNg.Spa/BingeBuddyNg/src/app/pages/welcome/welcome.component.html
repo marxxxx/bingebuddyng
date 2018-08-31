@@ -1,10 +1,12 @@
 <div fxLayout="column" fxLayoutAlign="center center">
     <h1>{{'WelcomeMessage' | translate}}</h1>
 
-    <img src="../../assets/img/Beer_logo.png">
 
-    <p *ngIf="!auth.isAuthenticated()">
+    <img (click)="onLogin()" src="../../assets/img/Beer_logo.png">
+
+
+    <div *ngIf="!auth.isAuthenticated()">
         {{'GetStarted' | translate }}
-        <button  mat-raised-button color="primary" (click)="onLogin()">{{'Login' | translate}}</button>
-    </p>
+
+    </div>
 </div>

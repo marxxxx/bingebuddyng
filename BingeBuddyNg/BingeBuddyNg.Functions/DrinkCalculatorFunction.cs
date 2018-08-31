@@ -1,7 +1,7 @@
-using BingeBuddyNg.Functions.DependencyInjection;
 using BingeBuddyNg.Services.Interfaces;
 using BingeBuddyNg.Services.Models;
 using Microsoft.Azure.WebJobs;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -12,11 +12,13 @@ namespace BingeBuddyNg.Functions
     {
         [FunctionName("DrinkCalculatorFunction")]
         public static async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo myTimer,
-            [Inject]IUserRepository userRepository,
-            [Inject]ICalculationService calculationService,
-            [Inject]IUserStatsRepository userStatsRepository,
             ILogger log)
         {
+            // we stick with poor man's DI for now
+            IUserRepository userRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
+            ICalculationService calculationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<ICalculationService>();
+            IUserStatsRepository userStatsRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserStatsRepository>();
+
             var users = await userRepository.GetAllUsersAsync();
 
             foreach (var u in users)

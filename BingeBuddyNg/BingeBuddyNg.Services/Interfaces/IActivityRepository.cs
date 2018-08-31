@@ -11,7 +11,7 @@ namespace BingeBuddyNg.Services.Interfaces
     {
         Task<List<Activity>> GetActivitysAsync(GetActivityFilterArgs args);
         Task<List<Activity>> GetActivitysForUser(string userId, DateTime startTimeUtc, ActivityType activityType);
-        Task<Activity> GetActivityAsync(string userId, string id);
+        Task<Activity> GetActivityAsync(string id);
         Task<Activity> AddActivityAsync(Activity activity);
 
         Task UpdateActivityAsync(Activity activity);

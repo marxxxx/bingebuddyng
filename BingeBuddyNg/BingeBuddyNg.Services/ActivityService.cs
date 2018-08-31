@@ -94,6 +94,8 @@ namespace BingeBuddyNg.Services
             await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
         }
 
+       
+
         public async Task<List<ActivityStatsDTO>> GetActivitiesAsync()
         {
             var activities = await this.ActivityRepository.GetActivitysAsync(new GetActivityFilterArgs(false));
@@ -102,6 +104,16 @@ namespace BingeBuddyNg.Services
 
             var result = activities.Select(a => new ActivityStatsDTO(a, userStats.First(u => u.UserId == a.UserId))).ToList();
             return result;
+        }
+
+        public async Task AddReactionAsync(ReactionDTO reaction)
+        {
+            var userId = this.IdentityService.GetCurrentUserId();
+            
+            // add to queue
+            var queueClient = this.StorageAccessService.GetQueueReference(Constants.ReactionAddedQueueName);
+            var message = new ReactionAddedMessage(reaction.ActivityId, reaction.Type, userId, reaction.Comment);
+            await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
         }
     }
 }

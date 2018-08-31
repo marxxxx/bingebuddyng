@@ -72,5 +72,11 @@ namespace BingeBuddyNg.Api.Controllers
             return Ok();
         }
 
+        [HttpPost("[action]")]
+        public async Task AddReaction([FromBody]ReactionDTO reaction)
+        {
+            await this.ActivityService.AddReactionAsync(reaction);
+        }
+
     }
 }

@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { AddMessageActivityDTO } from '../../models/AddMessageActivityDTO';
+import { ReactionDTO } from 'src/models/ReactionDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -44,4 +45,8 @@ export class ActivityService {
     return this.http.post(url, activity);
   }
 
+  addReaction(reaction: ReactionDTO) {
+    const url = `${this.baseUrl}/AddReaction`;
+    return this.http.post(url, reaction);
+  }
 }

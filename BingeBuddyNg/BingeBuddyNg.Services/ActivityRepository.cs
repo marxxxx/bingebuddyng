@@ -43,8 +43,17 @@ namespace BingeBuddyNg.Services
 
             var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityTableName, whereClause);
 
-            var activitys = result.Select(r => r.Entity).OrderByDescending(a => a.Timestamp).ToList();
-            return activitys;
+            List<Activity> resultActivitys = GetActivitiesWithId(result).OrderByDescending(a => a.Timestamp).ToList();
+            return resultActivitys;
+        }
+
+        private List<Activity> GetActivitiesWithId(IEnumerable<ActivityTableEntity> result)
+        {
+            var activitys = result.Select(r => new { r.RowKey, r.Entity }).ToList();
+            activitys.ForEach(a => a.Entity.Id = a.RowKey);
+
+            var resultActivitys = activitys.Select(a => a.Entity).ToList();
+            return resultActivitys;
         }
 
         public async Task<List<Activity>> GetActivitysForUser(string userId, DateTime startTimeUtc, ActivityType activityType)
@@ -61,7 +70,7 @@ namespace BingeBuddyNg.Services
 
             var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityPerUserTableName, whereClause);
 
-            var activitys = result.Select(r => r.Entity).OrderBy(a=>a.Timestamp).ToList();
+            var activitys = GetActivitiesWithId(result).OrderBy(a=>a.Timestamp).ToList();
             return activitys;
         }
 
@@ -88,7 +97,7 @@ namespace BingeBuddyNg.Services
             return activity;
         }
 
-        public async Task<Activity> GetActivityAsync(string userId, string id)
+        public async Task<Activity> GetActivityAsync(string id)
         {
             ActivityTableEntity entity = await GetActivityEntity(id);
 
@@ -106,6 +115,7 @@ namespace BingeBuddyNg.Services
             var result = await table.ExecuteAsync(retrieveOperation);
 
             var entity = (ActivityTableEntity)result.Result;
+            entity.Entity.Id = id;
             return entity;
         }
 
