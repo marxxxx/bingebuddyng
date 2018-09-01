@@ -12,6 +12,8 @@ import * as moment from 'moment';
 })
 export class StatsComponent implements OnInit, OnDestroy {
 
+  isBusy = false;
+
   // lineChart
   public lineChartData: Array<any> = [
     { data: [], label: '' }
@@ -45,12 +47,12 @@ export class StatsComponent implements OnInit, OnDestroy {
   };
   public lineChartColors: Array<any> = [
     { // grey
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
+      backgroundColor: 'rgba(236,132,39,0.2)',
+      borderColor: 'rgba(236,132,39,1)',
+      pointBackgroundColor: 'rgba(236,132,39,1)',
       pointBorderColor: '#fff',
       pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+      pointHoverBorderColor: 'rgba(236,132,39,0.8)'
     }
   ];
   public lineChartLegend = true;
@@ -73,9 +75,11 @@ export class StatsComponent implements OnInit, OnDestroy {
 
   load(): void {
 
+    this.isBusy = true;
     const drinksLabel = this.translateService.instant('Drinks');
 
     this.activityService.getActivityAggregation().subscribe(a => {
+      this.isBusy = false;
       a.forEach(l => this.lineChartLabels.push(moment(l.day).format('DD.MM.YYYY')));
 
       this.lineChartData = [{
@@ -83,6 +87,9 @@ export class StatsComponent implements OnInit, OnDestroy {
         label: drinksLabel
       }
       ];
+    }, e => {
+      console.error(e);
+      this.isBusy = false;
     });
 
   }

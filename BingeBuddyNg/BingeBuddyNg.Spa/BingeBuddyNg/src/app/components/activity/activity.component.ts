@@ -49,6 +49,10 @@ export class ActivityComponent implements OnInit {
     return this.activity.activity.activityType === ActivityType.Message;
   }
 
+  isImageActivity(): boolean {
+    return this.activity.activity.activityType === ActivityType.Image;
+  }
+
   getDrinkMessage(): string {
     if (!this.activity.activity.drinkName) {
       return this.activity.activity.message;

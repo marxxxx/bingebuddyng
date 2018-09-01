@@ -1,4 +1,4 @@
 <app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
-<agm-map #AgmMap *ngIf="location" [latitude]="location.latitude" [longitude]="location.longitude">
+<agm-map #AgmMap [latitude]="location?.latitude" [longitude]="location?.longitude">
   <agm-marker *ngFor="let a of activitys" [title]="formatLabel(a)" [latitude]="a.location.latitude" [longitude]="a.location.longitude"></agm-marker>
 </agm-map>

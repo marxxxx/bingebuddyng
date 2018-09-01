@@ -25,13 +25,15 @@ import 'hammerjs';
 import { ChartsModule } from 'ng2-charts';
 import { UserService } from './services/user.service';
 import { BingemapComponent } from './pages/bingemap/bingemap.component';
-import { AgmCoreModule} from '@agm/core';
+import { AgmCoreModule } from '@agm/core';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { EcoFabSpeedDialModule } from '@ecodev/fab-speed-dial';
 import { ActivityComponent } from './components/activity/activity.component';
 import { FormsModule } from '@angular/forms';
 import { ProgressSpinnerComponent } from './components/progress-spinner/progress-spinner.component';
+import { FileUploadModule } from 'ng2-file-upload';
+import { NotificationService } from './services/notification.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -73,9 +75,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     LayoutModule,
     FlexLayoutModule,
     AppMaterialModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    FileUploadModule
   ],
-  providers: [DataService, AuthService, UserService, ActivityService,
+  providers: [DataService, AuthService, UserService, ActivityService, NotificationService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthHttpInterceptor,

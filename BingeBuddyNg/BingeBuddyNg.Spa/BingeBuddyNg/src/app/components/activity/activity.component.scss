@@ -36,3 +36,17 @@ mat-divider {
         width: 100%;
     }
 }
+
+.image {
+    display: block;
+
+    img {
+        position: relative;
+        max-height: 400px;
+        max-width: 100%;
+    }
+}
+
+mat-chip-list {
+    margin-left: 5px;
+}

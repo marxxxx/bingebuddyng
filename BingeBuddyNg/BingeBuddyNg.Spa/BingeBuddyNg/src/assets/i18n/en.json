@@ -14,5 +14,6 @@
     "PostMessage": "Post message",
     "IJustHadA": "I just had a {{value}}! Cheers!",
     "UpdateAvailableMessage": "Update available! Install now?",
-    "Comment": "Comment"
+    "Comment": "Comment",
+    "PostImage": "Post image"
 }

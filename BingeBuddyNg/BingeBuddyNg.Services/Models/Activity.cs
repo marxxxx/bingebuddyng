@@ -54,7 +54,7 @@ namespace BingeBuddyNg.Services.Models
            DrinkType drinkType, string drinkId, string drinkName,
            double drinkAlcPrc, double drinkVolume)
         {
-            var activity = new Activity( Models.ActivityType.Drink, activityTimestamp,
+            var activity = new Activity( ActivityType.Drink, activityTimestamp,
                 location, userId, userName, userProfileImageUrl)
             {
                 DrinkType = drinkType,
@@ -70,7 +70,7 @@ namespace BingeBuddyNg.Services.Models
         public static Activity CreateMessageActivity(DateTime activityTimestamp,
            Location location, string userId, string userName, string userProfileImageUrl, string message)
         {
-            var activity = new Activity(BingeBuddyNg.Services.Models.ActivityType.Message, activityTimestamp,
+            var activity = new Activity(ActivityType.Message, activityTimestamp,
                 location, userId, userName, userProfileImageUrl)
             {
                 Message = message
@@ -82,7 +82,7 @@ namespace BingeBuddyNg.Services.Models
         public static Activity CreateImageActivity(DateTime activityTimestamp,
                     Location location, string userId, string userName, string userProfileImageUrl, string imageUrl)
         {
-            var activity = new Activity(BingeBuddyNg.Services.Models.ActivityType.Drink, activityTimestamp,
+            var activity = new Activity(ActivityType.Image, activityTimestamp,
                 location, userId, userName, userProfileImageUrl)
             {
                 ImageUrl = imageUrl

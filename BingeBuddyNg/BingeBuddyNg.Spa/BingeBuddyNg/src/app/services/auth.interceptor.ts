@@ -36,7 +36,7 @@ export class AuthHttpInterceptor implements HttpInterceptor {
                 if (err.status === 401) {
                     // redirect to the login route
                     console.warn('AuthHttpInterceptor: request is unauthorized - triggering token refresh!');
-                    // this.authService.handleTokenRefresh();
+                    this.authService.handleTokenRefresh();
                 }
             }
         }));

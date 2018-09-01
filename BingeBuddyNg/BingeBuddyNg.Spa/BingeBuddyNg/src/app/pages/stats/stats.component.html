@@ -1,4 +1,5 @@
-<div fxLayout>
+<app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
+<div fxLayout fxFlex>
   <div fxFlex>
     <div style="display: block">
       <canvas baseChart [datasets]="lineChartData " [labels]="lineChartLabels " [options]="lineChartOptions " [colors]="lineChartColors "

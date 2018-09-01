@@ -9,6 +9,7 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { SwPush, SwUpdate } from '@angular/service-worker';
 import { PushInfo } from '../models/PushInfo';
+import { NotificationService } from './services/notification.service';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +23,7 @@ export class AppComponent implements OnInit {
   constructor(public auth: AuthService, private translate: TranslateService, router: Router,
     private userService: UserService,
     private snackbar: MatSnackBar,
+    private notification: NotificationService,
     private pushService: SwPush,
     private updateService: SwUpdate) {
     auth.handleAuthentication();
@@ -62,12 +64,10 @@ export class AppComponent implements OnInit {
     });
 
     this.pushService.messages.subscribe((m: any) => {
-      console.log(m);
       if (m.notification && m.notification.body) {
         this.snackbar.open(m.notification.body, 'OK');
+        this.notification.raiseActivityReceived();
       }
-      // this.dataService.setBeerRequestApprovalResponse(m.notification.result);
-      console.log(m);
     });
   }
 

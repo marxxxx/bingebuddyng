@@ -52,15 +52,8 @@ namespace BingeBuddyNg.Functions
                 var otherUsersWithPushInfo = users.Where(u => u.PushInfo != null && u.Id != activity.UserId)
                     .Select(u => u.PushInfo).ToList();
 
-                string locationSnippet = null;
-                if (!string.IsNullOrEmpty(activity.LocationAddress))
-                {
-                    locationSnippet = $" in {activity.LocationAddress} ";
-                }
-
                 // TODO: Localize
-                var notificationMessage = new NotificationMessage(Constants.NotificationIconUrl, "BingeBuddy",
-                    $"{activityAddedMessage.AddedActivity.UserName} hat {activity.DrinkName}{locationSnippet} geschnappt!");
+                var notificationMessage = GetNotificationMessage(activity);
 
                 notificationService.SendMessage(otherUsersWithPushInfo, notificationMessage);
             }
@@ -68,6 +61,35 @@ namespace BingeBuddyNg.Functions
             {
                 log.LogError($"Failed to send push notification: [{ex}]");
             }
+
+        }
+
+        private static NotificationMessage GetNotificationMessage(Activity activity)
+        {
+            string locationSnippet = null;
+            if (!string.IsNullOrEmpty(activity.LocationAddress))
+            {
+                locationSnippet = $" in {activity.LocationAddress} ";
+            }
+
+            string activityString = null;
+            switch (activity.ActivityType)
+            {
+                case ActivityType.Drink:
+                    activityString = $"{activity.DrinkName}{locationSnippet} geschnappt!";
+                    break;
+                case ActivityType.Image:
+                    activityString = $"ein Foto hochgeladen!";
+                    break;
+                case ActivityType.Message:
+                    activityString = $"{activity.Message} gesagt!";
+                    break;
+            }
+
+            var notificationMessage = new NotificationMessage(Constants.NotificationIconUrl, 
+                Constants.NotificationIconUrl, Constants.ApplicationUrl, Constants.ApplicationName,
+                    $"{activity.UserName} hat {activityString}");
+            return notificationMessage;
 
         }
     }

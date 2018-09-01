@@ -1,9 +1,11 @@
 ﻿using BingeBuddyNg.Services.Configuration;
 using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -66,6 +68,21 @@ namespace BingeBuddyNg.Services
             return queue;
         }
 
+        public async Task<string> SaveFileInBlobStorage(string containerName, string path, string fileName, Stream file)
+        {
+            var account = GetStorageAccount();
+            var blobClient =  account.CreateCloudBlobClient();
+            
+            var container = blobClient.GetContainerReference(containerName);
+
+            string fullPath = $"{path}/{Guid.NewGuid()}_{fileName}";
+            var blob = container.GetBlockBlobReference(fullPath);
+            await blob.UploadFromStreamAsync(file);
+
+            var fileUrl = blob.Uri.AbsoluteUri;
+
+            return fileUrl;
+        }
 
         private CloudStorageAccount GetStorageAccount()
         {

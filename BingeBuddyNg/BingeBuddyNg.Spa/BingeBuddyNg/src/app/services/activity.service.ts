@@ -9,6 +9,7 @@ import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { AddMessageActivityDTO } from '../../models/AddMessageActivityDTO';
 import { ReactionDTO } from 'src/models/ReactionDTO';
+import { LocationDTO } from 'src/models/LocationDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -48,5 +49,16 @@ export class ActivityService {
   addReaction(reaction: ReactionDTO) {
     const url = `${this.baseUrl}/AddReaction`;
     return this.http.post(url, reaction);
+  }
+
+  getAddImageActivityUrl(loc: LocationDTO): string {
+    let url = `${this.baseUrl}/AddImageActivity/`;
+    if (loc) {
+      url += `${loc.latitude}/${loc.longitude}`;
+    } else {
+      url += '//';
+    }
+
+    return url;
   }
 }

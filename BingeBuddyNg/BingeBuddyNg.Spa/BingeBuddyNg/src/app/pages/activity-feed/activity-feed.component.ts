@@ -1,40 +1,51 @@
 import { DrinkType } from './../../../models/DrinkType';
 import { AddDrinkActivityDTO } from './../../../models/AddDrinkActivityDTO';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AddActivityBaseDTO } from './../../../models/AddActivityBaseDTO';
 import { TranslateService } from '@ngx-translate/core';
 import { LocationDTO } from '../../../models/LocationDTO';
 import { ActivityStatsDTO } from '../../../models/ActivityStatsDTO';
 import { ActivityService } from '../../services/activity.service';
 import { DataService } from '../../services/data.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { AddMessageActivityDTO } from '../../../models/AddMessageActivityDTO';
 import { UtilService } from '../../services/util.service';
 import { MatSnackBar } from '@angular/material';
 import { ShellInteractionService } from '../../services/shell-interaction.service';
+import { FileUploader, FileItem, FileUploaderOptions, ParsedResponseHeaders } from 'ng2-file-upload';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-activity-feed',
   templateUrl: './activity-feed.component.html',
   styleUrls: ['./activity-feed.component.scss']
 })
-export class ActivityFeedComponent implements OnInit {
+export class ActivityFeedComponent implements OnInit, OnDestroy {
   activitys: ActivityStatsDTO[] = [];
+  subscriptions: Subscription[] = [];
   isBusy = false;
   isBusyAdding = false;
   location: LocationDTO;
   locationIconId = 'location';
+  uploader: FileUploader;
 
   constructor(private activityService: ActivityService,
     private util: UtilService,
     private shellInteraction: ShellInteractionService,
+    private auth: AuthService,
+    private notification: NotificationService,
     private snackBar: MatSnackBar,
     private transate: TranslateService) { }
 
   ngOnInit() {
+
+    this.initFileUploader();
+
     this.load();
 
+    const sub = this.notification.activityReceived$.subscribe( _ => this.load());
+    this.subscriptions.push(sub);
 
     this.shellInteraction.addShellIcon({ id: this.locationIconId, name: 'not_listed_location', tooltip: 'QueryingLocation' });
 
@@ -45,6 +56,17 @@ export class ActivityFeedComponent implements OnInit {
       // this.snackBar.open(this.transate.instant('NoGeolocationMessage'), 'OK', { duration: 3000 });
       this.shellInteraction.addShellIcon({ id: this.locationIconId, name: 'location_off', tooltip: 'NoGeolocationMessage' });
     });
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  initFileUploader(): void {
+    this.uploader = new FileUploader(this.getOptions());
+
+    this.uploader.onAfterAddingFile = this.onAfterAddingFile.bind(this);
+    this.uploader.onCompleteAll = this.onCompleteAll.bind(this);
   }
 
   load() {
@@ -150,5 +172,39 @@ export class ActivityFeedComponent implements OnInit {
     }, e => {
       this.isBusyAdding = false;
     });
+  }
+
+
+  onAfterAddingFile(fileItem: FileItem) {
+
+    // update options to reflect deviceId in upload url
+    this.uploader.setOptions(this.getOptions());
+
+    // upload
+    this.isBusyAdding = true;
+    this.uploader.uploadAll();
+  }
+
+  getOptions(): FileUploaderOptions {
+
+    const options = {
+      url: this.activityService.getAddImageActivityUrl(this.location),
+      authTokenHeader: 'Authorization',
+      authToken: 'Bearer ' + this.auth.getAccessToken()
+    };
+
+    return options;
+  }
+
+  // onCompleteItem(item: FileItem, response: string, status: number, headers: ParsedResponseHeaders) {
+  //   console.log('upload completed');
+  //   console.log(response);
+  //   this.isBusyAdding = false;
+  // }
+
+  onCompleteAll() {
+    this.uploader.clearQueue();
+    this.isBusyAdding = false;
+    this.load();
   }
 }

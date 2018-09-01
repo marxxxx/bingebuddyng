@@ -9,6 +9,10 @@ export class AuthService {
 
   private userProfile: any;
 
+  readonly idTokenStorageKey = 'id_token';
+  readonly tokenStorageKey = 'token';
+  readonly expiresAtStorageKey = 'expires_at';
+
 
   auth0 = new auth0.WebAuth({
     clientID: '97ShzYXlNSZRiRgoiTR5Ui1JyDs8KxcY',
@@ -114,5 +118,30 @@ export class AuthService {
     // Access Token's expiry time
     const expiresAt = JSON.parse(localStorage.getItem('expires_at') || '{}');
     return new Date().getTime() < expiresAt;
+  }
+
+
+  resetAuthInformation() {
+    localStorage.removeItem(this.idTokenStorageKey);
+    localStorage.removeItem(this.tokenStorageKey);
+    localStorage.removeItem(this.expiresAtStorageKey);
+  }
+
+  handleTokenRefresh(): void {
+
+    if (this.getAccessToken() != null) {
+      console.log('AuthService: Handling token refresh');
+
+      // reset access token
+      this.resetAuthInformation();
+
+      // raise event
+      this.isLoggedIn$.next(false);
+
+      // move to login
+      this.login();
+    } else {
+      console.warn('AuthService: Token expiration handling in progress');
+    }
   }
 }

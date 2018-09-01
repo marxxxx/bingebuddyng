@@ -51,7 +51,8 @@ namespace BingeBuddyNg.Functions
             if (originUser.PushInfo != null)
             {
                 message = $"{reactingUser.Name} {message}";
-                var notification = new Services.Models.NotificationMessage(reactingUser.ProfileImageUrl, "Binge Buddy", message);
+                var notification = new Services.Models.NotificationMessage(Constants.NotificationIconUrl, 
+                    reactingUser.ProfileImageUrl, Constants.ApplicationUrl, Constants.ApplicationName, message);
                 notificationService.SendMessage(new[] { originUser.PushInfo }, notification);
             }
 

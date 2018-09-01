@@ -2,6 +2,7 @@
 using BingeBuddyNg.Services.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,5 +17,6 @@ namespace BingeBuddyNg.Services.Interfaces
         Task AddDrinkActivityAsync(AddDrinkActivityDTO request);
 
         Task AddReactionAsync(ReactionDTO reaction);
+        Task AddImageActivityAsync(Stream stream, string fileName, Location location);
     }
 }

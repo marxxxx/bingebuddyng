@@ -7,7 +7,7 @@ import { UtilService } from '../../services/util.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AgmMap, LatLngBounds, LatLng, AgmMarker } from '@agm/core';
 import * as moment from 'moment';
-import {} from 'googlemaps';
+import { } from 'googlemaps';
 
 @Component({
   selector: 'app-bingemap',
@@ -29,10 +29,11 @@ export class BingemapComponent implements OnInit {
 
     this.util.getLocation().then(l => {
       this.location = l;
-
+    }).catch(e => {
+      console.error('no location available.');
     });
 
-    this.route.params.subscribe( p => {
+    this.route.params.subscribe(p => {
       this.load();
     });
   }

@@ -1,0 +1,80 @@
+@import '../node_modules/@angular/material/theming';
+
+// Include non-theme styles for core.
+@include mat-core();
+
+
+/* For use in src/lib/core/theming/_palette.scss */
+$mat-bingebuddyprimary: (
+    50 : #fef5ea,
+    100 : #fce7cb,
+    200 : #fad7a8,
+    300 : #f7c685,
+    400 : #f6ba6b,
+    500 : #f4ae51,
+    600 : #f3a74a,
+    700 : #f19d40,
+    800 : #ef9437,
+    900 : #ec8427,
+    A100 : #ffffff,
+    A200 : #fff9f5,
+    A400 : #ffddc2,
+    A700 : #ffcfa8,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #ffffff,
+        300 : #000000,
+        400 : #000000,
+        500 : #ffffff,
+        600 : #000000,
+        700 : #000000,
+        800 : #000000,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+$mat-bingebuddyaccent: (
+    50 : #e0e0e0,
+    100 : #b3b3b3,
+    200 : #808080,
+    300 : #4d4d4d,
+    400 : #262626,
+    500 : #000000,
+    600 : #000000,
+    700 : #000000,
+    800 : #000000,
+    900 : #000000,
+    A100 : #a6a6a6,
+    A200 : #8c8c8c,
+    A400 : #737373,
+    A700 : #666666,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #ffffff,
+        400 : #ffffff,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #ffffff,
+        A700 : #ffffff,
+    )
+);
+
+// Define a theme.
+$custom-app-primary: mat-palette($mat-bingebuddyprimary, 900);
+$custom-app-accent:  mat-palette($mat-bingebuddyaccent, 500, 600, 700);
+$theme: mat-dark-theme($custom-app-primary, $custom-app-accent);
+
+// Include all theme styles for the components.
+@include angular-material-theme($theme);

@@ -5,6 +5,7 @@ using BingeBuddyNg.Services.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,6 +58,21 @@ namespace BingeBuddyNg.Services
             await AddToActivityAddedQueueAsync(savedActivity);
         }
 
+        public async Task AddImageActivityAsync(Stream stream, string fileName, Location location)
+        {
+            var userId = this.IdentityService.GetCurrentUserId();
+            var user = await this.UserRepository.GetUserAsync(userId);
+
+            // store file in blob storage
+            string imageUrl = await StorageAccessService.SaveFileInBlobStorage("img", "activities", fileName, stream);
+            var activity = Activity.CreateImageActivity(DateTime.UtcNow, location, userId, user.Name, user.ProfileImageUrl, imageUrl);
+
+            var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
+
+            await AddToActivityAddedQueueAsync(savedActivity);
+        }
+
+
         public async Task<List<ActivityAggregationDTO>> GetDrinkActivityAggregationAsync()
         {
             string userId = this.IdentityService.GetCurrentUserId();
@@ -85,8 +101,7 @@ namespace BingeBuddyNg.Services
 
             return sortedResult;
         }
-
-
+        
         private async Task AddToActivityAddedQueueAsync(Activity savedActivity)
         {
             var queueClient = this.StorageAccessService.GetQueueReference(Constants.ActivityAddedQueueName);
@@ -115,5 +130,6 @@ namespace BingeBuddyNg.Services
             var message = new ReactionAddedMessage(reaction.ActivityId, reaction.Type, userId, reaction.Comment);
             await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
         }
+
     }
 }

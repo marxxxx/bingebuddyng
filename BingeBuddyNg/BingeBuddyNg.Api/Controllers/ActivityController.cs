@@ -6,6 +6,7 @@ using BingeBuddyNg.Services.DTO;
 using BingeBuddyNg.Services.Interfaces;
 using BingeBuddyNg.Services.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BingeBuddyNg.Api.Controllers
@@ -68,6 +69,29 @@ namespace BingeBuddyNg.Api.Controllers
             }
 
             await this.ActivityService.AddDrinkActivityAsync(request);
+
+            return Ok();
+        }
+
+        [HttpPost("[action]/{lat}/{lng}")]
+        public async Task<ActionResult> AddImageActivity(IFormFile file, double? lat, double? lng)
+        {
+            if(file == null)
+            {
+                return BadRequest();
+            }
+
+            Location location = null;
+
+            if(lat.GetValueOrDefault() + lng.GetValueOrDefault() > 0)
+            {
+                location = new Location(lat.Value, lng.Value);
+            }
+
+            using (var stream = file.OpenReadStream())
+            {
+                await this.ActivityService.AddImageActivityAsync(stream, file.FileName, location);
+            }
 
             return Ok();
         }
