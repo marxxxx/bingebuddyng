@@ -95,6 +95,8 @@ export class ActivityComponent implements OnInit {
       this.isBusyCommenting = false;
       const addedComment = this.createCommentReaction(this.comment);
       this.activity.activity.comments.push(addedComment);
+      this.comment = null;
+      this.isCommentVisible = false;
     }, e => {
       this.isBusyCommenting = false;
       console.error(e);
