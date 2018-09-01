@@ -66,22 +66,8 @@ namespace BingeBuddyNg.Api
 
             services.AddHttpClient();
 
-            // Add Configuration
-            string storageConnString = Configuration.GetConnectionString("Storage");
-            string googleApiKey = Configuration.GetValue<string>("Credentials:GoogleApiKey");
-            services.AddSingleton(new AppConfiguration(storageConnString, googleApiKey));
-
             // Add Application Services
-            services.AddScoped<StorageAccessService>();
-            services.AddScoped<IIdentityService, IdentityService>();
-            services.AddScoped<IActivityRepository, ActivityRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IActivityService, ActivityService>();
-            services.AddScoped<INotificationService, NotificationService>();
-            services.AddScoped<IUserStatsRepository, UserStatsRepository>();
-
-            
-            
+            services.AddApplicationServices(this.Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,4 +1,5 @@
-﻿using BingeBuddyNg.Services.Interfaces;
+﻿using BingeBuddyNg.Services.Configuration;
+using BingeBuddyNg.Services.Interfaces;
 using BingeBuddyNg.Services.Models;
 using Newtonsoft.Json;
 using System;
@@ -11,14 +12,18 @@ namespace BingeBuddyNg.Services
 {
     public class NotificationService : INotificationService
     {
-        private const string PushPublicKey = "BP7M6mvrmwidRr7II8ewUIRSg8n7_mKAlWagRziRRluXnMc_d_rPUoVWGHb79YexnD0olGIFe_xackYqe1fmoxo";
-        private const string PushPrivateKey = "1NKizDYbqdvxaN_su5xvcC3GipJz65hD3UOmYGDFrRw";
+        private AppConfiguration configuration;
 
+        public NotificationService(AppConfiguration configuration)
+        {
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        }
 
         public void SendMessage(IEnumerable<PushInfo> receivers, NotificationMessage message)
         {
             var webPushClient = new WebPushClient();
-            var vapidDetails = new VapidDetails("mailto:brewmaster@bingebuddyng.com", PushPublicKey, PushPrivateKey);
+            var vapidDetails = new VapidDetails("mailto:brewmaster@bingebuddyng.com", 
+                configuration.WebPushPublicKey, configuration.WebPushPrivateKey);
 
             var pushMessage = new WebPushMessage(message);            
 
@@ -27,8 +32,6 @@ namespace BingeBuddyNg.Services
                 webPushClient.SendNotification(new PushSubscription(pushInfo.SubscriptionEndpoint, pushInfo.p256dh, pushInfo.Auth), 
                     JsonConvert.SerializeObject(pushMessage), vapidDetails);
             }
-
-
         }
     }
 }

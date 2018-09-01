@@ -20,10 +20,12 @@ namespace BingeBuddyNg.Functions
 
             string storageConnectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage", EnvironmentVariableTarget.Process);
             string googleApiKey = Environment.GetEnvironmentVariable("GoogleApiKey", EnvironmentVariableTarget.Process);
+            string webPushPublicKey = Environment.GetEnvironmentVariable("WebPushPublicKey", EnvironmentVariableTarget.Process);
+            string webPushPrivateKey = Environment.GetEnvironmentVariable("WebPushPrivateKey", EnvironmentVariableTarget.Process);
 
             services.AddHttpClient();
 
-            services.AddSingleton<AppConfiguration>(new AppConfiguration(storageConnectionString, googleApiKey));
+            services.AddSingleton(new AppConfiguration(storageConnectionString, googleApiKey, webPushPublicKey, webPushPrivateKey));
             services.AddScoped<StorageAccessService>();
             services.AddScoped<IActivityRepository, ActivityRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
