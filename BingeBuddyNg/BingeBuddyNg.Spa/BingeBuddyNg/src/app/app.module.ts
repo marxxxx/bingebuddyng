@@ -30,6 +30,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { EcoFabSpeedDialModule } from '@ecodev/fab-speed-dial';
 import { ActivityComponent } from './components/activity/activity.component';
+import { FormsModule } from '@angular/forms';
+import { ProgressSpinnerComponent } from './components/progress-spinner/progress-spinner.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -47,10 +49,12 @@ export function HttpLoaderFactory(http: HttpClient) {
     UserInfoComponent,
     CallbackComponent,
     BingemapComponent,
-    ActivityComponent
+    ActivityComponent,
+    ProgressSpinnerComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     HttpClientModule,
     ChartsModule,
     EcoFabSpeedDialModule,

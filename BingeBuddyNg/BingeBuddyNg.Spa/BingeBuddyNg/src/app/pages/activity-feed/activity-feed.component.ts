@@ -17,7 +17,7 @@ import { ShellInteractionService } from '../../services/shell-interaction.servic
 @Component({
   selector: 'app-activity-feed',
   templateUrl: './activity-feed.component.html',
-  styleUrls: ['./activity-feed.component.css']
+  styleUrls: ['./activity-feed.component.scss']
 })
 export class ActivityFeedComponent implements OnInit {
   activitys: ActivityStatsDTO[] = [];

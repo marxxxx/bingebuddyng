@@ -29,17 +29,50 @@
     <!-- Action Area -->
     <div fxLayout fxLayoutAlign="space-between center" class="actions">
       <div fxLayout>
+        <!-- Like -->
         <button *ngIf="!isBusyLiking" [disabled]="isLikedByMe()" mat-icon-button (click)="onLike()">
-          <span class="count" *ngIf="activity.activity.likes && activity.activity.likes.length > 0">{{activity.activity.likes.length}}</span>
           <mat-icon>thumb_up</mat-icon></button>
+        <span class="count" *ngIf="activity.activity.likes && activity.activity.likes.length > 0">{{activity.activity.likes.length}}</span>
         <mat-progress-spinner *ngIf="isBusyLiking" color="accent" mode="indeterminate" diameter="32"></mat-progress-spinner>
+
+        <!-- Cheers -->
         <button *ngIf="!isBusyCheering" [disabled]="isCheeredByMe()" mat-icon-button (click)="onCheers()">
-          <span class="count" *ngIf="activity.activity.cheers && activity.activity.cheers.length > 0">{{activity.activity.cheers.length}}</span>
           <img src="../../assets/img/beer-white-32.png"></button>
+        <span class="count" *ngIf="activity.activity.cheers && activity.activity.cheers.length > 0">{{activity.activity.cheers.length}}</span>
         <mat-progress-spinner *ngIf="isBusyCheering" color="accent" mode="indeterminate" diameter="32"></mat-progress-spinner>
       </div>
 
-      <button mat-icon-button><mat-icon>comment</mat-icon></button>
+      <div>
+        <button mat-icon-button (click)="isCommentVisible = !isCommentVisible">
+          <mat-icon *ngIf="!isCommentVisible">comment</mat-icon>
+          <mat-icon *ngIf="isCommentVisible">close</mat-icon>
+        </button>
+        <span class="count" *ngIf="activity.activity.comments && activity.activity.comments.length > 0">{{activity.activity.comments.length}}</span>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Comments -->
+    <div class="comments">
+      <div fxLayout fxLayoutAlign="space-between center" *ngIf="isCommentVisible">
+        <mat-form-field>
+          <input type="text" autofocus matInput placeholder="{{'Comment' | translate}}" [(ngModel)]="comment" [disabled]="isBusyCommenting">
+        </mat-form-field>
+        <button mat-icon-button *ngIf="!isBusyCommenting" (click)="onComment()"><mat-icon>send</mat-icon></button>
+        <mat-progress-spinner *ngIf="isBusyCommenting" color="accent" mode="indeterminate" diameter="32"></mat-progress-spinner>
+      </div>
+
+      <mat-list>
+        <mat-list-item *ngFor="let c of activity.activity.comments">
+          <img matListAvatar [src]="c.userProfileImageUrl">
+          <h3 matLine> {{c.userName}} </h3>
+          <p matLine fxLayout fxLayoutAlign="space-between center" fxLayout.lt-sm="column" fxLayoutAlign.lt-sm="start start">
+            <span> {{c.comment}} </span>
+            <span> {{c.timestamp | date:'dd.MM.yyyy HH:mm'}} </span>
+          </p>
+        </mat-list-item>
+      </mat-list>
     </div>
   </mat-card-content>
 </mat-card>

@@ -13,6 +13,7 @@
     "Anti": "Antialkoholisch",
     "PostMessage": "Nachricht posten",
     "IJustHadA": "Ich habe gerade ein {{value}} getrunken! Prost!",
-    "UpdateAvailableMessage": "Update verfügbar! Jetzt installieren?"
+    "UpdateAvailableMessage": "Update verfügbar! Jetzt installieren?",
+    "Comment": "Kommentar"
 
 }

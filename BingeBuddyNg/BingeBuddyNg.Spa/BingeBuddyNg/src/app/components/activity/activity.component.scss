@@ -15,12 +15,11 @@ span.user-name {
     margin-left: 10px;
 }
 
+button:hover {
+    transform: scale(1.1);
+}
 .actions {
-    button:hover {
-        transform: scale(1.1);
-    }
-
-    margin-top: 25px;
+     margin-top: 25px;
 }
 
 mat-divider {
@@ -29,4 +28,11 @@ mat-divider {
 
 .count {
     margin-right: 5px;
+}
+
+.comments {
+    margin-top: 25px;
+    mat-form-field {
+        width: 100%;
+    }
 }

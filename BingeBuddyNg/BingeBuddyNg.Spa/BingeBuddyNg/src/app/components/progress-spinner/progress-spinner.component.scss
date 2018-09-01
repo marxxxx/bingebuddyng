@@ -1,0 +1,23 @@
+@import '~@angular/material/theming';
+
+:host {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  > div {
+    height: 100%;
+  }
+}
+
+.spinner-container {
+  background: #fff;
+  border-radius: 50%;
+  height: 48px;
+  margin: 0 auto 16px auto;
+  padding: 8px;
+  width: 48px;
+  @include mat-elevation(2);
+}

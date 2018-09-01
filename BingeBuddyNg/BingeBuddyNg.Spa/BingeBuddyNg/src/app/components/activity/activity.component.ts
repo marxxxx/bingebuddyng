@@ -8,6 +8,7 @@ import { UserDTO } from '../../../models/UserDTO';
 import { AuthService } from '../../services/auth.service';
 import { ReactionType } from '../../../models/ReactionType';
 import { Reaction } from '../../../models/Reaction';
+import { CommentReaction } from '../../../models/CommentReaction';
 
 @Component({
   selector: 'app-activity',
@@ -18,7 +19,10 @@ export class ActivityComponent implements OnInit {
 
   isBusyLiking = false;
   isBusyCheering = false;
+  isBusyCommenting = false;
+  isCommentVisible = false;
   user: UserDTO;
+  comment: string;
 
   @Input()
   activity: ActivityStatsDTO;
@@ -57,43 +61,69 @@ export class ActivityComponent implements OnInit {
   onLike() {
 
     this.isBusyLiking = true;
-    const reaction: ReactionDTO = { activityId: this.activity.activity.id, type: ReactionType.Like };
+    const reaction = this.createReactionDTO(ReactionType.Like);
     this.activityService.addReaction(reaction).subscribe(r => {
       this.isBusyLiking = false;
-      const addedLike: Reaction = {
-        userId: this.user.id,
-        userName: this.user.name,
-        userProfileImageUrl: this.user.profileImageUrl,
-        timestamp: new Date(),
-        type: ReactionType.Like
-      };
+      const addedLike = this.createReaction(ReactionType.Like);
       this.activity.activity.likes.push(addedLike);
-      this.activity.activity.likes = this.activity.activity.likes;
+    }, e => {
+      this.isBusyLiking = false;
+      console.error(e);
+
     });
-
-
 
   }
 
   onCheers() {
 
     this.isBusyCheering = true;
-    const reaction: ReactionDTO = { activityId: this.activity.activity.id, type: ReactionType.Cheers };
+    const reaction = this.createReactionDTO(ReactionType.Cheers);
     this.activityService.addReaction(reaction).subscribe(r => {
       this.isBusyCheering = false;
-      const addedCheers: Reaction = {
-        userId: this.user.id,
-        userName: this.user.name,
-        userProfileImageUrl: this.user.profileImageUrl,
-        timestamp: new Date(),
-        type: ReactionType.Cheers
-      };
+      const addedCheers = this.createReaction(ReactionType.Cheers);
       this.activity.activity.cheers.push(addedCheers);
-      this.activity.activity.cheers = this.activity.activity.cheers;
     }, e => {
+      this.isBusyCheering = false;
       console.error(e);
     });
   }
+
+  onComment() {
+    this.isBusyCommenting = true;
+    const reaction = this.createReactionDTO(ReactionType.Comment, this.comment);
+    this.activityService.addReaction(reaction).subscribe(r => {
+      this.isBusyCommenting = false;
+      const addedComment = this.createCommentReaction(this.comment);
+      this.activity.activity.comments.push(addedComment);
+    }, e => {
+      this.isBusyCommenting = false;
+      console.error(e);
+    });
+  }
+
+  createReactionDTO(type: ReactionType, comment?: string): ReactionDTO {
+    const reaction: ReactionDTO = { activityId: this.activity.activity.id, type: type, comment: comment };
+    return reaction;
+  }
+
+
+  createReaction(type: ReactionType): Reaction {
+    const reaction: Reaction = {
+      userId: this.user.id,
+      userName: this.user.name,
+      userProfileImageUrl: this.user.profileImageUrl,
+      timestamp: new Date(),
+      type: type
+    };
+    return reaction;
+  }
+
+  createCommentReaction(comment: string): CommentReaction {
+    const reaction: CommentReaction = this.createReaction(ReactionType.Comment);
+    reaction.comment = comment;
+    return reaction;
+  }
+
 
   isLikedByMe(): boolean {
     const result = this.activity.activity.likes.filter(l => l.userId === this.user.id).length > 0;
