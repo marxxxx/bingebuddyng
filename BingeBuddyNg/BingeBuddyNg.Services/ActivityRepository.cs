@@ -43,7 +43,7 @@ namespace BingeBuddyNg.Services
 
             var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityTableName, whereClause, args.PageSize, args.ContinuationToken);
 
-            List<Activity> resultActivitys = GetActivitiesWithId(result.ResultPage).OrderByDescending(a => a.Timestamp).ToList();
+            List<Activity> resultActivitys = GetActivitiesWithId(result.ResultPage).ToList();
             return new PagedQueryResult<Activity>(resultActivitys, result.ContinuationToken);
         }
 
@@ -62,7 +62,7 @@ namespace BingeBuddyNg.Services
                 TableQuery.CombineFilters(
                 TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId),
                 TableOperators.And,
-                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, GetRowKey(startTimeUtc, userId)));
+                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, GetActivityPerUserRowKey(startTimeUtc)));
 
             whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
                 TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.ActivityType), QueryComparisons.Equal, activityType.ToString()));
@@ -70,7 +70,7 @@ namespace BingeBuddyNg.Services
 
             var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityPerUserTableName, whereClause);
 
-            var activitys = GetActivitiesWithId(result).OrderBy(a=>a.Timestamp).ToList();
+            var activitys = GetActivitiesWithId(result).ToList();
             return activitys;
         }
 
@@ -80,20 +80,21 @@ namespace BingeBuddyNg.Services
         {
             var activityTable = this.StorageAccessService.GetTableReference(ActivityTableName);
 
-            string rowKey = GetRowKey(activity.Timestamp, activity.UserId);
-            var entity = new ActivityTableEntity(GetPartitionKey(activity.Timestamp), rowKey, activity);
+            string activityFeedRowKey = GetActivityFeedRowKey(activity.Timestamp, activity.UserId);
+            var entity = new ActivityTableEntity(GetPartitionKey(activity.Timestamp), activityFeedRowKey, activity);
 
             TableOperation operation = TableOperation.Insert(entity);
             await activityTable.ExecuteAsync(operation);
 
             var perUserActivityTable = this.StorageAccessService.GetTableReference(ActivityPerUserTableName);
-                        
-            var perUserEntity = new ActivityTableEntity(activity.UserId, rowKey, activity);
+
+            string activityPerUserRowKey = GetActivityPerUserRowKey(activity.Timestamp);
+            var perUserEntity = new ActivityTableEntity(activity.UserId, activityFeedRowKey, activity);
 
             TableOperation perUserOperation = TableOperation.Insert(perUserEntity);
             await perUserActivityTable.ExecuteAsync(perUserOperation);
 
-            activity.Id = rowKey;
+            activity.Id = activityFeedRowKey;
             return activity;
         }
 
@@ -146,9 +147,18 @@ namespace BingeBuddyNg.Services
             return partitionKey;
         }
 
-        private string GetRowKey(DateTime timestampUtc, string userId)
+
+        private string GetActivityPerUserRowKey(DateTime timestampUtc)
         {
-            return timestampUtc.ToString("yyyyMMddHHmmss") + "|" + userId;
+            return timestampUtc.ToString("yyyyMMddHHmmss");
+        }
+
+        private string GetActivityFeedRowKey(DateTime timestampUtc, string userId)
+        {
+            DateTime maxDate = new DateTime(2100, 1, 1, 0,0,0, DateTimeKind.Utc);
+            long ticks = (maxDate - timestampUtc).Ticks;
+
+            return $"{ticks}|{userId}";
         }
     }
 }
