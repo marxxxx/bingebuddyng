@@ -35,7 +35,7 @@ namespace BingeBuddyNg.Tests
             var result = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 10));
             var timestamps = result.ResultPage.Select(p => p.Timestamp).ToList();
             var nextPage = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 10, result.ContinuationToken));
-            var timestampsNextPage = result.ResultPage.Select(p => p.Timestamp).ToList();
+            var timestampsNextPage = nextPage.ResultPage.Select(p => p.Timestamp).ToList();
             Assert.IsTrue(timestampsNextPage.All(t => timestamps.All(t1 => t1 < t)));
         }
     }

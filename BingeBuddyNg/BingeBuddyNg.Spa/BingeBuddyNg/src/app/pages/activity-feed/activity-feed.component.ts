@@ -1,3 +1,4 @@
+import { TableContinuationToken } from './../../../models/TableContinuationToken';
 import { DrinkType } from './../../../models/DrinkType';
 import { AddDrinkActivityDTO } from './../../../models/AddDrinkActivityDTO';
 import { Observable, Subscription } from 'rxjs';
@@ -29,6 +30,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   location: LocationDTO;
   locationIconId = 'location';
   uploader: FileUploader;
+  continuationToken: string;
 
   constructor(private activityService: ActivityService,
     private util: UtilService,
@@ -71,8 +73,9 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
   load() {
     this.isBusy = true;
-    this.activityService.getActivityFeed().subscribe(d => {
-      this.activitys = d;
+    this.activityService.getActivityFeed(this.continuationToken).subscribe(d => {
+      this.continuationToken = d.continuationToken;
+      this.activitys = d.resultPage;
       this.isBusy = false;
     }, e => {
       this.isBusy = false;

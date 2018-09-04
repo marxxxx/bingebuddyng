@@ -9,6 +9,8 @@ using BingeBuddyNg.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.WindowsAzure.Storage.Table;
+using Newtonsoft.Json;
 
 namespace BingeBuddyNg.Api.Controllers
 {
@@ -35,9 +37,14 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeed()
+        public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeed(string continuationToken)
         {
-            var result = await this.ActivityService.GetActivityFeedAsync();
+            TableContinuationToken tableContinuationToken = null;
+            if(string.IsNullOrEmpty(continuationToken) == false)
+            {
+                tableContinuationToken = JsonConvert.DeserializeObject<TableContinuationToken>(continuationToken);
+            }
+            var result = await this.ActivityService.GetActivityFeedAsync(tableContinuationToken);
             return result;
         }
 
