@@ -25,7 +25,7 @@ namespace BingeBuddyNg.Services
         }
 
 
-        public async Task<List<Activity>> GetActivitysAsync(GetActivityFilterArgs args)
+        public async Task<PagedQueryResult<Activity>> GetActivityFeedAsync(GetActivityFilterArgs args)
         {
             string currentPartition = GetPartitionKey(DateTime.UtcNow);
             string previousPartition = GetPartitionKey(DateTime.UtcNow.AddDays(-(DateTime.UtcNow.Day + 1)));
@@ -41,10 +41,10 @@ namespace BingeBuddyNg.Services
                         TableQuery.GenerateFilterConditionForBool(nameof(ActivityTableEntity.HasLocation), QueryComparisons.Equal, true));
             }
 
-            var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityTableName, whereClause);
+            var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityTableName, whereClause, args.PageSize, args.ContinuationToken);
 
-            List<Activity> resultActivitys = GetActivitiesWithId(result).OrderByDescending(a => a.Timestamp).ToList();
-            return resultActivitys;
+            List<Activity> resultActivitys = GetActivitiesWithId(result.ResultPage).OrderByDescending(a => a.Timestamp).ToList();
+            return new PagedQueryResult<Activity>(resultActivitys, result.ContinuationToken);
         }
 
         private List<Activity> GetActivitiesWithId(IEnumerable<ActivityTableEntity> result)

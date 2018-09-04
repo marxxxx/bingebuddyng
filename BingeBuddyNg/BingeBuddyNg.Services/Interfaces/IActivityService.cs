@@ -1,5 +1,6 @@
 ﻿using BingeBuddyNg.Services.DTO;
 using BingeBuddyNg.Services.Models;
+using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,7 +11,7 @@ namespace BingeBuddyNg.Services.Interfaces
 {
     public interface IActivityService
     {
-        Task<List<ActivityStatsDTO>> GetActivitiesAsync();
+        Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeedAsync(TableContinuationToken continuationToken = null);
         Task<List<ActivityAggregationDTO>> GetDrinkActivityAggregationAsync();
 
         Task AddMessageActivityAsync(AddMessageActivityDTO activity);

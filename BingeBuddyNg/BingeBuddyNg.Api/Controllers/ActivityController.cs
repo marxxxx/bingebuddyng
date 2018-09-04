@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services;
 using BingeBuddyNg.Services.DTO;
 using BingeBuddyNg.Services.Interfaces;
 using BingeBuddyNg.Services.Models;
@@ -29,14 +30,14 @@ namespace BingeBuddyNg.Api.Controllers
         [HttpGet("{onlyWithLocation}")]
         public async Task<ActionResult<List<Activity>>> Get(bool onlyWithLocation)
         {
-            var result = await this.ActivityRepository.GetActivitysAsync(new GetActivityFilterArgs(onlyWithLocation));
-            return result;
+            var result = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(onlyWithLocation, 100));
+            return result.ResultPage;
         }
 
         [HttpGet("[action]")]
-        public async Task<List<ActivityStatsDTO>> GetActivityFeed()
+        public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeed()
         {
-            var result = await this.ActivityService.GetActivitiesAsync();
+            var result = await this.ActivityService.GetActivityFeedAsync();
             return result;
         }
 
