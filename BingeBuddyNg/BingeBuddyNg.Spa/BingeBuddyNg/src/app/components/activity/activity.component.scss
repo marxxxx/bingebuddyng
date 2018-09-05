@@ -1,10 +1,12 @@
 mat-card {
     margin: 5px;
+    padding: 16px;
 }
 
 .user-profile-image {
     width: 48px;
     height: 48px;
+    border-radius: 50%;
 }
 
 .stats {
@@ -13,25 +15,27 @@ mat-card {
 
 span.user-name {
     margin-left: 10px;
+    font-size: 18px;
+    font-weight: 500;
 }
 
 button:hover {
     transform: scale(1.1);
 }
 .actions {
-     margin-top: 25px;
+     margin-top: 5px;
 }
 
 mat-divider {
-    margin-top: 15px;
+    margin-top: 5px;
 }
 
 .count {
-    margin-right: 5px;
+    margin-top: 3px;
 }
 
 .comments {
-    margin-top: 25px;
+    margin-top: 5px;
     mat-form-field {
         width: 100%;
     }
@@ -49,4 +53,23 @@ mat-divider {
 
 mat-chip-list {
     margin-left: 5px;
+}
+
+#btn-comm {
+    width: 24px;
+    height: 24px;
+}
+
+#btn-cls {
+    width: 22px;
+    height: 22px;
+}
+
+.metadata {
+    color: #8c8c8c;
+}
+
+#chip-number-drinks {
+    background-color: #facb4d!important;
+    color: #fff;
 }
