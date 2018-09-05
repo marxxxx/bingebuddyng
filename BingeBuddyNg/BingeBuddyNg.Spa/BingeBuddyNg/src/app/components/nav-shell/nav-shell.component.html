@@ -3,11 +3,11 @@
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
     <mat-toolbar color="primary">Menu</mat-toolbar>
     <mat-nav-list (click)="onNavListItemClicked()">
-      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/activity-feed"><mat-icon>whatshot</mat-icon><span>{{'Activity' | translate }}</span></a>
-      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/stats"><mat-icon>show_chart</mat-icon><span>{{'Statistics' | translate }}</span></a>
-      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/bingemap"><mat-icon>map</mat-icon><span>{{'BingeMap' | translate }}</span></a>
+      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/activity-feed"><!--<mat-icon>whatshot</mat-icon>--> <img src="../../assets/img/ActivityFeed.png"><span>{{'Activity' | translate }}</span></a>
+      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/stats"><!--<mat-icon>show_chart</mat-icon>--><img src="../../assets/img/statistics.png"><span>{{'Statistics' | translate }}</span></a>
+      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/bingemap"><!--<mat-icon>map</mat-icon>--><img src="../../assets/img/map.png"><span>{{'BingeMap' | translate }}</span></a>
       <mat-divider *ngIf="auth.isAuthenticated()"></mat-divider>
-      <a *ngIf="auth.isAuthenticated()" mat-list-item (click)="onLogout()"><mat-icon>exit_to_app</mat-icon><span>{{'Logout' | translate }}</span></a>
+      <a *ngIf="auth.isAuthenticated()" mat-list-item (click)="onLogout()"><!--<mat-icon>exit_to_app</mat-icon>--><img src="../../assets/img/logout.png"><span>{{'Logout' | translate }}</span></a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
