@@ -17,6 +17,7 @@ import { ShellInteractionService } from '../../services/shell-interaction.servic
 import { FileUploader, FileItem, FileUploaderOptions, ParsedResponseHeaders } from 'ng2-file-upload';
 import { NotificationService } from '../../services/notification.service';
 
+
 @Component({
   selector: 'app-activity-feed',
   templateUrl: './activity-feed.component.html',
@@ -46,7 +47,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     this.load();
 
-    const sub = this.notification.activityReceived$.subscribe( _ => this.load());
+    const sub = this.notification.activityReceived$.subscribe(_ => this.load());
     this.subscriptions.push(sub);
 
     this.shellInteraction.addShellIcon({ id: this.locationIconId, name: 'not_listed_location', tooltip: 'QueryingLocation' });
@@ -58,6 +59,14 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
       // this.snackBar.open(this.transate.instant('NoGeolocationMessage'), 'OK', { duration: 3000 });
       this.shellInteraction.addShellIcon({ id: this.locationIconId, name: 'location_off', tooltip: 'NoGeolocationMessage' });
     });
+
+    document.getElementById('scrollarea').onscroll = (ev) => {
+      console.log('scrollarea');
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
+        console.log('reloading');
+        this.onReload();
+      }
+    };
   }
 
   ngOnDestroy() {
@@ -83,7 +92,10 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     });
   }
 
-
+  onReload() {
+    console.log('triggering reload ...');
+    this.load();
+  }
 
   onAddBeer() {
     this.isBusyAdding = true;

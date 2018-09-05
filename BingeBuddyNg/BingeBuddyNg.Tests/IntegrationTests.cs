@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.DTO;
 using System.Linq;
+using BingeBuddyNg.Services;
 
 namespace BingeBuddyNg.Tests
 {
@@ -32,7 +33,11 @@ namespace BingeBuddyNg.Tests
         public async Task GetActivityFeedTest()
         {
             IActivityRepository activityRepository = serviceProvider.GetRequiredService<IActivityRepository>();
-            var result = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 10));
+            await activityRepository.MigratePartitionKeysAsync();
+
+            var result = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 1000));
+
+            
             var timestamps = result.ResultPage.Select(p => p.Timestamp).ToList();
             var nextPage = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 10, result.ContinuationToken));
             var timestampsNextPage = nextPage.ResultPage.Select(p => p.Timestamp).ToList();

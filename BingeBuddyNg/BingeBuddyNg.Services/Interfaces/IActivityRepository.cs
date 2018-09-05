@@ -16,5 +16,7 @@ namespace BingeBuddyNg.Services.Interfaces
         Task<Activity> AddActivityAsync(Activity activity);
 
         Task UpdateActivityAsync(Activity activity);
+        Task MigratePartitionKeysAsync();
+        Task MigrateRowKeyAsync(string rowKey);
     }
 }

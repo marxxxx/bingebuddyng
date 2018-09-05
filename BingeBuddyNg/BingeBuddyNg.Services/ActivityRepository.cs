@@ -49,11 +49,13 @@ namespace BingeBuddyNg.Services
 
         private List<Activity> GetActivitiesWithId(IEnumerable<ActivityTableEntity> result)
         {
-            var activitys = result.Select(r => new { r.RowKey, r.Entity }).ToList();
-            activitys.ForEach(a => a.Entity.Id = a.RowKey);
-
-            var resultActivitys = activitys.Select(a => a.Entity).ToList();
-            return resultActivitys;
+            List<Activity> resultActivities = new List<Activity>();
+            foreach(var r in result)
+            {
+                r.Entity.Id = r.RowKey;
+                resultActivities.Add(r.Entity);
+            }
+            return resultActivities;
         }
 
         public async Task<List<Activity>> GetActivitysForUser(string userId, DateTime startTimeUtc, ActivityType activityType)
@@ -136,9 +138,42 @@ namespace BingeBuddyNg.Services
             await table.ExecuteAsync(updateOperation);
         }
 
+        public async Task MigratePartitionKeysAsync()
+        {
+            var everything = await StorageAccessService.QueryTableAsync<ActivityTableEntity>("activitymigrated", null, 1000);
+            TableBatchOperation batch = new TableBatchOperation();
+           
+
+            foreach (var p in everything.ResultPage.Where(x => x.PartitionKey.StartsWith("2018")).GroupBy(r=>GetPartitionKey(r.Entity.Timestamp)))
+            {
+                foreach (var e in p)
+                {
+                    e.PartitionKey = GetPartitionKey(e.Entity.Timestamp);
+                    batch.Add(TableOperation.InsertOrReplace(e));
+                }
+
+
+                var table = StorageAccessService.GetTableReference("activitymigrated");
+                await table.ExecuteBatchAsync(batch);
+            }
+
+        }
+        
+
+        public async Task MigrateRowKeyAsync(string rowKey)
+        {
+            ActivityTableEntity entity = await GetActivityEntity(rowKey);
+            entity.RowKey = GetActivityFeedRowKey(entity.Entity.Timestamp, entity.Entity.UserId);
+
+            var table = this.StorageAccessService.GetTableReference(ActivityTableName);
+            TableOperation updateOperation = TableOperation.InsertOrReplace(entity);
+            await table.ExecuteAsync(updateOperation);
+
+        }
+
         private string GetPartitionKey(DateTime timestampUtc)
         {
-            return timestampUtc.ToString("yyyyMM");
+            return $"{2100-timestampUtc.Year}{12-timestampUtc.Month}";
         }
 
         private string GetPartitionKey(string rowKey)
