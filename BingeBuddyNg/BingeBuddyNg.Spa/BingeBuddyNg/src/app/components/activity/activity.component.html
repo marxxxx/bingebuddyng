@@ -36,7 +36,7 @@
       <div fxLayout>
         <!-- Like -->
         <button *ngIf="!isBusyLiking" [disabled]="isLikedByMe()" mat-icon-button (click)="onLike()">
-          <!--<mat-icon>thumb_up</mat-icon>--> <img src="../../assets/img/like.png"></button>
+          <img src="../../assets/img/like.png"></button>
         <span class="count" *ngIf="activity.activity.likes && activity.activity.likes.length > 0">{{activity.activity.likes.length}}</span>
         <mat-progress-spinner *ngIf="isBusyLiking" color="accent" mode="indeterminate" diameter="32"></mat-progress-spinner>
 
@@ -49,9 +49,7 @@
 
       <div>
         <button mat-icon-button (click)="isCommentVisible = !isCommentVisible">
-          <!--<mat-icon *ngIf="!isCommentVisible">comment</mat-icon>-->
           <img *ngIf="!isCommentVisible" id="btn-comm" src="../../assets/img/comment.png" >
-          <!--<mat-icon *ngIf="isCommentVisible">close</mat-icon>-->
           <img *ngIf="isCommentVisible" id="btn-cls" src="../../assets/img/cancel.png" >
         </button>
         <span class="count" *ngIf="activity.activity.comments && activity.activity.comments.length > 0">{{activity.activity.comments.length}}</span>
@@ -66,7 +64,7 @@
         <mat-form-field>
           <input type="text" autofocus matInput placeholder="{{'Comment' | translate}}" [(ngModel)]="comment" [disabled]="isBusyCommenting">
         </mat-form-field>
-        <button mat-icon-button *ngIf="!isBusyCommenting" (click)="onComment()"><!--<mat-icon>send</mat-icon>--> <img src="../../assets/img/send.png"></button>
+        <button mat-icon-button *ngIf="!isBusyCommenting" (click)="onComment()"><img src="../../assets/img/send.png"></button>
         <mat-progress-spinner *ngIf="isBusyCommenting" color="accent" mode="indeterminate" diameter="32"></mat-progress-spinner>
       </div>
 
