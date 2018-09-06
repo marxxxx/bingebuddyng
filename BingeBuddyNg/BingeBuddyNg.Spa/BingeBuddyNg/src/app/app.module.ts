@@ -34,7 +34,7 @@ import { FormsModule } from '@angular/forms';
 import { ProgressSpinnerComponent } from './components/progress-spinner/progress-spinner.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import { NotificationService } from './services/notification.service';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { InViewportModule } from 'ng-in-viewport';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -57,7 +57,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   imports: [
     BrowserModule,
-    InfiniteScrollModule,
+    InViewportModule,
     FormsModule,
     HttpClientModule,
     ChartsModule,

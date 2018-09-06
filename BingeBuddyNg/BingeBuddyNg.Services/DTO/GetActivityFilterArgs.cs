@@ -15,6 +15,13 @@ namespace BingeBuddyNg.Services.DTO
         public GetActivityFilterArgs()
         { }
 
+        public GetActivityFilterArgs(bool onlyWithLocation, int pageSize, TableContinuationToken continuationToken)
+        {
+            this.OnlyWithLocation = onlyWithLocation;
+            this.PageSize = pageSize;
+            this.ContinuationToken = continuationToken;
+        }
+
         public GetActivityFilterArgs(bool onlyWithLocation, int pageSize = 30, string continuationToken = null)
         {
             this.OnlyWithLocation = onlyWithLocation;
