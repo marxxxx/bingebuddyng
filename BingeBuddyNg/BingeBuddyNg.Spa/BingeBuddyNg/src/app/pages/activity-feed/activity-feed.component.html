@@ -18,24 +18,24 @@
       </button>
     </eco-fab-speed-dial-trigger>
 
-    <eco-fab-speed-dial-actions>
+    <eco-fab-speed-dial-actions class="btn-act">
       <button mat-mini-fab (click)="onAddBeer()" matTooltip="{{'Beer' | translate}}">
-        <img class="action-icon" src="../../assets/img/beer-32.png">
+        <img class="action-icon" src="../../assets/img/beer.png">
       </button>
       <button mat-mini-fab (click)="onAddWine()" matTooltip="{{'Wine' | translate}}">
-        <img class="action-icon" src="../../assets/img/wine-32.png">
+        <img class="action-icon" src="../../assets/img/wine.png">
       </button>
       <button mat-mini-fab (click)="onAddShot()" matTooltip="{{'Shot' | translate}}">
-        <img class="action-icon" src="../../assets/img/shot-32.png">
+        <img id="btn-sht" class="action-icon" src="../../assets/img/shot.png">
       </button>
       <button mat-mini-fab (click)="onAddAnti()" matTooltip="{{'Anti' | translate}}">
-        <img class="action-icon" src="../../assets/img/anti-32.png">
+        <img class="action-icon" src="../../assets/img/anti.png">
       </button>
       <!-- <button mat-mini-fab (click)="onAddMessage()" matTooltip="{{'PostMessage' | translate}}">
         <mat-icon>message</mat-icon>
       </button> -->
-      <button mat-mini-fab matTooltip="{{'PostImage' | translate}}" (click)="fileUpload.click()">
-        <img class="action-icon" src="../../assets/img/image-32.png">
+      <button mat-mini-fab matTooltip="{{'PostImage' | translate}}" (click)="fileUpload.click()" >
+        <img id="btn-img" class="action-icon" src="../../assets/img/image.png">
       </button>
 
 
