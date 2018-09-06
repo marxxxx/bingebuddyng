@@ -13,7 +13,7 @@ namespace BingeBuddyNg.Services
 {
     public class ActivityRepository : IActivityRepository
     {
-        private const string ActivityTableName = "activity";
+        private const string ActivityTableName = "activitymigrated";
         private const string ActivityPerUserTableName = "activityperuser";
         private static readonly DateTime MaxTimestamp = new DateTime(2100, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
