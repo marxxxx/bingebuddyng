@@ -15,7 +15,7 @@ namespace BingeBuddyNg.Services
     {
         private const string ActivityTableName = "activity";
         private const string ActivityPerUserTableName = "activityperuser";
-
+        private static readonly DateTime MaxTimestamp = new DateTime(2100, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         public StorageAccessService StorageAccessService { get; }
 
@@ -138,48 +138,15 @@ namespace BingeBuddyNg.Services
             await table.ExecuteAsync(updateOperation);
         }
 
-        public async Task MigratePartitionKeysAsync()
-        {
-            var everything = await StorageAccessService.QueryTableAsync<ActivityTableEntity>("activitymigrated", null, 1000);
-            TableBatchOperation batch = new TableBatchOperation();
-           
-
-            foreach (var p in everything.ResultPage.Where(x => x.PartitionKey.StartsWith("2018")).GroupBy(r=>GetPartitionKey(r.Entity.Timestamp)))
-            {
-                foreach (var e in p)
-                {
-                    e.PartitionKey = GetPartitionKey(e.Entity.Timestamp);
-                    batch.Add(TableOperation.InsertOrReplace(e));
-                }
-
-
-                var table = StorageAccessService.GetTableReference("activitymigrated");
-                await table.ExecuteBatchAsync(batch);
-            }
-
-        }
-        
-
-        public async Task MigrateRowKeyAsync(string rowKey)
-        {
-            ActivityTableEntity entity = await GetActivityEntity(rowKey);
-            entity.RowKey = GetActivityFeedRowKey(entity.Entity.Timestamp, entity.Entity.UserId);
-
-            var table = this.StorageAccessService.GetTableReference(ActivityTableName);
-            TableOperation updateOperation = TableOperation.InsertOrReplace(entity);
-            await table.ExecuteAsync(updateOperation);
-
-        }
-
         private string GetPartitionKey(DateTime timestampUtc)
         {
-            return $"{2100-timestampUtc.Year}{12-timestampUtc.Month}";
+            return $"{MaxTimestamp.Year- timestampUtc.Year}-{12-timestampUtc.Month}";
         }
 
         private string GetPartitionKey(string rowKey)
         {
-            string partitionKey = rowKey.Substring(0, 6);
-            return partitionKey;
+            string[] tokens = rowKey.Split('|');
+            return tokens[0];
         }
 
 
@@ -190,10 +157,10 @@ namespace BingeBuddyNg.Services
 
         private string GetActivityFeedRowKey(DateTime timestampUtc, string userId)
         {
-            DateTime maxDate = new DateTime(2100, 1, 1, 0,0,0, DateTimeKind.Utc);
-            long ticks = (maxDate - timestampUtc).Ticks;
+            long ticks = (MaxTimestamp - timestampUtc).Ticks;
+            string partitionKey = GetPartitionKey(timestampUtc);
 
-            return $"{ticks}|{userId}";
+            return $"{partitionKey}|{ticks}|{userId}";
         }
     }
 }

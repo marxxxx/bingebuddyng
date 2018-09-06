@@ -33,10 +33,7 @@ namespace BingeBuddyNg.Tests
         public async Task GetActivityFeedTest()
         {
             IActivityRepository activityRepository = serviceProvider.GetRequiredService<IActivityRepository>();
-            await activityRepository.MigratePartitionKeysAsync();
-
             var result = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 1000));
-
             
             var timestamps = result.ResultPage.Select(p => p.Timestamp).ToList();
             var nextPage = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 10, result.ContinuationToken));
