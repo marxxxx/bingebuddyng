@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services;
 using BingeBuddyNg.Services.DTO;
 using BingeBuddyNg.Services.Interfaces;
 using BingeBuddyNg.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.WindowsAzure.Storage.Table;
+using Newtonsoft.Json;
 
 namespace BingeBuddyNg.Api.Controllers
 {
@@ -29,14 +32,19 @@ namespace BingeBuddyNg.Api.Controllers
         [HttpGet("{onlyWithLocation}")]
         public async Task<ActionResult<List<Activity>>> Get(bool onlyWithLocation)
         {
-            var result = await this.ActivityRepository.GetActivitysAsync(new GetActivityFilterArgs(onlyWithLocation));
-            return result;
+            var result = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(onlyWithLocation, 100));
+            return result.ResultPage;
         }
 
         [HttpGet("[action]")]
-        public async Task<List<ActivityStatsDTO>> GetActivityFeed()
+        public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeed(string continuationToken)
         {
-            var result = await this.ActivityService.GetActivitiesAsync();
+            TableContinuationToken tableContinuationToken = null;
+            if(string.IsNullOrEmpty(continuationToken) == false)
+            {
+                tableContinuationToken = JsonConvert.DeserializeObject<TableContinuationToken>(continuationToken);
+            }
+            var result = await this.ActivityService.GetActivityFeedAsync(tableContinuationToken);
             return result;
         }
 

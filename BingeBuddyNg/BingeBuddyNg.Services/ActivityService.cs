@@ -2,6 +2,7 @@
 using BingeBuddyNg.Services.Interfaces;
 using BingeBuddyNg.Services.Messages;
 using BingeBuddyNg.Services.Models;
+using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -111,14 +112,14 @@ namespace BingeBuddyNg.Services
 
        
 
-        public async Task<List<ActivityStatsDTO>> GetActivitiesAsync()
+        public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeedAsync(TableContinuationToken continuationToken = null)
         {
-            var activities = await this.ActivityRepository.GetActivitysAsync(new GetActivityFilterArgs(false));
-            var userIds = activities.Select(a => a.UserId).Distinct();
+            var activities = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 20, continuationToken));
+            var userIds = activities.ResultPage.Select(a => a.UserId).Distinct();
             var userStats = await this.UserStatsRepository.GetStatisticsAsync(userIds);
 
-            var result = activities.Select(a => new ActivityStatsDTO(a, userStats.First(u => u.UserId == a.UserId))).ToList();
-            return result;
+            var result = activities.ResultPage.Select(a => new ActivityStatsDTO(a, userStats.First(u => u.UserId == a.UserId))).ToList();
+            return new PagedQueryResult<ActivityStatsDTO>(result, activities.ContinuationToken);
         }
 
         public async Task AddReactionAsync(ReactionDTO reaction)

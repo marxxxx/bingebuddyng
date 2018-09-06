@@ -2,8 +2,12 @@
 </app-progress-spinner>
 
 
-
-<app-activity *ngFor="let a of activitys" [activity]="a"></app-activity>
+<div id="activity-container">
+  <app-activity *ngFor="let a of activitys" [activity]="a"></app-activity>
+  <mat-progress-bar *ngIf="!isBusy" [mode]="indeterminate" color="primary" 
+    inViewport [inViewportOptions]="{ threshold: [0] }" 
+    (inViewportAction)="onAppear($event)"></mat-progress-bar>
+</div>
 
 <div class="bottom-right">
   <eco-fab-speed-dial *ngIf="!isBusyAdding" animationMode="scale">
@@ -29,7 +33,7 @@
       <!-- <button mat-mini-fab (click)="onAddMessage()" matTooltip="{{'PostMessage' | translate}}">
         <mat-icon>message</mat-icon>
       </button> -->
-      <button mat-mini-fab matTooltip="{{'PostImage' | translate}}" (click)="fileUpload.click()" >
+      <button mat-mini-fab matTooltip="{{'PostImage' | translate}}" (click)="fileUpload.click()">
         <img id="btn-img" class="action-icon" src="../../assets/img/image.png">
       </button>
 

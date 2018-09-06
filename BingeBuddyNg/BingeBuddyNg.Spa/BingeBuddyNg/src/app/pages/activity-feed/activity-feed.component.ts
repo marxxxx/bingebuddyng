@@ -1,3 +1,4 @@
+import { TableContinuationToken } from './../../../models/TableContinuationToken';
 import { DrinkType } from './../../../models/DrinkType';
 import { AddDrinkActivityDTO } from './../../../models/AddDrinkActivityDTO';
 import { Observable, Subscription } from 'rxjs';
@@ -7,7 +8,7 @@ import { LocationDTO } from '../../../models/LocationDTO';
 import { ActivityStatsDTO } from '../../../models/ActivityStatsDTO';
 import { ActivityService } from '../../services/activity.service';
 import { DataService } from '../../services/data.service';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { AddMessageActivityDTO } from '../../../models/AddMessageActivityDTO';
 import { UtilService } from '../../services/util.service';
@@ -15,6 +16,8 @@ import { MatSnackBar } from '@angular/material';
 import { ShellInteractionService } from '../../services/shell-interaction.service';
 import { FileUploader, FileItem, FileUploaderOptions, ParsedResponseHeaders } from 'ng2-file-upload';
 import { NotificationService } from '../../services/notification.service';
+import { ScrollDispatcher } from '@angular/cdk/scrolling';
+
 
 @Component({
   selector: 'app-activity-feed',
@@ -29,14 +32,18 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   location: LocationDTO;
   locationIconId = 'location';
   uploader: FileUploader;
+  continuationToken: string = null;
+
+  @ViewChild('#activity-container')
+  container: any;
 
   constructor(private activityService: ActivityService,
     private util: UtilService,
     private shellInteraction: ShellInteractionService,
     private auth: AuthService,
     private notification: NotificationService,
-    private snackBar: MatSnackBar,
-    private transate: TranslateService) { }
+    private scroll: ScrollDispatcher) { }
+
 
   ngOnInit() {
 
@@ -44,7 +51,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     this.load();
 
-    const sub = this.notification.activityReceived$.subscribe( _ => this.load());
+    const sub = this.notification.activityReceived$.subscribe(_ => this.load());
     this.subscriptions.push(sub);
 
     this.shellInteraction.addShellIcon({ id: this.locationIconId, name: 'not_listed_location', tooltip: 'QueryingLocation' });
@@ -58,6 +65,13 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     });
   }
 
+  onAppear(ev) {
+
+    if (ev.visible) {
+      console.log('loading next page');
+      this.load(this.continuationToken);
+    }
+  }
   ngOnDestroy() {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
@@ -69,17 +83,38 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     this.uploader.onCompleteAll = this.onCompleteAll.bind(this);
   }
 
-  load() {
+  isElementInViewport(el) {
+    const rect = el.getBoundingClientRect();
+
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  }
+
+  load(continuationToken: string = null) {
+    console.log('loading activities');
+    console.log(continuationToken);
     this.isBusy = true;
-    this.activityService.getActivityFeed().subscribe(d => {
-      this.activitys = d;
+    this.activityService.getActivityFeed(continuationToken).subscribe(d => {
+      this.continuationToken = d.continuationToken;
+
+      if (continuationToken) {
+        this.activitys.push(...d.resultPage);
+
+      } else {
+        this.activitys = d.resultPage;
+      }
       this.isBusy = false;
+
+
     }, e => {
       this.isBusy = false;
       console.error(e);
     });
   }
-
 
 
   onAddBeer() {
@@ -145,7 +180,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     const activity: AddDrinkActivityDTO = {
       drinkId: '3',
       drinkType: DrinkType.Anti,
-      drinkName: 'Antialcoholic Drink',
+      drinkName: 'Anti',
       alcPrc: 0,
       volume: 250,
       location: this.location
@@ -195,12 +230,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     return options;
   }
-
-  // onCompleteItem(item: FileItem, response: string, status: number, headers: ParsedResponseHeaders) {
-  //   console.log('upload completed');
-  //   console.log(response);
-  //   this.isBusyAdding = false;
-  // }
 
   onCompleteAll() {
     this.uploader.clearQueue();

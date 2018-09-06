@@ -38,13 +38,13 @@
         <button *ngIf="!isBusyLiking" [disabled]="isLikedByMe()" mat-icon-button (click)="onLike()">
           <img src="../../assets/img/like.png"></button>
         <span class="count" *ngIf="activity.activity.likes && activity.activity.likes.length > 0">{{activity.activity.likes.length}}</span>
-        <mat-progress-spinner *ngIf="isBusyLiking" color="accent" mode="indeterminate" diameter="32"></mat-progress-spinner>
+        <mat-progress-spinner *ngIf="isBusyLiking" color="primary" mode="indeterminate" diameter="32"></mat-progress-spinner>
 
         <!-- Cheers -->
         <button *ngIf="!isBusyCheering" [disabled]="isCheeredByMe()" mat-icon-button (click)="onCheers()">
           <img src="../../assets/img/beer.png"></button>
         <span class="count" *ngIf="activity.activity.cheers && activity.activity.cheers.length > 0">{{activity.activity.cheers.length}}</span>
-        <mat-progress-spinner *ngIf="isBusyCheering" color="accent" mode="indeterminate" diameter="32"></mat-progress-spinner>
+        <mat-progress-spinner *ngIf="isBusyCheering" color="primary" mode="indeterminate" diameter="32"></mat-progress-spinner>
       </div>
 
       <div>
@@ -65,7 +65,7 @@
           <input type="text" autofocus matInput placeholder="{{'Comment' | translate}}" [(ngModel)]="comment" [disabled]="isBusyCommenting">
         </mat-form-field>
         <button mat-icon-button *ngIf="!isBusyCommenting" (click)="onComment()"><img src="../../assets/img/send.png"></button>
-        <mat-progress-spinner *ngIf="isBusyCommenting" color="accent" mode="indeterminate" diameter="32"></mat-progress-spinner>
+        <mat-progress-spinner *ngIf="isBusyCommenting" color="primary" mode="indeterminate" diameter="32"></mat-progress-spinner>
       </div>
 
       <mat-list>

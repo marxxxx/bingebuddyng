@@ -1,3 +1,4 @@
+import { PagedQueryResult } from './../../models/PagedQueryResult';
 import { ActivityStatsDTO } from './../../models/ActivityStatsDTO';
 import { AddDrinkActivityDTO } from './../../models/AddDrinkActivityDTO';
 import { GetActivityFilterArgs } from '../../models/GetActivityFilterArgs';
@@ -20,9 +21,12 @@ export class ActivityService {
 
   constructor(private http: HttpClient) { }
 
-  getActivityFeed(): Observable<ActivityStatsDTO[]> {
-    const url = `${this.baseUrl}/GetActivityFeed`;
-    return this.http.get<ActivityStatsDTO[]>(url);
+  getActivityFeed(continuationToken: string): Observable<PagedQueryResult<ActivityStatsDTO>> {
+    let url = `${this.baseUrl}/GetActivityFeed`;
+    if (continuationToken) {
+      url += `?continuationToken=${continuationToken}`;
+    }
+    return this.http.get<PagedQueryResult<ActivityStatsDTO>>(url);
   }
 
   getActivitys(args: GetActivityFilterArgs): Observable<Activity[]> {
