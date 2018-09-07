@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BingeBuddyNg.Services.Models
 {
-    public class UserInfo
+    public class UserInfo : IEquatable<UserInfo>
     {
         public UserInfo()
         {
@@ -20,6 +20,26 @@ namespace BingeBuddyNg.Services.Models
         public string UserId { get; set; }
         public string UserName { get; set; }
         public string UserProfileImageUrl { get; set; }
+
+        public bool Equals(UserInfo other)
+        {
+            if (other == null)
+                return false;
+
+            return other.UserId == this.UserId;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as UserInfo);
+        }
+
+        public override int GetHashCode()
+        {
+            if (this.UserId == null)
+                return 0;
+            return this.UserId.GetHashCode();
+        }
 
         public override string ToString()
         {
