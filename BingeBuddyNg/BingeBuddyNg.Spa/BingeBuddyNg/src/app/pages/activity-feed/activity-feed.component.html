@@ -3,7 +3,7 @@
 
 <div id="activity-container" [@listActivities] = "activitys.length">
   <app-activity *ngFor="let a of activitys" [activity]="a"></app-activity>
-  <mat-progress-spinner id="loadingSpinner" *ngIf="!isBusy" [mode]="indeterminate" color="primary" 
+  <mat-progress-spinner id="loadingSpinner" *ngIf="!isInitialLoad" mode="indeterminate" color="primary" 
     inViewport [inViewportOptions]="{ threshold: [0] }" 
     (inViewportAction)="onAppear($event)"></mat-progress-spinner>
 </div>

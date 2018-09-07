@@ -46,6 +46,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   locationIconId = 'location';
   uploader: FileUploader;
   continuationToken: string = null;
+  isInitialLoad = true;
 
   @ViewChild('#activity-container')
   container: any;
@@ -121,6 +122,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
         this.activitys = d.resultPage;
       }
       this.isBusy = false;
+      this.isInitialLoad = false;
 
 
     }, e => {
