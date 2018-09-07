@@ -107,6 +107,12 @@ export class ActivityComponent implements OnInit {
     });
   }
 
+  onKeydown(ev) {
+    if (ev.key === 'Enter') {
+      this.onComment();
+    }
+  }
+
   createReactionDTO(type: ReactionType, comment?: string): ReactionDTO {
     const reaction: ReactionDTO = { activityId: this.activity.activity.id, type: type, comment: comment };
     return reaction;

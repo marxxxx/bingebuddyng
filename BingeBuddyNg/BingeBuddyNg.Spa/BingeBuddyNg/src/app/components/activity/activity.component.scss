@@ -1,6 +1,8 @@
 mat-card {
-    margin: 5px;
-    padding: 16px;
+    margin: 5px 5px 6px 5px;
+    padding: 12px 12px 2px 12px ;
+    border-top-left-radius: 30px;
+    border-bottom-right-radius: 10px;
 }
 
 .user-profile-image {
@@ -30,9 +32,21 @@ mat-divider {
     margin-top: 5px;
 }
 
+mat-form-field {
+    margin-top: 10px;
+}
+
 .count {
     margin-top: 3px;
 }
+
+div{
+    #comm {
+        position: relative;
+        top: -6px;
+    }
+}
+
 
 .comments {
     margin-top: 5px;
@@ -55,6 +69,10 @@ mat-chip-list {
     margin-left: 5px;
 }
 
+.mat-icon-button {
+    margin-right: -3px
+}
+
 #btn-comm {
     width: 24px;
     height: 24px;
@@ -69,7 +87,13 @@ mat-chip-list {
     color: #8c8c8c;
 }
 
-#chip-number-drinks {
+.chip {
     background-color: #facb4d!important;
     color: #fff;
 }
+
+.mat-list-avatar {
+    margin-bottom: 15px;
+}
+
+
