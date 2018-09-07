@@ -5,10 +5,10 @@
       <span class="user-name">{{activity.activity.userName}}</span>
     </div>
     <mat-chip-list class="stats" *ngIf="activity.userStats.currentNightDrinks + activity.userStats.currentAlcoholization > 0">
-      <mat-chip id="chip-number-drinks">{{activity.userStats.currentNightDrinks}}
+      <mat-chip class="chip">{{activity.userStats.currentNightDrinks}}
         <mat-icon fxHide fxShow.gt-xs>local_drink</mat-icon>
       </mat-chip>
-      <mat-chip *ngIf="activity.userStats.currentAlcoholization > 0">{{activity.userStats.currentAlcoholization}} <span fxHide fxShow.xs>‰</span>
+      <mat-chip class="chip" *ngIf="activity.userStats.currentAlcoholization > 0">{{activity.userStats.currentAlcoholization}} <span fxHide fxShow.xs>‰</span>
         <mat-icon fxHide fxShow.gt-xs>opacity</mat-icon>
       </mat-chip>
     </mat-chip-list>
@@ -52,17 +52,17 @@
           <img *ngIf="!isCommentVisible" id="btn-comm" src="../../assets/img/comment.png" >
           <img *ngIf="isCommentVisible" id="btn-cls" src="../../assets/img/cancel.png" >
         </button>
-        <span class="count" *ngIf="activity.activity.comments && activity.activity.comments.length > 0">{{activity.activity.comments.length}}</span>
+          <span class="count" id="comm" *ngIf="activity.activity.comments && activity.activity.comments.length > 0 && !isCommentVisible">{{activity.activity.comments.length}}</span>
       </div>
     </div>
 
-    <mat-divider></mat-divider>
-
     <!-- Comments -->
-    <div class="comments">
+    <div *ngIf="isCommentVisible" class="comments">
+      <mat-divider></mat-divider>
       <div fxLayout fxLayoutAlign="space-between center" *ngIf="isCommentVisible">
         <mat-form-field>
-          <input type="text" autofocus matInput placeholder="{{'Comment' | translate}}" [(ngModel)]="comment" [disabled]="isBusyCommenting">
+          <input type="text" autofocus matInput placeholder="{{'Comment' | translate}}" [(ngModel)]="comment" [disabled]="isBusyCommenting"
+          (keydown) = "onKeydown($event)" >
         </mat-form-field>
         <button mat-icon-button *ngIf="!isBusyCommenting" (click)="onComment()"><img src="../../assets/img/send.png"></button>
         <mat-progress-spinner *ngIf="isBusyCommenting" color="primary" mode="indeterminate" diameter="32"></mat-progress-spinner>

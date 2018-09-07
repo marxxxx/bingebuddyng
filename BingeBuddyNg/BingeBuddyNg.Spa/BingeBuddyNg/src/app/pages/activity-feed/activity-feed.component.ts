@@ -17,12 +17,25 @@ import { ShellInteractionService } from '../../services/shell-interaction.servic
 import { FileUploader, FileItem, FileUploaderOptions, ParsedResponseHeaders } from 'ng2-file-upload';
 import { NotificationService } from '../../services/notification.service';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
-
+import { trigger, style, transition, animate, query, stagger } from '@angular/animations';
 
 @Component({
   selector: 'app-activity-feed',
   templateUrl: './activity-feed.component.html',
-  styleUrls: ['./activity-feed.component.scss']
+  styleUrls: ['./activity-feed.component.scss'],
+  animations: [
+    trigger('listActivities', [
+      transition('* <=> *', [
+        query(':enter', [
+          style({ opacity: 0 }),
+          stagger('250ms',
+          animate('400ms ease-in',
+          style({ opacity: 1 })))
+        ], { optional: true }),
+        query(':leave', animate( '50ms', style({opacity: 0 })), { optional: true })
+      ])
+    ])
+  ]
 })
 export class ActivityFeedComponent implements OnInit, OnDestroy {
   activitys: ActivityStatsDTO[] = [];
