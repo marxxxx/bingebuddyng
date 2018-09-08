@@ -35,6 +35,8 @@ import { ProgressSpinnerComponent } from './components/progress-spinner/progress
 import { FileUploadModule } from 'ng2-file-upload';
 import { NotificationService } from './services/notification.service';
 import { InViewportModule } from 'ng-in-viewport';
+import { DrinkChartComponent } from './pages/stats/drink-chart/drink-chart.component';
+import { DrinkRatioChartComponent } from './pages/stats/drink-ratio-chart/drink-ratio-chart.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -53,7 +55,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     CallbackComponent,
     BingemapComponent,
     ActivityComponent,
-    ProgressSpinnerComponent
+    ProgressSpinnerComponent,
+    DrinkChartComponent,
+    DrinkRatioChartComponent
   ],
   imports: [
     BrowserModule,
