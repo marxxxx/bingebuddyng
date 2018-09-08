@@ -26,17 +26,13 @@ import { trigger, style, transition, animate, query, stagger } from '@angular/an
   animations: [
     trigger('listActivities', [
       transition('* <=> *', [
-        query(':enter', [
-          style({ opacity: 0 }),
-          stagger('250ms',
-          animate('400ms ease-in',
-          style({ opacity: 1 })))
-        ], { optional: true }),
-        query(':leave', animate( '50ms', style({opacity: 0 })), { optional: true })
+        style({ transform: 'translateY(-2%)', opacity: 0}),
+        animate('300ms ease-in', style({ transform: 'translateY(0)', opacity: 1}))
       ])
     ])
   ]
 })
+
 export class ActivityFeedComponent implements OnInit, OnDestroy {
   activitys: ActivityStatsDTO[] = [];
   subscriptions: Subscription[] = [];
