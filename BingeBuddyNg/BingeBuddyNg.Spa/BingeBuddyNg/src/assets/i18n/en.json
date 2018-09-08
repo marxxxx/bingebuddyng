@@ -15,5 +15,11 @@
     "IJustHadA": "I just had a {{value}}! Cheers!",
     "UpdateAvailableMessage": "Update available! Install now?",
     "Comment": "Comment",
-    "PostImage": "Post image"
+    "PostImage": "Post image",
+    "AlcoholicDrinks": "Alcoholic drinks",
+    "DrinkRatio": "Drink ratio",
+    "MonthlyDrinkStatistic": "Monthly drink statistic",
+    "AvgAlcDrinksPerDay": "Average alcoholic drinks per day",
+    "CalculatedOverLastMonth": "Calculated from last month"
+
 }
