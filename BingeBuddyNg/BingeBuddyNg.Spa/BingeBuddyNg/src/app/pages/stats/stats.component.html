@@ -1,5 +1,5 @@
 <app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
-<div fxLayout="column" fxFlex>
+<div fxLayout="column" fxFlex *ngIf="!isBusy">
 
   <mat-card fxFlex>
     <mat-card-title>{{'AvgAlcDrinksPerDay' | translate}}</mat-card-title>

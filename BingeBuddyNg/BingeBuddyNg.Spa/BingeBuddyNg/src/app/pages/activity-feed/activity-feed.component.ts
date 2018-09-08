@@ -93,16 +93,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     this.uploader.onCompleteAll = this.onCompleteAll.bind(this);
   }
 
-  isElementInViewport(el) {
-    const rect = el.getBoundingClientRect();
-
-    return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
-  }
 
   load(continuationToken: string = null) {
     console.log('loading activities');
@@ -118,7 +108,10 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
         this.activitys = d.resultPage;
       }
       this.isBusy = false;
-      this.isInitialLoad = false;
+
+      // adds reload-spinner after a second so it doesn't interfere with slide-in animation
+      setTimeout(() => this.isInitialLoad = false, 1000);
+
 
 
     }, e => {
