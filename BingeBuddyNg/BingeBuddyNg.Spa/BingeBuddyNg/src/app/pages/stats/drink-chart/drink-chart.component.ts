@@ -14,6 +14,9 @@ export class DrinkChartComponent implements OnInit, OnChanges {
   @Input()
   activities: ActivityAggregationDTO[];
 
+  @Input()
+  isLegendVisible: boolean;
+
   // lineChart
   public lineChartData: Array<any> = [
     { data: [], label: '' },

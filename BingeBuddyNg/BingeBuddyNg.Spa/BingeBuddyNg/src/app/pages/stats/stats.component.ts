@@ -4,6 +4,7 @@ import { ActivityService } from '../../services/activity.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ActivityAggregationDTO } from '../../../models/ActivityAggregationDTO';
+import { ObservableMedia, MediaChange } from '@angular/flex-layout';
 
 
 @Component({
@@ -15,13 +16,14 @@ export class StatsComponent implements OnInit, OnDestroy {
 
   isBusy = false;
   avgDrinksPerDay = 0;
-
+  isLegendVisible = true;
 
 
   private subscriptions: Subscription[] = [];
   activities: ActivityAggregationDTO[];
 
   constructor(private route: ActivatedRoute, private activityService: ActivityService,
+    private media: ObservableMedia,
     private translateService: TranslateService) {
   }
 
@@ -30,7 +32,17 @@ export class StatsComponent implements OnInit, OnDestroy {
       this.load();
     });
 
-    this.subscriptions.push(routeSubscription);
+    const mediaSubscription = this.media.subscribe((change: MediaChange) => {
+      console.log('media change');
+      console.log(change);
+      if (change.mqAlias === 'xs') {
+        this.isLegendVisible = false;
+      } else {
+        this.isLegendVisible = true;
+      }
+    });
+
+    this.subscriptions.push(routeSubscription, mediaSubscription);
 
   }
 
