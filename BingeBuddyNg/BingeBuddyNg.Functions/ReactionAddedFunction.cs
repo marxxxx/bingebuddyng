@@ -72,7 +72,7 @@ namespace BingeBuddyNg.Functions
             }
 
             var notification = new Services.Models.NotificationMessage(Constants.NotificationIconUrl,
-                  reactingUser.ProfileImageUrl, Constants.ApplicationUrl, Constants.ApplicationName, message);
+                  Constants.NotificationIconUrl, Constants.ApplicationUrl, Constants.ApplicationName, message);
             notificationService.SendMessage(involvedUserPushInfos, notification);
 
         }
@@ -86,7 +86,7 @@ namespace BingeBuddyNg.Functions
             {
                 string message = GetReactionMessage(reactionType, reactingUser.Name, originUser.Name);
                 var notification = new Services.Models.NotificationMessage(Constants.NotificationIconUrl,
-                    reactingUser.ProfileImageUrl, Constants.ApplicationUrl, Constants.ApplicationName, message);
+                    Constants.NotificationIconUrl, Constants.ApplicationUrl, Constants.ApplicationName, message);
                 notificationService.SendMessage(new[] { originUser.PushInfo }, notification);
             }
         }

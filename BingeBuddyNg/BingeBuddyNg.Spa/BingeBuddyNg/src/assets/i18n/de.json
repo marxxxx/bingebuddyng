@@ -15,6 +15,11 @@
     "IJustHadA": "Ich habe gerade ein {{value}} getrunken! Prost!",
     "UpdateAvailableMessage": "Update verfügbar! Jetzt installieren?",
     "Comment": "Kommentar",
-    "PostImage": "Foto posten"
+    "PostImage": "Foto posten",
+    "AlcoholicDrinks": "Alkoholische Getränke",
+    "DrinkRatio": "Getränkeverteilung",
+    "MonthlyDrinkStatistic": "Monatliche Getränkeentwicklung",
+    "AvgAlcDrinksPerDay": "Durchschnittliche alkoholische Getränke pro Tag",
+    "CalculatedOverLastMonth": "Berechnet aus dem letzten Monat"
 
 }

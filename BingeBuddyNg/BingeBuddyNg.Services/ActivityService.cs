@@ -84,7 +84,16 @@ namespace BingeBuddyNg.Services
 
             var groupedByDay = result.GroupBy(t => t.Timestamp.Date)
                 .OrderBy(t => t.Key)
-                .Select(t => new ActivityAggregationDTO() { Count = t.Count(), Day = t.Key })
+                .Select(t => new ActivityAggregationDTO()
+                {
+                    Count = t.Count(),
+                    CountBeer = t.Count(d=>d.DrinkType == DrinkType.Beer),
+                    CountWine = t.Count(d => d.DrinkType == DrinkType.Wine),
+                    CountShots = t.Count(d => d.DrinkType == DrinkType.Shot),
+                    CountAnti = t.Count(d => d.DrinkType == DrinkType.Anti),
+                    CountAlc = t.Count(d => d.DrinkType != DrinkType.Anti),
+                    Day = t.Key
+                })
                 .ToList();
 
             // now fill holes of last 30 days
@@ -94,7 +103,7 @@ namespace BingeBuddyNg.Services
                 var hasData = groupedByDay.Any(d => d.Day == date);
                 if (hasData == false)
                 {
-                    groupedByDay.Add(new ActivityAggregationDTO(date, 0));
+                    groupedByDay.Add(new ActivityAggregationDTO(date));
                 }
             }
 
