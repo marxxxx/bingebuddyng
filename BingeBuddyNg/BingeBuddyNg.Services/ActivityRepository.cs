@@ -91,7 +91,7 @@ namespace BingeBuddyNg.Services
             var perUserActivityTable = this.StorageAccessService.GetTableReference(ActivityPerUserTableName);
 
             string activityPerUserRowKey = GetActivityPerUserRowKey(activity.Timestamp);
-            var perUserEntity = new ActivityTableEntity(activity.UserId, activityFeedRowKey, activity);
+            var perUserEntity = new ActivityTableEntity(activity.UserId, activityPerUserRowKey, activity);
 
             TableOperation perUserOperation = TableOperation.Insert(perUserEntity);
             await perUserActivityTable.ExecuteAsync(perUserOperation);

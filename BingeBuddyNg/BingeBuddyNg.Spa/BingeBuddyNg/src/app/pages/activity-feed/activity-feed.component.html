@@ -9,7 +9,7 @@
 </div>
 
 <div class="bottom-right">
-  <eco-fab-speed-dial *ngIf="!isBusyAdding" animationMode="scale">
+  <eco-fab-speed-dial *ngIf="!isBusyAdding && !isBusyUploading" animationMode="scale">
     <eco-fab-speed-dial-trigger [spin]="true">
       <button mat-fab color="primary">
         <mat-icon>add</mat-icon>
@@ -42,4 +42,5 @@
 
   <input type="file" #fileUpload id="fileUpload" ng2FileSelect style="display:none;" [uploader]="uploader" />
   <mat-progress-spinner *ngIf="isBusyAdding" mode="indeterminate" diameter="48"></mat-progress-spinner>
+  <mat-progress-spinner *ngIf="isBusyUploading" diameter="48" [value]="currentProgress"></mat-progress-spinner>
 </div>

@@ -59,7 +59,6 @@ export class AppComponent implements OnInit {
       this.registerUser(pushInfo);
     }).catch(err => {
       console.error(err);
-      this.snackbar.open('Failed to register for push notifications', 'OK', { duration: 1000 });
       this.registerUser(null);
     });
 

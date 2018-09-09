@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingeBuddyNg.Services", "Bi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingeBuddyNg.Functions", "BingeBuddyNg.Functions\BingeBuddyNg.Functions.csproj", "{A05C5311-33F3-47C1-B251-5358BE6E7D63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingeBuddyNg.Tests", "BingeBuddyNg.Tests\BingeBuddyNg.Tests.csproj", "{9F2C66FA-998E-4689-ACCF-623AB3CB6D6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingeBuddyNg.Tests", "BingeBuddyNg.Tests\BingeBuddyNg.Tests.csproj", "{9F2C66FA-998E-4689-ACCF-623AB3CB6D6A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
