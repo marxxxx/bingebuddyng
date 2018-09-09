@@ -73,7 +73,7 @@
           <img matListAvatar [src]="c.userProfileImageUrl">
           <h3 matLine> {{c.userName}} </h3>
           <p matLine fxLayout fxLayoutAlign="space-between center" fxLayout.lt-sm="column" fxLayoutAlign.lt-sm="start start">
-            <span> {{c.comment}} </span>
+            <span class="comment-text">{{c.comment}}</span>
             <span class="metadata"> {{c.timestamp | date:'dd.MM.yyyy HH:mm'}} </span>
           </p>
         </mat-list-item>
