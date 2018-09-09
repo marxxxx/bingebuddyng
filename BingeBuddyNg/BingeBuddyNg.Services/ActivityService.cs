@@ -65,8 +65,9 @@ namespace BingeBuddyNg.Services
             var user = await this.UserRepository.GetUserAsync(userId);
 
             // store file in blob storage
-            string imageUrl = await StorageAccessService.SaveFileInBlobStorage("img", "activities", fileName, stream);
-            var activity = Activity.CreateImageActivity(DateTime.UtcNow, location, userId, user.Name, user.ProfileImageUrl, imageUrl);
+            string imageUrlOriginal = await StorageAccessService.SaveFileInBlobStorage("img", "activities", fileName, stream);
+            
+            var activity = Activity.CreateImageActivity(DateTime.UtcNow, location, userId, user.Name, user.ProfileImageUrl, imageUrlOriginal);
 
             var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
 

@@ -13,7 +13,7 @@ namespace BingeBuddyNg.Services
 {
     public class ActivityRepository : IActivityRepository
     {
-        private const string ActivityTableName = "activitymigrated";
+        private const string ActivityTableName = "activity";
         private const string ActivityPerUserTableName = "activityperuser";
         private static readonly DateTime MaxTimestamp = new DateTime(2100, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -91,7 +91,7 @@ namespace BingeBuddyNg.Services
             var perUserActivityTable = this.StorageAccessService.GetTableReference(ActivityPerUserTableName);
 
             string activityPerUserRowKey = GetActivityPerUserRowKey(activity.Timestamp);
-            var perUserEntity = new ActivityTableEntity(activity.UserId, activityFeedRowKey, activity);
+            var perUserEntity = new ActivityTableEntity(activity.UserId, activityPerUserRowKey, activity);
 
             TableOperation perUserOperation = TableOperation.Insert(perUserEntity);
             await perUserActivityTable.ExecuteAsync(perUserOperation);

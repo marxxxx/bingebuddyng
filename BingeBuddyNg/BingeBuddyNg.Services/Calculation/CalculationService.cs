@@ -59,10 +59,11 @@ namespace BingeBuddyNg.Services.Calculation
 
         public async Task<DrinkCalculationResult> CalculateStatsForUserAsync(User user)
         {
-            var activity = await this.ActivityRepository.GetActivitysForUser(user.Id, DateTime.UtcNow.Subtract(TimeSpan.FromHours(12)),
+            DateTime startTimestamp = DateTime.UtcNow.Subtract(TimeSpan.FromHours(12));
+            var activity = await this.ActivityRepository.GetActivitysForUser(user.Id, startTimestamp,
                 Models.ActivityType.Drink);
 
-            var drinkActivity = activity.Select(a => new DrinkActivityItem(a.Timestamp, a.DrinkAlcPrc.GetValueOrDefault(),
+            var drinkActivity = activity.Where(a=>a.Timestamp >= startTimestamp).Select(a => new DrinkActivityItem(a.Timestamp, a.DrinkAlcPrc.GetValueOrDefault(),
                 a.DrinkVolume.GetValueOrDefault()));
                         
             UserDrinkActivity userDrinkActivity = new UserDrinkActivity(user.Id, user.Gender, user.Weight.GetValueOrDefault(), drinkActivity);

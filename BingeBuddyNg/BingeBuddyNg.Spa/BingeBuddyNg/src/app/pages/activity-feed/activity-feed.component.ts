@@ -8,7 +8,7 @@ import { LocationDTO } from '../../../models/LocationDTO';
 import { ActivityStatsDTO } from '../../../models/ActivityStatsDTO';
 import { ActivityService } from '../../services/activity.service';
 import { DataService } from '../../services/data.service';
-import { Component, OnInit, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { AddMessageActivityDTO } from '../../../models/AddMessageActivityDTO';
 import { UtilService } from '../../services/util.service';
@@ -43,6 +43,8 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   uploader: FileUploader;
   continuationToken: string = null;
   isInitialLoad = true;
+  isBusyUploading = false;
+  currentProgress = 0;
 
   @ViewChild('#activity-container')
   container: any;
@@ -52,7 +54,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     private shellInteraction: ShellInteractionService,
     private auth: AuthService,
     private notification: NotificationService,
-    private scroll: ScrollDispatcher) { }
+    private changeRef: ChangeDetectorRef) { }
 
 
   ngOnInit() {
@@ -91,6 +93,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     this.uploader.onAfterAddingFile = this.onAfterAddingFile.bind(this);
     this.uploader.onCompleteAll = this.onCompleteAll.bind(this);
+    this.uploader.onProgressAll = this.onProgressUploading.bind(this);
   }
 
 
@@ -134,6 +137,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     this.activityService.addDrinkActivity(activity).subscribe(r => {
       this.isBusyAdding = false;
+      this.isInitialLoad = true;
       this.load();
     }, e => {
       this.isBusyAdding = false;
@@ -154,6 +158,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     this.activityService.addDrinkActivity(activity).subscribe(r => {
       this.isBusyAdding = false;
+      this.isInitialLoad = true;
       this.load();
     }, e => {
       this.isBusyAdding = false;
@@ -173,6 +178,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     this.activityService.addDrinkActivity(activity).subscribe(r => {
       this.isBusyAdding = false;
+      this.isInitialLoad = true;
       this.load();
     }, e => {
       this.isBusyAdding = false;
@@ -192,6 +198,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     this.activityService.addDrinkActivity(activity).subscribe(r => {
       this.isBusyAdding = false;
+      this.isInitialLoad = true;
       this.load();
     }, e => {
       this.isBusyAdding = false;
@@ -207,6 +214,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     this.activityService.addMessageActivity(activity).subscribe(r => {
       this.isBusyAdding = false;
+      this.isInitialLoad = true;
       this.load();
     }, e => {
       this.isBusyAdding = false;
@@ -215,8 +223,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
 
   onAfterAddingFile(fileItem: FileItem) {
-
-    // update options to reflect deviceId in upload url
     this.uploader.setOptions(this.getOptions());
 
     // upload
@@ -238,6 +244,15 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   onCompleteAll() {
     this.uploader.clearQueue();
     this.isBusyAdding = false;
+    this.isBusyUploading = false;
+    this.currentProgress = 0;
     this.load();
+  }
+
+  onProgressUploading(progress: number) {
+    this.isBusyAdding = false;
+    this.isBusyUploading = true;
+    this.currentProgress = progress;
+    this.changeRef.detectChanges();
   }
 }
