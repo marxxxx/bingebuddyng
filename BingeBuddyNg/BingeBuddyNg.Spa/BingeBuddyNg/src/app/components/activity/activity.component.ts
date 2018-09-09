@@ -146,4 +146,12 @@ export class ActivityComponent implements OnInit {
     const result = this.activity.activity.cheers.filter(l => l.userId === this.user.id).length > 0;
     return result;
   }
+
+  getLikeUserNames(): string {
+    return this.activity.activity.likes.map(l => l.userName).join(',');
+  }
+
+  getCheersUserNames(): string {
+    return this.activity.activity.cheers.map(l => l.userName).join(',');
+  }
 }

@@ -8,7 +8,8 @@
       <mat-chip class="chip">{{activity.userStats.currentNightDrinks}}
         <mat-icon fxHide fxShow.gt-xs>local_drink</mat-icon>
       </mat-chip>
-      <mat-chip class="chip" *ngIf="activity.userStats.currentAlcoholization > 0">{{activity.userStats.currentAlcoholization}} <span fxHide fxShow.xs>‰</span>
+      <mat-chip class="chip" *ngIf="activity.userStats.currentAlcoholization > 0">{{activity.userStats.currentAlcoholization}}
+        <span fxHide fxShow.xs>‰</span>
         <mat-icon fxHide fxShow.gt-xs>opacity</mat-icon>
       </mat-chip>
     </mat-chip-list>
@@ -35,13 +36,15 @@
     <div fxLayout fxLayoutAlign="space-between center" class="actions">
       <div fxLayout>
         <!-- Like -->
-        <button *ngIf="!isBusyLiking" [disabled]="isLikedByMe()" mat-icon-button (click)="onLike()">
+        <button *ngIf="!isBusyLiking" [disabled]="isLikedByMe()" mat-icon-button [matTooltip]="getLikeUserNames()"
+          (click)="onLike()">
           <img src="../../assets/img/like.png"></button>
         <span class="count" *ngIf="activity.activity.likes && activity.activity.likes.length > 0">{{activity.activity.likes.length}}</span>
         <mat-progress-spinner *ngIf="isBusyLiking" color="primary" mode="indeterminate" diameter="32"></mat-progress-spinner>
 
         <!-- Cheers -->
-        <button *ngIf="!isBusyCheering" [disabled]="isCheeredByMe()" mat-icon-button (click)="onCheers()">
+        <button *ngIf="!isBusyCheering" [disabled]="isCheeredByMe()" [matTooltip]="getCheersUserNames()"
+          mat-icon-button (click)="onCheers()">
           <img src="../../assets/img/beer.png"></button>
         <span class="count" *ngIf="activity.activity.cheers && activity.activity.cheers.length > 0">{{activity.activity.cheers.length}}</span>
         <mat-progress-spinner *ngIf="isBusyCheering" color="primary" mode="indeterminate" diameter="32"></mat-progress-spinner>
@@ -49,10 +52,10 @@
 
       <div>
         <button mat-icon-button (click)="isCommentVisible = !isCommentVisible">
-          <img *ngIf="!isCommentVisible" id="btn-comm" src="../../assets/img/comment.png" >
-          <img *ngIf="isCommentVisible" id="btn-cls" src="../../assets/img/cancel.png" >
+          <img *ngIf="!isCommentVisible" id="btn-comm" src="../../assets/img/comment.png">
+          <img *ngIf="isCommentVisible" id="btn-cls" src="../../assets/img/cancel.png">
         </button>
-          <span class="count" id="comm" *ngIf="activity.activity.comments && activity.activity.comments.length > 0 && !isCommentVisible">{{activity.activity.comments.length}}</span>
+        <span class="count" id="comm" *ngIf="activity.activity.comments && activity.activity.comments.length > 0 && !isCommentVisible">{{activity.activity.comments.length}}</span>
       </div>
     </div>
 
@@ -61,8 +64,8 @@
       <mat-divider></mat-divider>
       <div fxLayout fxLayoutAlign="space-between center" *ngIf="isCommentVisible">
         <mat-form-field>
-          <input type="text" autofocus matInput placeholder="{{'Comment' | translate}}" [(ngModel)]="comment" [disabled]="isBusyCommenting"
-          (keydown) = "onKeydown($event)" >
+          <input type="text" autofocus matInput placeholder="{{'Comment' | translate}}" [(ngModel)]="comment"
+            [disabled]="isBusyCommenting" (keydown)="onKeydown($event)">
         </mat-form-field>
         <button mat-icon-button *ngIf="!isBusyCommenting" (click)="onComment()"><img src="../../assets/img/send.png"></button>
         <mat-progress-spinner *ngIf="isBusyCommenting" color="primary" mode="indeterminate" diameter="32"></mat-progress-spinner>
