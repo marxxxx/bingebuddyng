@@ -17,7 +17,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BingeBuddyNg.Api\BingeBuddyNg.Api.csproj" />
+    <ProjectReference Include="..\BingeBuddyNg.Functions\BingeBuddyNg.Functions.csproj" />
     <ProjectReference Include="..\BingeBuddyNg.Services\BingeBuddyNg.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Files\landscape.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\portrait.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

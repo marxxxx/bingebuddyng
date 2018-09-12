@@ -1,6 +1,5 @@
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAzure.Storage.Blob;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Gif;
@@ -9,13 +8,13 @@ using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Functions
 {
     public static class ImageResizingFunction
     {
         private const int ResizeMaxWidth = 1024;
+        private const int ResizeMaxHeight = 768;
 
         [FunctionName("ImageResizingFunction")]
         public static void Run(
@@ -24,13 +23,23 @@ namespace BingeBuddyNg.Functions
             ILogger log)
         {
             var img = Image.Load(strm);
-
-            if (img.Width > ResizeMaxWidth)
+            
+            if (img.Width > ResizeMaxWidth || img.Height > ResizeMaxHeight)
             {
-                log.LogInformation($"Resizing image with width {img.Width} and height {img.Height} ...");
                 double ratio = img.Width / (double)img.Height;
-                int height = (int)(img.Height / ratio);
-                img.Mutate(x => x.Resize(new ResizeOptions() { Size = new SixLabors.Primitives.Size(ResizeMaxWidth, height) }));
+
+                // landscape
+                if (ratio > 1)
+                {
+                    log.LogInformation($"Resizing image with width {img.Width} and height {img.Height} ...");
+                    int height = (int)(ResizeMaxHeight / ratio);
+                    img.Mutate(x => x.AutoOrient().Resize(ResizeMaxWidth, height));
+                }
+                else
+                {
+                    int width = (int)(ResizeMaxWidth * ratio);
+                    img.Mutate(x => x.AutoOrient().Resize(width, ResizeMaxHeight));
+                }
 
 
                 IImageEncoder encoder = GetEncoderFromFileName(name);
@@ -45,6 +54,7 @@ namespace BingeBuddyNg.Functions
             }
 
         }
+
 
         private static IImageEncoder GetEncoderFromFileName(string name)
         {

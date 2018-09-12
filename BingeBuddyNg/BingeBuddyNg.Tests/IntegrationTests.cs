@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Services.DTO;
 using System.Linq;
 using BingeBuddyNg.Services;
+using System.IO;
+using BingeBuddyNg.Functions;
 
 namespace BingeBuddyNg.Tests
 {
@@ -15,7 +17,7 @@ namespace BingeBuddyNg.Tests
     public class IntegrationTests
     {
         static IServiceProvider serviceProvider;
-
+        
         [ClassInitialize]
         public static void Initialize(TestContext context)
         {
@@ -39,6 +41,32 @@ namespace BingeBuddyNg.Tests
             var nextPage = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 10, result.ContinuationToken));
             var timestampsNextPage = nextPage.ResultPage.Select(p => p.Timestamp).ToList();
             Assert.IsTrue(timestampsNextPage.All(t => timestamps.All(t1 => t1 < t)));
+        }
+
+        [TestMethod]
+        public void ImageResizingLandscapeTest()
+        {
+            var strm = File.OpenRead(@".\Files\landscape.jpg");
+
+            
+            BingeBuddyNg.Functions.ImageResizingFunction.Run(strm, "landscape.jpg", out byte[] resizedData, new MockLogger());
+
+            File.WriteAllBytes(@".\Files\landscape.resized.jpg", resizedData);
+
+
+        }
+
+        [TestMethod]
+        public void ImageResizingPortraitTest()
+        {
+            var strm = File.OpenRead(@".\Files\portrait.jpg");
+
+
+            BingeBuddyNg.Functions.ImageResizingFunction.Run(strm, "portrait.jpg", out byte[] resizedData, new MockLogger());
+
+            File.WriteAllBytes(@".\Files\portrait.resized.jpg", resizedData);
+
+
         }
     }
 }
