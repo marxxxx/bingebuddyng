@@ -6,6 +6,7 @@ using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
+using SixLabors.Primitives;
 using System;
 using System.IO;
 
@@ -33,12 +34,12 @@ namespace BingeBuddyNg.Functions
                 {
                     log.LogInformation($"Resizing image with width {img.Width} and height {img.Height} ...");
                     int height = (int)(ResizeMaxHeight / ratio);
-                    img.Mutate(x => x.AutoOrient().Resize(ResizeMaxWidth, height));
+                    img.Mutate(x => x.AutoOrient().Resize(new ResizeOptions() { Size = new Size(ResizeMaxWidth, height), Mode = ResizeMode.Max }));
                 }
                 else
                 {
                     int width = (int)(ResizeMaxWidth * ratio);
-                    img.Mutate(x => x.AutoOrient().Resize(width, ResizeMaxHeight));
+                    img.Mutate(x => x.AutoOrient().Resize(new ResizeOptions() { Size = new Size(width, ResizeMaxHeight), Mode = ResizeMode.Max }));
                 }
 
 

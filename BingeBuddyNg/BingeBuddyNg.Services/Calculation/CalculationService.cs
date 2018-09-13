@@ -24,21 +24,21 @@ namespace BingeBuddyNg.Services.Calculation
             if (userDrinkActivity.Weight == 0)
                 userDrinkActivity.Weight = DefaultWeight;
 
-            var orderedDrinks = userDrinkActivity.Drinks.OrderBy(d => d.Timestamp).ToList();
-            orderedDrinks.Add(new DrinkActivityItem(DateTime.UtcNow));
+            var orderedAlcoholicDrinks = userDrinkActivity.Drinks.Where(d=>d.AlcPrc > 0).OrderBy(d => d.Timestamp).ToList();
+            orderedAlcoholicDrinks.Add(new DrinkActivityItem(DateTime.UtcNow));
 
             double currentAlcoholization = 0.0;
             var factor = userDrinkActivity.Gender == Models.Gender.Female ? 0.61 : 0.69;
 
-            for (int i = 0; i < orderedDrinks.Count; i++)
+            for (int i = 0; i < orderedAlcoholicDrinks.Count; i++)
             {
-                var d = orderedDrinks[i];
+                var d = orderedAlcoholicDrinks[i];
 
                 var tmpPegel = (d.VolMl * d.AlcPrc / 100 * 0.8) / (userDrinkActivity.Weight * factor);
 
                 if (i > 0)
                 {
-                    var timeSinceLastDrink = (d.Timestamp - orderedDrinks[i - 1].Timestamp);
+                    var timeSinceLastDrink = (d.Timestamp - orderedAlcoholicDrinks[i - 1].Timestamp);
                     var decay = timeSinceLastDrink.TotalMinutes * 0.002;
 
                     if (decay > currentAlcoholization)
@@ -54,7 +54,7 @@ namespace BingeBuddyNg.Services.Calculation
 
             currentAlcoholization = Math.Round(currentAlcoholization, 3);
 
-            return new DrinkCalculationResult(userDrinkActivity.UserId, currentAlcoholization, orderedDrinks.Count-1);
+            return new DrinkCalculationResult(userDrinkActivity.UserId, currentAlcoholization, orderedAlcoholicDrinks.Count-1);
         }
 
         public async Task<DrinkCalculationResult> CalculateStatsForUserAsync(User user)
