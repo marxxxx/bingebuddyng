@@ -34,11 +34,11 @@ namespace BingeBuddyNg.Api.Controllers
             return FriendRequestRepository.GetFriendRequestsAsync(userId);
         }
 
-        [HttpGet("[action]/{requestingUserId}")]
-        public Task<bool> HasPendingFriendRequest(string requestingUserId)
+        [HttpGet("[action]/{friendUserId}")]
+        public Task<bool> HasPendingFriendRequest(string friendUserId)
         {
             var userId = IdentityService.GetCurrentUserId();
-            return FriendRequestRepository.HasPendingFriendRequestAsync(userId, requestingUserId);
+            return FriendRequestRepository.HasPendingFriendRequestAsync(friendUserId, userId);
         }
 
         [HttpPost("request/{friendUserId}")]

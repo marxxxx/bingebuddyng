@@ -51,6 +51,13 @@ namespace BingeBuddyNg.Services
 
         public async Task<bool> HasPendingFriendRequestAsync(string userId, string requestingUserId)
         {
+            var result = await Task.WhenAll(InternalHasPendingFriendRequestAsync(userId, requestingUserId), InternalHasPendingFriendRequestAsync(requestingUserId, userId));
+
+            return result.Any(r=>r);
+        }
+
+        private async Task<bool> InternalHasPendingFriendRequestAsync(string userId, string requestingUserId)
+        {
             var whereClause = TableQuery.CombineFilters(
                 TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId),
                 TableOperators.And,
