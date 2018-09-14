@@ -20,6 +20,13 @@
     "DrinkRatio": "Getränkeverteilung",
     "MonthlyDrinkStatistic": "Monatliche Getränkeentwicklung",
     "AvgAlcDrinksPerDay": "Durchschnittliche alkoholische Getränke pro Tag",
-    "CalculatedOverLastMonth": "Berechnet aus dem letzten Monat"
-
+    "CalculatedOverLastMonth": "Berechnet aus dem letzten Monat",
+    "AddFriend": "Als Freund hinzufügen",
+    "RemoveFriend": "Als Freund entfernen",
+    "PendingFriendRequests": "Offene Freundschaftsanfragen",
+    "NoPendingFriendRequests": "Du hast zur Zeit keine offenen Freundschaftsanfragen",
+    "Accept": "Akzeptieren",
+    "Decline": "Ablehnen",
+    "SentFriendRequest": "Die Freundschaftsanfrage wurde versendet.",
+    "FriendRequests": "Freundschaftsanfragen"
 }

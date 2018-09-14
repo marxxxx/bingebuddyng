@@ -7,6 +7,7 @@ export class Activity {
     id: string;
     activityType: ActivityType;
     timestamp: Date;
+    userId: string;
     userProfileImageUrl: string;
     userName: string;
     message: string;

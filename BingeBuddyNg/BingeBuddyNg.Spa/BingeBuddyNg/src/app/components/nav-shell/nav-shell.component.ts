@@ -1,6 +1,6 @@
 import { ShellInteractionService } from '../../services/shell-interaction.service';
 import { AuthService } from '../../services/auth.service';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -11,7 +11,7 @@ import { MatSidenav } from '@angular/material';
   templateUrl: './nav-shell.component.html',
   styleUrls: ['./nav-shell.component.scss']
 })
-export class NavShellComponent {
+export class NavShellComponent implements OnInit {
 
   @ViewChild(MatSidenav)
   sideNav: MatSidenav;
@@ -24,6 +24,10 @@ export class NavShellComponent {
       .pipe(
         map(result => result.matches)
       ).subscribe(this.isHandset$);
+  }
+
+  ngOnInit() {
+    this.shellInteraction.registerSideNav(this.sideNav);
   }
 
 

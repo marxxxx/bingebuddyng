@@ -2,13 +2,21 @@
   <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
     <mat-toolbar *ngIf="!(isHandset$ | async)" color="primary">Menu</mat-toolbar>
-    <mat-toolbar *ngIf="isHandset$ | async" color="primary"><button mat-icon-button (click)="onNavListItemClicked()"><mat-icon>close</mat-icon></button>Menu</mat-toolbar>
+    <mat-toolbar *ngIf="isHandset$ | async" color="primary"><button mat-icon-button (click)="onNavListItemClicked()">
+        <mat-icon>close</mat-icon>
+      </button>Menu</mat-toolbar>
     <mat-nav-list (click)="onNavListItemClicked()">
-      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/activity-feed"><img src="../../assets/img/ActivityFeed.png"><span>{{'Activity' | translate }}</span></a>
-      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/stats"><img src="../../assets/img/statistics.png"><span>{{'Statistics' | translate }}</span></a>
-      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/bingemap"><img src="../../assets/img/map.png"><span>{{'BingeMap' | translate }}</span></a>
+      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/activity-feed"><img src="../../assets/img/ActivityFeed.png"><span>{{'Activity'
+          | translate }}</span></a>
+      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/stats"><img src="../../assets/img/statistics.png"><span>{{'Statistics'
+          | translate }}</span></a>
+      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/bingemap"><img src="../../assets/img/map.png"><span>{{'BingeMap'
+          | translate }}</span></a>
+          <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/friendrequests"><img src="../../assets/img/like.png"><span>{{'FriendRequests'
+              | translate }}</span></a>
       <mat-divider *ngIf="auth.isAuthenticated()"></mat-divider>
-      <a *ngIf="auth.isAuthenticated()" mat-list-item (click)="onLogout()"><img src="../../assets/img/logout.png"><span>{{'Logout' | translate }}</span></a>
+      <a *ngIf="auth.isAuthenticated()" mat-list-item (click)="onLogout()"><img src="../../assets/img/logout.png"><span>{{'Logout'
+          | translate }}</span></a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -22,7 +30,7 @@
         <mat-icon *ngFor="let icon of shellInteraction.shellIcons" [matTooltip]="icon.tooltip">
           {{icon.name}}
         </mat-icon>
-        <app-user-info></app-user-info>
+        <app-me></app-me>
       </div>
 
     </mat-toolbar>

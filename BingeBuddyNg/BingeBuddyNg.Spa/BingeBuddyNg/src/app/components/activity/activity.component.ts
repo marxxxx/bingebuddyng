@@ -1,10 +1,11 @@
+import { UserInfo } from './../../../models/UserInfo';
 import { ActivityType } from './../../../models/ActivityType';
 import { ActivityStatsDTO } from '../../../models/ActivityStatsDTO';
 import { Component, OnInit, Input } from '@angular/core';
 import { TranslateService } from '../../../../node_modules/@ngx-translate/core';
 import { ActivityService } from '../../services/activity.service';
 import { ReactionDTO } from '../../../models/ReactionDTO';
-import { UserDTO } from '../../../models/UserDTO';
+import { User } from '../../../models/User';
 import { AuthService } from '../../services/auth.service';
 import { ReactionType } from '../../../models/ReactionType';
 import { Reaction } from '../../../models/Reaction';
@@ -21,8 +22,19 @@ export class ActivityComponent implements OnInit {
   isBusyCheering = false;
   isBusyCommenting = false;
   isCommentVisible = false;
-  user: UserDTO;
+  user: User;
   comment: string;
+  get userInfo(): UserInfo {
+    if (!this.user) {
+      return null;
+    }
+    return {
+      userId: this.activity.activity.userId,
+      userName: this.activity.activity.userName,
+      userProfileImageUrl: this.activity.activity.userProfileImageUrl
+    };
+  }
+
 
   @Input()
   activity: ActivityStatsDTO;

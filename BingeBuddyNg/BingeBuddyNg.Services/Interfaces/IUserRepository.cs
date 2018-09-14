@@ -11,6 +11,9 @@ namespace BingeBuddyNg.Services.Interfaces
         Task<List<User>> GetAllUsersAsync();
         Task<User> GetUserAsync(string id);
         Task SaveUserAsync(User user);
+        Task UpdateUserProfileAsync(User user);
 
+        Task AddFriendAsync(string userId, string friendUserId);
+        Task RemoveFriendAsync(string userId, string friendUserId);
     }
 }

@@ -20,6 +20,14 @@
     "DrinkRatio": "Drink ratio",
     "MonthlyDrinkStatistic": "Monthly drink statistic",
     "AvgAlcDrinksPerDay": "Average alcoholic drinks per day",
-    "CalculatedOverLastMonth": "Calculated from last month"
+    "CalculatedOverLastMonth": "Calculated from last month",
+    "AddFriend": "add friend",
+    "RemoveFriend": "remove friend",
+    "PendingFriendRequests": "pending friend requests",
+    "NoPendingFriendRequests": "You have no pending friend requests",
+    "Accept": "accept",
+    "Decline": "decline",
+    "SentFriendRequest": "The friend request has been sent.",
+    "FriendRequests": "Friend requests"
 
 }

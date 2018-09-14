@@ -1,6 +1,7 @@
+import { FriendrequestsComponent } from './pages/friendrequests/friendrequests.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 import { BingemapComponent } from './pages/bingemap/bingemap.component';
 import { CallbackComponent } from './components/callback/callback.component';
-import { MeComponent } from './pages/me/me.component';
 import { StatsComponent } from './pages/stats/stats.component';
 import { ActivityFeedComponent } from './pages/activity-feed/activity-feed.component';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
@@ -18,15 +19,18 @@ const routes: Routes = [{
   path: 'activity-feed',
   component: ActivityFeedComponent
 }, {
-  path: 'me',
-  component: MeComponent
-}, {
   path: 'stats',
   component: StatsComponent
 },
 {
   path: 'bingemap',
   component: BingemapComponent
+}, {
+  path: 'profile/:userId',
+  component: ProfileComponent
+}, {
+  path: 'friendrequests',
+  component: FriendrequestsComponent
 },
 {
   path: '',

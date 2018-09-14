@@ -28,6 +28,19 @@ namespace BingeBuddyNg.Services
             return table;
         }
 
+        public async Task DeleteTableEntityAsync(string tableName, string partitionKey, string rowKey)
+        {
+            var table = GetTableReference(tableName);
+
+            var retrieveOperation = TableOperation.Retrieve(partitionKey, rowKey);
+            var result = await table.ExecuteAsync(retrieveOperation);
+            if(result.Result != null)
+            {
+                var deleteOperation = TableOperation.Delete((ITableEntity)result.Result);
+                await table.ExecuteAsync(deleteOperation);
+            }
+        }
+
         public async Task<T> GetTableEntityAsync<T>(string tableName, string partitionKey, string rowKey) where T:ITableEntity, new()
         {
             var table = GetTableReference(tableName);
