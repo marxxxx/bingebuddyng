@@ -12,6 +12,10 @@
 
 </mat-card>
 
-<p *ngIf="pendingRequests.length == 0 && !isBusy">
-  {{'NoPendingFriendRequests' | translate}}
+<p *ngIf="pendingRequests.length == 0 && !isBusy" fxLayout fxLayoutAlign="start center">
+  <mat-icon>warning</mat-icon>{{'NoPendingFriendRequests' | translate}}
+</p>
+
+<p fxLayout fxLayoutAlign="start center">
+  <mat-icon>info</mat-icon>{{'FriendRequestHint' | translate }}
 </p>

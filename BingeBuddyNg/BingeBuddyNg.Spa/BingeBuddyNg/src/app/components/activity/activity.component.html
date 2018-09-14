@@ -3,7 +3,7 @@
     <div fxLayout fxLayoutAlign="start center">
       <app-user-info [userInfo]="userInfo"></app-user-info>
       <!-- <img class="user-profile-image" [src]="activity.activity.userProfileImageUrl"> -->
-      <span class="user-name">{{activity.activity.userName}}</span>
+      <span class="user-name" [routerLink]="['/profile', activity.activity.userId]">{{activity.activity.userName}}</span>
     </div>
     <mat-chip-list class="stats" *ngIf="activity.userStats.currentNightDrinks + activity.userStats.currentAlcoholization > 0">
       <mat-chip class="chip">{{activity.userStats.currentNightDrinks}}

@@ -2,3 +2,11 @@
     margin-top: 15px;
 }
 
+img {
+    margin-right: 5px;
+    max-width: 20%
+}
+
+#actions {
+    margin-top: 30px;
+}

@@ -28,6 +28,7 @@
     "Accept": "accept",
     "Decline": "decline",
     "SentFriendRequest": "The friend request has been sent.",
-    "FriendRequests": "Friend requests"
-
+    "FriendRequests": "Friend requests",
+    "YouAreFriends": "You are friends.",
+    "FriendRequestHint": "Hint: To add a friend, go to his profile and send him a friend request."
 }

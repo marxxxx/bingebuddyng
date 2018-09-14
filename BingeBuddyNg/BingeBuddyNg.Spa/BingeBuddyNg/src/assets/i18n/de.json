@@ -28,5 +28,7 @@
     "Accept": "Akzeptieren",
     "Decline": "Ablehnen",
     "SentFriendRequest": "Die Freundschaftsanfrage wurde versendet.",
-    "FriendRequests": "Freundschaftsanfragen"
+    "FriendRequests": "Freundschaftsanfragen",
+    "YouAreFriends": "Ihr seid befreundet.",
+    "FriendRequestHint": "Tipp: Um einen Freund hinzuzufügen, gehe auf sein Profil und sende ihm eine Freundschaftsanfrage."
 }
