@@ -16,6 +16,6 @@
   <mat-icon>warning</mat-icon>{{'NoPendingFriendRequests' | translate}}
 </p>
 
-<p fxLayout fxLayoutAlign="start center">
+<p fxLayout fxLayoutAlign="start center" *ngIf="!isBusy">
   <mat-icon>info</mat-icon>{{'FriendRequestHint' | translate }}
 </p>

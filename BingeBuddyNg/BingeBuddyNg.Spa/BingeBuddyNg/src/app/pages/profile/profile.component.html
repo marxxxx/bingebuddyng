@@ -1,3 +1,6 @@
+<app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
+
+
 <div class="container" *ngIf="user" fxLayout="column" fxLayoutAlign="center center">
   <img [src]="user.profileImageUrl">
   <h3>{{user.name}}</h3>

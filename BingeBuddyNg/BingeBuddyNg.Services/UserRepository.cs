@@ -51,7 +51,7 @@ namespace BingeBuddyNg.Services
                 savedUser.PushInfo = user.PushInfo;
             }
 
-            TableOperation saveUserOperation = TableOperation.InsertOrReplace(new JsonTableEntity<User>(PartitionKeyValue, user.Id, user));
+            TableOperation saveUserOperation = TableOperation.InsertOrReplace(new JsonTableEntity<User>(PartitionKeyValue, user.Id, savedUser));
 
             await table.ExecuteAsync(saveUserOperation);
         }
