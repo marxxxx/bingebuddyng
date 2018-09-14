@@ -8,6 +8,10 @@
   <p *ngIf="!isBusy && isYourFriend()" fxLayout>
     <img src="../../assets/img/like.png">{{'YouAreFriends' | translate}}
   </p>
+
+  <p *ngIf="!isBusy && isYou()">
+    {{'ThisIsYou' | translate}}
+  </p>
 </div>
 
 
