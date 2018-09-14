@@ -1,5 +1,5 @@
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { UserDTO } from './../models/UserDTO';
+import { User } from '../models/User';
 import { UserService } from './services/user.service';
 import { DataService } from './services/data.service';
 import { MatSnackBar } from '@angular/material';
@@ -91,7 +91,7 @@ export class AppComponent implements OnInit {
 
       this.auth.getProfile((err, profile) => {
         // register user
-        const user: UserDTO = {
+        const user: User = {
           id: profile.sub,
           name: profile.nickname,
           profileImageUrl: profile.picture,

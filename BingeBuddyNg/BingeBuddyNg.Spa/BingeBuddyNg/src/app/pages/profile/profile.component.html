@@ -1,0 +1,22 @@
+<app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
+
+
+<div class="container" *ngIf="user" fxLayout="column" fxLayoutAlign="center center">
+  <img [src]="user.profileImageUrl">
+  <h3>{{user.name}}</h3>
+
+  <p *ngIf="!isBusy && isYourFriend()" fxLayout>
+    <img src="../../assets/img/like.png">{{'YouAreFriends' | translate}}
+  </p>
+</div>
+
+
+
+<div id="actions" fxLayout fxLayoutAlign="center space-between" *ngIf="!isYou() && !isBusy">
+  <button *ngIf="!isYourFriend()" mat-raised-button color="primary" [disabled]="hasPendingRequest" (click)="onAddFriend()">
+    <mat-icon>add</mat-icon>{{'AddFriend' | translate }}
+  </button>
+  <button *ngIf="isYourFriend()" mat-raised-button color="accent">
+    <mat-icon>remove</mat-icon>{{'RemoveFriend' | translate }}
+  </button>
+</div>

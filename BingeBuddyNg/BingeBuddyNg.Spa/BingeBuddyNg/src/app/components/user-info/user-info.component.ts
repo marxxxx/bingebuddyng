@@ -1,7 +1,8 @@
-import { UserDTO } from '../../../models/UserDTO';
+import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { UserInfo } from '../../../models/UserInfo';
 
 @Component({
   selector: 'app-user-info',
@@ -9,32 +10,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./user-info.component.css']
 })
 export class UserInfoComponent implements OnInit {
-  profile: any;
 
-  constructor(private authService: AuthService, private userService: UserService) { }
+  @Input()
+  userInfo: UserInfo;
+
+  @Input()
+  showName: boolean;
+
+  constructor(private router: Router) { }
 
   ngOnInit() {
-
-    if (this.authService.isAuthenticated()) {
-      this.loadProfile();
-    }
-
-
-    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
-      console.log('UserProfileComponent ' + isLoggedIn);
-      if (isLoggedIn) {
-        this.loadProfile();
-      } else {
-        this.profile = null;
-      }
-    });
-
   }
 
-  loadProfile() {
-    this.authService.getProfile((err, profile) => {
-      this.profile = profile;
-    });
+  onClick() {
+    this.router.navigate(['/profile', this.userInfo.userId]);
   }
 
 }

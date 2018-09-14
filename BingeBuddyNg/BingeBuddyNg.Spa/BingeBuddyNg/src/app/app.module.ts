@@ -1,3 +1,4 @@
+import { MeComponent } from './components/me/me.component';
 import { ActivityService } from './services/activity.service';
 import { AuthHttpInterceptor } from './services/auth.interceptor';
 import { AuthService } from './services/auth.service';
@@ -12,7 +13,6 @@ import { NavShellComponent } from './components/nav-shell/nav-shell.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { ActivityFeedComponent } from './pages/activity-feed/activity-feed.component';
-import { MeComponent } from './pages/me/me.component';
 import { StatsComponent } from './pages/stats/stats.component';
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { CallbackComponent } from './components/callback/callback.component';
@@ -37,6 +37,10 @@ import { NotificationService } from './services/notification.service';
 import { InViewportModule } from 'ng-in-viewport';
 import { DrinkChartComponent } from './pages/stats/drink-chart/drink-chart.component';
 import { DrinkRatioChartComponent } from './pages/stats/drink-ratio-chart/drink-ratio-chart.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { FriendrequestsComponent } from './pages/friendrequests/friendrequests.component';
+import { FriendRequestService } from './services/friendrequest.service';
+
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -57,7 +61,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     ActivityComponent,
     ProgressSpinnerComponent,
     DrinkChartComponent,
-    DrinkRatioChartComponent
+    DrinkRatioChartComponent,
+    ProfileComponent,
+    FriendrequestsComponent
   ],
   imports: [
     BrowserModule,
@@ -84,7 +90,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     FileUploadModule
   ],
-  providers: [DataService, AuthService, UserService, ActivityService, NotificationService,
+  providers: [
+    DataService, AuthService, UserService, ActivityService, NotificationService,
+    FriendRequestService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthHttpInterceptor,

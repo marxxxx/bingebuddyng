@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { TableContinuationToken } from './../../../models/TableContinuationToken';
 import { DrinkType } from './../../../models/DrinkType';
 import { AddDrinkActivityDTO } from './../../../models/AddDrinkActivityDTO';
@@ -25,9 +26,9 @@ import { trigger, style, transition, animate, query, stagger } from '@angular/an
   styleUrls: ['./activity-feed.component.scss'],
   animations: [
     trigger('listActivities', [
-      transition('* <=> *', [
-        style({ transform: 'translateY(-2%)', opacity: 0}),
-        animate('300ms ease-in', style({ transform: 'translateY(0)', opacity: 1}))
+      transition('true <=> false', [
+        style({ transform: 'translateY(-2%)', opacity: 0 }),
+        animate('300ms ease-out', style({ transform: 'translateY(0)', opacity: 1 }))
       ])
     ])
   ]
@@ -45,6 +46,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   isInitialLoad = true;
   isBusyUploading = false;
   currentProgress = 0;
+  isReloadSpinnerActive = false;
 
   @ViewChild('#activity-container')
   container: any;
@@ -54,7 +56,8 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     private shellInteraction: ShellInteractionService,
     private auth: AuthService,
     private notification: NotificationService,
-    private changeRef: ChangeDetectorRef) { }
+    private changeRef: ChangeDetectorRef,
+    private route: ActivatedRoute) { }
 
 
   ngOnInit() {
@@ -112,10 +115,10 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
       }
       this.isBusy = false;
 
+      this.isInitialLoad = false;
+
       // adds reload-spinner after a second so it doesn't interfere with slide-in animation
-      setTimeout(() => this.isInitialLoad = false, 1000);
-
-
+      setTimeout(() => this.isReloadSpinnerActive = true, 3000);
 
     }, e => {
       this.isBusy = false;
@@ -137,7 +140,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     this.activityService.addDrinkActivity(activity).subscribe(r => {
       this.isBusyAdding = false;
-      this.isInitialLoad = true;
       this.load();
     }, e => {
       this.isBusyAdding = false;
@@ -158,7 +160,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     this.activityService.addDrinkActivity(activity).subscribe(r => {
       this.isBusyAdding = false;
-      this.isInitialLoad = true;
       this.load();
     }, e => {
       this.isBusyAdding = false;
@@ -178,7 +179,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     this.activityService.addDrinkActivity(activity).subscribe(r => {
       this.isBusyAdding = false;
-      this.isInitialLoad = true;
       this.load();
     }, e => {
       this.isBusyAdding = false;
@@ -198,7 +198,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     this.activityService.addDrinkActivity(activity).subscribe(r => {
       this.isBusyAdding = false;
-      this.isInitialLoad = true;
       this.load();
     }, e => {
       this.isBusyAdding = false;
@@ -214,7 +213,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     this.activityService.addMessageActivity(activity).subscribe(r => {
       this.isBusyAdding = false;
-      this.isInitialLoad = true;
       this.load();
     }, e => {
       this.isBusyAdding = false;

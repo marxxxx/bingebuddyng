@@ -1,3 +1,4 @@
+import { MatSidenav } from '@angular/material';
 import { Injectable } from '@angular/core';
 import { ShellIconInfo } from '../../models/ShellIconInfo';
 
@@ -5,6 +6,8 @@ import { ShellIconInfo } from '../../models/ShellIconInfo';
   providedIn: 'root'
 })
 export class ShellInteractionService {
+
+  private sideNav: MatSidenav;
 
   shellIcons: ShellIconInfo[] = [];
 
@@ -19,5 +22,16 @@ export class ShellInteractionService {
     }
   }
 
+  registerSideNav(sideNav: MatSidenav) {
+    this.sideNav = sideNav;
+  }
+
+  setSideNavState(open: boolean) {
+    if (open) {
+      this.sideNav.open();
+    } else {
+      this.sideNav.close();
+    }
+  }
 
 }

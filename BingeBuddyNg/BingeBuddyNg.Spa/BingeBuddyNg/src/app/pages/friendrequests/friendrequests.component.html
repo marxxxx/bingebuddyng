@@ -1,0 +1,21 @@
+<app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
+
+<mat-card *ngFor="let r of pendingRequests">
+
+  <mat-card-content fxLayout fxLayoutAlign="space-between center">
+    <app-user-info [userInfo]="r"></app-user-info> {{r.userName}}
+    <div>
+      <button mat-raised-button color="primary" (click)="onAccept(r)">{{'Accept' | translate }}</button>
+      <button mat-raised-button color="accent" (click)="onDecline(r)">{{'Decline' | translate }}</button>
+    </div>
+  </mat-card-content>
+
+</mat-card>
+
+<p *ngIf="pendingRequests.length == 0 && !isBusy" fxLayout fxLayoutAlign="start center">
+  <mat-icon>warning</mat-icon>{{'NoPendingFriendRequests' | translate}}
+</p>
+
+<p fxLayout fxLayoutAlign="start center" *ngIf="!isBusy">
+  <mat-icon>info</mat-icon>{{'FriendRequestHint' | translate }}
+</p>
