@@ -40,6 +40,13 @@ namespace BingeBuddyNg.Api.Controllers
             var response = new UpdateUserResponseDTO(!user.Weight.HasValue, user.Gender == Gender.Unknown);
             return response;
         }
-        
+
+        [HttpDelete("{friendUserId}")]
+        public Task RemoveFriend(string friendUserId)
+        {
+            var userId = IdentityService.GetCurrentUserId();
+            return UserRepository.RemoveFriendAsync(userId, friendUserId);
+        }
+
     }
 }

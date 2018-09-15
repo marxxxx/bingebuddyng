@@ -33,9 +33,9 @@ namespace BingeBuddyNg.Services.Models
             }
         }
 
-        public void RemoveFriend(UserInfo user)
+        public void RemoveFriend(string userId)
         {
-            var foundFriend = Friends.FirstOrDefault(f => f.UserId == user.UserId);
+            var foundFriend = Friends.FirstOrDefault(f => f.UserId == userId);
             if(foundFriend != null)
             {
                 Friends.Remove(foundFriend);

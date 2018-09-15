@@ -31,5 +31,7 @@
     "FriendRequests": "Friend requests",
     "YouAreFriends": "You are friends.",
     "FriendRequestHint": "Hint: To add a friend, go to his profile and send him a friend request.",
-    "ThisIsYou": "This is you."
+    "ThisIsYou": "This is you.",
+    "PendingFriendRequest": "Pending friend request ...",
+    "RemovedFriend": "Removed friend."
 }

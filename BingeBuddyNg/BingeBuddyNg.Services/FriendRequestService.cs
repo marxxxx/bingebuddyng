@@ -29,7 +29,7 @@ namespace BingeBuddyNg.Services
 
                 await FriendRequestRepository.AddFriendRequestAsync(friendUserId, requestingUser.ToUserInfo());
 
-                // TODO: send push notification to inform user about friend request
+                // send push notification to inform user about friend request
                 var friendUser = await UserRepository.GetUserAsync(friendUserId);
                 if(friendUser.PushInfo != null)
                 {
@@ -61,6 +61,6 @@ namespace BingeBuddyNg.Services
             return FriendRequestRepository.DeleteFriendRequestAsync(decliningUserId, requestingUserId);
         }
 
-
+   
     }
 }

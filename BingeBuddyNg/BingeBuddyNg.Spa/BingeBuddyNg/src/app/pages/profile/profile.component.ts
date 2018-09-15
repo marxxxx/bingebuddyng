@@ -1,7 +1,7 @@
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material';
 import { FriendRequestService } from './../../services/friendrequest.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService } from '../../services/user.service';
@@ -48,22 +48,32 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.isBusy = true;
     this.userService.getUser(this.userId).subscribe(r => {
       this.user = r;
-      this.isBusy = false;
+
+      this.auth.getProfile((err, profile) => {
+        if (profile) {
+          this.currentUserId = profile.sub;
+
+          if (!this.isYou()) {
+            this.friendRequests.hasPendingFriendRequests(this.userId).subscribe(hasRequest => {
+              this.hasPendingRequest = hasRequest;
+              this.isBusy = false;
+            }, e => {
+              this.isBusy = false;
+              console.error('error retrieving pending friend request status');
+              console.error(e);
+            });
+          }
+        } else {
+          console.error('could not get profile');
+          this.isBusy = false;
+        }
+      });
+
     }, e => {
       console.log(e);
     });
 
-    this.auth.getProfile((err, profile) => {
-      if (profile) {
-        this.currentUserId = profile.sub;
 
-        if (!this.isYou()) {
-          this.friendRequests.hasPendingFriendRequests(this.userId).subscribe(r => this.hasPendingRequest = r);
-        }
-      } else {
-        console.error('could not get profile');
-      }
-    });
 
 
   }
@@ -88,7 +98,22 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.hasPendingRequest = true;
     this.friendRequests.addFriendRequest(this.userId).subscribe(r => {
       const message = this.translate.instant('SentFriendRequest');
-      this.snackBar.open(message, 'OK', {duration: 2000});
+      this.snackBar.open(message, 'OK', { duration: 2000 });
     });
+  }
+
+  onRemoveFriend() {
+    const index = this.user.friends.findIndex(f => f.userId === this.currentUserId);
+    if (index >= 0) {
+      this.user.friends.splice(index, 1);
+    }
+
+    this.userService.removeFriend(this.userId).subscribe(r => {
+      const message = this.translate.instant('RemovedFriend');
+
+      this.snackBar.open(message, 'OK', { duration: 2000 });
+    });
+
+
   }
 }

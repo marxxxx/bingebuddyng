@@ -23,7 +23,7 @@ export class UserService {
 
 
   removeFriend(friendUserId: string): Observable<{}> {
-    return this.http.put(`${this.baseUrl}/{friendUserId}/remove`, {});
+    return this.http.delete(`${this.baseUrl}/${friendUserId}`, {});
   }
 
   saveUser(user: User): Observable<{}> {

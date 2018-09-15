@@ -85,13 +85,12 @@ namespace BingeBuddyNg.Services
 
         public async Task RemoveFriendAsync(string userId, string friendUserId)
         {
-            var user = await GetUserAsync(userId);
-            var friend = await GetUserAsync(friendUserId);
+            var results = await Task.WhenAll(GetUserAsync(userId), GetUserAsync(friendUserId));
 
-            user.RemoveFriend(friend.ToUserInfo());
-            friend.RemoveFriend(user.ToUserInfo());
+            results[0].RemoveFriend(friendUserId);
+            results[1].RemoveFriend(userId);
 
-            await Task.WhenAll(SaveUserAsync(user), SaveUserAsync(friend));
+            await Task.WhenAll(SaveUserAsync(results[0]), SaveUserAsync(results[1]));
         }
     }
 }

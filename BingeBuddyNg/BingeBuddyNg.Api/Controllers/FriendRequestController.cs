@@ -48,6 +48,7 @@ namespace BingeBuddyNg.Api.Controllers
             return FriendRequestService.AddFriendRequestAsync(userId, friendUserId);
         }
 
+
         [HttpPut("accept/{requestingUserId}")]
         public Task AcceptFriendRequest(string requestingUserId)
         {
