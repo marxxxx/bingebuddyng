@@ -1,3 +1,4 @@
+import { DrinkersComponent } from './pages/drinkers/drinkers.component';
 import { FriendrequestsComponent } from './pages/friendrequests/friendrequests.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { BingemapComponent } from './pages/bingemap/bingemap.component';
@@ -31,6 +32,9 @@ const routes: Routes = [{
 }, {
   path: 'friendrequests',
   component: FriendrequestsComponent
+}, {
+  path: 'drinkers',
+  component: DrinkersComponent
 },
 {
   path: '',

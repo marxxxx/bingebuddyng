@@ -1,3 +1,4 @@
+import { UserInfo } from './../../models/UserInfo';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -12,6 +13,14 @@ export class UserService {
   baseUrl = environment.BaseDataUrl + '/user';
 
   constructor(private http: HttpClient) { }
+
+  getAllUsers(filterText: string): Observable<UserInfo[]> {
+    let url = this.baseUrl;
+    if (filterText) {
+      url += encodeURI('?filterText=' + filterText);
+    }
+    return this.http.get<UserInfo[]>(url);
+  }
 
   getUser(userId: string): Observable<User> {
     return this.http.get<User>(`${this.baseUrl}/${userId}`);

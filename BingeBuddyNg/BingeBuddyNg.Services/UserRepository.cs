@@ -79,7 +79,7 @@ namespace BingeBuddyNg.Services
         public async Task<List<User>> GetAllUsersAsync()
         {
             var result = await StorageAccess.QueryTableAsync<JsonTableEntity<User>>(TableName);
-            var users = result.Select(r => r.Entity).ToList();
+            var users = result.OrderByDescending(u=>u.Timestamp).Select(r => r.Entity).ToList();
             return users;
         }
 

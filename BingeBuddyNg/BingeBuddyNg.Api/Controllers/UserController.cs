@@ -25,6 +25,22 @@ namespace BingeBuddyNg.Api.Controllers
             this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
+        [HttpGet]
+        public async Task<List<UserInfo>> GetAllUsers(string filterText=null)
+        {
+            var users = await this.UserRepository.GetAllUsersAsync();
+                        
+            var userInfo = users.Select(u => u.ToUserInfo()).ToList();
+
+            // TODO: Should soon be improved!
+            if (!string.IsNullOrEmpty(filterText))
+            {
+                userInfo = userInfo.Where(u => u.UserName.Contains(filterText)).ToList();
+            }
+
+            return userInfo;
+        }
+
         [HttpGet("{userId}")]
         public async Task<User> GetUser(string userId)
         {

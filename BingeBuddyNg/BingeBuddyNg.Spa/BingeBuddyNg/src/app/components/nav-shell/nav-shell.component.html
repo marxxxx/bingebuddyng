@@ -12,8 +12,10 @@
           | translate }}</span></a>
       <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/bingemap"><img src="../../assets/img/map.png"><span>{{'BingeMap'
           | translate }}</span></a>
-          <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/friendrequests"><img src="../../assets/img/like.png"><span>{{'FriendRequests'
-              | translate }}</span></a>
+      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/drinkers"><img src="../../assets/img/beer.png"><span>{{'Drinkers'
+          | translate }}</span></a>
+      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/friendrequests"><img src="../../assets/img/like.png"><span>{{'FriendRequests'
+          | translate }}</span></a>
       <mat-divider *ngIf="auth.isAuthenticated()"></mat-divider>
       <a *ngIf="auth.isAuthenticated()" mat-list-item (click)="onLogout()"><img src="../../assets/img/logout.png"><span>{{'Logout'
           | translate }}</span></a>
