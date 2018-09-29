@@ -25,36 +25,43 @@ namespace BingeBuddyNg.Services
 
         public async Task<User> FindUserAsync(string id)
         {
-            var table = StorageAccess.GetTableReference(TableName);
-
-            TableOperation retrieveOperation = TableOperation.Retrieve<JsonTableEntity<User>>(PartitionKeyValue, id);
-
-            var result = await table.ExecuteAsync(retrieveOperation);
+            var result = await FindUserEntityAsync(id);
             User user = null;
-            if (result.Result != null)
+            if (result != null)
             {
-                user = ((JsonTableEntity<User>)result.Result).Entity;
+                user = result.Entity;
             }
 
             return user;
         }
 
+        private async Task<JsonTableEntity<User>> FindUserEntityAsync(string id)
+        {
+            var table = StorageAccess.GetTableReference(TableName);
+
+            TableOperation retrieveOperation = TableOperation.Retrieve<JsonTableEntity<User>>(PartitionKeyValue, id);
+
+            var result = await table.ExecuteAsync(retrieveOperation);
+
+            return result?.Result as JsonTableEntity<User>;
+        }
+
+
         public async Task CreateOrUpdateUserAsync(User user)
         {
             var table = StorageAccess.GetTableReference(TableName);
             TableOperation saveUserOperation = null;
-            var savedUser = await FindUserAsync(user.Id);
+            var savedUser = await FindUserEntityAsync(user.Id);
             if(savedUser != null)
             {
-                savedUser.Name = user.Name;
-                savedUser.ProfileImageUrl = user.ProfileImageUrl;
-                savedUser.PushInfo = user.PushInfo;
-                saveUserOperation = TableOperation.Replace(new JsonTableEntity<User>(PartitionKeyValue, user.Id, savedUser));
+                savedUser.Entity.Name = user.Name;
+                savedUser.Entity.ProfileImageUrl = user.ProfileImageUrl;
+                savedUser.Entity.PushInfo = user.PushInfo;
+                saveUserOperation = TableOperation.Replace(savedUser);
             }
             else
             {
-                savedUser = user;
-                saveUserOperation = TableOperation.Insert(new JsonTableEntity<User>(PartitionKeyValue, user.Id, savedUser));
+                saveUserOperation = TableOperation.Insert(new JsonTableEntity<User>(PartitionKeyValue, user.Id, savedUser.Entity));
             }
 
             await table.ExecuteAsync(saveUserOperation);

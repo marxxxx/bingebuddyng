@@ -62,6 +62,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
               console.error('error retrieving pending friend request status');
               console.error(e);
             });
+          } else {
+            this.isBusy = false;
+            // TODO: clean up this messy code!
           }
         } else {
           console.error('could not get profile');

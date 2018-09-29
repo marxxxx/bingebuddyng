@@ -69,14 +69,16 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     const sub = this.notification.activityReceived$.subscribe(_ => this.load());
     this.subscriptions.push(sub);
 
-    this.shellInteraction.addShellIcon({ id: this.locationIconId, name: 'not_listed_location', tooltip: 'QueryingLocation' });
+    // this.shellInteraction.addShellIcon({ id: this.locationIconId, name: 'not_listed_location', tooltip: 'QueryingLocation' });
 
     this.util.getLocation().then(l => {
       this.location = l;
-      this.shellInteraction.addShellIcon({ id: this.locationIconId, name: 'location_on', tooltip: `${l.longitude} / ${l.latitude}` });
+      // this.shellInteraction.addShellIcon({ id: this.locationIconId, name: 'location_on', tooltip: `${l.longitude} / ${l.latitude}` });
     }, e => {
+      console.error('error retrieving location');
+      console.error(e);
       // this.snackBar.open(this.transate.instant('NoGeolocationMessage'), 'OK', { duration: 3000 });
-      this.shellInteraction.addShellIcon({ id: this.locationIconId, name: 'location_off', tooltip: 'NoGeolocationMessage' });
+      // this.shellInteraction.addShellIcon({ id: this.locationIconId, name: 'location_off', tooltip: 'NoGeolocationMessage' });
     });
   }
 

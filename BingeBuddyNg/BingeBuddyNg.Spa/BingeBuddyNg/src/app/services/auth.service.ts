@@ -57,6 +57,7 @@ export class AuthService {
     });
   }
 
+  // TODO: Change to observable!
   public getProfile(cb): void {
 
     if (this.userProfile) {
