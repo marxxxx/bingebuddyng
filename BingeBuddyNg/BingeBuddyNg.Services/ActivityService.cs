@@ -38,7 +38,7 @@ namespace BingeBuddyNg.Services
         public async Task AddMessageActivityAsync(AddMessageActivityDTO addedActivity)
         {
             var userId = this.IdentityService.GetCurrentUserId();
-            var user = await this.UserRepository.GetUserAsync(userId);
+            var user = await this.UserRepository.FindUserAsync(userId);
 
             var activity = Activity.CreateMessageActivity(DateTime.UtcNow, addedActivity.Location, userId, user.Name, user.ProfileImageUrl, addedActivity.Message);
 
@@ -49,7 +49,7 @@ namespace BingeBuddyNg.Services
         public async Task AddDrinkActivityAsync(AddDrinkActivityDTO addedActivity)
         {
             var userId = this.IdentityService.GetCurrentUserId();
-            var user = await this.UserRepository.GetUserAsync(userId);
+            var user = await this.UserRepository.FindUserAsync(userId);
 
             var activity = Activity.CreateDrinkActivity(DateTime.UtcNow, addedActivity.Location, userId, user.Name, user.ProfileImageUrl,
                 addedActivity.DrinkType, addedActivity.DrinkId, addedActivity.DrinkName, addedActivity.AlcPrc, addedActivity.Volume);
@@ -62,7 +62,7 @@ namespace BingeBuddyNg.Services
         public async Task AddImageActivityAsync(Stream stream, string fileName, Location location)
         {
             var userId = this.IdentityService.GetCurrentUserId();
-            var user = await this.UserRepository.GetUserAsync(userId);
+            var user = await this.UserRepository.FindUserAsync(userId);
 
             // store file in blob storage
             string imageUrlOriginal = await StorageAccessService.SaveFileInBlobStorage("img", "activities", fileName, stream);

@@ -25,12 +25,12 @@ namespace BingeBuddyNg.Services
             var hasPendingRequest = await FriendRequestRepository.HasPendingFriendRequestAsync(friendUserId, requestingUserId);
             if(hasPendingRequest == false)
             {
-                var requestingUser = await UserRepository.GetUserAsync(requestingUserId);
+                var requestingUser = await UserRepository.FindUserAsync(requestingUserId);
 
                 await FriendRequestRepository.AddFriendRequestAsync(friendUserId, requestingUser.ToUserInfo());
 
                 // send push notification to inform user about friend request
-                var friendUser = await UserRepository.GetUserAsync(friendUserId);
+                var friendUser = await UserRepository.FindUserAsync(friendUserId);
                 if(friendUser.PushInfo != null)
                 {
                     NotificationService.SendMessage(new[] { friendUser.PushInfo }, new Models.NotificationMessage(Constants.FriendRequestNotificationIconUrl,
@@ -46,8 +46,8 @@ namespace BingeBuddyNg.Services
 
             await UserRepository.AddFriendAsync(acceptingUserId, requestingUserId);
 
-            var acceptingUser = await UserRepository.GetUserAsync(acceptingUserId);
-            var requestingUser = await UserRepository.GetUserAsync(requestingUserId);
+            var acceptingUser = await UserRepository.FindUserAsync(acceptingUserId);
+            var requestingUser = await UserRepository.FindUserAsync(requestingUserId);
             if (requestingUser.PushInfo != null)
             {
                 NotificationService.SendMessage(new[] { requestingUser.PushInfo }, new Models.NotificationMessage(Constants.FriendRequestNotificationIconUrl,

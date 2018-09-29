@@ -9,9 +9,9 @@ namespace BingeBuddyNg.Services.Interfaces
     public interface IUserRepository
     {
         Task<List<User>> GetAllUsersAsync();
-        Task<User> GetUserAsync(string id);
-        Task SaveUserAsync(User user);
-        Task UpdateUserProfileAsync(User user);
+        Task<User> FindUserAsync(string id);
+        Task UpdateUserAsync(User user);
+        Task CreateOrUpdateUserAsync(User user);
 
         Task AddFriendAsync(string userId, string friendUserId);
         Task RemoveFriendAsync(string userId, string friendUserId);

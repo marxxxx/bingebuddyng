@@ -24,7 +24,7 @@ namespace BingeBuddyNg.Functions
             INotificationService notificationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<INotificationService>();
 
             var activity = await activityRepository.GetActivityAsync(reactionAddedMessage.ActivityId);
-            var reactingUser = await userRepository.GetUserAsync(reactionAddedMessage.UserId);
+            var reactingUser = await userRepository.FindUserAsync(reactionAddedMessage.UserId);
            
 
             switch (reactionAddedMessage.ReactionType)
@@ -64,7 +64,7 @@ namespace BingeBuddyNg.Functions
             List<PushInfo> involvedUserPushInfos = new List<PushInfo>();
             foreach (var user in involvedUsers)
             {
-                var userInfo = await userRepository.GetUserAsync(user.UserId);
+                var userInfo = await userRepository.FindUserAsync(user.UserId);
                 if(userInfo.PushInfo != null)
                 {
                     involvedUserPushInfos.Add(userInfo.PushInfo);
@@ -80,7 +80,7 @@ namespace BingeBuddyNg.Functions
         private static async Task NotifyOriginUserAsync(IUserRepository userRepository, INotificationService notificationService, 
             ReactionType reactionType, string originUserId, User reactingUser)
         {
-            var originUser = await userRepository.GetUserAsync(originUserId);
+            var originUser = await userRepository.FindUserAsync(originUserId);
             
             if (originUser.PushInfo != null)
             {

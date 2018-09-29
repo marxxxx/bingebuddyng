@@ -28,14 +28,14 @@ namespace BingeBuddyNg.Api.Controllers
         [HttpGet("{userId}")]
         public async Task<User> GetUser(string userId)
         {
-            var user = await this.UserRepository.GetUserAsync(userId);
+            var user = await this.UserRepository.FindUserAsync(userId);
             return user;
         }
                 
         [HttpPost]
         public async Task<UpdateUserResponseDTO> UpdateUserProfile([FromBody]User user)
         {
-            await this.UserRepository.UpdateUserProfileAsync(user);
+            await this.UserRepository.CreateOrUpdateUserAsync(user);
 
             var response = new UpdateUserResponseDTO(!user.Weight.HasValue, user.Gender == Gender.Unknown);
             return response;

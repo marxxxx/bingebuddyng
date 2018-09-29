@@ -23,7 +23,7 @@ namespace BingeBuddyNg.Services
         }
                 
 
-        public async Task<User> GetUserAsync(string id)
+        public async Task<User> FindUserAsync(string id)
         {
             var table = StorageAccess.GetTableReference(TableName);
 
@@ -39,28 +39,32 @@ namespace BingeBuddyNg.Services
             return user;
         }
 
-        public async Task UpdateUserProfileAsync(User user)
+        public async Task CreateOrUpdateUserAsync(User user)
         {
             var table = StorageAccess.GetTableReference(TableName);
-
-            var savedUser = await GetUserAsync(user.Id);
+            TableOperation saveUserOperation = null;
+            var savedUser = await FindUserAsync(user.Id);
             if(savedUser != null)
             {
                 savedUser.Name = user.Name;
                 savedUser.ProfileImageUrl = user.ProfileImageUrl;
                 savedUser.PushInfo = user.PushInfo;
+                saveUserOperation = TableOperation.Replace(new JsonTableEntity<User>(PartitionKeyValue, user.Id, savedUser));
             }
-
-            TableOperation saveUserOperation = TableOperation.InsertOrReplace(new JsonTableEntity<User>(PartitionKeyValue, user.Id, savedUser));
+            else
+            {
+                savedUser = user;
+                saveUserOperation = TableOperation.Insert(new JsonTableEntity<User>(PartitionKeyValue, user.Id, savedUser));
+            }
 
             await table.ExecuteAsync(saveUserOperation);
         }
 
-        public Task SaveUserAsync(User user)
+        public Task UpdateUserAsync(User user)
         {
             var table = StorageAccess.GetTableReference(TableName);
             
-            TableOperation saveUserOperation = TableOperation.InsertOrReplace(new JsonTableEntity<User>(PartitionKeyValue, user.Id, user));
+            TableOperation saveUserOperation = TableOperation.Replace(new JsonTableEntity<User>(PartitionKeyValue, user.Id, user));
 
             return table.ExecuteAsync(saveUserOperation);            
         }
@@ -74,23 +78,23 @@ namespace BingeBuddyNg.Services
 
         public async Task AddFriendAsync(string userId, string friendUserId)
         {
-            var user = await GetUserAsync(userId);
-            var friend = await GetUserAsync(friendUserId);
+            var user = await FindUserAsync(userId);
+            var friend = await FindUserAsync(friendUserId);
 
             user.AddFriend(friend.ToUserInfo());
             friend.AddFriend(user.ToUserInfo());
 
-            await Task.WhenAll(SaveUserAsync(user), SaveUserAsync(friend));
+            await Task.WhenAll(UpdateUserAsync(user), UpdateUserAsync(friend));
         }
 
         public async Task RemoveFriendAsync(string userId, string friendUserId)
         {
-            var results = await Task.WhenAll(GetUserAsync(userId), GetUserAsync(friendUserId));
+            var results = await Task.WhenAll(FindUserAsync(userId), FindUserAsync(friendUserId));
 
             results[0].RemoveFriend(friendUserId);
             results[1].RemoveFriend(userId);
 
-            await Task.WhenAll(SaveUserAsync(results[0]), SaveUserAsync(results[1]));
+            await Task.WhenAll(UpdateUserAsync(results[0]), UpdateUserAsync(results[1]));
         }
     }
 }

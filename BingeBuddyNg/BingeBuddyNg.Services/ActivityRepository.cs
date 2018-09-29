@@ -134,7 +134,7 @@ namespace BingeBuddyNg.Services
             entity.Entity.Comments = activity.Comments;
             entity.Entity.Cheers = activity.Cheers;
 
-            TableOperation updateOperation = TableOperation.InsertOrReplace(entity);
+            TableOperation updateOperation = TableOperation.Replace(entity);
             await table.ExecuteAsync(updateOperation);
         }
 
