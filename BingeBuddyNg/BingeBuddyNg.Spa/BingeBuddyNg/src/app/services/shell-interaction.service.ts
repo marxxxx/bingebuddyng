@@ -22,6 +22,13 @@ export class ShellInteractionService {
     }
   }
 
+  removeShellIcon(id: string) {
+    const existingIconIndex = this.shellIcons.findIndex(i => i.id === id);
+    if (existingIconIndex >= 0) {
+      this.shellIcons.splice(existingIconIndex, 1);
+    }
+  }
+
   registerSideNav(sideNav: MatSidenav) {
     this.sideNav = sideNav;
   }

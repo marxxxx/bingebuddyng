@@ -1,11 +1,12 @@
+import { StateService } from './../../services/state.service';
 import { ShellIconInfo } from './../../../models/ShellIconInfo';
 import { FriendRequestInfo } from './../../../models/FriendRequestInfo';
 import { FriendRequestService } from './../../services/friendrequest.service';
 import { ShellInteractionService } from '../../services/shell-interaction.service';
 import { AuthService } from '../../services/auth.service';
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MatSidenav } from '@angular/material';
 import { Router } from '@angular/router';
@@ -15,9 +16,12 @@ import { Router } from '@angular/router';
     templateUrl: './nav-shell.component.html',
     styleUrls: ['./nav-shell.component.scss']
 })
-export class NavShellComponent implements OnInit {
+export class NavShellComponent implements OnInit, OnDestroy {
 
+    private subscriptions: Subscription[] = [];
+    private currentUserId: string;
     friendRequests: FriendRequestInfo[] = [];
+
 
     @ViewChild(MatSidenav)
     sideNav: MatSidenav;
@@ -27,7 +31,8 @@ export class NavShellComponent implements OnInit {
     constructor(private breakpointObserver: BreakpointObserver,
         public auth: AuthService, public shellInteraction: ShellInteractionService,
         private friendRequestService: FriendRequestService,
-        private router: Router) {
+        private router: Router,
+        private state: StateService) {
         this.breakpointObserver.observe(Breakpoints.Handset)
             .pipe(
                 map(result => result.matches)
@@ -39,25 +44,38 @@ export class NavShellComponent implements OnInit {
 
         // get current user
         this.auth.getProfile((err, profile) => {
-            const currentUserId = profile.sub;
+            this.currentUserId = profile.sub;
 
             // get pending friend requests
-            this.friendRequestService.getPendingFriendRequests().subscribe(r => {
-                this.friendRequests = r.filter(f => f.requestingUser.userId !== currentUserId);
-
-                if (this.friendRequests.length > 0) {
-                    this.shellInteraction.addShellIcon({
-                        id: 'friendrequests',
-                        name: 'sentiment_satisfied_alt',
-                        tooltip: 'PendingFriendRequests',
-                        link: '/friendrequests'
-                    });
-                }
-            });
+            this.updatePendingFriendRequests(this.currentUserId);
         });
 
+        // update pending friend requests if something changed in this area
+        const sub = this.state.pendingFriendRequestsChanged$.subscribe(p => this.updatePendingFriendRequests(this.currentUserId));
+        this.subscriptions.push(sub);
     }
 
+    ngOnDestroy() {
+        this.subscriptions.forEach(s => s.unsubscribe());
+    }
+
+
+    private updatePendingFriendRequests(currentUserId: any) {
+        this.friendRequestService.getPendingFriendRequests().subscribe(r => {
+            this.friendRequests = r.filter(f => f.requestingUser.userId !== currentUserId);
+            const id = 'friendrequests';
+            if (this.friendRequests.length > 0) {
+                this.shellInteraction.addShellIcon({
+                    id: id,
+                    name: 'sentiment_satisfied_alt',
+                    tooltip: 'PendingFriendRequests',
+                    link: '/friendrequests'
+                });
+            } else {
+              this.shellInteraction.removeShellIcon(id);
+            }
+        });
+    }
 
     onLogout() {
         this.auth.logout();
@@ -71,7 +89,7 @@ export class NavShellComponent implements OnInit {
 
     onShellIconClick(icon: ShellIconInfo): void {
         if (icon.link) {
-          this.router.navigate([icon.link]);
+            this.router.navigate([icon.link]);
         }
     }
 

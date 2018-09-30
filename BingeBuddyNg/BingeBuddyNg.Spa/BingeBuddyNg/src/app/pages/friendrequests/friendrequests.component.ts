@@ -1,3 +1,4 @@
+import { StateService } from './../../services/state.service';
 import { AuthService } from './../../services/auth.service';
 import { UserInfo } from './../../../models/UserInfo';
 import { FriendRequestService } from './../../services/friendrequest.service';
@@ -13,11 +14,12 @@ import { Subscription } from 'rxjs';
 export class FriendrequestsComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
+  private currentUserId: string;
   pendingRequests: UserInfo[] = [];
   isBusy = false;
-  private currentUserId: string;
 
   constructor(private route: ActivatedRoute, private friendRequest: FriendRequestService,
+    private state: StateService,
     private auth: AuthService) { }
 
   ngOnInit() {
@@ -54,7 +56,9 @@ export class FriendrequestsComponent implements OnInit, OnDestroy {
 
     this.removeUserFromList(user.userId);
     this.friendRequest.acceptFriendRequest(user.userId).subscribe(r => {
-      console.log('accepted');
+
+      // signal change in friend requests status
+      this.state.raisePendingFriendRequestsChanged();
     });
 
   }
@@ -62,7 +66,9 @@ export class FriendrequestsComponent implements OnInit, OnDestroy {
   onDecline(user: UserInfo) {
     this.removeUserFromList(user.userId);
     this.friendRequest.declineFriendRequest(user.userId).subscribe(r => {
-      console.log('accepted');
+
+      // signal change in friend requests status
+      this.state.raisePendingFriendRequestsChanged();
     });
   }
 
