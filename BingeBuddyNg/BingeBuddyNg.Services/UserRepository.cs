@@ -67,13 +67,15 @@ namespace BingeBuddyNg.Services
             await table.ExecuteAsync(saveUserOperation);
         }
 
-        public Task UpdateUserAsync(User user)
+        public async Task UpdateUserAsync(User user)
         {
             var table = StorageAccess.GetTableReference(TableName);
+            var userEntity = await FindUserEntityAsync(user.Id);
+            userEntity.Entity = user;
             
-            TableOperation saveUserOperation = TableOperation.Replace(new JsonTableEntity<User>(PartitionKeyValue, user.Id, user));
+            TableOperation saveUserOperation = TableOperation.Replace(userEntity);
 
-            return table.ExecuteAsync(saveUserOperation);            
+            await table.ExecuteAsync(saveUserOperation);            
         }
 
         public async Task<List<User>> GetAllUsersAsync()

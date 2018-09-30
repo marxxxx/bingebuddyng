@@ -42,14 +42,16 @@ namespace BingeBuddyNg.Services
 
         public async Task AcceptFriendRequestAsync(string acceptingUserId, string requestingUserId)
         {
-            await FriendRequestRepository.DeleteFriendRequestAsync(acceptingUserId, requestingUserId);
 
             await UserRepository.AddFriendAsync(acceptingUserId, requestingUserId);
+
+            await FriendRequestRepository.DeleteFriendRequestAsync(acceptingUserId, requestingUserId);
 
             var acceptingUser = await UserRepository.FindUserAsync(acceptingUserId);
             var requestingUser = await UserRepository.FindUserAsync(requestingUserId);
             if (requestingUser.PushInfo != null)
             {
+                //TODO: Localize
                 NotificationService.SendMessage(new[] { requestingUser.PushInfo }, new Models.NotificationMessage(Constants.FriendRequestNotificationIconUrl,
                     Constants.FriendRequestNotificationIconUrl, Constants.FriendRequestApplicationUrl, "Freundschaftsanfrage",
                     $"{acceptingUser.Name} hat deine Freundschaftsanfrage akzeptiert!"));

@@ -1,12 +1,13 @@
 <app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
 
+<h3>{{'PendingFriendRequests' | translate }}</h3>
 <mat-card *ngFor="let r of pendingRequests">
 
   <mat-card-content fxLayout fxLayoutAlign="space-between center">
-    <app-user-info [userInfo]="r"></app-user-info> {{r.userName}}
+    <app-user-info [userInfo]="r" [showName]="true"></app-user-info>
     <div>
-      <button mat-raised-button color="primary" (click)="onAccept(r)">{{'Accept' | translate }}</button>
-      <button mat-raised-button color="accent" (click)="onDecline(r)">{{'Decline' | translate }}</button>
+      <button mat-icon-button color="primary" (click)="onAccept(r)"><mat-icon>check</mat-icon></button>
+      <button mat-icon-button color="accent" (click)="onDecline(r)"><mat-icon>close</mat-icon></button>
     </div>
   </mat-card-content>
 

@@ -28,6 +28,8 @@ export class NavShellComponent implements OnInit {
 
   ngOnInit() {
     this.shellInteraction.registerSideNav(this.sideNav);
+
+
   }
 
 
