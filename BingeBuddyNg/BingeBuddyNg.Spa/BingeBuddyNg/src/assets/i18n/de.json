@@ -35,5 +35,8 @@
     "PendingFriendRequest": "Freundschaftsanfrage gesendet ...",
     "RemovedFriend": "Der Freund wurde entfernt.",
     "Drinkers": "Trinker",
-    "Search": "Suche"
+    "Search": "Suche",
+    "Friends": "Freunde",
+    "NoFriends": "Du hast keine Freunde.",
+    "FindFriendsAt": "Schau doch mal ob du hier welche findest "
 }

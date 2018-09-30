@@ -21,31 +21,34 @@ namespace BingeBuddyNg.Services
             this.StorageAccesService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
         }
 
-        public async Task AddFriendRequestAsync(string userId, UserInfo requestingUser)
+        public async Task AddFriendRequestAsync(UserInfo friend, UserInfo requestingUser)
         {
             var table = StorageAccesService.GetTableReference(TableName);
+            
+            var requestingEntity = new FriendRequestEntity(friend.UserId, requestingUser.UserId, requestingUser, friend);
+            var friendEntity = new FriendRequestEntity(requestingUser.UserId, friend.UserId, requestingUser, friend);
 
-            var entity = new FriendRequestEntity(userId, DateTime.UtcNow, requestingUser.UserId,
-                requestingUser.UserName, requestingUser.UserProfileImageUrl);
-            TableOperation operation = TableOperation.Insert(entity);
-
-            await table.ExecuteAsync(operation);
+            await table.ExecuteAsync(TableOperation.Insert(requestingEntity));
+            await table.ExecuteAsync(TableOperation.Insert(friendEntity));
         }
 
 
         public async Task DeleteFriendRequestAsync(string userId, string requestingUserId)
         {
             await this.StorageAccesService.DeleteTableEntityAsync(TableName, userId, requestingUserId);
+            await this.StorageAccesService.DeleteTableEntityAsync(TableName, requestingUserId, userId);
         }
 
 
-        public async Task<List<UserInfo>> GetFriendRequestsAsync(string userId)
+        public async Task<List<FriendRequestInfo>> GetFriendRequestsAsync(string userId)
         {
             var whereClause = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId);
-
+            
             var queryResult = await this.StorageAccesService.QueryTableAsync<FriendRequestEntity>(TableName, whereClause);
 
-            var result = queryResult.Select(r => new UserInfo(r.RequestingUserId, r.RequestingUserName, r.RequestingUserProfileImageUrl)).ToList();
+            var result = queryResult.Select(r => new FriendRequestInfo(
+                new UserInfo(r.RequestingUserId, r.RequestingUserName, r.RequestingUserProfileImageUrl),
+                new UserInfo(r.FriendUserId, r.FriendUserName, r.FriendUserProfileImageUrl))).ToList();
             return result;
         }
 

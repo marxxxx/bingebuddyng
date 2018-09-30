@@ -29,9 +29,12 @@
 
       <span>Binge Buddy</span>
       <div class="right" fxLayout fxLayoutAlign="space-between center">
-        <mat-icon *ngFor="let icon of shellInteraction.shellIcons" [matTooltip]="icon.tooltip">
-          {{icon.name}}
-        </mat-icon>
+        <button mat-icon-button (click)="onShellIconClick(icon)" *ngFor="let icon of shellInteraction.shellIcons">
+          <mat-icon [matTooltip]="icon.tooltip | translate">
+            {{icon.name}}
+          </mat-icon>
+        </button>
+
         <app-me></app-me>
       </div>
 

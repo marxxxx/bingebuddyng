@@ -8,8 +8,8 @@ namespace BingeBuddyNg.Services.Interfaces
 {
     public interface IFriendRequestRepository
     {
-        Task<List<UserInfo>> GetFriendRequestsAsync(string userId);
-        Task AddFriendRequestAsync(string userId, UserInfo requestingUser);
+        Task<List<FriendRequestInfo>> GetFriendRequestsAsync(string userId);
+        Task AddFriendRequestAsync(UserInfo friend, UserInfo requestingUser);
         Task DeleteFriendRequestAsync(string userId, string requestingUserId);
         Task<bool> HasPendingFriendRequestAsync(string userId, string requestingUserId);
     }

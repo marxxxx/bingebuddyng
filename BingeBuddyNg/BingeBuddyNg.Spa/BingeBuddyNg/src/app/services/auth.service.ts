@@ -1,13 +1,14 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import * as auth0 from 'auth0-js';
 import { Router } from '@angular/router';
+import { UserProfile } from '../../models/UserProfile';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private userProfile: any;
+  private userProfile: UserProfile;
 
   readonly idTokenStorageKey = 'id_token';
   readonly tokenStorageKey = 'token';
@@ -57,7 +58,6 @@ export class AuthService {
     });
   }
 
-  // TODO: Change to observable!
   public getProfile(cb): void {
 
     if (this.userProfile) {
