@@ -11,6 +11,7 @@ namespace BingeBuddyNg.Services.Entitys
     {
         public ActivityType ActivityType { get; set; }
         public bool HasLocation { get; set; }
+        public string UserId { get; set; }
 
         public ActivityTableEntity()
         { }
@@ -19,6 +20,7 @@ namespace BingeBuddyNg.Services.Entitys
         {
             this.ActivityType = activity.ActivityType;
             this.HasLocation = activity.Location != null && activity.Location.IsValid();
+            this.UserId = activity.UserId;
         }
 
         public override void ReadEntity(IDictionary<string, EntityProperty> properties, OperationContext operationContext)
@@ -28,19 +30,12 @@ namespace BingeBuddyNg.Services.Entitys
             {
                 this.ActivityType = Util.SafeParseEnum<ActivityType>(activityTypeValue.StringValue, ActivityType.None);
             }
-
-            //if (properties.TryGetValue(nameof(HasLocation), out EntityProperty hasLocationValue))
-            //{
-            //    this.HasLocation = hasLocationValue.BooleanValue.GetValueOrDefault();
-            //}
-
         }
 
         public override IDictionary<string, EntityProperty> WriteEntity(OperationContext operationContext)
         {
             var properties = base.WriteEntity(operationContext);
             properties.Add(nameof(ActivityType), new EntityProperty(ActivityType.ToString()));
-            //properties.Add(nameof(HasLocation), new EntityProperty(HasLocation));
             return properties;
         }
     }
