@@ -122,10 +122,14 @@ namespace BingeBuddyNg.Services
 
        
 
-        public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeedAsync(TableContinuationToken continuationToken = null)
+        public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeedAsync(string userId, TableContinuationToken continuationToken = null)
         {
+            var callingUser = await this.UserRepository.FindUserAsync(userId);
+            var visibleUserIds = callingUser.Friends.Select(f => f.UserId).Except(callingUser.MutedByFriendUserIds);
+            
+
             // TODO: Use Constant for Page Size
-            var activities = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 20, continuationToken));
+            var activities = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, visibleUserIds, 20, continuationToken));
             var userIds = activities.ResultPage.Select(a => a.UserId).Distinct();
             var userStats = await this.UserStatsRepository.GetStatisticsAsync(userIds);
 

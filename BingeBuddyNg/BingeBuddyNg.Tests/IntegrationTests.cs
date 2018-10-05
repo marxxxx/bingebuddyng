@@ -35,10 +35,10 @@ namespace BingeBuddyNg.Tests
         public async Task GetActivityFeedTest()
         {
             IActivityRepository activityRepository = serviceProvider.GetRequiredService<IActivityRepository>();
-            var result = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 1000));
+            var result = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, null, 1000));
             
             var timestamps = result.ResultPage.Select(p => p.Timestamp).ToList();
-            var nextPage = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 10, result.ContinuationToken));
+            var nextPage = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, null, 10, result.ContinuationToken));
             var timestampsNextPage = nextPage.ResultPage.Select(p => p.Timestamp).ToList();
             Assert.IsTrue(timestampsNextPage.All(t => timestamps.All(t1 => t1 < t)));
         }

@@ -11,19 +11,22 @@ namespace BingeBuddyNg.Services.DTO
         public bool OnlyWithLocation { get; set; }
         public int PageSize { get; set; }
         public TableContinuationToken ContinuationToken { get; set; }
+        public IEnumerable<string> FilteredUserIds { get; set; }
 
         public GetActivityFilterArgs()
         { }
 
-        public GetActivityFilterArgs(bool onlyWithLocation, int pageSize, TableContinuationToken continuationToken)
+        public GetActivityFilterArgs(bool onlyWithLocation, IEnumerable<string> filteredUserIds, int pageSize, TableContinuationToken continuationToken)
         {
+            this.FilteredUserIds = filteredUserIds;
             this.OnlyWithLocation = onlyWithLocation;
             this.PageSize = pageSize;
             this.ContinuationToken = continuationToken;
         }
 
-        public GetActivityFilterArgs(bool onlyWithLocation, int pageSize = 30, string continuationToken = null)
+        public GetActivityFilterArgs(bool onlyWithLocation, IEnumerable<string> filteredUserIds, int pageSize = 30, string continuationToken = null)
         {
+            this.FilteredUserIds = filteredUserIds;
             this.OnlyWithLocation = onlyWithLocation;
             this.PageSize = pageSize;
             if (continuationToken != null)

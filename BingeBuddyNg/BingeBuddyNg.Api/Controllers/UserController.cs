@@ -64,5 +64,18 @@ namespace BingeBuddyNg.Api.Controllers
             return UserRepository.RemoveFriendAsync(userId, friendUserId);
         }
 
+        [HttpPut("[action]")]
+        public async Task SetFriendMuteState(string friendUserId, bool muteState)
+        {
+            var userId = IdentityService.GetCurrentUserId();
+            var user = await UserRepository.FindUserAsync(userId);
+            user.SetFriendMuteState(friendUserId, muteState);
+
+            var mutedUser = await UserRepository.FindUserAsync(friendUserId);
+            mutedUser.SetMutedByFriendState(userId, muteState);
+
+            Task.WaitAll(UserRepository.UpdateUserAsync(user), UserRepository.UpdateUserAsync(mutedUser));
+        }
+
     }
 }
