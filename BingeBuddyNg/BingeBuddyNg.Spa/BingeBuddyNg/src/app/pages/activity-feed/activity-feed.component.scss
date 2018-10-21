@@ -1,5 +1,10 @@
-#loadingSpinner {
+.activityspinner {
     margin-top: -200px !important;
+    margin: 0 auto;
+}
+
+.noactivityspinner {
+    margin-top: 200px !important;
     margin: 0 auto;
 }
 

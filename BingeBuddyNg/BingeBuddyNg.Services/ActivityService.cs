@@ -2,6 +2,7 @@
 using BingeBuddyNg.Services.Interfaces;
 using BingeBuddyNg.Services.Messages;
 using BingeBuddyNg.Services.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 using System;
@@ -15,23 +16,28 @@ namespace BingeBuddyNg.Services
 {
     public class ActivityService : IActivityService
     {
+        private const int MaxQueryLoopCount = 5;
         public IIdentityService IdentityService { get; }
         public IUserRepository UserRepository { get; }
         public IActivityRepository ActivityRepository { get; }
         public IUserStatsRepository UserStatsRepository { get; }
         public StorageAccessService StorageAccessService { get; }
 
-        public ActivityService(IIdentityService identityService,  
+        private ILogger<ActivityService> logger;
+
+        public ActivityService(IIdentityService identityService,
             IUserRepository userRepository,
-            IActivityRepository activityRepository, 
+            IActivityRepository activityRepository,
             IUserStatsRepository userStatsRepository,
-            StorageAccessService storageAccessService)
+            StorageAccessService storageAccessService,
+            ILogger<ActivityService> logger)
         {
             this.IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             this.ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
             this.UserStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
             this.StorageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
 
@@ -66,7 +72,7 @@ namespace BingeBuddyNg.Services
 
             // store file in blob storage
             string imageUrlOriginal = await StorageAccessService.SaveFileInBlobStorage("img", "activities", fileName, stream);
-            
+
             var activity = Activity.CreateImageActivity(DateTime.UtcNow, location, userId, user.Name, user.ProfileImageUrl, imageUrlOriginal);
 
             var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
@@ -80,7 +86,7 @@ namespace BingeBuddyNg.Services
             string userId = this.IdentityService.GetCurrentUserId();
 
             var startTime = DateTime.UtcNow.AddDays(-30).Date;
-            
+
             var result = await this.ActivityRepository.GetActivitysForUser(userId, startTime, ActivityType.Drink);
 
             var groupedByDay = result.GroupBy(t => t.Timestamp.Date)
@@ -88,7 +94,7 @@ namespace BingeBuddyNg.Services
                 .Select(t => new ActivityAggregationDTO()
                 {
                     Count = t.Count(),
-                    CountBeer = t.Count(d=>d.DrinkType == DrinkType.Beer),
+                    CountBeer = t.Count(d => d.DrinkType == DrinkType.Beer),
                     CountWine = t.Count(d => d.DrinkType == DrinkType.Wine),
                     CountShots = t.Count(d => d.DrinkType == DrinkType.Shot),
                     CountAnti = t.Count(d => d.DrinkType == DrinkType.Anti),
@@ -98,7 +104,7 @@ namespace BingeBuddyNg.Services
                 .ToList();
 
             // now fill holes of last 30 days
-            for(int i=-30; i<0; i++)
+            for (int i = -30; i < 0; i++)
             {
                 var date = DateTime.UtcNow.AddDays(i).Date;
                 var hasData = groupedByDay.Any(d => d.Day == date);
@@ -112,7 +118,7 @@ namespace BingeBuddyNg.Services
 
             return sortedResult;
         }
-        
+
         private async Task AddToActivityAddedQueueAsync(Activity savedActivity)
         {
             var queueClient = this.StorageAccessService.GetQueueReference(Constants.ActivityAddedQueueName);
@@ -120,19 +126,15 @@ namespace BingeBuddyNg.Services
             await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
         }
 
-       
+
 
         public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeedAsync(string userId, TableContinuationToken continuationToken = null)
         {
             var callingUser = await this.UserRepository.FindUserAsync(userId);
-            var visibleUserIds = callingUser.GetVisibleFriendUserIds();
             
-            // TODO: Use Constant for Page Size
-            var activities = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 20, continuationToken));
 
-            // filter out users you should not see (or only see antialcoholic drinks from)
-            activities.ResultPage = activities.ResultPage.Where(a => visibleUserIds.Contains(a.UserId) || 
-                (callingUser.Friends.Select(f=>f.UserId).Contains(a.UserId) && a.DrinkType == DrinkType.Anti)).ToList();
+            // TODO: Use Constant for Page Size
+            var activities = await GetActivityFeedAsync(callingUser, continuationToken, new PagedQueryResult<Activity>());
 
             var userIds = activities.ResultPage.Select(a => a.UserId).Distinct();
             var userStats = await this.UserStatsRepository.GetStatisticsAsync(userIds);
@@ -141,11 +143,41 @@ namespace BingeBuddyNg.Services
             return new PagedQueryResult<ActivityStatsDTO>(result, activities.ContinuationToken);
         }
 
+        private async Task<PagedQueryResult<Activity>> GetActivityFeedAsync(User callingUser, TableContinuationToken continuationToken, 
+            PagedQueryResult<Activity> previousResult, int queryLoopCount = 0)
+        {
+            logger.LogInformation($"Getting ActivityFeed (result {previousResult.ResultPage.Count}, query count {queryLoopCount} ...");
+            if(queryLoopCount > MaxQueryLoopCount)
+            {
+                return previousResult;
+            }
+            var visibleUserIds = callingUser.GetVisibleFriendUserIds();
+            var nextResult = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 20, continuationToken));
+
+            // filter out users you should not see (or only see antialcoholic drinks from)
+            nextResult.ResultPage = nextResult.ResultPage.Where(a => visibleUserIds.Contains(a.UserId) ||
+                (callingUser.Friends.Select(f => f.UserId).Contains(a.UserId) && a.DrinkType == DrinkType.Anti)).ToList();
+
+            nextResult.ResultPage.InsertRange(0, previousResult.ResultPage);
+
+            if(previousResult.ResultPage.Count < 5)
+            {
+                return await GetActivityFeedAsync(callingUser, 
+                    nextResult.ContinuationToken != null ? JsonConvert.DeserializeObject<TableContinuationToken>(nextResult.ContinuationToken) : null, 
+                    nextResult, queryLoopCount+1);
+                
+            }
+            else
+            {
+                return nextResult;
+            }
+        }
+
 
         public async Task AddReactionAsync(ReactionDTO reaction)
         {
             var userId = this.IdentityService.GetCurrentUserId();
-            
+
             // add to queue
             var queueClient = this.StorageAccessService.GetQueueReference(Constants.ReactionAddedQueueName);
             var message = new ReactionAddedMessage(reaction.ActivityId, reaction.Type, userId, reaction.Comment);

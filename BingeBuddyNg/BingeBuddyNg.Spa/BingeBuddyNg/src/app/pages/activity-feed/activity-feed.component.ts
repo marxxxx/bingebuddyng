@@ -82,7 +82,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
   onAppear(ev) {
 
-    if (ev.visible) {
+    if (ev.visible && this.continuationToken) {
       console.log('loading next page');
       this.load(this.continuationToken);
     }

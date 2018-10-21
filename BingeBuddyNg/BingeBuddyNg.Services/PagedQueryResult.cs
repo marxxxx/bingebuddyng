@@ -8,11 +8,17 @@ namespace BingeBuddyNg.Services
 {
     public class PagedQueryResult<T>
     {
+        public PagedQueryResult()
+        {
+            this.ResultPage = new List<T>();
+        }
 
         public PagedQueryResult(List<T> resultPage, string continuationToken)
         {
             this.ResultPage = resultPage;
+
             this.ContinuationToken = continuationToken;
+
         }
         public PagedQueryResult(List<T> resultPage, TableContinuationToken continuationToken)
         {
