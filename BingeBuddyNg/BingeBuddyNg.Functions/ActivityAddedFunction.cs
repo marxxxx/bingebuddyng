@@ -45,8 +45,10 @@ namespace BingeBuddyNg.Functions
                 // Immediately update Stats for current user
                 await DrinkCalculatorFunction.UpdateStatsForUserasync(currentUser, calculationService, userStatsRepository, log);
 
-                // get friends of this user
-                foreach (var friend in currentUser?.Friends)
+                // get friends of this user who didn't mute themselves from him
+                var friends = currentUser.Friends.Where(f => currentUser.MutedByFriendUserIds == null || 
+                    !currentUser.MutedByFriendUserIds.Contains(f.UserId)).ToList();
+                foreach (var friend in friends)
                 {
                     try
                     {

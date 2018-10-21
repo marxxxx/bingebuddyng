@@ -34,8 +34,8 @@
 
   <div *ngFor="let f of user?.friends" fxLayout fxLayoutAlign="space-between center">
     <app-user-info [userInfo]="f" [showName]="true" [matTooltip]="f.userName"></app-user-info>
-    <button mat-icon-button *ngIf="!isMutedFriend(f.userId)" (click)="setFriendMuteState(f.userId, true)"><mat-icon>volume_up</mat-icon></button>
-    <button mat-icon-button *ngIf="isMutedFriend(f.userId)" (click)="setFriendMuteState(f.userId, false)"><mat-icon>volume_off</mat-icon></button>
+    <button mat-icon-button *ngIf="isYou() && !isMutedFriend(f.userId)" (click)="setFriendMuteState(f.userId, true)"><mat-icon>volume_up</mat-icon></button>
+    <button mat-icon-button *ngIf="isYou() && isMutedFriend(f.userId)" (click)="setFriendMuteState(f.userId, false)"><mat-icon>volume_off</mat-icon></button>
   </div>
 
 
