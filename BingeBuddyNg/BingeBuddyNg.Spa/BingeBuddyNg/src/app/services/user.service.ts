@@ -40,4 +40,9 @@ export class UserService {
     console.log(user);
     return this.http.post(this.baseUrl, user);
   }
+
+  setFriendMuteState(friendUserId: string, muteState: boolean): Observable<any> {
+    const url = `${this.baseUrl}/SetFriendMuteState?friendUserId=${friendUserId}&muteState=${muteState}`;
+    return this.http.put(url, {});
+  }
 }

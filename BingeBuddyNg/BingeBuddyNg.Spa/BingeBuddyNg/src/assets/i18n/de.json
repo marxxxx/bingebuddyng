@@ -38,5 +38,8 @@
     "Search": "Suche",
     "Friends": "Freunde",
     "NoFriends": "Du hast keine Freunde.",
-    "FindFriendsAt": "Schau doch mal ob du hier welche findest "
+    "NoActiveFriends": "Du hast keine aktiven Freunde.",
+    "FindFriendsAt": "Schau doch mal ob du hier welche findest ",
+    "OperationFailed": "Das hat nicht funktioniert. Bitte nochmal versuchen!",
+    "FindFriendsOnDrinkersPage": "Geh zur Trinker Seite und finde neue Freunde indem du jemandem eine Freundschaftsanfrage sendest!"
 }

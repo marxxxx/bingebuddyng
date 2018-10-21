@@ -8,4 +8,5 @@ export class User {
     weight?: number;
     pushInfo?: PushInfo;
     friends?: UserInfo[];
+    mutedFriendUserIds?: string[];
 }

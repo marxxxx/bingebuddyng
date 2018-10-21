@@ -16,9 +16,9 @@ export class DrinkDialogComponent implements OnInit {
     'https://media.giphy.com/media/26gjiYH2vGNjB11wk/giphy.gif',
     'http://static.wixstatic.com/media/ddcd6c_60bf7754b5c502596a79fe039235618b.gif',
     'https://i.pinimg.com/originals/8f/0d/36/8f0d3672ef0b768fdf8fb999c9ca116e.gif'];
-  readonly wineGifs = ['https://media1.tenor.com/images/cf4393066940affd7a6cf7bca24d31c4/tenor.gif?itemid=4088025',
+  readonly wineGifs = ['https://media1.tenor.com/images/cf4393066940affd7a6cf7bca24d31c4/tenor.gif',
     'https://media.giphy.com/media/9U7YUWNqG5j56/giphy.gif'];
-  readonly shotGifs = ['https://media1.tenor.com/images/e1981c3c933343bdd610d1a3b89ad26c/tenor.gif?itemid=5499454'];
+  readonly shotGifs = ['https://media1.tenor.com/images/e1981c3c933343bdd610d1a3b89ad26c/tenor.gif'];
   readonly antiGifs = ['https://media.tenor.com/images/063a21946b6afea28ca76820acecb5e4/tenor.gif',
     'https://media.giphy.com/media/PAujV4AqViWCA/giphy.gif'];
 

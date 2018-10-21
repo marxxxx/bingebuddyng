@@ -1,3 +1,4 @@
+import { ShellInteractionService } from './../../services/shell-interaction.service';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material';
 import { FriendRequestService } from './../../services/friendrequest.service';
@@ -30,7 +31,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private friendRequests: FriendRequestService,
     private auth: AuthService,
     private translate: TranslateService,
-    private snackBar: MatSnackBar) { }
+    private snackBar: MatSnackBar,
+    private shellInteraction: ShellInteractionService) { }
 
   ngOnInit() {
 
@@ -102,6 +104,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.friendRequests.addFriendRequest(this.userId).subscribe(r => {
       const message = this.translate.instant('SentFriendRequest');
       this.snackBar.open(message, 'OK', { duration: 2000 });
+    }, e => {
+      this.shellInteraction.showErrorMessage();
     });
   }
 
@@ -115,8 +119,37 @@ export class ProfileComponent implements OnInit, OnDestroy {
       const message = this.translate.instant('RemovedFriend');
 
       this.snackBar.open(message, 'OK', { duration: 2000 });
+    }, e => {
+      this.shellInteraction.showErrorMessage();
     });
 
 
+  }
+
+  isMutedFriend(userId: string): boolean {
+    return (this.user && this.user.mutedFriendUserIds && this.user.mutedFriendUserIds.indexOf(userId) >= 0);
+  }
+
+  setFriendMuteState(userId: string, mute: boolean) {
+    if (this.user.mutedFriendUserIds == null) {
+      this.user.mutedFriendUserIds = [];
+    }
+
+    console.log(`setting friend mute state ${userId} - ${mute}`);
+    if (mute) {
+      this.user.mutedFriendUserIds.push(userId);
+    } else {
+      const index = this.user.mutedFriendUserIds.findIndex(u => u === userId);
+      if (index >= 0) {
+        this.user.mutedFriendUserIds.splice(index, 1);
+      }
+    }
+
+
+
+    this.userService.setFriendMuteState(userId, mute)
+      .subscribe(r => console.log('finished'), e => {
+        this.shellInteraction.showErrorMessage();
+      });
   }
 }
