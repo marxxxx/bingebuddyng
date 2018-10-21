@@ -149,6 +149,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
         this.load();
       }, e => {
         this.isBusyAdding = false;
+        this.shellInteraction.showErrorMessage();
       });
     });
 
@@ -173,6 +174,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
         this.load();
       }, e => {
         this.isBusyAdding = false;
+        this.shellInteraction.showErrorMessage();
       });
     });
   }
@@ -194,6 +196,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
         this.load();
       }, e => {
         this.isBusyAdding = false;
+        this.shellInteraction.showErrorMessage();
       });
     });
   }
@@ -215,6 +218,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
         this.load();
       }, e => {
         this.isBusyAdding = false;
+        this.shellInteraction.showErrorMessage();
       });
     });
   }
@@ -231,6 +235,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
       this.load();
     }, e => {
       this.isBusyAdding = false;
+      this.shellInteraction.showErrorMessage();
     });
   }
 

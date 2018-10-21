@@ -41,5 +41,6 @@
     "NoActiveFriends": "You have got no active friends.",
     "FindFriendsAt": "Have a look if you find some over here ",
     "OperationFailed": "That didn't work. Please try again!",
-    "FindFriendsOnDrinkersPage": "Go to the drinkers page and find some new friends by sending them a friend request."
+    "FindFriendsOnDrinkersPage": "Go to the drinkers page and find some new friends by sending them a friend request.",
+    "EnterDrinks": "Or enter some drinks with the plus symbol on the bottom right!"
 }

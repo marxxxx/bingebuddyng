@@ -1,44 +1,63 @@
+import { Subscription } from 'rxjs';
 import { FriendRequestInfo } from './../../../models/FriendRequestInfo';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material';
 import { AuthService } from './../../services/auth.service';
 import { UserInfo } from './../../../models/UserInfo';
 import { User } from './../../../models/User';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { FriendRequestService } from '../../services/friendrequest.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-drinkers',
   templateUrl: './drinkers.component.html',
   styleUrls: ['./drinkers.component.css']
 })
-export class DrinkersComponent implements OnInit {
+export class DrinkersComponent implements OnInit, OnDestroy {
 
   isBusy = false;
   filterText = null;
   currentUser: User;
   users: UserInfo[];
   pendingRequests: FriendRequestInfo[] = [];
+  sub: Subscription;
 
-  constructor(private userService: UserService,
+  constructor(
+    private route: ActivatedRoute,
+    private userService: UserService,
     private auth: AuthService,
     private translate: TranslateService,
     private friendRequests: FriendRequestService,
     private snackbar: MatSnackBar) { }
 
   ngOnInit() {
-    // get current user
-    this.auth.getProfile((err, profile) => {
 
-      this.userService.getUser(profile.sub).subscribe(u => {
-        this.currentUser = u;
+    this.sub = this.route.paramMap.subscribe(p => {
+      // get current user
+      this.auth.getProfile((err, profile) => {
+
+        this.userService.getUser(profile.sub).subscribe(u => {
+          this.currentUser = u;
+
+          this.load();
+        });
+      });
+
+      this.friendRequests.getPendingFriendRequests().subscribe(r => {
+        this.pendingRequests = r;
       });
     });
 
-    this.friendRequests.getPendingFriendRequests().subscribe(r => {
-      this.pendingRequests = r;
-    });
+
+  }
+
+  ngOnDestroy() {
+    if (this.sub) {
+      this.sub.unsubscribe();
+      this.sub = null;
+    }
   }
 
 
