@@ -41,6 +41,8 @@ namespace BingeBuddyNg.Services
                         TableQuery.GenerateFilterConditionForBool(nameof(ActivityTableEntity.HasLocation), QueryComparisons.Equal, true));
             }
 
+          
+
             var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityTableName, whereClause, args.PageSize, args.ContinuationToken);
 
             List<Activity> resultActivitys = GetActivitiesWithId(result.ResultPage).ToList();

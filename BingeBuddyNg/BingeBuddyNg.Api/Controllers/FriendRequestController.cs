@@ -27,7 +27,7 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
         [HttpGet]
-        public Task<List<UserInfo>> GetPendingFriendRequests()
+        public Task<List<FriendRequestInfo>> GetPendingFriendRequests()
         {
             var userId = IdentityService.GetCurrentUserId();
 

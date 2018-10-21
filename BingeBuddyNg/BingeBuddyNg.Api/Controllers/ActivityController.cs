@@ -19,11 +19,15 @@ namespace BingeBuddyNg.Api.Controllers
     [ApiController]
     public class ActivityController : ControllerBase
     {
+        public IIdentityService IdentityService { get; }
         public IActivityService ActivityService { get; }
         public IActivityRepository ActivityRepository { get; }
 
-        public ActivityController(IActivityService activityService, IActivityRepository activityRepository)
+        public ActivityController(
+            IIdentityService identityService,
+            IActivityService activityService, IActivityRepository activityRepository)
         {
+            this.IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.ActivityService = activityService ?? throw new ArgumentNullException(nameof(activityService));
             this.ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
         }
@@ -39,12 +43,13 @@ namespace BingeBuddyNg.Api.Controllers
         [HttpGet("[action]")]
         public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeed(string continuationToken)
         {
+            var userId = this.IdentityService.GetCurrentUserId();
             TableContinuationToken tableContinuationToken = null;
             if(string.IsNullOrEmpty(continuationToken) == false)
             {
                 tableContinuationToken = JsonConvert.DeserializeObject<TableContinuationToken>(continuationToken);
             }
-            var result = await this.ActivityService.GetActivityFeedAsync(tableContinuationToken);
+            var result = await this.ActivityService.GetActivityFeedAsync(userId, tableContinuationToken);
             return result;
         }
 

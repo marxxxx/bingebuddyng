@@ -33,5 +33,14 @@
     "FriendRequestHint": "Tipp: Um einen Freund hinzuzufügen, gehe auf sein Profil und sende ihm eine Freundschaftsanfrage.",
     "ThisIsYou": "Das bist du.",
     "PendingFriendRequest": "Freundschaftsanfrage gesendet ...",
-    "RemovedFriend": "Der Freund wurde entfernt."
+    "RemovedFriend": "Der Freund wurde entfernt.",
+    "Drinkers": "Trinker",
+    "Search": "Suche",
+    "Friends": "Freunde",
+    "NoFriends": "Du hast keine Freunde.",
+    "NoActiveFriends": "Du hast keine aktiven Freunde.",
+    "FindFriendsAt": "Schau doch mal ob du hier welche findest ",
+    "OperationFailed": "Das hat nicht funktioniert. Bitte nochmal versuchen!",
+    "FindFriendsOnDrinkersPage": "Geh zur Trinker Seite und finde neue Freunde indem du jemandem eine Freundschaftsanfrage sendest!",
+    "EnterDrinks": "Oder buche ein paar Getränke mit dem Plus-Symbol rechts unten ein!"
 }

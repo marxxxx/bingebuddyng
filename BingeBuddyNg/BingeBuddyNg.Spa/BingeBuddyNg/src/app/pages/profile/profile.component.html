@@ -21,10 +21,26 @@
     <mat-icon>add</mat-icon>{{'AddFriend' | translate }}
   </button>
   <p *ngIf="hasPendingRequest" fxLayout fxLayoutAlign="center center">
-    <mat-icon>sentiment_satisfied_alt</mat-icon>
+    <mat-icon>access_time</mat-icon>
     <span>{{'PendingFriendRequest' | translate }}</span>
   </p>
   <button *ngIf="isYourFriend()" mat-raised-button color="accent" (click)="onRemoveFriend()">
     <mat-icon>remove</mat-icon>{{'RemoveFriend' | translate }}
   </button>
+</div>
+
+<div id="friends" *ngIf="!isBusy && (isYou() || isYourFriend())">
+  <h3>{{'Friends' | translate }}</h3>
+
+  <div *ngFor="let f of user?.friends" fxLayout fxLayoutAlign="space-between center">
+    <app-user-info [userInfo]="f" [showName]="true" [matTooltip]="f.userName"></app-user-info>
+    <button mat-icon-button *ngIf="isYou() && !isMutedFriend(f.userId)" (click)="setFriendMuteState(f.userId, true)"><mat-icon>volume_up</mat-icon></button>
+    <button mat-icon-button *ngIf="isYou() && isMutedFriend(f.userId)" (click)="setFriendMuteState(f.userId, false)"><mat-icon>volume_off</mat-icon></button>
+  </div>
+
+
+  <div *ngIf="isYou() && (!user.friends || user.friends.length === 0)">
+    <p>{{'NoFriends' | translate }}</p>
+    <p>{{'FindFriendsAt' | translate }} <a [routerLink]="['/drinkers']">{{'Drinkers' | translate }}</a></p>
+  </div>
 </div>

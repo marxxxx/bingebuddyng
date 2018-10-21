@@ -13,12 +13,14 @@ import { Component, OnInit, OnDestroy, ViewChild, ViewEncapsulation, ChangeDetec
 import { AuthService } from '../../services/auth.service';
 import { AddMessageActivityDTO } from '../../../models/AddMessageActivityDTO';
 import { UtilService } from '../../services/util.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
 import { ShellInteractionService } from '../../services/shell-interaction.service';
 import { FileUploader, FileItem, FileUploaderOptions, ParsedResponseHeaders } from 'ng2-file-upload';
 import { NotificationService } from '../../services/notification.service';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { trigger, style, transition, animate, query, stagger } from '@angular/animations';
+import { DrinkDialogComponent } from '../../components/drink-dialog/drink-dialog.component';
+import { DrinkDialogArgs } from '../../components/drink-dialog/DrinkDialogArgs';
 
 @Component({
   selector: 'app-activity-feed',
@@ -57,7 +59,8 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private notification: NotificationService,
     private changeRef: ChangeDetectorRef,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private dialog: MatDialog) { }
 
 
   ngOnInit() {
@@ -69,16 +72,11 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     const sub = this.notification.activityReceived$.subscribe(_ => this.load());
     this.subscriptions.push(sub);
 
-    // this.shellInteraction.addShellIcon({ id: this.locationIconId, name: 'not_listed_location', tooltip: 'QueryingLocation' });
-
     this.util.getLocation().then(l => {
       this.location = l;
-      // this.shellInteraction.addShellIcon({ id: this.locationIconId, name: 'location_on', tooltip: `${l.longitude} / ${l.latitude}` });
     }, e => {
       console.error('error retrieving location');
       console.error(e);
-      // this.snackBar.open(this.transate.instant('NoGeolocationMessage'), 'OK', { duration: 3000 });
-      // this.shellInteraction.addShellIcon({ id: this.locationIconId, name: 'location_off', tooltip: 'NoGeolocationMessage' });
     });
   }
 
@@ -128,81 +126,100 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     });
   }
 
+  displayDrinkDialog(type: DrinkType): Observable<any> {
+    const args: DrinkDialogArgs = { drinkType: type };
+    return this.dialog.open(DrinkDialogComponent, { data: args, width: '90%' }).afterClosed();
+  }
 
   onAddBeer() {
-    this.isBusyAdding = true;
-    const activity: AddDrinkActivityDTO = {
-      drinkId: '1',
-      drinkType: DrinkType.Beer,
-      drinkName: 'Beer',
-      alcPrc: 5,
-      volume: 500,
-      location: this.location
-    };
 
-    this.activityService.addDrinkActivity(activity).subscribe(r => {
-      this.isBusyAdding = false;
-      this.load();
-    }, e => {
-      this.isBusyAdding = false;
+    this.displayDrinkDialog(DrinkType.Beer).subscribe(_ => {
+      this.isBusyAdding = true;
+      const activity: AddDrinkActivityDTO = {
+        drinkId: '1',
+        drinkType: DrinkType.Beer,
+        drinkName: 'Beer',
+        alcPrc: 5,
+        volume: 500,
+        location: this.location
+      };
+
+      this.activityService.addDrinkActivity(activity).subscribe(r => {
+        this.isBusyAdding = false;
+        this.load();
+      }, e => {
+        this.isBusyAdding = false;
+        this.shellInteraction.showErrorMessage();
+      });
     });
+
+
   }
 
   onAddWine() {
-    this.isBusyAdding = true;
-    const activity: AddDrinkActivityDTO = {
-      drinkId: '2',
-      drinkType: DrinkType.Wine,
-      drinkName: 'Wine',
-      alcPrc: 9,
-      volume: 125,
-      location: this.location
-    };
+    this.displayDrinkDialog(DrinkType.Wine).subscribe(_ => {
+      this.isBusyAdding = true;
+      const activity: AddDrinkActivityDTO = {
+        drinkId: '2',
+        drinkType: DrinkType.Wine,
+        drinkName: 'Wine',
+        alcPrc: 9,
+        volume: 125,
+        location: this.location
+      };
 
 
-    this.activityService.addDrinkActivity(activity).subscribe(r => {
-      this.isBusyAdding = false;
-      this.load();
-    }, e => {
-      this.isBusyAdding = false;
+      this.activityService.addDrinkActivity(activity).subscribe(r => {
+        this.isBusyAdding = false;
+        this.load();
+      }, e => {
+        this.isBusyAdding = false;
+        this.shellInteraction.showErrorMessage();
+      });
     });
   }
 
   onAddShot() {
-    this.isBusyAdding = true;
-    const activity: AddDrinkActivityDTO = {
-      drinkId: '3',
-      drinkType: DrinkType.Shot,
-      drinkName: 'Shot',
-      alcPrc: 20,
-      volume: 40,
-      location: this.location
-    };
+    this.displayDrinkDialog(DrinkType.Shot).subscribe(_ => {
+      this.isBusyAdding = true;
+      const activity: AddDrinkActivityDTO = {
+        drinkId: '3',
+        drinkType: DrinkType.Shot,
+        drinkName: 'Shot',
+        alcPrc: 20,
+        volume: 40,
+        location: this.location
+      };
 
-    this.activityService.addDrinkActivity(activity).subscribe(r => {
-      this.isBusyAdding = false;
-      this.load();
-    }, e => {
-      this.isBusyAdding = false;
+      this.activityService.addDrinkActivity(activity).subscribe(r => {
+        this.isBusyAdding = false;
+        this.load();
+      }, e => {
+        this.isBusyAdding = false;
+        this.shellInteraction.showErrorMessage();
+      });
     });
   }
 
   onAddAnti() {
-    this.isBusyAdding = true;
-    const activity: AddDrinkActivityDTO = {
-      drinkId: '3',
-      drinkType: DrinkType.Anti,
-      drinkName: 'Anti',
-      alcPrc: 0,
-      volume: 250,
-      location: this.location
-    };
+    this.displayDrinkDialog(DrinkType.Anti).subscribe(_ => {
+      this.isBusyAdding = true;
+      const activity: AddDrinkActivityDTO = {
+        drinkId: '3',
+        drinkType: DrinkType.Anti,
+        drinkName: 'Anti',
+        alcPrc: 0,
+        volume: 250,
+        location: this.location
+      };
 
-    this.activityService.addDrinkActivity(activity).subscribe(r => {
-      this.isBusyAdding = false;
-      this.load();
-    }, e => {
-      this.isBusyAdding = false;
+      this.activityService.addDrinkActivity(activity).subscribe(r => {
+        this.isBusyAdding = false;
+        this.load();
+      }, e => {
+        this.isBusyAdding = false;
+        this.shellInteraction.showErrorMessage();
+      });
     });
   }
 
@@ -218,6 +235,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
       this.load();
     }, e => {
       this.isBusyAdding = false;
+      this.shellInteraction.showErrorMessage();
     });
   }
 

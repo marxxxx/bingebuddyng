@@ -1,0 +1,10 @@
+img {
+    margin-left: 20%;
+    margin-right: 20%;
+    border: 3px solid black;
+    width: 60%;
+}
+
+mat-icon {
+    margin-right: 5px;
+}

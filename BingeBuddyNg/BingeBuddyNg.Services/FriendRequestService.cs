@@ -26,11 +26,11 @@ namespace BingeBuddyNg.Services
             if(hasPendingRequest == false)
             {
                 var requestingUser = await UserRepository.FindUserAsync(requestingUserId);
+                var friendUser = await UserRepository.FindUserAsync(friendUserId);
 
-                await FriendRequestRepository.AddFriendRequestAsync(friendUserId, requestingUser.ToUserInfo());
+                await FriendRequestRepository.AddFriendRequestAsync(friendUser.ToUserInfo(), requestingUser.ToUserInfo());
 
                 // send push notification to inform user about friend request
-                var friendUser = await UserRepository.FindUserAsync(friendUserId);
                 if(friendUser.PushInfo != null)
                 {
                     NotificationService.SendMessage(new[] { friendUser.PushInfo }, new Models.NotificationMessage(Constants.FriendRequestNotificationIconUrl,
@@ -42,14 +42,15 @@ namespace BingeBuddyNg.Services
 
         public async Task AcceptFriendRequestAsync(string acceptingUserId, string requestingUserId)
         {
-            await FriendRequestRepository.DeleteFriendRequestAsync(acceptingUserId, requestingUserId);
-
             await UserRepository.AddFriendAsync(acceptingUserId, requestingUserId);
+
+            await FriendRequestRepository.DeleteFriendRequestAsync(acceptingUserId, requestingUserId);
 
             var acceptingUser = await UserRepository.FindUserAsync(acceptingUserId);
             var requestingUser = await UserRepository.FindUserAsync(requestingUserId);
             if (requestingUser.PushInfo != null)
             {
+                //TODO: Localize
                 NotificationService.SendMessage(new[] { requestingUser.PushInfo }, new Models.NotificationMessage(Constants.FriendRequestNotificationIconUrl,
                     Constants.FriendRequestNotificationIconUrl, Constants.FriendRequestApplicationUrl, "Freundschaftsanfrage",
                     $"{acceptingUser.Name} hat deine Freundschaftsanfrage akzeptiert!"));

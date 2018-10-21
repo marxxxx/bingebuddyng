@@ -40,22 +40,32 @@ namespace BingeBuddyNg.Functions
 
             try
             {
-                // get all users
-                var users = await userRepository.GetAllUsersAsync();
+                var currentUser = await userRepository.FindUserAsync(activity.UserId);
 
                 // Immediately update Stats for current user
-                var currentUser = users.First(u => u.Id == activity.UserId);
                 await DrinkCalculatorFunction.UpdateStatsForUserasync(currentUser, calculationService, userStatsRepository, log);
 
-                // send out push
+                // get friends of this user who didn't mute themselves from him
+                var friends = currentUser.Friends.Where(f => currentUser.MutedByFriendUserIds == null || 
+                    !currentUser.MutedByFriendUserIds.Contains(f.UserId)).ToList();
+                foreach (var friend in friends)
+                {
+                    try
+                    {
+                        var friendUser = await userRepository.FindUserAsync(friend.UserId);
+                        if (friendUser != null && friendUser.PushInfo != null)
+                        {
+                            // TODO: Localize
+                            var notificationMessage = GetNotificationMessage(activity);
 
-                var otherUsersWithPushInfo = users.Where(u => u.PushInfo != null && u.Id != activity.UserId)
-                    .Select(u => u.PushInfo).ToList();
-
-                // TODO: Localize
-                var notificationMessage = GetNotificationMessage(activity);
-
-                notificationService.SendMessage(otherUsersWithPushInfo, notificationMessage);
+                            notificationService.SendMessage(new[] { friendUser.PushInfo }, notificationMessage);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // ignore
+                    }
+                }
             }
             catch (Exception ex)
             {

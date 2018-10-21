@@ -11,7 +11,7 @@ namespace BingeBuddyNg.Services.Interfaces
 {
     public interface IActivityService
     {
-        Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeedAsync(TableContinuationToken continuationToken = null);
+        Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeedAsync(string userId, TableContinuationToken continuationToken = null);
         Task<List<ActivityAggregationDTO>> GetDrinkActivityAggregationAsync();
 
         Task AddMessageActivityAsync(AddMessageActivityDTO activity);

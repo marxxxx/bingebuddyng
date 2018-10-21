@@ -1,0 +1,37 @@
+<app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
+
+<h2>{{'Drinkers' | translate }}</h2>
+
+<!-- Search Input -->
+<div fxLayout fxLayoutAlign="space-between center">
+  <mat-form-field fxFlex="90">
+    <input matInput autofocus placeholder="{{'Search' | translate }}" [(ngModel)]="filterText" (keydown)="onKeyDown($event)">
+  </mat-form-field>
+  <button fxFlex="10" mat-icon-button (click)="load()">
+    <mat-icon>search</mat-icon>
+  </button>
+</div>
+
+<!-- List of users-->
+<div *ngFor="let u of users" fxLayout fxLayoutAlign="space-between center">
+
+  <!-- Basic User info (picture, name) -->
+  <app-user-info [userInfo]="u" [showName]="true"></app-user-info>
+
+  <!-- Is your friend -->
+  <button mat-icon-button *ngIf="isYourFriend(u)" color="primary">
+    <mat-icon>sentiment_satisfied_alt</mat-icon>
+  </button>
+
+  <!-- Add Friend -->
+  <button class="add-friend" mat-icon-button *ngIf="!u.isBusy && !isYou(u) && !hasPendingRequest(u) && !isYourFriend(u)"
+    (click)="onSendFriendRequest(u)">
+    <mat-icon>add_circle_outline</mat-icon>
+  </button>
+  <mat-progress-spinner *ngIf="u.isBusy" mode="indeterminate" color="primary" diameter="32"></mat-progress-spinner>
+
+  <!-- Pending Friends Request -->
+  <button mat-icon-button *ngIf="!isYou(u) && hasPendingRequest(u)" [disabled]="true">
+    <mat-icon>access_time</mat-icon>
+  </button>
+</div>

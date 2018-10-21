@@ -1,3 +1,5 @@
+import { StateService } from './../../services/state.service';
+import { AuthService } from './../../services/auth.service';
 import { UserInfo } from './../../../models/UserInfo';
 import { FriendRequestService } from './../../services/friendrequest.service';
 import { ActivatedRoute } from '@angular/router';
@@ -12,13 +14,20 @@ import { Subscription } from 'rxjs';
 export class FriendrequestsComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
+  private currentUserId: string;
   pendingRequests: UserInfo[] = [];
   isBusy = false;
 
-  constructor(private route: ActivatedRoute, private friendRequest: FriendRequestService) { }
+  constructor(private route: ActivatedRoute, private friendRequest: FriendRequestService,
+    private state: StateService,
+    private auth: AuthService) { }
 
   ngOnInit() {
 
+    // get current user id
+    this.auth.getProfile((err, profile) => this.currentUserId = profile.sub);
+
+    // load friend requests
     const sub = this.route.paramMap.subscribe(r => {
       this.load();
     });
@@ -34,7 +43,8 @@ export class FriendrequestsComponent implements OnInit, OnDestroy {
   load(): void {
     this.isBusy = true;
     this.friendRequest.getPendingFriendRequests().subscribe(r => {
-      this.pendingRequests = r;
+      this.pendingRequests = r.filter(f => f.requestingUser.userId !== this.currentUserId)
+        .map(f => f.requestingUser);
       this.isBusy = false;
     }, e => {
       this.isBusy = false;
@@ -46,7 +56,9 @@ export class FriendrequestsComponent implements OnInit, OnDestroy {
 
     this.removeUserFromList(user.userId);
     this.friendRequest.acceptFriendRequest(user.userId).subscribe(r => {
-      console.log('accepted');
+
+      // signal change in friend requests status
+      this.state.raisePendingFriendRequestsChanged();
     });
 
   }
@@ -54,7 +66,9 @@ export class FriendrequestsComponent implements OnInit, OnDestroy {
   onDecline(user: UserInfo) {
     this.removeUserFromList(user.userId);
     this.friendRequest.declineFriendRequest(user.userId).subscribe(r => {
-      console.log('accepted');
+
+      // signal change in friend requests status
+      this.state.raisePendingFriendRequestsChanged();
     });
   }
 

@@ -14,3 +14,7 @@ img {
 mat-icon {
     margin-right: 5px;
 }
+
+.mute-buttons {
+    width: 60px;
+}
