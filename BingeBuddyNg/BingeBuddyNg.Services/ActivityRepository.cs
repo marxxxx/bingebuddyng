@@ -45,11 +45,11 @@ namespace BingeBuddyNg.Services
 
             var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityTableName, whereClause, args.PageSize, args.ContinuationToken);
 
-            List<Activity> resultActivitys = GetActivitiesWithId(result.ResultPage).ToList();
+            List<Activity> resultActivitys = ConvertActivities(result.ResultPage).ToList();
             return new PagedQueryResult<Activity>(resultActivitys, result.ContinuationToken);
         }
 
-        private List<Activity> GetActivitiesWithId(IEnumerable<ActivityTableEntity> result)
+        private List<Activity> ConvertActivities(IEnumerable<ActivityTableEntity> result)
         {
             List<Activity> resultActivities = new List<Activity>();
             foreach(var r in result)
@@ -74,7 +74,7 @@ namespace BingeBuddyNg.Services
 
             var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityPerUserTableName, whereClause);
 
-            var activitys = GetActivitiesWithId(result).ToList();
+            var activitys = ConvertActivities(result).ToList();
             return activitys;
         }
 

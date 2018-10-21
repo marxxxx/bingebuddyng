@@ -18,6 +18,7 @@ namespace BingeBuddyNg.Services.Models
         public List<string> MutedFriendUserIds { get; set; } = new List<string>();
         public List<string> MutedByFriendUserIds { get; set; } = new List<string>();
 
+
         public User()
         {
 
@@ -26,6 +27,13 @@ namespace BingeBuddyNg.Services.Models
         public UserInfo ToUserInfo()
         {
             return new UserInfo(Id, Name, ProfileImageUrl);
+        }
+
+
+        public List<string> GetVisibleFriendUserIds()
+        {
+            var visibleUserIds = Friends.Select(f => f.UserId).Except(MutedByFriendUserIds).Union(new[] { this.Id }).ToList();
+            return visibleUserIds;
         }
 
         public void AddFriend(UserInfo user)

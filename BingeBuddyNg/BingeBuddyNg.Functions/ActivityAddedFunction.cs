@@ -46,13 +46,12 @@ namespace BingeBuddyNg.Functions
                 await DrinkCalculatorFunction.UpdateStatsForUserasync(currentUser, calculationService, userStatsRepository, log);
 
                 // get friends of this user who didn't mute themselves from him
-                var friends = currentUser.Friends.Where(f => currentUser.MutedByFriendUserIds == null || 
-                    !currentUser.MutedByFriendUserIds.Contains(f.UserId)).ToList();
-                foreach (var friend in friends)
+                var friendUserIds = currentUser.GetVisibleFriendUserIds();
+                foreach (var friendUserId in friendUserIds)
                 {
                     try
                     {
-                        var friendUser = await userRepository.FindUserAsync(friend.UserId);
+                        var friendUser = await userRepository.FindUserAsync(friendUserId);
                         if (friendUser != null && friendUser.PushInfo != null)
                         {
                             // TODO: Localize

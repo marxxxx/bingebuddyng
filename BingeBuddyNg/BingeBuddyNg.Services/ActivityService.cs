@@ -125,13 +125,14 @@ namespace BingeBuddyNg.Services
         public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeedAsync(string userId, TableContinuationToken continuationToken = null)
         {
             var callingUser = await this.UserRepository.FindUserAsync(userId);
-            var visibleUserIds = callingUser.Friends.Select(f => f.UserId).Except(callingUser.MutedByFriendUserIds).Union(new[] { userId });
+            var visibleUserIds = callingUser.GetVisibleFriendUserIds();
             
             // TODO: Use Constant for Page Size
             var activities = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 20, continuationToken));
 
-            // filter out users you should not see
-            activities.ResultPage = activities.ResultPage.Where(a => visibleUserIds.Contains(a.UserId)).ToList();
+            // filter out users you should not see (or only see antialcoholic drinks from)
+            activities.ResultPage = activities.ResultPage.Where(a => visibleUserIds.Contains(a.UserId) || 
+                (callingUser.Friends.Select(f=>f.UserId).Contains(a.UserId) && a.DrinkType == DrinkType.Anti)).ToList();
 
             var userIds = activities.ResultPage.Select(a => a.UserId).Distinct();
             var userStats = await this.UserStatsRepository.GetStatisticsAsync(userIds);
