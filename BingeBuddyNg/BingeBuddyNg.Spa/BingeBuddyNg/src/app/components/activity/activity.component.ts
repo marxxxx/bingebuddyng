@@ -168,6 +168,6 @@ export class ActivityComponent implements OnInit {
   }
 
   isMessageLink(link: string): boolean {
-    return (link && (link.indexOf('http') === 0);
+    return (link && (link.indexOf('http') === 0));
   }
 }
