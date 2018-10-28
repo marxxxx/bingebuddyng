@@ -1,3 +1,5 @@
+@import '../../../theme.scss';
+
 .activityspinner {
     margin-top: -200px !important;
     margin: 0 auto;
@@ -66,3 +68,6 @@ mat-card {
 }
 
 
+#btn-message {
+    color: map-get($mat-bingebuddyprimary, 500);
+}
