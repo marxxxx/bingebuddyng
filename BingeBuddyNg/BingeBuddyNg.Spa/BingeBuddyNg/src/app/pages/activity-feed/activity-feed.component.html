@@ -4,7 +4,7 @@
 <div id="activity-container" [@listActivities]="isInitialLoad">
   <app-activity *ngFor="let a of activitys" [activity]="a"></app-activity>
   <mat-progress-spinner [ngClass]="{noactivityspinner: activitys && activitys.length < 5, activityspinner: activitys && activitys.length >= 5}" id="loadingSpinner" 
-  *ngIf="isReloadSpinnerActive && activitys && activitys.length > 0" mode="indeterminate"
+  *ngIf="isReloadSpinnerActive && activitys && activitys.length > 5" mode="indeterminate"
     color="primary" inViewport [inViewportOptions]="{ threshold: [0] }" (inViewportAction)="onAppear($event)"></mat-progress-spinner>
   <app-no-friends *ngIf="!isBusy && activitys && activitys.length === 0"></app-no-friends>
 </div>
@@ -19,16 +19,16 @@
 
     <eco-fab-speed-dial-actions class="btn-act">
       <button mat-mini-fab (click)="onAddBeer()" matTooltip="{{'Beer' | translate}}">
-        <img class="action-icon" src="../../assets/img/beer.png">
+        <app-drink-icon [drinkType]="20"></app-drink-icon>
       </button>
       <button mat-mini-fab (click)="onAddWine()" matTooltip="{{'Wine' | translate}}">
-        <img class="action-icon" src="../../assets/img/wine.png">
+        <app-drink-icon [drinkType]="30"></app-drink-icon>
       </button>
       <button mat-mini-fab (click)="onAddShot()" matTooltip="{{'Shot' | translate}}">
-        <img id="btn-sht" class="action-icon" src="../../assets/img/shot.png">
+        <app-drink-icon [drinkType]="40"></app-drink-icon>
       </button>
       <button mat-mini-fab (click)="onAddAnti()" matTooltip="{{'Anti' | translate}}">
-        <img class="action-icon" src="../../assets/img/anti.png">
+        <app-drink-icon [drinkType]="10"></app-drink-icon>
       </button>
       <button id="btn-message" mat-mini-fab (click)="onAddMessage()" matTooltip="{{'PostMessage' | translate}}">
         <mat-icon>message</mat-icon>

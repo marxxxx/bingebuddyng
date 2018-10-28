@@ -44,6 +44,7 @@ import { DrinkersComponent } from './pages/drinkers/drinkers.component';
 import { DrinkDialogComponent } from './components/drink-dialog/drink-dialog.component';
 import { NoFriendsComponent } from './components/no-friends/no-friends.component';
 import { MessageDialogComponent } from './components/message-dialog/message-dialog.component';
+import { DrinkIconComponent } from './components/drink-icon/drink-icon.component';
 
 
 // AoT requires an exported function for factories
@@ -71,7 +72,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     DrinkersComponent,
     DrinkDialogComponent,
     NoFriendsComponent,
-    MessageDialogComponent
+    MessageDialogComponent,
+    DrinkIconComponent
   ],
   entryComponents: [DrinkDialogComponent, MessageDialogComponent],
   imports: [

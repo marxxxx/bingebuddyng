@@ -1,3 +1,8 @@
  agm-map {
     height: 90vh;
   } 
+
+  .activity-info {
+    color: black;
+    display: block;
+  }

@@ -1,6 +1,9 @@
+<h2 mat-dialog-title>
+  {{'PostAMessage' | translate}}
+</h2>
 <mat-dialog-content>
   <mat-form-field>
-    <textarea matInput [(ngModel)]="message" placeholder="{{'YourMessage' | translate }}"></textarea>
+    <input type="text" matInput [(ngModel)]="message" placeholder="{{'YourMessage' | translate }}">
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions fxLayoutAlign="end center">

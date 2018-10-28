@@ -15,10 +15,11 @@ export class MeComponent implements OnInit {
 
   ngOnInit() {
 
-    this.loadProfile();
+    if (this.authService.isLoggedIn$.value === true) {
+      this.loadProfile();
+    }
 
     this.authService.isLoggedIn$.subscribe(isLoggedIn => {
-      console.log('MeComponent ' + isLoggedIn);
       if (isLoggedIn) {
         this.loadProfile();
       } else {

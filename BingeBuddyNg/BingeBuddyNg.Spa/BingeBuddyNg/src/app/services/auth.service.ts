@@ -2,6 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import * as auth0 from 'auth0-js';
 import { Router } from '@angular/router';
 import { UserProfile } from '../../models/UserProfile';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class AuthService {
     scope: 'openid profile'
   });
 
-  isLoggedIn$: EventEmitter<boolean> = new EventEmitter<boolean>(false);
+  isLoggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(public router: Router) { }
 

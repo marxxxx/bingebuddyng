@@ -1,4 +1,14 @@
 <app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
 <agm-map #AgmMap [latitude]="location?.latitude" [longitude]="location?.longitude">
-  <agm-marker *ngFor="let a of activitys" [title]="formatLabel(a)" [latitude]="a.location.latitude" [longitude]="a.location.longitude"></agm-marker>
+  <agm-marker *ngFor="let a of activitys" [latitude]="a.location.latitude" [longitude]="a.location.longitude">
+    <agm-info-window [disableAutoPan]="true">
+      <div fxLayout fxLayoutAlign="space-between center">
+        <app-user-info [userInfo]="getUserInfo(a)"></app-user-info>
+        <app-drink-icon [drinkType]="a.drinkType"></app-drink-icon>
+      </div>
+
+      <p class="activity-info">{{a.userName}}</p>
+      <p class="activity-info">{{a.timestamp | date:'dd.MM.yyyy HH:mm'}}</p>
+    </agm-info-window>
+  </agm-marker>
 </agm-map>

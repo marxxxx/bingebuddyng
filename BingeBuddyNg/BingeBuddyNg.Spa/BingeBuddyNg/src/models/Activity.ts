@@ -3,6 +3,7 @@ import { LocationDTO } from './LocationDTO';
 import { ActivityType } from './ActivityType';
 import { Reaction } from './Reaction';
 import { CommentReaction } from './CommentReaction';
+import { UserInfo } from './UserInfo';
 export class Activity {
     id: string;
     activityType: ActivityType;
@@ -19,4 +20,14 @@ export class Activity {
     likes: Reaction[];
     cheers: Reaction[];
     comments: CommentReaction[];
+
+    getUserInfo(): UserInfo {
+        const userInfo: UserInfo = {
+            userId: this.userId,
+            userName: this.userName,
+            userProfileImageUrl: this.userProfileImageUrl
+        };
+
+        return userInfo;
+    }
 }

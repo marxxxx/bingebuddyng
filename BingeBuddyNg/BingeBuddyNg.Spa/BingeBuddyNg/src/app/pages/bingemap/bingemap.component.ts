@@ -1,3 +1,4 @@
+import { UserInfo } from './../../../models/UserInfo';
 import { ActivatedRoute } from '@angular/router';
 import { Activity } from '../../../models/Activity';
 import { ActivityService } from '../../services/activity.service';
@@ -54,6 +55,16 @@ export class BingemapComponent implements OnInit {
     });
   }
 
+  getUserInfo(a: Activity): UserInfo {
+    const userInfo: UserInfo = {
+        userId: a.userId,
+        userName: a.userName,
+        userProfileImageUrl: a.userProfileImageUrl
+    };
+
+    return userInfo;
+}
+
   private fitBounds() {
     const bounds: google.maps.LatLngBounds = new google.maps.LatLngBounds();
     for (const mm of this.activitys) {
@@ -62,10 +73,5 @@ export class BingemapComponent implements OnInit {
     this.agmMap.fitBounds = bounds;
     console.log('fitted bounds');
     this.agmMap.triggerResize();
-  }
-
-  formatLabel(a: Activity): string {
-    const time = moment(a.timestamp).fromNow();
-    return `${a.userName} : ${time}`;
   }
 }

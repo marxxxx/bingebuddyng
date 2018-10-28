@@ -45,5 +45,6 @@
     "EnterDrinks": "Or enter some drinks with the plus symbol on the bottom right!",
     "YourMessage": "Your message",
     "Send":" send",
-    "Cancel":"cancel"
+    "Cancel":"cancel",
+    "PostAMessage": "Post a message"
 }
