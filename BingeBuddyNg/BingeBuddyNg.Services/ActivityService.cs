@@ -131,10 +131,10 @@ namespace BingeBuddyNg.Services
         public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeedAsync(string userId, TableContinuationToken continuationToken = null)
         {
             var callingUser = await this.UserRepository.FindUserAsync(userId);
-            
 
             // TODO: Use Constant for Page Size
-            var activities = await GetActivityFeedAsync(callingUser, continuationToken, new PagedQueryResult<Activity>());
+            var visibleUserIds = callingUser.GetVisibleFriendUserIds();
+            var activities = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(visibleUserIds, continuationToken));
 
             var userIds = activities.ResultPage.Select(a => a.UserId).Distinct();
             var userStats = await this.UserStatsRepository.GetStatisticsAsync(userIds);
@@ -143,35 +143,7 @@ namespace BingeBuddyNg.Services
             return new PagedQueryResult<ActivityStatsDTO>(result, activities.ContinuationToken);
         }
 
-        private async Task<PagedQueryResult<Activity>> GetActivityFeedAsync(User callingUser, TableContinuationToken continuationToken, 
-            PagedQueryResult<Activity> previousResult, int queryLoopCount = 0)
-        {
-            logger.LogInformation($"Getting ActivityFeed (result {previousResult.ResultPage.Count}, query count {queryLoopCount} ...");
-            if(queryLoopCount > MaxQueryLoopCount)
-            {
-                return previousResult;
-            }
-            var visibleUserIds = callingUser.GetVisibleFriendUserIds();
-            var nextResult = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 20, continuationToken));
-
-            // filter out users you should not see (or only see antialcoholic drinks from)
-            nextResult.ResultPage = nextResult.ResultPage.Where(a => visibleUserIds.Contains(a.UserId) ||
-                (callingUser.Friends.Select(f => f.UserId).Contains(a.UserId) && a.DrinkType == DrinkType.Anti)).ToList();
-
-            nextResult.ResultPage.InsertRange(0, previousResult.ResultPage);
-
-            if(previousResult.ResultPage.Count < 5)
-            {
-                return await GetActivityFeedAsync(callingUser, 
-                    nextResult.ContinuationToken != null ? JsonConvert.DeserializeObject<TableContinuationToken>(nextResult.ContinuationToken) : null, 
-                    nextResult, queryLoopCount+1);
-                
-            }
-            else
-            {
-                return nextResult;
-            }
-        }
+     
 
 
         public async Task AddReactionAsync(ReactionDTO reaction)

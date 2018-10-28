@@ -41,6 +41,25 @@ namespace BingeBuddyNg.Services
                         TableQuery.GenerateFilterConditionForBool(nameof(ActivityTableEntity.HasLocation), QueryComparisons.Equal, true));
             }
 
+            if(args.UserIds != null && args.UserIds.Any())
+            {
+                string userWhereClause = null;
+                foreach(var userId in args.UserIds)
+                {
+                    var userCondition = TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.UserId), QueryComparisons.Equal, userId);
+                    if(userWhereClause == null)
+                    {
+                        userWhereClause = userCondition;
+                    }
+                    else
+                    {
+                        userWhereClause = TableQuery.CombineFilters(userWhereClause, TableOperators.Or, userCondition);
+                    }
+                }
+
+                whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And, userWhereClause);
+            }
+
           
 
             var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityTableName, whereClause, args.PageSize, args.ContinuationToken);

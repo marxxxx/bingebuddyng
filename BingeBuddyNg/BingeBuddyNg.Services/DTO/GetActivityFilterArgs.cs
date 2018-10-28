@@ -2,27 +2,31 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BingeBuddyNg.Services.DTO
 {
     public class GetActivityFilterArgs
     {
+        private const int DefaultActivityPageSize = 30;
+
         public bool OnlyWithLocation { get; set; }
         public int PageSize { get; set; }
         public TableContinuationToken ContinuationToken { get; set; }
+        public List<string> UserIds { get; set; }
 
         public GetActivityFilterArgs()
         { }
 
-        public GetActivityFilterArgs(bool onlyWithLocation, int pageSize, TableContinuationToken continuationToken)
+        public GetActivityFilterArgs(int pageSize, TableContinuationToken continuationToken, bool onlyWithLocation)
         {
-            this.OnlyWithLocation = onlyWithLocation;
             this.PageSize = pageSize;
             this.ContinuationToken = continuationToken;
+            this.OnlyWithLocation = onlyWithLocation;
         }
 
-        public GetActivityFilterArgs(bool onlyWithLocation, int pageSize = 30, string continuationToken = null)
+        public GetActivityFilterArgs(bool onlyWithLocation, int pageSize = DefaultActivityPageSize, string continuationToken = null)
         {
             this.OnlyWithLocation = onlyWithLocation;
             this.PageSize = pageSize;
@@ -30,6 +34,12 @@ namespace BingeBuddyNg.Services.DTO
             {
                 this.ContinuationToken = JsonConvert.DeserializeObject<TableContinuationToken>(continuationToken);
             }
+        }
+
+        public GetActivityFilterArgs(IEnumerable<string> userIds, TableContinuationToken continuationToken) 
+            : this(DefaultActivityPageSize, continuationToken, false)
+        {
+            this.UserIds = userIds != null ? userIds.ToList() : null;
         }
 
         public override string ToString()

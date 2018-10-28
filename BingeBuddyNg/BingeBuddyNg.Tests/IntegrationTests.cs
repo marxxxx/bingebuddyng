@@ -10,6 +10,9 @@ using System.Linq;
 using BingeBuddyNg.Services;
 using System.IO;
 using BingeBuddyNg.Functions;
+using BingeBuddyNg.Services.Entitys;
+using Microsoft.WindowsAzure.Storage.Table;
+using Newtonsoft.Json;
 
 namespace BingeBuddyNg.Tests
 {
@@ -30,6 +33,29 @@ namespace BingeBuddyNg.Tests
             serviceProvider = services.BuildServiceProvider();
 
         }
+
+        [TestMethod]
+        public async Task MigrateUserId()
+        {
+            StorageAccessService storageAccessService = serviceProvider.GetRequiredService<StorageAccessService>();
+            PagedQueryResult<ActivityTableEntity> result = null;
+            do
+            {
+                TableContinuationToken ct = result != null && result.ContinuationToken != null ? JsonConvert.DeserializeObject<TableContinuationToken>(result.ContinuationToken) : null;
+                result = await storageAccessService.QueryTableAsync<ActivityTableEntity>("activity", null, 100, ct);
+                var table = storageAccessService.GetTableReference("activity");
+                foreach (var r in result.ResultPage)
+                {
+                    if (r.UserId == null)
+                    {
+                        r.UserId = r.Entity.UserId;
+
+                        await table.ExecuteAsync(TableOperation.Merge(r));
+                    }
+                }
+            } while (result.ContinuationToken != null);
+        }
+
 
         [TestMethod]
         public async Task GetActivityFeedTest()
