@@ -224,19 +224,20 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   }
 
   onAddMessage() {
-    this.isBusyAdding = true;
-    const activity: AddMessageActivityDTO = {
-      message: 'Hello this is a message!',
-      location: this.location
-    };
+    this.displayDrinkDialog(DrinkType.Beer).subscribe(r => console.log(r));
+    // this.isBusyAdding = true;
+    // const activity: AddMessageActivityDTO = {
+    //   message: 'Hello this is a message!',
+    //   location: this.location
+    // };
 
-    this.activityService.addMessageActivity(activity).subscribe(r => {
-      this.isBusyAdding = false;
-      this.load();
-    }, e => {
-      this.isBusyAdding = false;
-      this.shellInteraction.showErrorMessage();
-    });
+    // this.activityService.addMessageActivity(activity).subscribe(r => {
+    //   this.isBusyAdding = false;
+    //   this.load();
+    // }, e => {
+    //   this.isBusyAdding = false;
+    //   this.shellInteraction.showErrorMessage();
+    // });
   }
 
 

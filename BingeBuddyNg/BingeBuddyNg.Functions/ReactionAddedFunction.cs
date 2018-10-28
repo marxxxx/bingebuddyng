@@ -25,23 +25,7 @@ namespace BingeBuddyNg.Functions
 
             var activity = await activityRepository.GetActivityAsync(reactionAddedMessage.ActivityId);
             var reactingUser = await userRepository.FindUserAsync(reactionAddedMessage.UserId);
-           
 
-            switch (reactionAddedMessage.ReactionType)
-            {
-
-                case Services.Models.ReactionType.Cheers:
-                    activity.AddCheers(new Reaction(reactionAddedMessage.UserId, reactingUser.Name, reactingUser.ProfileImageUrl));
-                    break;
-                case Services.Models.ReactionType.Like:
-                    activity.AddLike(new Reaction(reactionAddedMessage.UserId, reactingUser.Name, reactingUser.ProfileImageUrl));
-                    break;
-                case Services.Models.ReactionType.Comment:
-                    activity.AddComment(new CommentReaction(reactionAddedMessage.UserId, reactingUser.Name, reactingUser.ProfileImageUrl,  reactionAddedMessage.Comment));
-                    break;
-            }
-
-            await activityRepository.UpdateActivityAsync(activity);
 
             // notify involved users
             if (activity.UserId != reactingUser.Id)
@@ -74,7 +58,6 @@ namespace BingeBuddyNg.Functions
             var notification = new Services.Models.NotificationMessage(Constants.NotificationIconUrl,
                   Constants.NotificationIconUrl, Constants.ApplicationUrl, Constants.ApplicationName, message);
             notificationService.SendMessage(involvedUserPushInfos, notification);
-
         }
 
         private static async Task NotifyOriginUserAsync(IUserRepository userRepository, INotificationService notificationService, 

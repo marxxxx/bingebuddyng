@@ -177,6 +177,26 @@ namespace BingeBuddyNg.Services
         public async Task AddReactionAsync(ReactionDTO reaction)
         {
             var userId = this.IdentityService.GetCurrentUserId();
+            var activity = await this.ActivityRepository.GetActivityAsync(reaction.ActivityId);
+
+            var reactingUser = await this.UserRepository.FindUserAsync(userId);
+
+            switch (reaction.Type)
+            {
+
+                case ReactionType.Cheers:
+                    activity.AddCheers(new Reaction(userId, reactingUser.Name, reactingUser.ProfileImageUrl));
+                    break;
+                case ReactionType.Like:
+                    activity.AddLike(new Reaction(userId, reactingUser.Name, reactingUser.ProfileImageUrl));
+                    break;
+                case ReactionType.Comment:
+                    activity.AddComment(new CommentReaction(userId, reactingUser.Name, reactingUser.ProfileImageUrl, reaction.Comment));
+                    break;
+            }
+
+            await this.ActivityRepository.UpdateActivityAsync(activity);
+            
 
             // add to queue
             var queueClient = this.StorageAccessService.GetQueueReference(Constants.ReactionAddedQueueName);

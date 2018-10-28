@@ -1,8 +1,8 @@
 {
   "name": "Binge Buddy",
   "short_name": "Binge Buddy",
-  "theme_color": "#2196f3",
-  "background_color": "#32393f",
+  "theme_color": "#f8b500",
+  "background_color": "#000000",
   "display": "standalone",
   "Scope": "/",
   "start_url": "/",
