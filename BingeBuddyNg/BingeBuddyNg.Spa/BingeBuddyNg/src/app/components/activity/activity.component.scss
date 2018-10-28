@@ -1,3 +1,5 @@
+@import '../../../theme.scss';
+
 mat-card {
     margin: 5px 5px 6px 5px;
     padding: 12px 12px 2px 12px ;
@@ -66,6 +68,9 @@ div{
     }
 }
 
+a {
+    color: map-get($mat-bingebuddyprimary, 500)
+}
 mat-chip-list {
     margin-left: 5px;
 }

@@ -43,6 +43,7 @@ import { FriendRequestService } from './services/friendrequest.service';
 import { DrinkersComponent } from './pages/drinkers/drinkers.component';
 import { DrinkDialogComponent } from './components/drink-dialog/drink-dialog.component';
 import { NoFriendsComponent } from './components/no-friends/no-friends.component';
+import { MessageDialogComponent } from './components/message-dialog/message-dialog.component';
 
 
 // AoT requires an exported function for factories
@@ -69,9 +70,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     FriendrequestsComponent,
     DrinkersComponent,
     DrinkDialogComponent,
-    NoFriendsComponent
+    NoFriendsComponent,
+    MessageDialogComponent
   ],
-  entryComponents: [DrinkDialogComponent],
+  entryComponents: [DrinkDialogComponent, MessageDialogComponent],
   imports: [
     BrowserModule,
     InViewportModule,

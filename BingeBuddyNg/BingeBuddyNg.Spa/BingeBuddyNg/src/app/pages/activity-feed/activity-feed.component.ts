@@ -1,3 +1,4 @@
+import { MessageDialogComponent } from './../../components/message-dialog/message-dialog.component';
 import { ActivatedRoute } from '@angular/router';
 import { TableContinuationToken } from './../../../models/TableContinuationToken';
 import { DrinkType } from './../../../models/DrinkType';
@@ -224,20 +225,26 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   }
 
   onAddMessage() {
-    this.displayDrinkDialog(DrinkType.Beer).subscribe(r => console.log(r));
-    // this.isBusyAdding = true;
-    // const activity: AddMessageActivityDTO = {
-    //   message: 'Hello this is a message!',
-    //   location: this.location
-    // };
+    this.dialog.open(MessageDialogComponent, { width: '80%' }).afterClosed().subscribe(message => {
 
-    // this.activityService.addMessageActivity(activity).subscribe(r => {
-    //   this.isBusyAdding = false;
-    //   this.load();
-    // }, e => {
-    //   this.isBusyAdding = false;
-    //   this.shellInteraction.showErrorMessage();
-    // });
+      if (!message) {
+        return;
+      }
+
+      this.isBusyAdding = true;
+      const activity: AddMessageActivityDTO = {
+        message: message,
+        location: this.location
+      };
+
+      this.activityService.addMessageActivity(activity).subscribe(r => {
+        this.isBusyAdding = false;
+        this.load();
+      }, e => {
+        this.isBusyAdding = false;
+        this.shellInteraction.showErrorMessage();
+      });
+    });
   }
 
 

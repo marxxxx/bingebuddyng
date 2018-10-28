@@ -17,9 +17,10 @@
 
   </mat-card-title>
   <mat-card-content>
-    <span class="message" *ngIf="isMessageActivity()">
-      {{activity.activity.message}}
-    </span>
+    <p class="message" *ngIf="isMessageActivity()">
+      <span *ngIf="!isMessageLink(activity.activity.message)">{{activity.activity.message}}</span>
+      <a *ngIf="isMessageLink(activity.activity.message)" [href]="activity.activity.message">{{activity.activity.message}}</a>
+    </p>
     <span class="drink" *ngIf="isDrinkActivity()">
       {{getDrinkMessage()}}
     </span>

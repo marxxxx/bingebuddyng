@@ -166,4 +166,8 @@ export class ActivityComponent implements OnInit {
   getCheersUserNames(): string {
     return this.activity.activity.cheers.map(l => l.userName).join(',');
   }
+
+  isMessageLink(link: string): boolean {
+    return (link && (link.indexOf('http') === 0);
+  }
 }
