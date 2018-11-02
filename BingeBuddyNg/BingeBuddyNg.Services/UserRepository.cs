@@ -1,7 +1,10 @@
 ﻿using BingeBuddyNg.Services.Entitys;
 using BingeBuddyNg.Services.Interfaces;
+using BingeBuddyNg.Services.Messages;
 using BingeBuddyNg.Services.Models;
+using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.Table;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,10 +53,14 @@ namespace BingeBuddyNg.Services
         public async Task CreateOrUpdateUserAsync(User user)
         {
             var table = StorageAccess.GetTableReference(TableName);
+
             TableOperation saveUserOperation = null;
+            bool profilePicHasChanged = false;
             var savedUser = await FindUserEntityAsync(user.Id);
-            if(savedUser != null)
+            
+            if (savedUser != null)
             {
+                profilePicHasChanged = savedUser.Entity.ProfileImageUrl != user.ProfileImageUrl;
                 savedUser.Entity.Name = user.Name;
                 savedUser.Entity.ProfileImageUrl = user.ProfileImageUrl;
                 savedUser.Entity.PushInfo = user.PushInfo;
@@ -65,6 +72,14 @@ namespace BingeBuddyNg.Services
             }
 
             await table.ExecuteAsync(saveUserOperation);
+
+            // enqueue profile image update change
+            if (profilePicHasChanged)
+            {
+                var queue = StorageAccess.GetQueueReference("profile-update");
+                var message = new ProfileUpdateMessage(user.Id, user.ProfileImageUrl);
+                await queue.AddMessageAsync(new CloudQueueMessage(JsonConvert.SerializeObject(message)));
+            }
         }
 
         public async Task UpdateUserAsync(User user)

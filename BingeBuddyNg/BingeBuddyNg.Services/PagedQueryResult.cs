@@ -16,14 +16,13 @@ namespace BingeBuddyNg.Services
         public PagedQueryResult(List<T> resultPage, string continuationToken)
         {
             this.ResultPage = resultPage;
-
             this.ContinuationToken = continuationToken;
 
         }
         public PagedQueryResult(List<T> resultPage, TableContinuationToken continuationToken)
         {
             this.ResultPage = resultPage;
-            this.ContinuationToken = JsonConvert.SerializeObject(continuationToken);
+            this.ContinuationToken = continuationToken != null ? JsonConvert.SerializeObject(continuationToken) : null;
         }
 
         public List<T> ResultPage { get; set; }

@@ -44,9 +44,9 @@
         "https://lh3.googleusercontent.com/**"
       ],
       "cacheConfig": {
-        "strategy": "performance",
+        "strategy": "freshness",
         "maxSize": 100,
-        "maxAge": "30d",
+        "maxAge": "1d",
         "timeout": "5s"
       }
     }

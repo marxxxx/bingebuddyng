@@ -30,16 +30,21 @@ namespace BingeBuddyNg.Services.DTO
         {
             this.OnlyWithLocation = onlyWithLocation;
             this.PageSize = pageSize;
-            if (continuationToken != null)
-            {
-                this.ContinuationToken = JsonConvert.DeserializeObject<TableContinuationToken>(continuationToken);
-            }
+            SetContinuationToken(continuationToken);
         }
 
         public GetActivityFilterArgs(IEnumerable<string> userIds, TableContinuationToken continuationToken) 
             : this(DefaultActivityPageSize, continuationToken, false)
         {
             this.UserIds = userIds != null ? userIds.ToList() : null;
+        }
+
+        public void SetContinuationToken(string continuationToken)
+        {
+            if (continuationToken != null)
+            {
+                this.ContinuationToken = JsonConvert.DeserializeObject<TableContinuationToken>(continuationToken);
+            }
         }
 
         public override string ToString()
