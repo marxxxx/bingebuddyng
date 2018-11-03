@@ -17,7 +17,7 @@ export class UserInfoComponent implements OnInit {
   @Input()
   showName: boolean;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private userService: UserService) { }
 
   ngOnInit() {
   }
@@ -26,4 +26,10 @@ export class UserInfoComponent implements OnInit {
     this.router.navigate(['/profile', this.userInfo.userId]);
   }
 
+  getProfileImageUrl() {
+    if (this.userInfo == null) {
+      return null;
+    }
+    return this.userService.getProfileImageUrl(this.userInfo.userId);
+  }
 }

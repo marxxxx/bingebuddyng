@@ -32,7 +32,7 @@ export class MeComponent implements OnInit {
   loadProfile() {
     this.authService.getProfile((err, profile) => {
       if (profile) {
-        this.userInfo = { userId: profile.sub, userName: profile.nickname, userProfileImageUrl: profile.picture };
+        this.userInfo = { userId: profile.sub, userName: profile.nickname };
         console.log('loaded userinfo');
         console.log(this.userInfo);
       } else {

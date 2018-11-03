@@ -45,4 +45,8 @@ export class UserService {
     const url = `${this.baseUrl}/SetFriendMuteState?friendUserId=${friendUserId}&muteState=${muteState}`;
     return this.http.put(url, {});
   }
+
+  getProfileImageUrl(userId: string): string {
+    return `https://bingebuddystorage.blob.core.windows.net/profileimg/${userId}`;
+  }
 }

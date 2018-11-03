@@ -3,6 +3,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.Table;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -87,20 +88,32 @@ namespace BingeBuddyNg.Services
             return queue;
         }
 
-        public async Task<string> SaveFileInBlobStorage(string containerName, string path, string fileName, Stream file)
+        public Task AddQueueMessage(string queueName, object message)
+        {
+            var queue = GetQueueReference(queueName);
+            return queue.AddMessageAsync(new CloudQueueMessage(JsonConvert.SerializeObject(message)));
+        }
+
+        public async Task<string> SaveFileInBlobStorage(string containerName, string fullPath, Stream file)
         {
             var account = GetStorageAccount();
-            var blobClient =  account.CreateCloudBlobClient();
-            
+            var blobClient = account.CreateCloudBlobClient();
+
             var container = blobClient.GetContainerReference(containerName);
 
-            string fullPath = $"{path}/{Guid.NewGuid()}_{fileName}";
             var blob = container.GetBlockBlobReference(fullPath);
             await blob.UploadFromStreamAsync(file);
 
             var fileUrl = blob.Uri.AbsoluteUri;
 
             return fileUrl;
+        }
+
+        public Task<string> SaveFileInBlobStorage(string containerName, string path, string fileName, Stream file)
+        {
+            string fullPath = $"{path}/{Guid.NewGuid()}_{fileName}";
+
+            return SaveFileInBlobStorage(containerName, fullPath, file);
         }
 
         private CloudStorageAccount GetStorageAccount()

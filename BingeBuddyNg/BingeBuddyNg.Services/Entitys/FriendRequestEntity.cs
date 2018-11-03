@@ -44,11 +44,9 @@ namespace BingeBuddyNg.Services.Entitys
             
             RequestingUserId = requestingUser.UserId;
             RequestingUserName = requestingUser.UserName;
-            RequestingUserProfileImageUrl = requestingUser.UserProfileImageUrl;
 
             FriendUserId = friend.UserId;
             FriendUserName = friend.UserName;
-            FriendUserProfileImageUrl = friend.UserProfileImageUrl;
         }
     }
 }

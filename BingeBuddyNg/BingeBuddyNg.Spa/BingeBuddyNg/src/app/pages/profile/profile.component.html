@@ -2,7 +2,7 @@
 
 
 <div class="container" *ngIf="user" fxLayout="column" fxLayoutAlign="center center">
-  <img [src]="user.profileImageUrl">
+  <img [src]="getProfileImageUrl()">
   <h3>{{user.name}}</h3>
 
   <p *ngIf="!isBusy && isYourFriend()" fxLayout>

@@ -58,8 +58,7 @@ export class BingemapComponent implements OnInit {
   getUserInfo(a: Activity): UserInfo {
     const userInfo: UserInfo = {
         userId: a.userId,
-        userName: a.userName,
-        userProfileImageUrl: a.userProfileImageUrl
+        userName: a.userName
     };
 
     return userInfo;

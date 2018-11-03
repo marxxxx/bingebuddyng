@@ -47,8 +47,8 @@ namespace BingeBuddyNg.Services
             var queryResult = await this.StorageAccesService.QueryTableAsync<FriendRequestEntity>(TableName, whereClause);
 
             var result = queryResult.Select(r => new FriendRequestInfo(
-                new UserInfo(r.RequestingUserId, r.RequestingUserName, r.RequestingUserProfileImageUrl),
-                new UserInfo(r.FriendUserId, r.FriendUserName, r.FriendUserProfileImageUrl))).ToList();
+                new UserInfo(r.RequestingUserId, r.RequestingUserName),
+                new UserInfo(r.FriendUserId, r.FriendUserName))).ToList();
             return result;
         }
 

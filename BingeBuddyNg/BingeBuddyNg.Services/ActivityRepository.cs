@@ -154,7 +154,6 @@ namespace BingeBuddyNg.Services
             entity.Entity.Likes = activity.Likes;
             entity.Entity.Comments = activity.Comments;
             entity.Entity.Cheers = activity.Cheers;
-            entity.Entity.UserProfileImageUrl = activity.UserProfileImageUrl;
 
             TableOperation updateOperation = TableOperation.Replace(entity);
             await table.ExecuteAsync(updateOperation);

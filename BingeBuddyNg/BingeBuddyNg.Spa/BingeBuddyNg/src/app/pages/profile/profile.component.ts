@@ -152,4 +152,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.shellInteraction.showErrorMessage();
       });
   }
+
+  getProfileImageUrl() {
+    return this.userService.getProfileImageUrl(this.userId);
+  }
 }

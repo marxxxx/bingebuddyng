@@ -13,7 +13,6 @@ namespace BingeBuddyNg.Services.Models
         public string LocationAddress { get; set; }
         public string UserId { get; set; }
         public string UserName { get; set; }
-        public string UserProfileImageUrl { get; set; }
         public string Message { get; set; }
         public DrinkType DrinkType { get; set; }
         public string DrinkId { get; set; }
@@ -32,13 +31,13 @@ namespace BingeBuddyNg.Services.Models
         { }
 
         public Activity(ActivityType type, DateTime timestamp, Location location,
-            string userId, string userName, string userProfileImageUrl)
-            : this(null, type, timestamp, location, userId, userName, userProfileImageUrl)
+            string userId, string userName)
+            : this(null, type, timestamp, location, userId, userName)
         {
         }
 
         public Activity(string id, ActivityType type, DateTime timestamp, Location location, 
-            string userId, string userName, string userProfileImageUrl)
+            string userId, string userName)
         {
             this.Id = id;
             this.ActivityType = type;
@@ -46,16 +45,15 @@ namespace BingeBuddyNg.Services.Models
             this.Location = location;
             this.UserId = userId;
             this.UserName = userName;
-            this.UserProfileImageUrl = userProfileImageUrl;
         }
 
         public static Activity CreateDrinkActivity(DateTime activityTimestamp,
-           Location location, string userId, string userName, string userProfileImageUrl,
+           Location location, string userId, string userName,
            DrinkType drinkType, string drinkId, string drinkName,
            double drinkAlcPrc, double drinkVolume)
         {
             var activity = new Activity( ActivityType.Drink, activityTimestamp,
-                location, userId, userName, userProfileImageUrl)
+                location, userId, userName)
             {
                 DrinkType = drinkType,
                 DrinkId = drinkId,
@@ -68,10 +66,10 @@ namespace BingeBuddyNg.Services.Models
         }
 
         public static Activity CreateMessageActivity(DateTime activityTimestamp,
-           Location location, string userId, string userName, string userProfileImageUrl, string message)
+           Location location, string userId, string userName, string message)
         {
             var activity = new Activity(ActivityType.Message, activityTimestamp,
-                location, userId, userName, userProfileImageUrl)
+                location, userId, userName)
             {
                 Message = message
             };
@@ -80,10 +78,10 @@ namespace BingeBuddyNg.Services.Models
         }
 
         public static Activity CreateImageActivity(DateTime activityTimestamp,
-                    Location location, string userId, string userName, string userProfileImageUrl, string imageUrl)
+                    Location location, string userId, string userName, string imageUrl)
         {
             var activity = new Activity(ActivityType.Image, activityTimestamp,
-                location, userId, userName, userProfileImageUrl)
+                location, userId, userName)
             {
                 ImageUrl = imageUrl
             };

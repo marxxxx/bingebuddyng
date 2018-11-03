@@ -46,7 +46,7 @@ namespace BingeBuddyNg.Services
             var userId = this.IdentityService.GetCurrentUserId();
             var user = await this.UserRepository.FindUserAsync(userId);
 
-            var activity = Activity.CreateMessageActivity(DateTime.UtcNow, addedActivity.Location, userId, user.Name, user.ProfileImageUrl, addedActivity.Message);
+            var activity = Activity.CreateMessageActivity(DateTime.UtcNow, addedActivity.Location, userId, user.Name, addedActivity.Message);
 
             var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
             await AddToActivityAddedQueueAsync(savedActivity);
@@ -57,7 +57,7 @@ namespace BingeBuddyNg.Services
             var userId = this.IdentityService.GetCurrentUserId();
             var user = await this.UserRepository.FindUserAsync(userId);
 
-            var activity = Activity.CreateDrinkActivity(DateTime.UtcNow, addedActivity.Location, userId, user.Name, user.ProfileImageUrl,
+            var activity = Activity.CreateDrinkActivity(DateTime.UtcNow, addedActivity.Location, userId, user.Name, 
                 addedActivity.DrinkType, addedActivity.DrinkId, addedActivity.DrinkName, addedActivity.AlcPrc, addedActivity.Volume);
 
             var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
@@ -73,7 +73,7 @@ namespace BingeBuddyNg.Services
             // store file in blob storage
             string imageUrlOriginal = await StorageAccessService.SaveFileInBlobStorage("img", "activities", fileName, stream);
 
-            var activity = Activity.CreateImageActivity(DateTime.UtcNow, location, userId, user.Name, user.ProfileImageUrl, imageUrlOriginal);
+            var activity = Activity.CreateImageActivity(DateTime.UtcNow, location, userId, user.Name, imageUrlOriginal);
 
             var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
 

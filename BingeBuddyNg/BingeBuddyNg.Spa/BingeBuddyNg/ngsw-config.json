@@ -40,14 +40,13 @@
     {
       "name": "userpics",
       "urls": [
-        "https://platform-lookaside.fbsbx.com/**",
-        "https://lh3.googleusercontent.com/**"
+        "https://bingebuddystorage.blob.core.windows.net/profileimg/**"
       ],
       "cacheConfig": {
         "strategy": "freshness",
         "maxSize": 100,
         "maxAge": "1d",
-        "timeout": "5s"
+        "timeout": "1s"
       }
     }
   ]

@@ -102,8 +102,7 @@ export class DrinkersComponent implements OnInit, OnDestroy {
         requestingUser:
         {
           userId: this.currentUser.id,
-          userName: this.currentUser.name,
-          userProfileImageUrl: this.currentUser.profileImageUrl
+          userName: this.currentUser.name
         }
       };
       this.pendingRequests.push(request);

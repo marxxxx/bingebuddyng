@@ -36,8 +36,8 @@ namespace BingeBuddyNg.Functions
             }
 
             // now other ones (with likes and cheers)
-            var involvedUsers = activity.Cheers?.Select(c => new UserInfo(c.UserId, c.UserName, c.UserProfileImageUrl))
-                .Union(activity.Likes?.Select(l => new UserInfo(l.UserId, l.UserName, l.UserProfileImageUrl)))
+            var involvedUsers = activity.Cheers?.Select(c => new UserInfo(c.UserId, c.UserName))
+                .Union(activity.Likes?.Select(l => new UserInfo(l.UserId, l.UserName)))
                 .Distinct()
                 .Where(u=>u.UserId != activity.UserId && u.UserId != reactingUser.Id)
                 .ToList();

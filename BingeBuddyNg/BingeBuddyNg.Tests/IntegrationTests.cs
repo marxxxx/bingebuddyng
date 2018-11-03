@@ -13,6 +13,7 @@ using BingeBuddyNg.Functions;
 using BingeBuddyNg.Services.Entitys;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
+using BingeBuddyNg.Services.Messages;
 
 namespace BingeBuddyNg.Tests
 {
@@ -32,6 +33,20 @@ namespace BingeBuddyNg.Tests
 
             serviceProvider = services.BuildServiceProvider();
 
+        }
+
+        [TestMethod]
+        public async Task MigrateProfileImages()
+        {
+
+            var userRepository = serviceProvider.GetRequiredService<IUserRepository>();
+            StorageAccessService storageAccessService = serviceProvider.GetRequiredService<StorageAccessService>();
+            var users = await userRepository.GetAllUsersAsync();
+            foreach(var u in users)
+            {
+                await storageAccessService.AddQueueMessage("profile-update", new ProfileUpdateMessage(u.Id, u.ProfileImageUrl));
+            }
+            
         }
 
         [TestMethod]

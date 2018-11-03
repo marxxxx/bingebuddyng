@@ -5,6 +5,5 @@ export class Reaction {
     timestamp: any;
     userId: string;
     userName: string;
-    userProfileImageUrl: string;
 }
 

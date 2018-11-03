@@ -9,7 +9,6 @@ export class Activity {
     activityType: ActivityType;
     timestamp: Date;
     userId: string;
-    userProfileImageUrl: string;
     userName: string;
     message: string;
     locationAddress: string;
@@ -24,8 +23,7 @@ export class Activity {
     getUserInfo(): UserInfo {
         const userInfo: UserInfo = {
             userId: this.userId,
-            userName: this.userName,
-            userProfileImageUrl: this.userProfileImageUrl
+            userName: this.userName
         };
 
         return userInfo;

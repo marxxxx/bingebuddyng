@@ -2,7 +2,6 @@
   <mat-card-title fxLayout fxLayoutAlign="space-between center">
     <div fxLayout fxLayoutAlign="start center">
       <app-user-info [userInfo]="userInfo"></app-user-info>
-      <!-- <img class="user-profile-image" [src]="activity.activity.userProfileImageUrl"> -->
       <span class="user-name" [routerLink]="['/profile', activity.activity.userId]">{{activity.activity.userName}}</span>
     </div>
     <mat-chip-list class="stats" *ngIf="activity.userStats.currentNightDrinks + activity.userStats.currentAlcoholization > 0">
@@ -75,7 +74,7 @@
 
       <mat-list>
         <mat-list-item *ngFor="let c of activity.activity.comments">
-          <img matListAvatar [src]="c.userProfileImageUrl">
+          <img matListAvatar [src]="userService.getProfileImageUrl(c.userId)">
           <h3 matLine> {{c.userName}} </h3>
           <p matLine fxLayout fxLayoutAlign="space-between center" fxLayout.lt-sm="column" fxLayoutAlign.lt-sm="start start">
             <span class="comment-text">{{c.comment}}</span>

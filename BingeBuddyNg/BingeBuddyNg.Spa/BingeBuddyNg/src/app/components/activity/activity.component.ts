@@ -10,6 +10,7 @@ import { AuthService } from '../../services/auth.service';
 import { ReactionType } from '../../../models/ReactionType';
 import { Reaction } from '../../../models/Reaction';
 import { CommentReaction } from '../../../models/CommentReaction';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-activity',
@@ -30,8 +31,7 @@ export class ActivityComponent implements OnInit {
     }
     return {
       userId: this.activity.activity.userId,
-      userName: this.activity.activity.userName,
-      userProfileImageUrl: this.activity.activity.userProfileImageUrl
+      userName: this.activity.activity.userName
     };
   }
 
@@ -42,7 +42,8 @@ export class ActivityComponent implements OnInit {
 
   constructor(private translate: TranslateService,
     private auth: AuthService,
-    private activityService: ActivityService) { }
+    private activityService: ActivityService,
+    public userService: UserService) { }
 
   ngOnInit() {
     if (this.auth.isAuthenticated()) {
@@ -135,7 +136,6 @@ export class ActivityComponent implements OnInit {
     const reaction: Reaction = {
       userId: this.user.id,
       userName: this.user.name,
-      userProfileImageUrl: this.user.profileImageUrl,
       timestamp: new Date(),
       type: type
     };

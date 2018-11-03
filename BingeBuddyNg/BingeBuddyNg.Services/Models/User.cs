@@ -26,7 +26,7 @@ namespace BingeBuddyNg.Services.Models
 
         public UserInfo ToUserInfo()
         {
-            return new UserInfo(Id, Name, ProfileImageUrl);
+            return new UserInfo(Id, Name);
         }
 
 

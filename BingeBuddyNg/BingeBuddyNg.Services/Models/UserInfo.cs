@@ -10,16 +10,14 @@ namespace BingeBuddyNg.Services.Models
         {
         }
 
-        public UserInfo(string userId, string userName, string userProfileImageUrl)
+        public UserInfo(string userId, string userName)
         {
             UserId = userId ?? throw new ArgumentNullException(nameof(userId));
             UserName = userName ?? throw new ArgumentNullException(nameof(userName));
-            UserProfileImageUrl = userProfileImageUrl ?? throw new ArgumentNullException(nameof(userProfileImageUrl));
         }
 
         public string UserId { get; set; }
         public string UserName { get; set; }
-        public string UserProfileImageUrl { get; set; }
 
         public bool Equals(UserInfo other)
         {
@@ -43,7 +41,7 @@ namespace BingeBuddyNg.Services.Models
 
         public override string ToString()
         {
-            return $"{{{nameof(UserId)}={UserId}, {nameof(UserName)}={UserName}, {nameof(UserProfileImageUrl)}={UserProfileImageUrl}}}";
+            return $"{{{nameof(UserId)}={UserId}, {nameof(UserName)}={UserName}}}";
         }
     }
 }
