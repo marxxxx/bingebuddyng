@@ -1,7 +1,7 @@
 import { UserInfo } from './../../../models/UserInfo';
 import { ActivityType } from './../../../models/ActivityType';
 import { ActivityStatsDTO } from '../../../models/ActivityStatsDTO';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChildren } from '@angular/core';
 import { TranslateService } from '../../../../node_modules/@ngx-translate/core';
 import { ActivityService } from '../../services/activity.service';
 import { ReactionDTO } from '../../../models/ReactionDTO';
@@ -11,6 +11,7 @@ import { ReactionType } from '../../../models/ReactionType';
 import { Reaction } from '../../../models/Reaction';
 import { CommentReaction } from '../../../models/CommentReaction';
 import { UserService } from 'src/app/services/user.service';
+import { MatTooltip } from '@angular/material';
 
 @Component({
   selector: 'app-activity',
@@ -26,18 +27,23 @@ export class ActivityComponent implements OnInit {
   user: User;
   comment: string;
   get userInfo(): UserInfo {
-    if (!this.user) {
-      return null;
+    let userInfo: UserInfo = null;
+    if (this.activity && this.activity.activity) {
+      userInfo = {
+        userId: this.activity.activity.userId,
+        userName: this.activity.activity.userName
+      };
     }
-    return {
-      userId: this.activity.activity.userId,
-      userName: this.activity.activity.userName
-    };
+
+    return userInfo;
   }
 
 
   @Input()
   activity: ActivityStatsDTO;
+
+  @ViewChildren(MatTooltip)
+  tooltips: MatTooltip[];
 
 
   constructor(private translate: TranslateService,
@@ -73,6 +79,10 @@ export class ActivityComponent implements OnInit {
     const message = this.translate.instant('IJustHadA',
       { value: this.translate.instant(this.activity.activity.drinkName) });
     return message;
+  }
+
+  onShowTooltips() {
+    this.tooltips.forEach(t => t.show());
   }
 
   onLike() {
@@ -150,24 +160,41 @@ export class ActivityComponent implements OnInit {
 
 
   isLikedByMe(): boolean {
+    if (this.user == null || this.activity == null || this.activity.activity == null || this.activity.activity.likes == null) {
+      return false;
+    }
     const result = this.activity.activity.likes.filter(l => l.userId === this.user.id).length > 0;
     return result;
   }
 
   isCheeredByMe(): boolean {
+    if (!this.hasData() || this.activity.activity.cheers == null) {
+      return false;
+    }
     const result = this.activity.activity.cheers.filter(l => l.userId === this.user.id).length > 0;
     return result;
   }
 
   getLikeUserNames(): string {
+    if (!this.hasData() || this.activity.activity.likes == null) {
+      return null;
+    }
     return this.activity.activity.likes.map(l => l.userName).join(',');
   }
 
   getCheersUserNames(): string {
+    if (!this.hasData() || this.activity.activity.cheers == null) {
+      return null;
+    }
     return this.activity.activity.cheers.map(l => l.userName).join(',');
   }
 
   isMessageLink(link: string): boolean {
     return (link && (link.indexOf('http') === 0));
+  }
+
+  hasData(): boolean {
+    const hasData = (this.user != null && this.activity != null && this.activity.activity != null);
+    return hasData;
   }
 }
