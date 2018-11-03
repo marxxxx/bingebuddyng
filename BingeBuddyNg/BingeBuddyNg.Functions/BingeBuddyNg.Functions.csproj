@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BingeBuddyNg.Services\BingeBuddyNg.Services.csproj" />
+    <ProjectReference Include="..\BingeBuddyNg.Shared\BingeBuddyNg.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">

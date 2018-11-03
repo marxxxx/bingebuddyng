@@ -14,7 +14,7 @@ namespace BingeBuddyNg.Functions
     public static class ReactionAddedFunction
     {
         [FunctionName("ReactionAddedFunction")]
-        public static async Task Run([QueueTrigger("reaction-added", Connection = "AzureWebJobsStorage")]string reactionQueueItem, ILogger log)
+        public static async Task Run([QueueTrigger(Shared.Constants.QueueNames.ReactionAdded, Connection = "AzureWebJobsStorage")]string reactionQueueItem, ILogger log)
         {
             var reactionAddedMessage = JsonConvert.DeserializeObject<ReactionAddedMessage>(reactionQueueItem);
 

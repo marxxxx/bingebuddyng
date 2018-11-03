@@ -2,6 +2,7 @@
 using BingeBuddyNg.Services.Interfaces;
 using BingeBuddyNg.Services.Messages;
 using BingeBuddyNg.Services.Models;
+using BingeBuddyNg.Shared;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
@@ -121,7 +122,7 @@ namespace BingeBuddyNg.Services
 
         private async Task AddToActivityAddedQueueAsync(Activity savedActivity)
         {
-            var queueClient = this.StorageAccessService.GetQueueReference(Constants.ActivityAddedQueueName);
+            var queueClient = this.StorageAccessService.GetQueueReference(Constants.QueueNames.ActivityAdded);
             var message = new ActivityAddedMessage(savedActivity);
             await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
         }
@@ -171,7 +172,7 @@ namespace BingeBuddyNg.Services
             
 
             // add to queue
-            var queueClient = this.StorageAccessService.GetQueueReference(Constants.ReactionAddedQueueName);
+            var queueClient = this.StorageAccessService.GetQueueReference(Constants.QueueNames.ReactionAdded);
             var message = new ReactionAddedMessage(reaction.ActivityId, reaction.Type, userId, reaction.Comment);
             await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
         }

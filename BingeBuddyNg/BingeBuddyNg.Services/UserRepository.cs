@@ -76,7 +76,7 @@ namespace BingeBuddyNg.Services
             // enqueue profile image update change
             if (profilePicHasChanged)
             {
-                var queue = StorageAccess.GetQueueReference("profile-update");
+                var queue = StorageAccess.GetQueueReference(Shared.Constants.QueueNames.ProfileUpdate);
                 var message = new ProfileUpdateMessage(user.Id, user.ProfileImageUrl);
                 await queue.AddMessageAsync(new CloudQueueMessage(JsonConvert.SerializeObject(message)));
             }

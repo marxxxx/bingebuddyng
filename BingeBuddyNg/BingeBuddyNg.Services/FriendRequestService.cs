@@ -1,4 +1,5 @@
 ﻿using BingeBuddyNg.Services.Interfaces;
+using BingeBuddyNg.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -33,8 +34,8 @@ namespace BingeBuddyNg.Services
                 // send push notification to inform user about friend request
                 if(friendUser.PushInfo != null)
                 {
-                    NotificationService.SendMessage(new[] { friendUser.PushInfo }, new Models.NotificationMessage(Constants.FriendRequestNotificationIconUrl,
-                        Constants.FriendRequestNotificationIconUrl, Constants.FriendRequestApplicationUrl, "Freundschaftsanfrage",
+                    NotificationService.SendMessage(new[] { friendUser.PushInfo }, new Models.NotificationMessage(Constants.Urls.FriendRequestNotificationIconUrl,
+                        Constants.Urls.FriendRequestNotificationIconUrl, Constants.Urls.FriendRequestApplicationUrl, "Freundschaftsanfrage",
                         $"{requestingUser.Name} hat dir eine Freundschaftsanfrage geschickt!"));
                 }
             }
@@ -51,8 +52,8 @@ namespace BingeBuddyNg.Services
             if (requestingUser.PushInfo != null)
             {
                 //TODO: Localize
-                NotificationService.SendMessage(new[] { requestingUser.PushInfo }, new Models.NotificationMessage(Constants.FriendRequestNotificationIconUrl,
-                    Constants.FriendRequestNotificationIconUrl, Constants.FriendRequestApplicationUrl, "Freundschaftsanfrage",
+                NotificationService.SendMessage(new[] { requestingUser.PushInfo }, new Models.NotificationMessage(Constants.Urls.FriendRequestNotificationIconUrl,
+                    Constants.Urls.FriendRequestNotificationIconUrl, Constants.Urls.FriendRequestApplicationUrl, "Freundschaftsanfrage",
                     $"{acceptingUser.Name} hat deine Freundschaftsanfrage akzeptiert!"));
             }
         }

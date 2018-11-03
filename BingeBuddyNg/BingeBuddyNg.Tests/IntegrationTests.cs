@@ -44,7 +44,7 @@ namespace BingeBuddyNg.Tests
             var users = await userRepository.GetAllUsersAsync();
             foreach(var u in users)
             {
-                await storageAccessService.AddQueueMessage("profile-update", new ProfileUpdateMessage(u.Id, u.ProfileImageUrl));
+                await storageAccessService.AddQueueMessage(Shared.Constants.QueueNames.ProfileUpdate, new ProfileUpdateMessage(u.Id, u.ProfileImageUrl));
             }
             
         }

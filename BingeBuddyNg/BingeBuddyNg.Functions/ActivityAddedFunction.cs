@@ -14,7 +14,7 @@ namespace BingeBuddyNg.Functions
     public static class ActivityAddedFunction
     {
         [FunctionName("ActivityAddedFunction")]
-        public static async Task Run([QueueTrigger("activity-added", Connection = "AzureWebJobsStorage")]string message,
+        public static async Task Run([QueueTrigger(Shared.Constants.QueueNames.ActivityAdded, Connection = "AzureWebJobsStorage")]string message,
             ILogger log)
         {
             // we stick with poor man's DI for now
