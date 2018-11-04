@@ -33,9 +33,9 @@ export class AuthService {
     this.auth0.authorize();
   }
 
-  public handleAuthentication(): void {
+  public handleAuthentication(returnUrl?: string): void {
 
-    const successRoute = '/activity-feed';
+    const successRoute = returnUrl != null ? returnUrl : '/activity-feed';
 
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {

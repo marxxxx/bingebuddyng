@@ -24,6 +24,9 @@ export class MeComponent implements OnInit {
         this.loadProfile();
       } else {
         this.userInfo = null;
+
+         // retry
+         setTimeout(() => this.loadProfile(), 1000);
       }
     });
 
@@ -38,6 +41,9 @@ export class MeComponent implements OnInit {
       } else {
         console.log('no profile');
         console.error(err);
+
+        // retry
+        setTimeout(() => this.loadProfile(), 1000);
       }
     });
   }

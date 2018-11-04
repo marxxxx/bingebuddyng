@@ -8,6 +8,7 @@ import { ActivityFeedComponent } from './pages/activity-feed/activity-feed.compo
 import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthGuard } from './services/auth.guard';
 
 const routes: Routes = [{
   path: 'callback',
@@ -18,23 +19,29 @@ const routes: Routes = [{
 },
 {
   path: 'activity-feed',
-  component: ActivityFeedComponent
+  component: ActivityFeedComponent,
+  canActivate: [AuthGuard]
 }, {
   path: 'stats',
-  component: StatsComponent
+  component: StatsComponent,
+  canActivate: [AuthGuard]
 },
 {
   path: 'bingemap',
-  component: BingemapComponent
+  component: BingemapComponent,
+  canActivate: [AuthGuard]
 }, {
   path: 'profile/:userId',
-  component: ProfileComponent
+  component: ProfileComponent,
+  canActivate: [AuthGuard]
 }, {
   path: 'friendrequests',
-  component: FriendrequestsComponent
+  component: FriendrequestsComponent,
+  canActivate: [AuthGuard]
 }, {
   path: 'drinkers',
-  component: DrinkersComponent
+  component: DrinkersComponent,
+  canActivate: [AuthGuard]
 },
 {
   path: '',

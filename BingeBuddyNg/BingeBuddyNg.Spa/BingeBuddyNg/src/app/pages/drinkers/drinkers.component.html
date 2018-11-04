@@ -5,7 +5,7 @@
 <!-- Search Input -->
 <div fxLayout fxLayoutAlign="space-between center">
   <mat-form-field fxFlex="90">
-    <input matInput autofocus placeholder="{{'Search' | translate }}" [(ngModel)]="filterText" (keydown)="onKeyDown($event)">
+    <input matInput placeholder="{{'Search' | translate }}" [(ngModel)]="filterText" (keydown)="onKeyDown($event)">
   </mat-form-field>
   <button fxFlex="10" mat-icon-button (click)="load()">
     <mat-icon>search</mat-icon>

@@ -5,6 +5,7 @@ import { GetActivityFilterArgs } from '../../models/GetActivityFilterArgs';
 import { ActivityAggregationDTO } from '../../models/ActivityAggregationDTO';
 import { Activity } from '../../models/Activity';
 import { Observable } from 'rxjs';
+import { retry } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
@@ -47,7 +48,7 @@ export class ActivityService {
 
   addDrinkActivity(activity: AddDrinkActivityDTO): Observable<any> {
     const url = `${this.baseUrl}/AddDrinkActivity`;
-    return this.http.post(url, activity);
+    return this.http.post(url, activity).pipe(retry(3));
   }
 
   addReaction(reaction: ReactionDTO) {

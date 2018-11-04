@@ -55,7 +55,7 @@ namespace BingeBuddyNg.Services
             var table = StorageAccess.GetTableReference(TableName);
 
             TableOperation saveUserOperation = null;
-            bool profilePicHasChanged = false;
+            bool profilePicHasChanged = true;
             var savedUser = await FindUserEntityAsync(user.Id);
             
             if (savedUser != null)

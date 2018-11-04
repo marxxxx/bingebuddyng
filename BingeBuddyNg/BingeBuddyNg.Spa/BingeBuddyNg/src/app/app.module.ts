@@ -45,6 +45,7 @@ import { DrinkDialogComponent } from './components/drink-dialog/drink-dialog.com
 import { NoFriendsComponent } from './components/no-friends/no-friends.component';
 import { MessageDialogComponent } from './components/message-dialog/message-dialog.component';
 import { DrinkIconComponent } from './components/drink-icon/drink-icon.component';
+import { AuthGuard } from './services/auth.guard';
 
 
 // AoT requires an exported function for factories
@@ -108,7 +109,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthHttpInterceptor,
       multi: true
-    }],
+    }, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

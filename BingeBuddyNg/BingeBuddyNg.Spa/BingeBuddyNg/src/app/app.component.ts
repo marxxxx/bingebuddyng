@@ -5,20 +5,23 @@ import { DataService } from './services/data.service';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { AuthService } from './services/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { SwPush, SwUpdate } from '@angular/service-worker';
 import { PushInfo } from '../models/PushInfo';
 import { NotificationService } from './services/notification.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
   readonly VAPID_PUBLIC_KEY = 'BP7M6mvrmwidRr7II8ewUIRSg8n7_mKAlWagRziRRluXnMc_d_rPUoVWGHb79YexnD0olGIFe_xackYqe1fmoxo';
+  private pushInfo: PushInfo;
+  private sub: Subscription;
 
   constructor(public auth: AuthService, private translate: TranslateService, router: Router,
     private userService: UserService,
@@ -33,6 +36,14 @@ export class AppComponent implements OnInit {
 
     // the lang to use, if the lang isn't available, it will use the current loader to get them
     translate.use(navigator.language.substr(0, 2));
+
+    this.sub = this.auth.isLoggedIn$.subscribe(isLoggedIn => {
+
+      if (isLoggedIn) {
+        this.registerUser(this.pushInfo);
+      }
+
+    });
   }
 
   ngOnInit() {
@@ -40,12 +51,11 @@ export class AppComponent implements OnInit {
     this.updateService.available.subscribe(e => {
       const message = this.translate.instant('UpdateAvailableMessage');
       this.snackbar.open(message, 'OK')
-      .onAction().subscribe(r => {
-        location.reload(true);
-      });
+        .onAction().subscribe(r => {
+          location.reload(true);
+        });
     });
 
-    let pushInfo: PushInfo = null;
 
     console.log('requesting push subscription ...');
 
@@ -55,11 +65,10 @@ export class AppComponent implements OnInit {
       console.log('Subscription received');
       console.log(sub);
 
-      pushInfo = this.getPushInfo(sub);
-      this.registerUser(pushInfo);
+      this.pushInfo = this.getPushInfo(sub);
+      this.registerUser(this.pushInfo);
     }).catch(err => {
       console.error(err);
-      this.registerUser(null);
     });
 
     this.pushService.messages.subscribe((m: any) => {
@@ -68,6 +77,13 @@ export class AppComponent implements OnInit {
         this.notification.raiseActivityReceived();
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.sub) {
+      this.sub.unsubscribe();
+      this.sub = null;
+    }
   }
 
   getPushInfo(sub: PushSubscription): PushInfo {
