@@ -35,10 +35,15 @@ export class AuthService {
 
   public handleAuthentication(returnUrl?: string): void {
 
+    console.log('handling authentication');
     const successRoute = returnUrl != null ? returnUrl : '/activity-feed';
 
     this.auth0.parseHash((err, authResult) => {
+      console.log('parseHash completed');
+      console.log(authResult);
+      console.log(err);
       if (authResult && authResult.accessToken && authResult.idToken) {
+        console.log('received authResult');
         window.location.hash = '';
         this.setSession(authResult);
 
@@ -46,14 +51,20 @@ export class AuthService {
           this.isLoggedIn$.next(true);
         }
 
+        console.log('navigating to success route');
         this.router.navigate([successRoute]);
       } else if (err) {
+        console.log('error parsing hash');
         this.router.navigate(['/']);
-        console.log(err);
+        console.error(err);
       } else {
-        this.checkAuthenticated();
-
-        console.log(this.getAccessToken());
+        if (this.checkAuthenticated()) {
+          console.log('authenticated -> navigating to success route');
+          this.router.navigate([successRoute]);
+        } else {
+          console.log('not authenticated -> navigating to root');
+          this.login();
+        }
       }
 
     });
@@ -68,7 +79,7 @@ export class AuthService {
 
     const accessToken = this.getAccessToken();
     if (!accessToken) {
-      throw new Error('Access Token must exist to fetch profile');
+      cb('Access Token must exist to fetch profile', null);
     }
 
     const self = this;
@@ -81,6 +92,8 @@ export class AuthService {
   }
 
   private setSession(authResult): void {
+    console.log('Setting session');
+    console.log(authResult);
     // Set the time that the Access Token will expire at
     const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
     localStorage.setItem('access_token', authResult.accessToken);
