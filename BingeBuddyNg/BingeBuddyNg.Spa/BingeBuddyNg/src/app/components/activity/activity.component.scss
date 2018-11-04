@@ -102,3 +102,7 @@ mat-chip-list {
 .comment-text {
     white-space: pre-wrap; 
 }
+
+img[matListAvatar] {
+    cursor: pointer;
+}

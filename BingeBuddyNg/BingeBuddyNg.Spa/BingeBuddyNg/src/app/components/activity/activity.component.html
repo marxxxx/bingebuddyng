@@ -74,7 +74,7 @@
 
       <mat-list>
         <mat-list-item *ngFor="let c of activity.activity.comments">
-          <img matListAvatar [src]="userService.getProfileImageUrl(c.userId)">
+          <img matListAvatar [src]="userService.getProfileImageUrl(c.userId)" [routerLink]="['/profile', c.userId]">
           <h3 matLine> {{c.userName}} </h3>
           <p matLine fxLayout fxLayoutAlign="space-between center" fxLayout.lt-sm="column" fxLayoutAlign.lt-sm="start start">
             <span class="comment-text">{{c.comment}}</span>
