@@ -3,12 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { Activity } from '../../../models/Activity';
 import { ActivityService } from '../../services/activity.service';
 import { LocationDTO } from '../../../models/LocationDTO';
-import { Subject } from 'rxjs';
 import { UtilService } from '../../services/util.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AgmMap, LatLngBounds, LatLng, AgmMarker } from '@agm/core';
-import * as moment from 'moment';
-import { } from 'googlemaps';
+
+declare var google: any;
 
 @Component({
   selector: 'app-bingemap',
@@ -65,7 +63,7 @@ export class BingemapComponent implements OnInit {
 }
 
   private fitBounds() {
-    const bounds: google.maps.LatLngBounds = new google.maps.LatLngBounds();
+    const bounds = new google.maps.LatLngBounds();
     for (const mm of this.activitys) {
       bounds.extend({ lat: mm.location.latitude, lng: mm.location.longitude });
     }
