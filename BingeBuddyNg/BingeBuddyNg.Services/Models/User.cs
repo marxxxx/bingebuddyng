@@ -30,10 +30,14 @@ namespace BingeBuddyNg.Services.Models
         }
 
 
-        public List<string> GetVisibleFriendUserIds()
+        public List<string> GetVisibleFriendUserIds(bool includeMe = true)
         {
-            var visibleUserIds = Friends.Select(f => f.UserId).Except(MutedByFriendUserIds).Union(new[] { this.Id }).ToList();
-            return visibleUserIds;
+            var visibleUserIds = Friends.Select(f => f.UserId).Except(MutedByFriendUserIds);
+            if(includeMe)
+            {
+                visibleUserIds = visibleUserIds.Union(new[] { this.Id });
+            }
+            return visibleUserIds.ToList();
         }
 
         public void AddFriend(UserInfo user)
