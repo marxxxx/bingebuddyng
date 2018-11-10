@@ -71,12 +71,16 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     const sub = this.notification.activityReceived$.subscribe(_ => this.load());
     this.subscriptions.push(sub);
 
-    this.util.getLocation().then(l => {
-      this.location = l;
-    }, e => {
-      console.error('error retrieving location');
-      console.error(e);
+    this.route.paramMap.subscribe(_ => {
+      console.log('refreshing location');
+      this.util.getLocation().then(l => {
+        this.location = l;
+      }, e => {
+        console.error('error retrieving location');
+        console.error(e);
+      });
     });
+
   }
 
   onAppear(ev) {
