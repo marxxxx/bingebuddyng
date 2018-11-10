@@ -13,7 +13,6 @@ export class DrinkDialogComponent implements OnInit {
   readonly beerGifs = ['https://media.giphy.com/media/92wsX8GEoNTYA/giphy.gif',
     'https://media.giphy.com/media/osbU9PXXgwHuM/giphy.gif',
     'https://media.giphy.com/media/oDgKc9AGIo372/giphy.gif',
-    'https://media.giphy.com/media/26gjiYH2vGNjB11wk/giphy.gif',
     'https://i.pinimg.com/originals/8f/0d/36/8f0d3672ef0b768fdf8fb999c9ca116e.gif',
     'https://i.imgur.com/KJM8Ma1.gif',
     'https://media.tenor.com/images/8e0becb6e3edc70b8501240959be2861/tenor.gif',

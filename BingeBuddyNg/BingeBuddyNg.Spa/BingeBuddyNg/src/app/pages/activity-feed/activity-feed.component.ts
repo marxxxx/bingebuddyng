@@ -1,25 +1,20 @@
 import { MessageDialogComponent } from './../../components/message-dialog/message-dialog.component';
 import { ActivatedRoute } from '@angular/router';
-import { TableContinuationToken } from './../../../models/TableContinuationToken';
 import { DrinkType } from './../../../models/DrinkType';
 import { AddDrinkActivityDTO } from './../../../models/AddDrinkActivityDTO';
 import { Observable, Subscription } from 'rxjs';
-import { AddActivityBaseDTO } from './../../../models/AddActivityBaseDTO';
-import { TranslateService } from '@ngx-translate/core';
 import { LocationDTO } from '../../../models/LocationDTO';
 import { ActivityStatsDTO } from '../../../models/ActivityStatsDTO';
 import { ActivityService } from '../../services/activity.service';
-import { DataService } from '../../services/data.service';
-import { Component, OnInit, OnDestroy, ViewChild, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, ViewChildren } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { AddMessageActivityDTO } from '../../../models/AddMessageActivityDTO';
 import { UtilService } from '../../services/util.service';
-import { MatSnackBar, MatDialog } from '@angular/material';
+import { MatDialog, MatTooltip } from '@angular/material';
 import { ShellInteractionService } from '../../services/shell-interaction.service';
-import { FileUploader, FileItem, FileUploaderOptions, ParsedResponseHeaders } from 'ng2-file-upload';
+import { FileUploader, FileItem, FileUploaderOptions } from 'ng2-file-upload';
 import { NotificationService } from '../../services/notification.service';
-import { ScrollDispatcher } from '@angular/cdk/scrolling';
-import { trigger, style, transition, animate, query, stagger } from '@angular/animations';
+import { trigger, style, transition, animate } from '@angular/animations';
 import { DrinkDialogComponent } from '../../components/drink-dialog/drink-dialog.component';
 import { DrinkDialogArgs } from '../../components/drink-dialog/DrinkDialogArgs';
 
@@ -53,6 +48,9 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
   @ViewChild('#activity-container')
   container: any;
+
+  @ViewChildren(MatTooltip)
+  tooltips: MatTooltip[];
 
   constructor(private activityService: ActivityService,
     private util: UtilService,
@@ -280,5 +278,15 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     this.isBusyUploading = true;
     this.currentProgress = progress;
     this.changeRef.detectChanges();
+  }
+
+  onActionsOpenChange(open: boolean): void {
+    console.log('actions open change', open);
+    if (open) {
+      setTimeout(() => this.tooltips.forEach(t => t.show()), 500);
+    } else {
+      this.tooltips.forEach(t => t.hide());
+    }
+
   }
 }

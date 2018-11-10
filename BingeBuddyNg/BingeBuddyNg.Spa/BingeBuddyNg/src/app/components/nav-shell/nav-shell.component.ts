@@ -42,6 +42,23 @@ export class NavShellComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.shellInteraction.registerSideNav(this.sideNav);
 
+        const loggedInSubScription = this.auth.isLoggedIn$.subscribe(isLoggedIn => {
+            if (isLoggedIn) {
+                this.updateUserAndFriendRequests();
+            }
+        });
+
+        if (this.auth.isLoggedIn$.value) {
+            this.updateUserAndFriendRequests();
+        }
+
+        // update pending friend requests if something changed in this area
+        const sub = this.state.pendingFriendRequestsChanged$.subscribe(p => this.updatePendingFriendRequests(this.currentUserId));
+
+        this.subscriptions.push(sub, loggedInSubScription);
+    }
+
+    updateUserAndFriendRequests() {
         // get current user
         this.auth.getProfile((err, profile) => {
             this.currentUserId = profile.sub;
@@ -49,10 +66,6 @@ export class NavShellComponent implements OnInit, OnDestroy {
             // get pending friend requests
             this.updatePendingFriendRequests(this.currentUserId);
         });
-
-        // update pending friend requests if something changed in this area
-        const sub = this.state.pendingFriendRequestsChanged$.subscribe(p => this.updatePendingFriendRequests(this.currentUserId));
-        this.subscriptions.push(sub);
     }
 
     ngOnDestroy() {
@@ -72,7 +85,7 @@ export class NavShellComponent implements OnInit, OnDestroy {
                     link: '/friendrequests'
                 });
             } else {
-              this.shellInteraction.removeShellIcon(id);
+                this.shellInteraction.removeShellIcon(id);
             }
         });
     }
