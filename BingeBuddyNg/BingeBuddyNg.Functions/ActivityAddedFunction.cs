@@ -42,8 +42,15 @@ namespace BingeBuddyNg.Functions
             {
                 var currentUser = await userRepository.FindUserAsync(activity.UserId);
 
-                // Immediately update Stats for current user
-                await DrinkCalculatorFunction.UpdateStatsForUserasync(currentUser, calculationService, userStatsRepository, log);
+                try
+                {
+                    // Immediately update Stats for current user
+                    await DrinkCalculatorFunction.UpdateStatsForUserAsync(currentUser, calculationService, userStatsRepository, log);
+                }
+                catch (Exception ex)
+                {
+                    log.LogError($"Failed to update stats for user [{currentUser}]: [{ex}]");
+                }
 
                 // get friends of this user who didn't mute themselves from him
                 var friendUserIds = currentUser.GetVisibleFriendUserIds(false);
@@ -54,15 +61,17 @@ namespace BingeBuddyNg.Functions
                         var friendUser = await userRepository.FindUserAsync(friendUserId);
                         if (friendUser != null && friendUser.PushInfo != null)
                         {
+                            log.LogInformation($"Sending push to [{friendUser}] ...");
+
                             // TODO: Localize
                             var notificationMessage = GetNotificationMessage(activity);
 
                             notificationService.SendMessage(new[] { friendUser.PushInfo }, notificationMessage);
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        // ignore
+                        log.LogError($"Failed to send push notification to user [{friendUserId}]: [{ex}]");
                     }
                 }
             }
