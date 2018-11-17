@@ -12,6 +12,7 @@ import { Reaction } from '../../../models/Reaction';
 import { CommentReaction } from '../../../models/CommentReaction';
 import { UserService } from 'src/app/services/user.service';
 import { MatTooltip } from '@angular/material';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-activity',
@@ -48,6 +49,7 @@ export class ActivityComponent implements OnInit {
 
   constructor(private translate: TranslateService,
     private auth: AuthService,
+    private router: Router,
     private activityService: ActivityService,
     public userService: UserService) { }
 
@@ -134,6 +136,10 @@ export class ActivityComponent implements OnInit {
     if (ev.key === 'Enter') {
       this.onComment();
     }
+  }
+
+  onLocationClick() {
+    this.router.navigate(['bingemap'], { queryParams: { selectedActivityId: this.activity.activity.id } });
   }
 
   createReactionDTO(type: ReactionType, comment?: string): ReactionDTO {

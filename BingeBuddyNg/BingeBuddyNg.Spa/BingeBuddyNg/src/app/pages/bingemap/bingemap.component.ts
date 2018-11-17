@@ -15,6 +15,7 @@ declare var google: any;
 })
 export class BingemapComponent implements OnInit {
 
+  selectedActivityId: string;
   location: LocationDTO;
   isBusy = false;
   activitys: Activity[] = [];
@@ -32,7 +33,8 @@ export class BingemapComponent implements OnInit {
       console.error('no location available.');
     });
 
-    this.route.params.subscribe(p => {
+    this.route.queryParamMap.subscribe(p => {
+      this.selectedActivityId = p.get('selectedActivityId');
       this.load();
     });
   }

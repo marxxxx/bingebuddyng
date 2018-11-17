@@ -28,7 +28,7 @@
     </div>
     <div class="metadata" fxLayout fxLayoutAlign="space-between center">
       <span class="timestamp">{{activity.activity.timestamp | date:'dd.MM.yyyy HH:mm'}}</span>
-      <span class="address"> {{activity.activity.locationAddress}}</span>
+      <span class="address" (click)="onLocationClick()"> {{activity.activity.locationAddress}}</span>
     </div>
 
     <mat-divider></mat-divider>
