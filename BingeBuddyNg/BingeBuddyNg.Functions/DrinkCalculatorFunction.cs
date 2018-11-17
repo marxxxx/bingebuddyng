@@ -25,7 +25,7 @@ namespace BingeBuddyNg.Functions
             {
                 try
                 {
-                    await UpdateStatsForUserasync(u, calculationService, userStatsRepository, log);
+                    await UpdateStatsForUserAsync(u, calculationService, userStatsRepository, log);
                 }
                 catch (Exception ex)
                 {
@@ -34,7 +34,7 @@ namespace BingeBuddyNg.Functions
             }
         }
 
-        public static async Task UpdateStatsForUserasync(User user, ICalculationService calculationService, IUserStatsRepository userStatsRepository, ILogger log)
+        public static async Task UpdateStatsForUserAsync(User user, ICalculationService calculationService, IUserStatsRepository userStatsRepository, ILogger log)
         {
             var stats = await calculationService.CalculateStatsForUserAsync(user);
             var userStats = new UserStatistics(user.Id, stats.CurrentAlcLevel, stats.CurrentNightDrinks);
