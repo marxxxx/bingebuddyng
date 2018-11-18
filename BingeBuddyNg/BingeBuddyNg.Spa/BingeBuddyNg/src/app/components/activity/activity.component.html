@@ -37,14 +37,14 @@
     <div fxLayout fxLayoutAlign="space-between center" class="actions" (click)="onShowTooltips()">
       <div fxLayout>
         <!-- Like -->
-        <button *ngIf="!isBusyLiking" [disabled]="!user || isLikedByMe()" mat-icon-button [matTooltip]="getLikeUserNames()"
+        <button *ngIf="!isBusyLiking" [disabled]="!currentUser || isLikedByMe()" mat-icon-button [matTooltip]="getLikeUserNames()"
           (click)="onLike()">
           <img src="../../assets/img/like.png"></button>
         <span class="count" *ngIf="activity.activity.likes && activity.activity.likes.length > 0">{{activity.activity.likes.length}}</span>
         <mat-progress-spinner *ngIf="isBusyLiking" color="primary" mode="indeterminate" diameter="32"></mat-progress-spinner>
 
         <!-- Cheers -->
-        <button *ngIf="!isBusyCheering" [disabled]="!user || isCheeredByMe()" [matTooltip]="getCheersUserNames()"
+        <button *ngIf="!isBusyCheering" [disabled]="!currentUser || isCheeredByMe()" [matTooltip]="getCheersUserNames()"
           mat-icon-button (click)="onCheers()">
           <img src="../../assets/img/beer.png"></button>
         <span class="count" *ngIf="activity.activity.cheers && activity.activity.cheers.length > 0">{{activity.activity.cheers.length}}</span>
@@ -68,7 +68,7 @@
           <input type="text" autofocus matInput placeholder="{{'Comment' | translate}}" [(ngModel)]="comment"
             [disabled]="isBusyCommenting" (keydown)="onKeydown($event)">
         </mat-form-field>
-        <button mat-icon-button [disabled]="!user" *ngIf="!isBusyCommenting" (click)="onComment()"><img src="../../assets/img/send.png"></button>
+        <button mat-icon-button [disabled]="!currentUser" *ngIf="!isBusyCommenting" (click)="onComment()"><img src="../../assets/img/send.png"></button>
         <mat-progress-spinner *ngIf="isBusyCommenting" color="primary" mode="indeterminate" diameter="32"></mat-progress-spinner>
       </div>
 
