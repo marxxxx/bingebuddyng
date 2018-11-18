@@ -1,3 +1,5 @@
+import { UserInfo } from './UserInfo';
+
 export class UserProfile {
     family_name: string;
     given_name: string;
@@ -6,4 +8,8 @@ export class UserProfile {
     picture: string;
     sub: string;
     updated_at: any;
+
+    toUserInfo(): UserInfo {
+        return { userId: this.sub, userName: this.nickname };
+    }
 }
