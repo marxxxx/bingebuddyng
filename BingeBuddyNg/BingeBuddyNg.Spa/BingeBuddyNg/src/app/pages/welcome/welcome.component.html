@@ -2,10 +2,10 @@
     <h1>{{'WelcomeMessage' | translate}}</h1>
     <h3>{{'WelcomeSubTitle' | translate }}</h3>
 
-    <img (click)="onLogin()" src="../../assets/img/Logo.svg">
+    <img class="pulsate-transform" (click)="onLogin()" src="../../assets/img/Logo.svg">
 
 
-    <div id="started-text" *ngIf="!auth.isAuthenticated()">
+    <div id="started-text" class="pulsate" *ngIf="!auth.isAuthenticated()">
         {{'GetStarted' | translate }}
 
     </div>
