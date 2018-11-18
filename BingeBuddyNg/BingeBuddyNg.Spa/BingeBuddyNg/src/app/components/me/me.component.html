@@ -1,1 +1,1 @@
-<app-user-info [userInfo]="userInfo$ | async" [showName]="false"></app-user-info>
+<app-user-info *ngIf="userInfo$ | async as user" [userInfo]="user" [showName]="false"></app-user-info>

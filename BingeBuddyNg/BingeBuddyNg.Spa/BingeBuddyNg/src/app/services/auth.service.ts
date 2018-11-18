@@ -140,6 +140,7 @@ export class AuthService {
     this.router.navigate(['/']);
 
     this.isLoggedIn$.next(false);
+    this.currentUserProfile$.next(null);
   }
 
   public isAuthenticated(): boolean {
