@@ -1,7 +1,7 @@
 import { UserInfo } from './../../../models/UserInfo';
 import { ActivityType } from './../../../models/ActivityType';
 import { ActivityStatsDTO } from '../../../models/ActivityStatsDTO';
-import { Component, OnInit, Input, ViewChildren } from '@angular/core';
+import { Component, OnInit, Input, ViewChildren, EventEmitter, Output } from '@angular/core';
 import { TranslateService } from '../../../../node_modules/@ngx-translate/core';
 import { ActivityService } from '../../services/activity.service';
 import { ReactionDTO } from '../../../models/ReactionDTO';
@@ -44,6 +44,9 @@ export class ActivityComponent implements OnInit {
 
   @Input()
   currentUser: UserInfo;
+
+  @Output()
+  commentOpenChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   @ViewChildren(MatTooltip)
   tooltips: MatTooltip[];
@@ -120,9 +123,9 @@ export class ActivityComponent implements OnInit {
       const addedComment = this.createCommentReaction(this.comment);
       this.activity.activity.comments.push(addedComment);
       this.comment = null;
-      this.isCommentVisible = false;
+      this.setCommentVisible(false);
     }, e => {
-      this.isBusyCommenting = false;
+      this.setCommentVisible(false);
       console.error(e);
     });
   }
@@ -135,6 +138,18 @@ export class ActivityComponent implements OnInit {
 
   onLocationClick() {
     this.router.navigate(['bingemap'], { queryParams: { selectedActivityId: this.activity.activity.id } });
+  }
+
+  onCommentClicked(ev) {
+    this.setCommentVisible(!this.isCommentVisible);
+    this.tooltips.forEach(t => t.hide());
+    ev.preventDefault();
+    ev.stopPropagation();
+  }
+
+  setCommentVisible(isVisible: boolean) {
+    this.isCommentVisible = isVisible;
+    this.commentOpenChanged.emit(this.isCommentVisible);
   }
 
   createReactionDTO(type: ReactionType, comment?: string): ReactionDTO {

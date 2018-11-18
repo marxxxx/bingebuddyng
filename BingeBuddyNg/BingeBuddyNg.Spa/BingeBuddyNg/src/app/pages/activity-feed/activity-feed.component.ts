@@ -49,6 +49,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   isReloadSpinnerActive = false;
   currentUser: UserInfo;
   DrinkType = DrinkType;
+  isCommentOpen = false;
 
   @ViewChild('#activity-container')
   container: any;

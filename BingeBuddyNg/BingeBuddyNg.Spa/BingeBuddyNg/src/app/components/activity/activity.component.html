@@ -52,7 +52,7 @@
       </div>
 
       <div>
-        <button mat-icon-button (click)="isCommentVisible = !isCommentVisible">
+        <button mat-icon-button (click)="onCommentClicked($event)">
           <img *ngIf="!isCommentVisible" id="btn-comm" src="../../assets/img/comment.png">
           <img *ngIf="isCommentVisible" id="btn-cls" src="../../assets/img/cancel.png">
         </button>
