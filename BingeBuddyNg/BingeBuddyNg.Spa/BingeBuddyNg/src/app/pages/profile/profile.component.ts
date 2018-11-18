@@ -40,9 +40,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.userId = p.get('userId');
 
       this.load();
-
     });
     this.subscriptions.push(sub);
+
+    this.subscriptions.push(this.auth.currentUserProfile$.subscribe(profile => {
+      if (profile) {
+        this.currentUserId = profile.sub;
+      }
+    }));
   }
 
   load(): void {
@@ -51,35 +56,22 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.userService.getUser(this.userId).subscribe(r => {
       this.user = r;
 
-      this.auth.getProfile((err, profile) => {
-        if (profile) {
-          this.currentUserId = profile.sub;
-
-          if (!this.isYou()) {
-            this.friendRequests.hasPendingFriendRequests(this.userId).subscribe(hasRequest => {
-              this.hasPendingRequest = hasRequest;
-              this.isBusy = false;
-            }, e => {
-              this.isBusy = false;
-              console.error('error retrieving pending friend request status');
-              console.error(e);
-            });
-          } else {
-            this.isBusy = false;
-            // TODO: clean up this messy code!
-          }
-        } else {
-          console.error('could not get profile');
+      if (!this.isYou()) {
+        this.friendRequests.hasPendingFriendRequests(this.userId).subscribe(hasRequest => {
+          this.hasPendingRequest = hasRequest;
           this.isBusy = false;
-        }
-      });
-
+        }, e => {
+          this.isBusy = false;
+          console.error('error retrieving pending friend request status');
+          console.error(e);
+        });
+      } else {
+        this.isBusy = false;
+        // TODO: clean up this messy code!
+      }
     }, e => {
       console.log(e);
     });
-
-
-
 
   }
 

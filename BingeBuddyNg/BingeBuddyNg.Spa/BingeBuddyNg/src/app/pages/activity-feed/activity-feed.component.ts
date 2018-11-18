@@ -17,6 +17,8 @@ import { NotificationService } from '../../services/notification.service';
 import { trigger, style, transition, animate } from '@angular/animations';
 import { DrinkDialogComponent } from '../../components/drink-dialog/drink-dialog.component';
 import { DrinkDialogArgs } from '../../components/drink-dialog/DrinkDialogArgs';
+import { User } from '../../../models/User';
+import { UserInfo } from 'src/models/UserInfo';
 
 @Component({
   selector: 'app-activity-feed',
@@ -45,6 +47,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   isBusyUploading = false;
   currentProgress = 0;
   isReloadSpinnerActive = false;
+  currentUser: UserInfo;
 
   @ViewChild('#activity-container')
   container: any;
@@ -68,8 +71,12 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     this.load();
 
-    const sub = this.notification.activityReceived$.subscribe(_ => this.load());
-    this.subscriptions.push(sub);
+    this.subscriptions.push(this.notification.activityReceived$.subscribe(_ => this.load()));
+    this.subscriptions.push(this.auth.currentUserProfile$.subscribe(p => {
+      if (p) {
+        this.currentUser = { userId: p.sub, userName: p.nickname };
+      }
+    }));
 
     this.route.paramMap.subscribe(_ => {
       console.log('refreshing location');

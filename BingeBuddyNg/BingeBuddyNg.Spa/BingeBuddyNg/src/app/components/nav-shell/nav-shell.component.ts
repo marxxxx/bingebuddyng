@@ -10,6 +10,7 @@ import { Observable, Subject, BehaviorSubject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MatSidenav } from '@angular/material';
 import { Router } from '@angular/router';
+import { UserProfile } from 'src/models/UserProfile';
 
 @Component({
     selector: 'app-nav-shell',
@@ -42,15 +43,11 @@ export class NavShellComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.shellInteraction.registerSideNav(this.sideNav);
 
-        const loggedInSubScription = this.auth.isLoggedIn$.subscribe(isLoggedIn => {
-            if (isLoggedIn) {
-                this.updateUserAndFriendRequests();
+        const loggedInSubScription = this.auth.currentUserProfile$.subscribe(profile => {
+            if (profile != null) {
+                this.updateUserAndFriendRequests(profile);
             }
         });
-
-        if (this.auth.isLoggedIn$.value) {
-            this.updateUserAndFriendRequests();
-        }
 
         // update pending friend requests if something changed in this area
         const sub = this.state.pendingFriendRequestsChanged$.subscribe(p => this.updatePendingFriendRequests(this.currentUserId));
@@ -58,14 +55,8 @@ export class NavShellComponent implements OnInit, OnDestroy {
         this.subscriptions.push(sub, loggedInSubScription);
     }
 
-    updateUserAndFriendRequests() {
-        // get current user
-        this.auth.getProfile((err, profile) => {
-            this.currentUserId = profile.sub;
-
-            // get pending friend requests
-            this.updatePendingFriendRequests(this.currentUserId);
-        });
+    updateUserAndFriendRequests(profile: UserProfile) {
+        this.updatePendingFriendRequests(profile.sub);
     }
 
     ngOnDestroy() {

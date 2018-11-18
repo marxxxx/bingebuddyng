@@ -1,4 +1,4 @@
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 import { FriendRequestInfo } from './../../../models/FriendRequestInfo';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material';
@@ -9,6 +9,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { FriendRequestService } from '../../services/friendrequest.service';
 import { ActivatedRoute } from '@angular/router';
+import { ShellInteractionService } from '../../services/shell-interaction.service';
 
 @Component({
   selector: 'app-drinkers',
@@ -19,10 +20,11 @@ export class DrinkersComponent implements OnInit, OnDestroy {
 
   isBusy = false;
   filterText = null;
+  currentUserId: string;
   currentUser: User;
   users: UserInfo[];
   pendingRequests: FriendRequestInfo[] = [];
-  sub: Subscription;
+  subs: Subscription[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -30,46 +32,42 @@ export class DrinkersComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private translate: TranslateService,
     private friendRequests: FriendRequestService,
+    private shellInteractionService: ShellInteractionService,
     private snackbar: MatSnackBar) { }
 
   ngOnInit() {
 
-    this.sub = this.route.paramMap.subscribe(p => {
-      // get current user
-      this.auth.getProfile((err, profile) => {
+    this.subs.push(this.auth.currentUserProfile$.subscribe(profile => {
+      if (profile) {
+        this.currentUserId = profile.sub;
+      }
+    }));
 
-        this.userService.getUser(profile.sub).subscribe(u => {
-          this.currentUser = u;
-
-          this.load();
-        });
-      });
-
-      this.friendRequests.getPendingFriendRequests().subscribe(r => {
-        this.pendingRequests = r;
-      });
-    });
-
-
+    this.subs.push(this.route.paramMap.subscribe(p => {
+      this.load();
+    }));
   }
 
   ngOnDestroy() {
-    if (this.sub) {
-      this.sub.unsubscribe();
-      this.sub = null;
-    }
+    this.subs.forEach(s => s.unsubscribe());
   }
 
 
   load(): void {
     this.isBusy = true;
 
-    this.userService.getAllUsers(this.filterText).subscribe(r => {
-      this.users = r;
+    forkJoin(
+      this.userService.getUser(this.currentUserId),
+      this.userService.getAllUsers(this.filterText),
+      this.friendRequests.getPendingFriendRequests()
+    ).subscribe(([user, allUsers, friendsRequests]) => {
+      this.currentUser = user;
+      this.users = allUsers;
+      this.pendingRequests = friendsRequests;
       this.isBusy = false;
     }, e => {
       this.isBusy = false;
-      console.error(e);
+      this.shellInteractionService.showErrorMessage();
     });
   }
 
@@ -110,6 +108,7 @@ export class DrinkersComponent implements OnInit, OnDestroy {
       this.snackbar.open(message, 'OK', { duration: 2000 });
     }, e => {
       (<any>u).isBusy = false;
+      this.shellInteractionService.showErrorMessage();
     });
   }
 }

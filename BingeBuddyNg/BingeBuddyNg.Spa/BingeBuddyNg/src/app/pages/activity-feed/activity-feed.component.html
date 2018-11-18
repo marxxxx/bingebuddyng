@@ -2,7 +2,7 @@
 <app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
 
 <div id="activity-container" [@listActivities]="isInitialLoad">
-  <app-activity *ngFor="let a of activitys" [activity]="a"></app-activity>
+  <app-activity *ngFor="let a of activitys" [activity]="a" [currentUser]="currentUser"></app-activity>
   <mat-progress-spinner [ngClass]="{noactivityspinner: activitys && activitys.length < 5, activityspinner: activitys && activitys.length >= 5}"
     id="loadingSpinner" *ngIf="isReloadSpinnerActive && activitys && activitys.length > 5" mode="indeterminate" color="primary"
     inViewport [inViewportOptions]="{ threshold: [0] }" (inViewportAction)="onAppear($event)"></mat-progress-spinner>

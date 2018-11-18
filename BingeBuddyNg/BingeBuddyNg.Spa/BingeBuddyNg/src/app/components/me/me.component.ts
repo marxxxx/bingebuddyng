@@ -1,6 +1,8 @@
 import { UserInfo } from '../../../models/UserInfo';
 import { AuthService } from '../../services/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-me',
@@ -9,43 +11,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MeComponent implements OnInit {
 
-  userInfo: UserInfo;
+  userInfo$: Observable<UserInfo>;
 
   constructor(private authService: AuthService) { }
 
   ngOnInit() {
-
-    if (this.authService.isLoggedIn$.value === true) {
-      this.loadProfile();
-    }
-
-    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
-      if (isLoggedIn) {
-        this.loadProfile();
-      } else {
-        this.userInfo = null;
-
-         // retry
-         setTimeout(() => this.loadProfile(), 1000);
-      }
-    });
-
+    this.userInfo$ = this.authService.currentUserProfile$
+      .pipe(map(profile => (profile != null ? { userId: profile.sub, userName: profile.nickname } : null)));
   }
-
-  loadProfile() {
-    this.authService.getProfile((err, profile) => {
-      if (profile) {
-        this.userInfo = { userId: profile.sub, userName: profile.nickname };
-        console.log('loaded userinfo');
-        console.log(this.userInfo);
-      } else {
-        console.log('no profile');
-        console.error(err);
-
-        // retry
-        setTimeout(() => this.loadProfile(), 1000);
-      }
-    });
-  }
-
 }

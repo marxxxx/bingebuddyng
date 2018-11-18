@@ -5,7 +5,6 @@ import { Component, OnInit, Input, ViewChildren } from '@angular/core';
 import { TranslateService } from '../../../../node_modules/@ngx-translate/core';
 import { ActivityService } from '../../services/activity.service';
 import { ReactionDTO } from '../../../models/ReactionDTO';
-import { User } from '../../../models/User';
 import { AuthService } from '../../services/auth.service';
 import { ReactionType } from '../../../models/ReactionType';
 import { Reaction } from '../../../models/Reaction';
@@ -13,6 +12,7 @@ import { CommentReaction } from '../../../models/CommentReaction';
 import { UserService } from 'src/app/services/user.service';
 import { MatTooltip } from '@angular/material';
 import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-activity',
@@ -25,7 +25,6 @@ export class ActivityComponent implements OnInit {
   isBusyCheering = false;
   isBusyCommenting = false;
   isCommentVisible = false;
-  user: User;
   comment: string;
   get userInfo(): UserInfo {
     let userInfo: UserInfo = null;
@@ -43,23 +42,19 @@ export class ActivityComponent implements OnInit {
   @Input()
   activity: ActivityStatsDTO;
 
+  @Input()
+  currentUser: UserInfo;
+
   @ViewChildren(MatTooltip)
   tooltips: MatTooltip[];
 
 
   constructor(private translate: TranslateService,
-    private auth: AuthService,
     private router: Router,
     private activityService: ActivityService,
     public userService: UserService) { }
 
   ngOnInit() {
-    if (this.auth.isAuthenticated()) {
-      this.auth.getProfile((err, profile) => {
-        this.user = { id: profile.sub, profileImageUrl: profile.picture, name: profile.nickname };
-      });
-    }
-
   }
 
   isDrinkActivity(): boolean {
@@ -150,8 +145,8 @@ export class ActivityComponent implements OnInit {
 
   createReaction(type: ReactionType): Reaction {
     const reaction: Reaction = {
-      userId: this.user.id,
-      userName: this.user.name,
+      userId: this.currentUser.userId,
+      userName: this.currentUser.userName,
       timestamp: new Date(),
       type: type
     };
@@ -166,10 +161,10 @@ export class ActivityComponent implements OnInit {
 
 
   isLikedByMe(): boolean {
-    if (this.user == null || this.activity == null || this.activity.activity == null || this.activity.activity.likes == null) {
+    if (this.currentUser == null || this.activity == null || this.activity.activity == null || this.activity.activity.likes == null) {
       return false;
     }
-    const result = this.activity.activity.likes.filter(l => l.userId === this.user.id).length > 0;
+    const result = this.activity.activity.likes.filter(l => l.userId === this.currentUser.userId).length > 0;
     return result;
   }
 
@@ -177,7 +172,7 @@ export class ActivityComponent implements OnInit {
     if (!this.hasData() || this.activity.activity.cheers == null) {
       return false;
     }
-    const result = this.activity.activity.cheers.filter(l => l.userId === this.user.id).length > 0;
+    const result = this.activity.activity.cheers.filter(l => l.userId === this.currentUser.userId).length > 0;
     return result;
   }
 
@@ -200,7 +195,7 @@ export class ActivityComponent implements OnInit {
   }
 
   hasData(): boolean {
-    const hasData = (this.user != null && this.activity != null && this.activity.activity != null);
+    const hasData = (this.currentUser != null && this.activity != null && this.activity.activity != null);
     return hasData;
   }
 }

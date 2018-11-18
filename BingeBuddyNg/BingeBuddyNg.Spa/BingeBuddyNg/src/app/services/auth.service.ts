@@ -26,6 +26,7 @@ export class AuthService {
   });
 
   isLoggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  currentUserProfile$: BehaviorSubject<UserProfile> = new BehaviorSubject<UserProfile>(null);
 
   constructor(public router: Router) { }
 
@@ -47,9 +48,7 @@ export class AuthService {
         window.location.hash = '';
         this.setSession(authResult);
 
-        if (this.isAuthenticated()) {
-          this.isLoggedIn$.next(true);
-        }
+        this.checkAuthenticated();
 
         console.log('navigating to success route');
         this.router.navigate([successRoute]);
@@ -104,6 +103,21 @@ export class AuthService {
   public checkAuthenticated(): boolean {
     const isAuth = this.isAuthenticated();
     if (isAuth) {
+
+      this.getProfile((error, profile) => {
+        if (profile) {
+          this.currentUserProfile$.next(profile);
+        } else {
+          if (error) {
+            console.error('error retrieving user profile', error);
+          } else {
+            console.error('no profile and also no error available. this should not happen.');
+          }
+        }
+
+        this.isLoggedIn$.next(true);
+      });
+
       console.log('user is authenticated');
       this.isLoggedIn$.next(true);
     }
