@@ -47,5 +47,6 @@
     "YourMessage": "Your message",
     "Send":" send",
     "Cancel":"cancel",
-    "PostAMessage": "Post a message"
+    "PostAMessage": "Post a message",
+    "NoVideoSupport": "Your browser is outdated."
 }

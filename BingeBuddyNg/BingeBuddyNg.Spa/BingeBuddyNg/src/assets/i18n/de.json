@@ -47,5 +47,6 @@
     "YourMessage": "Deine Nachricht",
     "Send":" Senden",
     "Cancel":"Abbrechen",
-    "PostAMessage": "Eine Nachricht posten"
+    "PostAMessage": "Eine Nachricht posten",
+    "NoVideoSupport": "Dein Browser ist veraltet."
 }

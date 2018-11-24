@@ -26,6 +26,12 @@
     <div class="image" *ngIf="isImageActivity()">
       <img [src]="activity.activity.imageUrl">
     </div>
+    <div class="image" *ngIf="isVideoActivity()">
+      <video width="320" height="240" controls>
+        <source [src]="activity.activity.imageUrl" type="video/mp4">
+        {{'NoVideoSupport' | translate }}
+      </video>
+    </div>
     <div class="metadata" fxLayout fxLayoutAlign="space-between center">
       <span class="timestamp">{{activity.activity.timestamp | date:'dd.MM.yyyy HH:mm'}}</span>
       <span class="address" (click)="onLocationClick()"> {{activity.activity.locationAddress}}</span>

@@ -69,7 +69,12 @@ export class ActivityComponent implements OnInit {
   }
 
   isImageActivity(): boolean {
-    return this.activity.activity.activityType === ActivityType.Image;
+    return this.activity.activity.activityType === ActivityType.Image && !this.isVideoActivity();
+  }
+
+  isVideoActivity(): boolean {
+    return this.activity.activity.activityType === ActivityType.Image &&
+      this.activity.activity.imageUrl && this.activity.activity.imageUrl.endsWith('mp4');
   }
 
   getDrinkMessage(): string {
