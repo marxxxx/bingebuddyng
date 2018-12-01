@@ -1,3 +1,4 @@
+import { UserProfile } from './../models/UserProfile';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { User } from '../models/User';
 import { UserService } from './services/user.service';
@@ -22,6 +23,7 @@ export class AppComponent implements OnInit, OnDestroy {
   readonly VAPID_PUBLIC_KEY = 'BP7M6mvrmwidRr7II8ewUIRSg8n7_mKAlWagRziRRluXnMc_d_rPUoVWGHb79YexnD0olGIFe_xackYqe1fmoxo';
   private pushInfo: PushInfo;
   private sub: Subscription;
+  private userProfile: UserProfile;
 
   constructor(public auth: AuthService, private translate: TranslateService, router: Router,
     private userService: UserService,
@@ -37,9 +39,10 @@ export class AppComponent implements OnInit, OnDestroy {
     // the lang to use, if the lang isn't available, it will use the current loader to get them
     translate.use(navigator.language.substr(0, 2));
 
-    this.sub = this.auth.isLoggedIn$.subscribe(isLoggedIn => {
+    this.sub = this.auth.currentUserProfile$.subscribe(userProfile => {
+      this.userProfile = userProfile;
 
-      if (isLoggedIn) {
+      if (userProfile) {
         this.registerUser(this.pushInfo);
       }
 
@@ -103,24 +106,20 @@ export class AppComponent implements OnInit, OnDestroy {
 
   registerUser(pushInfo: PushInfo) {
 
-    if (this.auth.isAuthenticated()) {
+    // register user
+    const user: User = {
+      id: this.userProfile.sub,
+      name: this.userProfile.nickname,
+      profileImageUrl: this.userProfile.picture,
+      pushInfo: pushInfo
+    };
 
-      this.auth.getProfile((err, profile) => {
-        // register user
-        const user: User = {
-          id: profile.sub,
-          name: profile.nickname,
-          profileImageUrl: profile.picture,
-          pushInfo: pushInfo
-        };
+    console.log('registering user ...');
+    console.log(user);
+    this.userService.saveUser(user).subscribe(
+      _ => console.log('user registration completed'), 
+      e => console.error('error registering user info', e));
 
-        console.log('registering user ...');
-        console.log(user);
-        this.userService.saveUser(user).subscribe(_ => console.log('user registration completed'));
-      });
-    } else {
-      console.warn('user not authenticated');
-    }
   }
 }
 

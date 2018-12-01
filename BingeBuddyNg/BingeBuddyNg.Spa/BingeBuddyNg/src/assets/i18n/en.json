@@ -48,5 +48,6 @@
     "Send":" send",
     "Cancel":"cancel",
     "PostAMessage": "Post a message",
-    "NoVideoSupport": "Your browser is outdated."
+    "NoVideoSupport": "Your browser is outdated.",
+    "UnsupportedMediaFormat": "Unsupported media format."
 }

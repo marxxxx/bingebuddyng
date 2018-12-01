@@ -54,6 +54,7 @@ namespace BingeBuddyNg.Functions
 
                 // get friends of this user who didn't mute themselves from him
                 var friendUserIds = currentUser.GetVisibleFriendUserIds(false);
+
                 foreach (var friendUserId in friendUserIds)
                 {
                     try

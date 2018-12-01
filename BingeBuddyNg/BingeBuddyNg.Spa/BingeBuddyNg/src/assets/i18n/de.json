@@ -48,5 +48,6 @@
     "Send":" Senden",
     "Cancel":"Abbrechen",
     "PostAMessage": "Eine Nachricht posten",
-    "NoVideoSupport": "Dein Browser ist veraltet."
+    "NoVideoSupport": "Dein Browser ist veraltet.",
+    "UnsupportedMediaFormat": "Nicht unterstütztes Medienformat."
 }

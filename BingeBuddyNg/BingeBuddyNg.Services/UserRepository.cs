@@ -63,7 +63,10 @@ namespace BingeBuddyNg.Services
                 profilePicHasChanged = savedUser.Entity.ProfileImageUrl != user.ProfileImageUrl;
                 savedUser.Entity.Name = user.Name;
                 savedUser.Entity.ProfileImageUrl = user.ProfileImageUrl;
-                savedUser.Entity.PushInfo = user.PushInfo;
+                if (user.PushInfo != null && user.PushInfo.HasValue())
+                {
+                    savedUser.Entity.PushInfo = user.PushInfo;
+                }
                 saveUserOperation = TableOperation.Replace(savedUser);
             }
             else
