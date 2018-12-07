@@ -28,7 +28,7 @@ namespace BingeBuddyNg.Api.Controllers
         [HttpGet]
         public async Task<List<UserInfo>> GetAllUsers(string filterText=null)
         {
-            var users = await this.UserRepository.GetAllUsersAsync();
+            var users = await this.UserRepository.GetUsersAsync();
                         
             var userInfo = users.Select(u => u.ToUserInfo()).ToList();
 

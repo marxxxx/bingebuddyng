@@ -79,7 +79,7 @@ namespace BingeBuddyNg.Services
             return resultActivities;
         }
 
-        public async Task<List<Activity>> GetActivitysForUser(string userId, DateTime startTimeUtc, ActivityType activityType)
+        public async Task<List<Activity>> GetActivitysForUserAsync(string userId, DateTime startTimeUtc, ActivityType activityType)
         {
             var whereClause =
                 TableQuery.CombineFilters(

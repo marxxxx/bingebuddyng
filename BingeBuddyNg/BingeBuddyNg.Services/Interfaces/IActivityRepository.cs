@@ -11,7 +11,7 @@ namespace BingeBuddyNg.Services.Interfaces
     public interface IActivityRepository
     {
         Task<PagedQueryResult<Activity>> GetActivityFeedAsync(GetActivityFilterArgs args);
-        Task<List<Activity>> GetActivitysForUser(string userId, DateTime startTimeUtc, ActivityType activityType);
+        Task<List<Activity>> GetActivitysForUserAsync(string userId, DateTime startTimeUtc, ActivityType activityType);
         Task<Activity> GetActivityAsync(string id);
         Task<Activity> AddActivityAsync(Activity activity);
 

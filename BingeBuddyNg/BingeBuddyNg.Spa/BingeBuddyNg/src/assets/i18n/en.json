@@ -16,7 +16,7 @@
     "IJustHadA": "I just had a {{value}}! Cheers!",
     "UpdateAvailableMessage": "Update available! Install now?",
     "Comment": "Comment",
-    "PostImage": "Post image",
+    "PostImage": "Post image or video",
     "AlcoholicDrinks": "Alcoholic drinks",
     "DrinkRatio": "Drink ratio",
     "MonthlyDrinkStatistic": "Monthly drink statistic",
@@ -49,5 +49,7 @@
     "Cancel":"cancel",
     "PostAMessage": "Post a message",
     "NoVideoSupport": "Your browser is outdated.",
-    "UnsupportedMediaFormat": "Unsupported media format."
+    "UnsupportedMediaFormat": "Unsupported media format.",
+    "Ranking": "Ranking",
+    "AlcoholicDrinkCountInLastMonth": "alcoholic drink count in the last month"
 }

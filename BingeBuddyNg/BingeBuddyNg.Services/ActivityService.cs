@@ -88,7 +88,7 @@ namespace BingeBuddyNg.Services
 
             var startTime = DateTime.UtcNow.AddDays(-30).Date;
 
-            var result = await this.ActivityRepository.GetActivitysForUser(userId, startTime, ActivityType.Drink);
+            var result = await this.ActivityRepository.GetActivitysForUserAsync(userId, startTime, ActivityType.Drink);
 
             var groupedByDay = result.GroupBy(t => t.Timestamp.Date)
                 .OrderBy(t => t.Key)

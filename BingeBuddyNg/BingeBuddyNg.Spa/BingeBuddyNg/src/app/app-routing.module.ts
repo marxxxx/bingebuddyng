@@ -9,44 +9,56 @@ import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './services/auth.guard';
+import { RankingComponent } from './pages/ranking/ranking.component';
 
-const routes: Routes = [{
-  path: 'callback',
-  component: CallbackComponent
-}, {
-  path: 'welcome',
-  component: WelcomeComponent
-},
-{
-  path: 'activity-feed',
-  component: ActivityFeedComponent,
-  canActivate: [AuthGuard]
-}, {
-  path: 'stats',
-  component: StatsComponent,
-  canActivate: [AuthGuard]
-},
-{
-  path: 'bingemap',
-  component: BingemapComponent,
-  canActivate: [AuthGuard]
-}, {
-  path: 'profile/:userId',
-  component: ProfileComponent,
-  canActivate: [AuthGuard]
-}, {
-  path: 'friendrequests',
-  component: FriendrequestsComponent,
-  canActivate: [AuthGuard]
-}, {
-  path: 'drinkers',
-  component: DrinkersComponent,
-  canActivate: [AuthGuard]
-},
-{
-  path: '',
-  component: WelcomeComponent
-}
+const routes: Routes = [
+  {
+    path: 'callback',
+    component: CallbackComponent
+  },
+  {
+    path: 'welcome',
+    component: WelcomeComponent
+  },
+  {
+    path: 'activity-feed',
+    component: ActivityFeedComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'stats',
+    component: StatsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'bingemap',
+    component: BingemapComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'profile/:userId',
+    component: ProfileComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'friendrequests',
+    component: FriendrequestsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'drinkers',
+    component: DrinkersComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'ranking',
+    component: RankingComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: '',
+    component: WelcomeComponent
+  }
 ];
 
 @NgModule({

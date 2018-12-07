@@ -13,39 +13,41 @@ namespace BingeBuddyNg.Functions
 {
     public static class ActivityAddedFunction
     {
+        // we stick with poor man's DI for now
+        public static readonly IUtilityService UtilityService = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUtilityService>();
+        public static readonly IActivityRepository ActivityRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IActivityRepository>();
+        public static readonly IUserRepository UserRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
+        public static readonly ICalculationService CalculationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<ICalculationService>();
+        public static readonly IUserStatsRepository UserStatsRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserStatsRepository>();
+        public static readonly INotificationService NotificationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<INotificationService>();
+
         [FunctionName("ActivityAddedFunction")]
         public static async Task Run([QueueTrigger(Shared.Constants.QueueNames.ActivityAdded, Connection = "AzureWebJobsStorage")]string message,
             ILogger log)
         {
-            // we stick with poor man's DI for now
-            IUtilityService utilityService = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUtilityService>();
-            IActivityRepository activityRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IActivityRepository>();
-            IUserRepository userRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
-            ICalculationService calculationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<ICalculationService>();
-            IUserStatsRepository userStatsRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserStatsRepository>();
-            INotificationService notificationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<INotificationService>();
-
+            
             var activityAddedMessage = JsonConvert.DeserializeObject<ActivityAddedMessage>(message);
             var activity = activityAddedMessage.AddedActivity;
 
             if (activity.Location != null && activity.Location.IsValid())
             {
-                var address = await utilityService.GetAddressFromLongLatAsync(activity.Location);
+                var address = await UtilityService.GetAddressFromLongLatAsync(activity.Location);
                 activity.LocationAddress = address.AddressText;
                 activity.CountryLongName = address.CountryLongName;
                 activity.CountryShortName = address.CountryShortName;
 
-                await activityRepository.UpdateActivityAsync(activity);
+                await ActivityRepository.UpdateActivityAsync(activity);
             }
 
             try
             {
-                var currentUser = await userRepository.FindUserAsync(activity.UserId);
+                var currentUser = await UserRepository.FindUserAsync(activity.UserId);
 
                 try
                 {
                     // Immediately update Stats for current user
-                    await DrinkCalculatorFunction.UpdateStatsForUserAsync(currentUser, calculationService, userStatsRepository, log);
+                    await DrinkCalculatorFunction.UpdateStatsForUserAsync(currentUser, log);
+                    await RankingCalculatorFunction.UpdateRankingForUserAsync(currentUser.Id, log);
                 }
                 catch (Exception ex)
                 {
@@ -59,7 +61,7 @@ namespace BingeBuddyNg.Functions
                 {
                     try
                     {
-                        var friendUser = await userRepository.FindUserAsync(friendUserId);
+                        var friendUser = await UserRepository.FindUserAsync(friendUserId);
                         if (friendUser != null && friendUser.PushInfo != null)
                         {
                             log.LogInformation($"Sending push to [{friendUser}] ...");
@@ -67,7 +69,7 @@ namespace BingeBuddyNg.Functions
                             // TODO: Localize
                             var notificationMessage = GetNotificationMessage(activity);
 
-                            notificationService.SendMessage(new[] { friendUser.PushInfo }, notificationMessage);
+                            NotificationService.SendMessage(new[] { friendUser.PushInfo }, notificationMessage);
                         }
                     }
                     catch (Exception ex)
@@ -98,7 +100,7 @@ namespace BingeBuddyNg.Functions
                     activityString = $"{activity.DrinkName}{locationSnippet} geschnappt!";
                     break;
                 case ActivityType.Image:
-                    activityString = $"ein Foto hochgeladen!";
+                    activityString = $"ein Foto oder Video hochgeladen!";
                     break;
                 case ActivityType.Message:
                     activityString = $"{activity.Message} gesagt!";

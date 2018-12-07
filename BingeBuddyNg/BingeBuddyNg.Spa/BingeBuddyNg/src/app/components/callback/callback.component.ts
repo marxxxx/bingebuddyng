@@ -16,8 +16,10 @@ export class CallbackComponent implements OnInit {
 
     this.activatedRoute.paramMap.subscribe(p => {
 
+
       // get return url from route parameters or default to '/'
-      const returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'] || '/activity-feed';
+      const snapshot = this.activatedRoute.snapshot;
+      const returnUrl = snapshot.queryParams['returnUrl'] || '/activity-feed';
 
       this.auth.handleAuthentication(returnUrl);
 

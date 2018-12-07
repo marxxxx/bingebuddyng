@@ -1,3 +1,5 @@
+@import '../../../theme.scss';
+
 .sidenav-container {
   height: 100%;
 }
@@ -31,6 +33,12 @@ img {
   margin-left: 7px;
   width: 24px;
   height: 24px;
+}
+
+mat-icon {
+  margin-left: 5px;
+  margin-right: 12px;
+  color: map-get($mat-bingebuddyprimary, 500)
 }
 
 span {

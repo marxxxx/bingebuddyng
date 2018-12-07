@@ -16,7 +16,7 @@
     "IJustHadA": "Ich habe gerade ein {{value}} getrunken! Prost!",
     "UpdateAvailableMessage": "Update verfügbar! Jetzt installieren?",
     "Comment": "Kommentar",
-    "PostImage": "Foto posten",
+    "PostImage": "Foto oder Video posten",
     "AlcoholicDrinks": "Alkoholische Getränke",
     "DrinkRatio": "Getränkeverteilung",
     "MonthlyDrinkStatistic": "Monatliche Getränkeentwicklung",
@@ -49,5 +49,7 @@
     "Cancel":"Abbrechen",
     "PostAMessage": "Eine Nachricht posten",
     "NoVideoSupport": "Dein Browser ist veraltet.",
-    "UnsupportedMediaFormat": "Nicht unterstütztes Medienformat."
+    "UnsupportedMediaFormat": "Nicht unterstütztes Medienformat.",
+    "Ranking": "Bestenlisten",
+    "AlcoholicDrinkCountInLastMonth": "Anzahl alkoholischer Getränke im letzten Monat"
 }

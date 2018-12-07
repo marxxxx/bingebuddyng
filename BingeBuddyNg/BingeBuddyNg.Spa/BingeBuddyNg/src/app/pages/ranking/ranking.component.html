@@ -1,0 +1,16 @@
+<ng-template #loading>
+  <app-progress-spinner></app-progress-spinner>
+</ng-template>
+
+<h2>{{'Ranking' | translate }}</h2>
+<h4>{{'AlcoholicDrinkCountInLastMonth' | translate }}</h4>
+
+<ng-container *ngIf="(ranking$ | async) as ranking; else loading">
+  <div *ngFor="let r of ranking" fxLayout fxLayoutAlign="space-between center">
+    <app-user-info [userInfo]="r.user" showName="true"></app-user-info>
+
+    <span class="count">
+      {{r.statistics.totalDrinksLastMonth}}
+    </span>
+  </div>
+</ng-container>

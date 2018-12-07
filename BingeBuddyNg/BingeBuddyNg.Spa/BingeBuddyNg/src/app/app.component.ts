@@ -4,7 +4,7 @@ import { User } from '../models/User';
 import { UserService } from './services/user.service';
 import { DataService } from './services/data.service';
 import { MatSnackBar } from '@angular/material';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -25,13 +25,14 @@ export class AppComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   private userProfile: UserProfile;
 
-  constructor(public auth: AuthService, private translate: TranslateService, router: Router,
+  constructor(public auth: AuthService, private translate: TranslateService, activatedRoute: ActivatedRoute,
     private userService: UserService,
     private snackbar: MatSnackBar,
     private notification: NotificationService,
     private pushService: SwPush,
     private updateService: SwUpdate) {
-    auth.handleAuthentication();
+
+    auth.handleAuthentication(location.pathname);
 
     // this language will be used as a fallback when a translation isn't found in the current language
     translate.setDefaultLang('en');
@@ -117,7 +118,7 @@ export class AppComponent implements OnInit, OnDestroy {
     console.log('registering user ...');
     console.log(user);
     this.userService.saveUser(user).subscribe(
-      _ => console.log('user registration completed'), 
+      _ => console.log('user registration completed'),
       e => console.error('error registering user info', e));
 
   }

@@ -41,7 +41,7 @@ namespace BingeBuddyNg.Tests
 
             var userRepository = serviceProvider.GetRequiredService<IUserRepository>();
             StorageAccessService storageAccessService = serviceProvider.GetRequiredService<StorageAccessService>();
-            var users = await userRepository.GetAllUsersAsync();
+            var users = await userRepository.GetUsersAsync();
             foreach(var u in users)
             {
                 await storageAccessService.AddQueueMessage(Shared.Constants.QueueNames.ProfileUpdate, new ProfileUpdateMessage(u.Id, u.ProfileImageUrl));

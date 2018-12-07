@@ -10,22 +10,22 @@ namespace BingeBuddyNg.Functions
 {
     public static class DrinkCalculatorFunction
     {
+        // we stick with poor man's DI for now
+        public static readonly IUserRepository UserRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
+        public static readonly ICalculationService CalculationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<ICalculationService>();
+        public static readonly IUserStatsRepository UserStatsRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserStatsRepository>();
+
         [FunctionName("DrinkCalculatorFunction")]
         public static async Task Run([TimerTrigger("0 */15 * * * *")]TimerInfo myTimer,
             ILogger log)
         {
-            // we stick with poor man's DI for now
-            IUserRepository userRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
-            ICalculationService calculationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<ICalculationService>();
-            IUserStatsRepository userStatsRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserStatsRepository>();
-
-            var users = await userRepository.GetAllUsersAsync();
+            var users = await UserRepository.GetUsersAsync();
 
             foreach (var u in users)
             {
                 try
                 {
-                    await UpdateStatsForUserAsync(u, calculationService, userStatsRepository, log);
+                    await UpdateStatsForUserAsync(u, log);
                 }
                 catch (Exception ex)
                 {
@@ -34,11 +34,11 @@ namespace BingeBuddyNg.Functions
             }
         }
 
-        public static async Task UpdateStatsForUserAsync(User user, ICalculationService calculationService, IUserStatsRepository userStatsRepository, ILogger log)
+        public static async Task UpdateStatsForUserAsync(User user, ILogger log)
         {
-            var stats = await calculationService.CalculateStatsForUserAsync(user);
+            var stats = await CalculationService.CalculateStatsForUserAsync(user);
             var userStats = new UserStatistics(user.Id, stats.CurrentAlcLevel, stats.CurrentNightDrinks);
-            await userStatsRepository.SaveStatisticsForUserAsync(userStats);
+            await UserStatsRepository.SaveStatisticsForUserAsync(userStats);
 
             log.LogDebug($"Successfully updated stats for user {user}: {userStats}");
         }

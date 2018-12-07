@@ -96,11 +96,37 @@ namespace BingeBuddyNg.Services
             await table.ExecuteAsync(saveUserOperation);            
         }
 
-        public async Task<List<User>> GetAllUsersAsync()
+        public async Task<List<User>> GetUsersAsync(IEnumerable<string> userIds = null)
         {
-            var result = await StorageAccess.QueryTableAsync<JsonTableEntity<User>>(TableName);
+            string whereClause = BuildWhereClause(userIds);
+
+            var result = await StorageAccess.QueryTableAsync<JsonTableEntity<User>>(TableName, whereClause);
+
             var users = result.OrderByDescending(u=>u.Timestamp).Select(r => r.Entity).ToList();
             return users;
+        }
+
+        private string BuildWhereClause(IEnumerable<string> userIds)
+        {
+            string whereClause = null;
+
+            if(userIds != null)
+            {
+                foreach(var u in userIds)
+                {
+                    string filter = TableQuery.GenerateFilterCondition(nameof(TableEntity.RowKey), QueryComparisons.Equal, u);
+                    if(whereClause != null)
+                    {
+                        whereClause = TableQuery.CombineFilters(whereClause, TableOperators.Or, filter);
+                    }
+                    else
+                    {
+                        whereClause = filter;
+                    }
+                }
+            }
+
+            return whereClause;
         }
 
         public async Task AddFriendAsync(string userId, string friendUserId)

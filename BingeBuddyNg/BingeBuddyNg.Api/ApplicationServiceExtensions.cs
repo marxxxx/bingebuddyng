@@ -31,6 +31,7 @@ namespace BingeBuddyNg.Api
             services.AddScoped<IUserStatsRepository, UserStatsRepository>();
             services.AddScoped<IFriendRequestRepository, FriendRequestRepository>();
             services.AddScoped<IFriendRequestService, FriendRequestService>();
+            services.AddScoped<IRankingService, RankingService>();
         }
     }
 }

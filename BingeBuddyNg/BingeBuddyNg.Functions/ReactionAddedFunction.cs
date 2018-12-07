@@ -13,26 +13,26 @@ namespace BingeBuddyNg.Functions
 {
     public static class ReactionAddedFunction
     {
+
+        // we stick with poor man's DI for now
+        public static readonly IActivityRepository ActivityRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IActivityRepository>();
+        public static readonly IUserRepository UserRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
+        public static readonly INotificationService NotificationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<INotificationService>();
+
+
         [FunctionName("ReactionAddedFunction")]
         public static async Task Run([QueueTrigger(Shared.Constants.QueueNames.ReactionAdded, Connection = "AzureWebJobsStorage")]string reactionQueueItem, ILogger log)
         {
             var reactionAddedMessage = JsonConvert.DeserializeObject<ReactionAddedMessage>(reactionQueueItem);
 
-            // we stick with poor man's DI for now
-            IActivityRepository activityRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IActivityRepository>();
-            IUserRepository userRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
-            INotificationService notificationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<INotificationService>();
-
-            var activity = await activityRepository.GetActivityAsync(reactionAddedMessage.ActivityId);
-            var reactingUser = await userRepository.FindUserAsync(reactionAddedMessage.UserId);
+            var activity = await ActivityRepository.GetActivityAsync(reactionAddedMessage.ActivityId);
+            var reactingUser = await UserRepository.FindUserAsync(reactionAddedMessage.UserId);
 
 
             // notify involved users
             if (activity.UserId != reactingUser.Id)
             {
-                await NotifyOriginUserAsync(userRepository, notificationService, 
-                    reactionAddedMessage.ReactionType, activity.UserId, 
-                    reactingUser);
+                await NotifyOriginUserAsync(reactionAddedMessage.ReactionType, activity.UserId, reactingUser);
             }
 
             // now other ones (with likes and cheers)
@@ -48,7 +48,7 @@ namespace BingeBuddyNg.Functions
             List<PushInfo> involvedUserPushInfos = new List<PushInfo>();
             foreach (var user in involvedUsers)
             {
-                var userInfo = await userRepository.FindUserAsync(user.UserId);
+                var userInfo = await UserRepository.FindUserAsync(user.UserId);
                 if(userInfo.PushInfo != null)
                 {
                     involvedUserPushInfos.Add(userInfo.PushInfo);
@@ -57,20 +57,20 @@ namespace BingeBuddyNg.Functions
 
             var notification = new Services.Models.NotificationMessage(Constants.NotificationIconUrl,
                   Constants.NotificationIconUrl, Constants.ApplicationUrl, Constants.ApplicationName, message);
-            notificationService.SendMessage(involvedUserPushInfos, notification);
+            NotificationService.SendMessage(involvedUserPushInfos, notification);
         }
 
-        private static async Task NotifyOriginUserAsync(IUserRepository userRepository, INotificationService notificationService, 
+        private static async Task NotifyOriginUserAsync(
             ReactionType reactionType, string originUserId, User reactingUser)
         {
-            var originUser = await userRepository.FindUserAsync(originUserId);
+            var originUser = await UserRepository.FindUserAsync(originUserId);
             
             if (originUser.PushInfo != null)
             {
                 string message = GetReactionMessage(reactionType, reactingUser.Name, originUser.Name);
                 var notification = new Services.Models.NotificationMessage(Constants.NotificationIconUrl,
                     Constants.NotificationIconUrl, Constants.ApplicationUrl, Constants.ApplicationName, message);
-                notificationService.SendMessage(new[] { originUser.PushInfo }, notification);
+                NotificationService.SendMessage(new[] { originUser.PushInfo }, notification);
             }
         }
 

@@ -46,6 +46,7 @@ import { NoFriendsComponent } from './components/no-friends/no-friends.component
 import { MessageDialogComponent } from './components/message-dialog/message-dialog.component';
 import { DrinkIconComponent } from './components/drink-icon/drink-icon.component';
 import { AuthGuard } from './services/auth.guard';
+import { RankingComponent } from './pages/ranking/ranking.component';
 
 
 // AoT requires an exported function for factories
@@ -74,7 +75,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     DrinkDialogComponent,
     NoFriendsComponent,
     MessageDialogComponent,
-    DrinkIconComponent
+    DrinkIconComponent,
+    RankingComponent
   ],
   entryComponents: [DrinkDialogComponent, MessageDialogComponent],
   imports: [
