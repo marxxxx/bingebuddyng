@@ -2,3 +2,12 @@
     font-size: x-large;
     font-weight: bold;
 }
+
+.rank {
+    font-size: large;
+    width: 25px;
+}
+
+app-user-info {
+    margin-left: 10px;
+}
