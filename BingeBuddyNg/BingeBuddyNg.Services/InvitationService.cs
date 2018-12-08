@@ -41,26 +41,26 @@ namespace BingeBuddyNg.Services
         public async Task AcceptInvitationAsync(string userId, string invitationToken)
         {
             var invitation = await this.InvitationRepository.AcceptInvitationAsync(userId, invitationToken);
-
-            var invitingUser = await this.UserRepository.FindUserAsync(invitation.InvitingUserId);
-            var acceptingUser = await this.UserRepository.FindUserAsync(invitation.AcceptingUserId);
-
-            if(invitingUser != null && acceptingUser != null)
+            if (userId != invitation.InvitingUserId)
             {
-                await this.UserRepository.AddFriendAsync(invitingUser.Id, acceptingUser.Id);
-            }
+                var invitingUser = await this.UserRepository.FindUserAsync(invitation.InvitingUserId);
+                var acceptingUser = await this.UserRepository.FindUserAsync(invitation.AcceptingUserId);
 
-            if (invitingUser != null && invitingUser.PushInfo != null)
-            {
-                // TODO: Localize!
-                string userName = acceptingUser?.Name ?? "jemand";
-                
-                var message = new NotificationMessage(Constants.Urls.ApplicationIconUrl, Constants.Urls.ApplicationIconUrl, Constants.Urls.ApplicationUrl, 
-                    "Binge Buddy", $"{userName} hat deine Einladung angenommen.");
-                this.NotificationService.SendMessage(new[] { invitingUser.PushInfo }, message);
-            }
-             
+                if (invitingUser != null && acceptingUser != null)
+                {
+                    await this.UserRepository.AddFriendAsync(invitingUser.Id, acceptingUser.Id);
+                }
 
+                if (invitingUser != null && invitingUser.PushInfo != null)
+                {
+                    // TODO: Localize!
+                    string userName = acceptingUser?.Name ?? "jemand";
+
+                    var message = new NotificationMessage(Constants.Urls.ApplicationIconUrl, Constants.Urls.ApplicationIconUrl, Constants.Urls.ApplicationUrl,
+                        "Binge Buddy", $"{userName} hat deine Einladung angenommen.");
+                    this.NotificationService.SendMessage(new[] { invitingUser.PushInfo }, message);
+                }
+            }
         }
     }
 }
