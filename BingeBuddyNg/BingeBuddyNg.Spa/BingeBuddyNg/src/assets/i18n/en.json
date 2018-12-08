@@ -4,6 +4,7 @@
     "Login": "Login",
     "Logout": "Logout",
     "GetStarted": "To get started, please press the beer!",
+    "GetStartedInvited": "Press the Beer to accept the invitation!",
     "Activity": "Activity",
     "Statistics": "Statistics",
     "Drinks": "Drinks",
@@ -51,5 +52,12 @@
     "NoVideoSupport": "Your browser is outdated.",
     "UnsupportedMediaFormat": "Unsupported media format.",
     "Ranking": "Ranking",
-    "AlcoholicDrinkCountInLastMonth": "alcoholic drink count in the last month"
+    "AlcoholicDrinkCountInLastMonth": "alcoholic drink count in the last month",
+    "InviteFriend": "Invite friend",
+    "InviteFriendDescription": "Press the button to create an invitation.",
+    "InviteShareInfo": "Share this link with your friend.",
+    "InvitationTitle": "Invitation to Binge Buddy!",
+    "InvitationText": "You have been invited by {{userName}} to join.",
+    "CopiedToClipboard": "Copied to clipboard.",
+    "InvitedBy": "You have been invited by "
 }

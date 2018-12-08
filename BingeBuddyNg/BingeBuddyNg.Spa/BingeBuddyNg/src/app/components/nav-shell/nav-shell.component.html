@@ -17,6 +17,9 @@
       <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/ranking">
         <mat-icon class="menu-item">cake</mat-icon>{{'Ranking' | translate }}
       </a>
+      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/invite-friend">
+        <mat-icon class="menu-item">share</mat-icon>{{'InviteFriend' | translate }}
+      </a>
       <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/friendrequests"><img src="../../assets/img/like.png"><span>{{'FriendRequests'
           | translate }}</span></a>
       <mat-divider *ngIf="auth.isAuthenticated()"></mat-divider>

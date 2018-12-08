@@ -1,0 +1,6 @@
+@import '../../../theme.scss';
+
+.share-button  {
+    margin-left: 10px;
+    color: map-get($mat-bingebuddyprimary, 500)
+}
