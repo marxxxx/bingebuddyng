@@ -8,8 +8,11 @@
 
 <div fxLayout *ngIf="invitationToken">
   <textarea #invitationTokenArea fxFlex="90" readonly>{{getInvitationLink()}}</textarea>
-  <button id="copyButton" mat-icon-button fxFlex="10" (click)="onCopyToClipboard(invitationTokenArea)">
+  <button *ngIf="!isSharingSupported()" class="share-button" mat-icon-button fxFlex="10" (click)="onCopyToClipboard(invitationTokenArea)">
     <mat-icon>file_copy</mat-icon>
+  </button>
+  <button *ngIf="isSharingSupported()" class="share-button" mat-icon-button fxFlex="10" (click)="onShare()">
+    <mat-icon>share</mat-icon>
   </button>
 </div>
 

@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material';
 @Component({
   selector: 'app-invite-friend',
   templateUrl: './invite-friend.component.html',
-  styleUrls: ['./invite-friend.component.css']
+  styleUrls: ['./invite-friend.component.scss']
 })
 export class InviteFriendComponent implements OnInit {
 
@@ -28,20 +28,12 @@ export class InviteFriendComponent implements OnInit {
     this.authService.currentUserProfile$.subscribe(p => this.currentUserProfile = p);
   }
 
-  onInvite() {
+  async onInvite() {
 
     this.isBusy = true;
     this.invitationService.createInvitation().subscribe(token => {
       this.isBusy = false;
       this.invitationToken = token;
-
-      if (this.navigatorInstance.share) {
-        this.onShare(token);
-      } else {
-
-        console.warn('sharing not available');
-
-      }
 
     }, e => {
       console.error(e);
@@ -57,26 +49,28 @@ export class InviteFriendComponent implements OnInit {
     this.snackbar.open(this.translateService.instant('CopiedToClipboard'), null, {
       duration: 1000
     });
+
   }
 
-  onShare(token: string) {
+  onShare() {
 
+    const title = this.translateService.instant('InvitationTitle');
+    const text = this.translateService.instant('InvitationText', { userName: this.currentUserProfile.nickname });
+    const url = this.getInvitationLink();
 
-    this.navigatorInstance.share({
-      title: this.translateService.instant('InvitationTitle'),
-      text: this.translateService.instant('InvitationText', { userName: this.currentUserProfile.nickname }),
-      url: this.getInvitationLink(),
-    })
-      .then(() => console.log('Successful share'))
-      .catch((error) => {
-        console.log('Error sharing', error);
-        this.shellInteractionService.showErrorMessage();
-      });
+    console.log('triggering share ui', title, text, url);
 
+    const nav: any = navigator;
+
+    nav.share({ title, text, url }).catch(error => console.error('Error sharing', error));
   }
 
   getInvitationLink(): string {
     const url = `https://bingebuddy.azureedge.net/welcome-invited/${this.invitationToken}`;
     return url;
+  }
+
+  isSharingSupported(): boolean {
+    return navigator['share'];
   }
 }
