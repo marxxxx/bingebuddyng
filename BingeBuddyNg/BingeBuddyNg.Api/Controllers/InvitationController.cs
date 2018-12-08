@@ -29,6 +29,7 @@ namespace BingeBuddyNg.Api.Controllers
             InvitationRepository = invitationRepository ?? throw new ArgumentNullException(nameof(invitationRepository));
         }
 
+        [AllowAnonymous]
         [HttpGet("{invitationToken}")]
         public async Task<InvitationInfo> GetInvitation(string invitationToken)
         {

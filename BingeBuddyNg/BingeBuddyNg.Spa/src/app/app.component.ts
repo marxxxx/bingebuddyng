@@ -12,6 +12,7 @@ import { SwPush, SwUpdate } from '@angular/service-worker';
 import { PushInfo } from '../models/PushInfo';
 import { NotificationService } from './services/notification.service';
 import { Subscription } from 'rxjs';
+import { InvitationService } from './services/invitation.service';
 
 @Component({
   selector: 'app-root',
@@ -29,6 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private snackbar: MatSnackBar,
     private notification: NotificationService,
+    private invitationService: InvitationService,
     private pushService: SwPush,
     private updateService: SwUpdate) {
 
@@ -87,12 +89,29 @@ export class AppComponent implements OnInit, OnDestroy {
     //   // window.open(url);
     //   console.log('[Service Worker] Notification click Received. event', event);
     // });
+
+    this.handleInvitations();
   }
 
   ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
       this.sub = null;
+    }
+  }
+
+  handleInvitations() {
+
+    const invitationToken = localStorage.getItem('invitationToken');
+    if (invitationToken) {
+
+      console.log('accepting invitation ...');
+      this.invitationService.acceptInvitation(invitationToken).subscribe(r => {
+        console.log('successfully accepted invitation');
+        localStorage.removeItem('invitationToken');
+      }, e => {
+        console.error('error accepting invitation', e);
+      });
     }
   }
 

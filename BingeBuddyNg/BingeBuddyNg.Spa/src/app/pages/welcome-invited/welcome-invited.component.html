@@ -1,0 +1,24 @@
+<div fxLayout="column" fxLayoutAlign="center center">
+  <h1>{{'WelcomeMessage' | translate}}</h1>
+  <h3>{{'WelcomeSubTitle' | translate }}</h3>
+
+  <div *ngIf="(invitationInfo$ | async) as invitationInfo; else loading">
+    <div style="text-align: center">
+      <div fxFlexLayout fxLayoutAlign="center center" class="invite-info">
+        <span>{{'InvitedBy' | translate }}</span>
+        <app-user-info [userInfo]="invitationInfo.invitingUser" showName="true"></app-user-info>
+        <span>!</span>
+      </div>
+
+      <img class="pulsate-transform" (click)="onLogin()" src="../../assets/img/Logo.svg">
+    </div>
+  </div>
+
+  <ng-template #loading>
+    <app-progress-spinner></app-progress-spinner>
+  </ng-template>
+
+  <div id="started-text" class="pulsate">
+    {{'GetStartedInvited' | translate }}
+  </div>
+</div>

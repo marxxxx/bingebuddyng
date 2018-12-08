@@ -36,8 +36,9 @@ export class AuthService {
 
   public handleAuthentication(returnUrl?: string): void {
 
-    console.log('handling authentication');
-    const successRoute = returnUrl != null ? returnUrl : '/activity-feed';
+    console.log('handling authentication', returnUrl);
+    const successRoute = (returnUrl != null && returnUrl !== '/callback') ? returnUrl : '/activity-feed';
+    returnUrl = returnUrl || '/';
 
     this.auth0.parseHash((err, authResult) => {
       console.log('parseHash completed');
@@ -50,11 +51,11 @@ export class AuthService {
 
         this.checkAuthenticated();
 
-        console.log('navigating to success route');
+        console.log('navigating to success route', successRoute);
         this.router.navigate([successRoute]);
       } else if (err) {
         console.log('error parsing hash');
-        this.router.navigate(['/']);
+        this.router.navigate([returnUrl]);
         console.error(err);
       } else {
         if (this.checkAuthenticated()) {
@@ -62,7 +63,7 @@ export class AuthService {
           this.router.navigate([successRoute]);
         } else {
           console.log('not authenticated -> navigating to root');
-          this.router.navigate(['/']);
+          this.router.navigate([returnUrl]);
         }
       }
 

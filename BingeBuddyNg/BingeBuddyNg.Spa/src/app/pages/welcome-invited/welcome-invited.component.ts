@@ -23,15 +23,13 @@ export class WelcomeInvitedComponent implements OnInit {
     this.route.paramMap.subscribe(p => {
 
       this.invitationToken = p.get('invitationToken');
+      localStorage.setItem('invitationToken', this.invitationToken);
 
       this.invitationInfo$ = this.invitationService.getInvitationInfo(this.invitationToken);
     });
   }
 
   onLogin() {
-    this.invitationService.acceptInvitation(this.invitationToken).subscribe(r => {
-      this.auth.login();
-    });
+    this.auth.login();
   }
-
 }
