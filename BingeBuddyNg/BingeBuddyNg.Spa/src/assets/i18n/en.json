@@ -59,5 +59,6 @@
     "InvitationTitle": "Invitation to Binge Buddy!",
     "InvitationText": "You have been invited by {{userName}} to join.",
     "CopiedToClipboard": "Copied to clipboard.",
-    "InvitedBy": "You have been invited by "
+    "InvitedBy": "You have been invited by ",
+    "InvitationAccepted": "This invitation has already been accepted."
 }

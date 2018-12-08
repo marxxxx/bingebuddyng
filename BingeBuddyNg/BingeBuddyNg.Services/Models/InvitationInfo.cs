@@ -6,18 +6,18 @@ namespace BingeBuddyNg.Services.Models
 {
     public class InvitationInfo
     {
-        public InvitationInfo(string invitationToken, UserInfo invitingUser)
+        public InvitationInfo(Invitation invitation, UserInfo invitingUser)
         {
-            InvitationToken = invitationToken ?? throw new ArgumentNullException(nameof(invitationToken));
+            Invitation = invitation ?? throw new ArgumentNullException(nameof(invitation));
             InvitingUser = invitingUser ?? throw new ArgumentNullException(nameof(invitingUser));
         }
 
-        public string InvitationToken { get; set; }
+        public Invitation Invitation { get; set; }
         public UserInfo InvitingUser { get; set; }
 
         public override string ToString()
         {
-            return $"{{{nameof(InvitationToken)}={InvitationToken}, {nameof(InvitingUser)}={InvitingUser}}}";
+            return $"{{{nameof(Invitation)}={Invitation}, {nameof(InvitingUser)}={InvitingUser}}}";
         }
     }
 }

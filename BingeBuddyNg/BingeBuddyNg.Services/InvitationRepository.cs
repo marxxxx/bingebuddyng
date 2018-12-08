@@ -41,7 +41,7 @@ namespace BingeBuddyNg.Services
             return invitationToken;
         }
 
-        public async Task AcceptInvitationAsync(string userId, string token)
+        public async Task<Invitation> AcceptInvitationAsync(string userId, string token)
         {
             var table = StorageAccess.GetTableReference(TableName);
             var invitationEntity = await FindInvitationEntityAsync(token);
@@ -50,6 +50,9 @@ namespace BingeBuddyNg.Services
             TableOperation operation = TableOperation.Replace(invitationEntity);
 
             await table.ExecuteAsync(operation);
+
+            var result = new Invitation(invitationEntity.InviationToken, invitationEntity.InvitingUserId, invitationEntity.AcceptingUserId);
+            return result;
         }
 
         public async Task<Invitation> GetInvitationAsync(string invitationToken)
