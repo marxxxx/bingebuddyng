@@ -104,7 +104,7 @@ export class AppComponent implements OnInit, OnDestroy {
     const invitationToken = localStorage.getItem('invitationToken');
     if (invitationToken) {
 
-      console.log('accepting invitation ...');
+      console.log('accepting invitation ...', invitationToken);
       this.invitationService.acceptInvitation(invitationToken).subscribe(r => {
         console.log('successfully accepted invitation');
         localStorage.removeItem('invitationToken');

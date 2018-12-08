@@ -29,15 +29,16 @@ export class WelcomeInvitedComponent implements OnInit {
     this.route.paramMap.subscribe(p => {
 
       this.invitationToken = p.get('invitationToken');
-      localStorage.setItem('invitationToken', this.invitationToken);
 
       this.isBusy = true;
       this.invitationService.getInvitationInfo(this.invitationToken).subscribe(r => {
         this.isBusy = false;
         this.invitationInfo = r;
         if (r.invitation.acceptingUserId !== null) {
-          this.snackbar.open(this.translateService.instant('InvitationAccepted'), 'OK', { duration: 1000 });
+          this.snackbar.open(this.translateService.instant('InvitationAccepted'), 'OK', { duration: 5000 });
           this.router.navigate(['/welcome']);
+        } else {
+          localStorage.setItem('invitationToken', this.invitationToken);
         }
       }, e => {
         console.error('failed to load invitation info', e);
