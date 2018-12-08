@@ -1,3 +1,4 @@
+import { WelcomeInvitedComponent } from './pages/welcome-invited/welcome-invited.component';
 import { DrinkersComponent } from './pages/drinkers/drinkers.component';
 import { FriendrequestsComponent } from './pages/friendrequests/friendrequests.component';
 import { ProfileComponent } from './pages/profile/profile.component';
@@ -10,6 +11,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './services/auth.guard';
 import { RankingComponent } from './pages/ranking/ranking.component';
+import { InviteFriendComponent } from './pages/invite-friend/invite-friend.component';
 
 const routes: Routes = [
   {
@@ -19,6 +21,10 @@ const routes: Routes = [
   {
     path: 'welcome',
     component: WelcomeComponent
+  },
+  {
+    path: 'welcome-invited/:invitationToken',
+    component: WelcomeInvitedComponent
   },
   {
     path: 'activity-feed',
@@ -53,6 +59,11 @@ const routes: Routes = [
   {
     path: 'ranking',
     component: RankingComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'invite-friend',
+    component: InviteFriendComponent,
     canActivate: [AuthGuard]
   },
   {

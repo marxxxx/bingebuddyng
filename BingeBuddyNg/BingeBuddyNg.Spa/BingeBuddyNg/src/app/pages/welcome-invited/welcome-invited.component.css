@@ -1,0 +1,62 @@
+img {
+    max-height: 240px;
+    max-width: 240px;
+    cursor: pointer;
+}
+
+img:hover {
+    transform: scale(1.1);
+    transition-timing-function: ease-in-out;
+}
+
+h1, h3 {
+    text-align: center;
+}
+
+
+#started-text {
+    margin-top: 20px;
+}
+
+.pulsate {
+    animation: pulsate 3s ease-in-out;
+    animation-iteration-count: infinite; 
+    opacity: 0.5;
+}
+@keyframes pulsate {
+    0% { 
+        opacity: 0.5;
+    }
+    50% { 
+        opacity: 1.0;
+    }
+    100% { 
+        opacity: 0.5;
+    }
+}
+
+
+.pulsate-transform {
+    animation: pulsate-transform 3s ease-in-out;
+    animation-iteration-count: infinite; 
+    transform: scale(1)
+}
+@keyframes pulsate-transform {
+    0% { 
+        transform: scale(1)
+    }
+    50% { 
+        transform: scale(1.1)
+    }
+    100% { 
+        transform: scale(1)
+    }
+}
+
+app-user-info {
+    margin-left: 10px;
+}
+
+.invite-info {
+    margin-bottom: 20px;
+}

@@ -82,10 +82,11 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.pushService.notificationClicks.subscribe( r => {
-      const url = r.notification.data.url || 'https://bingebuddy.azureedge.net';
-      window.open(url);
-    });
+    // this.pushService.notificationClicks.subscribe( event => {
+    //   const url = event.notification.data.url || 'https://bingebuddy.azureedge.net';
+    //   // window.open(url);
+    //   console.log('[Service Worker] Notification click Received. event', event);
+    // });
   }
 
   ngOnDestroy() {
