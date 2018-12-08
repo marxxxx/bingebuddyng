@@ -49,7 +49,7 @@ namespace BingeBuddyNg.Api.Controllers
         public async Task AcceptInvitation(string invitationToken)
         {
             var userId = IdentityService.GetCurrentUserId();
-            await InvitationRepository.AcceptInvitationAsync(userId, invitationToken);
+            await InvitationService.AcceptInvitationAsync(userId, invitationToken);
         }
         
     }

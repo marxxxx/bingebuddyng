@@ -1,5 +1,6 @@
 import { UserInfo } from './UserInfo';
+import { Invitation } from './Invitation';
 export class InvitationInfo {
-    invitationToken: string;
+    invitation: Invitation;
     invitingUser: UserInfo;
 }

@@ -12,6 +12,6 @@ namespace BingeBuddyNg.Services.Interfaces
 
         Task<string> CreateInvitationAsync(string userId);
 
-        Task AcceptInvitationAsync(string userId, string token);
+        Task<Invitation> AcceptInvitationAsync(string userId, string token);
     }
 }

@@ -47,6 +47,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
       if (userProfile) {
         this.registerUser(this.pushInfo);
+        this.handleInvitations();
       }
 
     });
@@ -89,8 +90,6 @@ export class AppComponent implements OnInit, OnDestroy {
     //   // window.open(url);
     //   console.log('[Service Worker] Notification click Received. event', event);
     // });
-
-    this.handleInvitations();
   }
 
   ngOnDestroy() {

@@ -13,8 +13,9 @@ namespace BingeBuddyNg.Shared
 
         public static class Urls
         {
-            public const string FriendRequestNotificationIconUrl = "https://bingebuddystorage.z6.web.core.windows.net/favicon.ico";
+            public const string ApplicationIconUrl = "https://bingebuddystorage.z6.web.core.windows.net/favicon.ico";
             public const string FriendRequestApplicationUrl = "https://bingebuddy.azureedge.net/friendrequests";
+            public const string ApplicationUrl = "https://bingebuddy.azureedge.net";
         }
     }
 }

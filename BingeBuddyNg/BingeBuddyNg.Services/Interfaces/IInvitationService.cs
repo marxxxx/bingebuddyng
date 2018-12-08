@@ -9,5 +9,7 @@ namespace BingeBuddyNg.Services.Interfaces
     public interface IInvitationService
     {
         Task<InvitationInfo> GetInvitationInfoAsync(string invitationToken);
+
+        Task AcceptInvitationAsync(string userId, string invitationToken);
     }
 }
