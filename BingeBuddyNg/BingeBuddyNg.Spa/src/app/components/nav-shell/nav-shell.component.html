@@ -21,7 +21,7 @@
         <mat-icon class="menu-item">share</mat-icon>{{'InviteFriend' | translate }}
       </a>
       <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/friendrequests"><img src="../../assets/img/like.png"><span>{{'FriendRequests'
-          | translate }}</span></a>
+          | translate }}</span><span *ngIf="friendRequests && friendRequests.length > 0"> ({{friendRequests.length}})</span></a>
       <mat-divider *ngIf="auth.isAuthenticated()"></mat-divider>
       <a *ngIf="auth.isAuthenticated()" mat-list-item (click)="onLogout()"><img src="../../assets/img/logout.png"><span>{{'Logout'
           | translate }}</span></a>

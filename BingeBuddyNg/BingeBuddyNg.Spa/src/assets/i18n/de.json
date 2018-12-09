@@ -58,7 +58,7 @@
     "InviteShareInfo": "Teile diesen Link mit deinem Freund.",
     "InvitationTitle": "Einladung zu Binge Buddy!",
     "InvitationText": "Du wurdest von {{userName}} eingeladen, bei Binge Buddy mitzumachen.",
-    "CopiedToClipboard": "Link in Zwischenablage kopiert.",
+    "CopiedToClipboardNowSend": "Link in Zwischenablage kopiert. Sende ihn nun an deinen Freund.",
     "InvitedBy": "Du wurdest eingeladen von ",
     "InvitationAccepted": "Diese Einladung wurde bereits akzeptiert."
 }

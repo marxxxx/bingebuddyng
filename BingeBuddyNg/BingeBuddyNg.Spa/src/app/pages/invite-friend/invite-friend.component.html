@@ -1,22 +1,26 @@
-<h1>
-  {{'InviteFriend' | translate}}
-</h1>
+<div fxLayout="column" fxLayoutAlign="center center">
+  <h1>
+    {{'InviteFriend' | translate}}
+  </h1>
 
-<p *ngIf="!invitationToken">{{'InviteFriendDescription' | translate }}</p>
+  <img src="../../../assets/img/friends.png">
 
-<div *ngIf="invitationToken">{{'InviteShareInfo'| translate}}</div>
+  <p *ngIf="!invitationToken">{{'InviteFriendDescription' | translate }}</p>
 
-<div fxLayout *ngIf="invitationToken">
-  <textarea #invitationTokenArea fxFlex="90" readonly>{{getInvitationLink()}}</textarea>
-  <button *ngIf="!isSharingSupported()" class="share-button" mat-icon-button fxFlex="10" (click)="onCopyToClipboard(invitationTokenArea)">
-    <mat-icon>file_copy</mat-icon>
-  </button>
-  <button *ngIf="isSharingSupported()" class="share-button" mat-icon-button fxFlex="10" (click)="onShare()">
-    <mat-icon>share</mat-icon>
-  </button>
+  <div *ngIf="invitationToken" class="margin-top">{{'InviteShareInfo'| translate}}</div>
+
+  <div fxLayout *ngIf="invitationToken" class="margin-top">
+    <textarea #invitationTokenArea fxFlex="90" readonly>{{getInvitationLink()}}</textarea>
+    <button *ngIf="!isSharingSupported()" class="share-button" mat-icon-button fxFlex="10" (click)="onCopyToClipboard(invitationTokenArea)">
+      <mat-icon>file_copy</mat-icon>
+    </button>
+    <button *ngIf="isSharingSupported()" class="share-button" mat-icon-button fxFlex="10" (click)="onShare()">
+      <mat-icon>share</mat-icon>
+    </button>
+  </div>
+
+
+  <button *ngIf="!isBusy && !invitationToken" mat-raised-button color="primary" (click)="onInvite()">{{'InviteFriend' |
+    translate}}</button>
+  <mat-progress-spinner *ngIf="isBusy" mode="indeterminate" diameter="32"></mat-progress-spinner>
 </div>
-
-
-<button *ngIf="!isBusy && !invitationToken" mat-raised-button color="primary" (click)="onInvite()">{{'InviteFriend' |
-  translate}}</button>
-<mat-progress-spinner *ngIf="isBusy" mode="indeterminate" diameter="32"></mat-progress-spinner>

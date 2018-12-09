@@ -58,7 +58,7 @@
     "InviteShareInfo": "Share this link with your friend.",
     "InvitationTitle": "Invitation to Binge Buddy!",
     "InvitationText": "You have been invited by {{userName}} to join Binge Buddy.",
-    "CopiedToClipboard": "Copied to clipboard.",
+    "CopiedToClipboardNowSend": "Copied to clipboard. Now go and send it to your friend.",
     "InvitedBy": "You have been invited by ",
     "InvitationAccepted": "This invitation has already been accepted."
 }

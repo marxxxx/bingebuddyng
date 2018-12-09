@@ -46,9 +46,7 @@ export class InviteFriendComponent implements OnInit {
     el.select();
     document.execCommand('copy');
 
-    this.snackbar.open(this.translateService.instant('CopiedToClipboard'), null, {
-      duration: 1000
-    });
+    this.snackbar.open(this.translateService.instant('CopiedToClipboardNowSend'), 'OK');
 
     this.invitationToken = null;
 
