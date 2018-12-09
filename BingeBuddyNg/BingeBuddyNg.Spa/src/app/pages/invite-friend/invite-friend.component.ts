@@ -50,6 +50,8 @@ export class InviteFriendComponent implements OnInit {
       duration: 1000
     });
 
+    this.invitationToken = null;
+
   }
 
   onShare() {
@@ -62,7 +64,12 @@ export class InviteFriendComponent implements OnInit {
 
     const nav: any = navigator;
 
-    nav.share({ title, text, url }).catch(error => console.error('Error sharing', error));
+    nav.share({ title, text, url })
+      .then(_ => {
+        console.log('sharing successful.');
+        this.invitationToken = null;
+      })
+      .catch(error => console.error('Error sharing', error));
   }
 
   getInvitationLink(): string {
