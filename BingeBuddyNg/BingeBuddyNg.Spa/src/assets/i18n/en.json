@@ -57,7 +57,7 @@
     "InviteFriendDescription": "Press the button to create an invitation.",
     "InviteShareInfo": "Share this link with your friend.",
     "InvitationTitle": "Invitation to Binge Buddy!",
-    "InvitationText": "You have been invited by {{userName}} to join.",
+    "InvitationText": "You have been invited by {{userName}} to join Binge Buddy.",
     "CopiedToClipboard": "Copied to clipboard.",
     "InvitedBy": "You have been invited by ",
     "InvitationAccepted": "This invitation has already been accepted."
