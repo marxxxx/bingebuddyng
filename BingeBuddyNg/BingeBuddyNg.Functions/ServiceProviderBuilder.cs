@@ -33,7 +33,8 @@ namespace BingeBuddyNg.Functions
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<ICalculationService, CalculationService>();
             services.AddScoped<IUserStatsRepository, UserStatsRepository>();
-                                    
+            services.AddScoped<IDrinkEventRepository, DrinkEventRepository>();
+
             return services.BuildServiceProvider();
         }
     }

@@ -52,7 +52,7 @@
     "NoVideoSupport": "Dein Browser ist veraltet.",
     "UnsupportedMediaFormat": "Nicht unterstütztes Medienformat.",
     "Ranking": "Bestenlisten",
-    "AlcoholicDrinkCountInLastMonth": "Anzahl alkoholischer Getränke im letzten Monat",
+    "AlcoholicDrinkCount": "Getränkeanzahl",
     "InviteFriend": "Freund einladen",
     "InviteFriendDescription": "Drücke auf den Knopf um eine Einladung zu erstellen.",
     "InviteShareInfo": "Teile diesen Link mit deinem Freund.",
@@ -60,5 +60,7 @@
     "InvitationText": "Du wurdest von {{userName}} eingeladen, bei Binge Buddy mitzumachen.",
     "CopiedToClipboardNowSend": "Link in Zwischenablage kopiert. Sende ihn nun an deinen Freund.",
     "InvitedBy": "Du wurdest eingeladen von ",
-    "InvitationAccepted": "Diese Einladung wurde bereits akzeptiert."
+    "InvitationAccepted": "Diese Einladung wurde bereits akzeptiert.",
+    "HardnessScore": "Härtepunkte",
+    "LastMonth": "Letztes Monat"
 }

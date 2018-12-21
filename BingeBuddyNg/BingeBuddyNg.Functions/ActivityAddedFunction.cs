@@ -19,6 +19,8 @@ namespace BingeBuddyNg.Functions
         public static readonly ICalculationService CalculationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<ICalculationService>();
         public static readonly IUserStatsRepository UserStatsRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserStatsRepository>();
         public static readonly INotificationService NotificationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<INotificationService>();
+        public static readonly IDrinkEventRepository DrinkEventRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IDrinkEventRepository>();
+
 
         [FunctionName("ActivityAddedFunction")]
         public static async Task Run(
@@ -101,11 +103,39 @@ namespace BingeBuddyNg.Functions
                         }
                     }
                 }
+
+                // check for drink events
+                try
+                {
+                    if (activity.ActivityType == ActivityType.Drink || activity.DrinkType != DrinkType.Anti)
+                    {
+                        var drinkEvent = await DrinkEventRepository.FindCurrentDrinkEventAsync();
+                        if (drinkEvent != null)
+                        {
+                            if (drinkEvent.AddScoringUserId(currentUser.Id))
+                            {
+                                await UserStatsRepository.IncreaseScoreAsync(currentUser.Id, Shared.Constants.Scores.StandardDrinkAction);
+
+                                if (currentUser.PushInfo != null)
+                                {
+                                    NotificationService.SendMessage(new[] { currentUser.PushInfo }, new NotificationMessage("Gratuliere!", $"Du hast bei der Drink Aktion gewonnen und dir dabei {Shared.Constants.Scores.StandardDrinkAction} verdient!"));
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.LogError($"Error checking drink actions", ex);
+                }
             }
             catch (Exception ex)
             {
-                log.LogError($"Failed to send push notification: [{ex}]");
+                log.LogError($"Processing failed: [{ex}]");
             }
+
+
+            
         }
 
         private static NotificationMessage GetNotificationMessage(Activity activity)

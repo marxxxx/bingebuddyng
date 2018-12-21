@@ -8,6 +8,7 @@ namespace BingeBuddyNg.Services.Interfaces
 {
     public interface IRankingService
     {
-        Task<List<UserRanking>> GetUserRankingAsync();
+        Task<List<UserRanking>> GetDrinksRankingAsync();
+        Task<List<UserRanking>> GetScoreRankingAsync();
     }
 }

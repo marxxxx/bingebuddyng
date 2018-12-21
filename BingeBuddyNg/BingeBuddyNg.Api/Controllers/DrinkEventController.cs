@@ -12,28 +12,21 @@ namespace BingeBuddyNg.Api.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
-    public class RankingController : Controller
+    public class DrinkEventController : Controller
     {
-        public IRankingService RankingService { get; }
+        public IDrinkEventRepository DrinkEventRepository { get; }
         public IIdentityService IdentityService { get; set; }
 
-        public RankingController(IIdentityService identityService, IRankingService rankingService)
+        public DrinkEventController(IIdentityService identityService, IDrinkEventRepository drinkEventRepository)
         {
             this.IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
-            this.RankingService = rankingService ?? throw new ArgumentNullException(nameof(rankingService));
+            this.DrinkEventRepository = drinkEventRepository ?? throw new ArgumentNullException(nameof(drinkEventRepository));
         }
 
         [HttpGet("[action]")]
-        public async Task<List<UserRanking>> GetDrinkRanking()
+        public async Task<DrinkEvent> GetCurrentDrinkEvent()
         {
-            var result = await this.RankingService.GetDrinksRankingAsync();
-            return result;
-        }
-
-        [HttpGet("[action]")]
-        public async Task<List<UserRanking>> GetScoreRanking()
-        {
-            var result = await this.RankingService.GetScoreRankingAsync();
+            var result = await this.DrinkEventRepository.FindCurrentDrinkEventAsync();
             return result;
         }
     }

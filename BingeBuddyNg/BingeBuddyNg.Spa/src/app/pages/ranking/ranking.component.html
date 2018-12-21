@@ -3,17 +3,37 @@
 </ng-template>
 
 <h2>{{'Ranking' | translate }}</h2>
-<p>{{'AlcoholicDrinkCountInLastMonth' | translate }}</p>
+<p>{{'LastMonth' | translate }}</p>
 
-<ng-container *ngIf="(ranking$ | async) as ranking; else loading">
-  <div *ngFor="let r of ranking; let i=index" fxLayout fxLayoutAlign="space-between center">
-    <div fxLayout fxLayoutAlign="start center">
-      <p class="rank">{{i+1}}.</p>
-      <app-user-info [userInfo]="r.user" showName="true"></app-user-info>
-    </div>
+<mat-tab-group>
+  <mat-tab label="{{'AlcoholicDrinkCount' | translate }}">
+    <ng-container *ngIf="(ranking$ | async) as ranking; else loading">
+      <div *ngFor="let r of ranking; let i=index" fxLayout fxLayoutAlign="space-between center">
+        <div fxLayout fxLayoutAlign="start center">
+          <p class="rank">{{i+1}}.</p>
+          <app-user-info [userInfo]="r.user" showName="true"></app-user-info>
+        </div>
 
-    <span class="count">
-      {{r.statistics.totalDrinksLastMonth}}
-    </span>
-  </div>
-</ng-container>
+        <span class="count">
+          {{r.statistics.totalDrinksLastMonth}}
+        </span>
+      </div>
+    </ng-container>
+  </mat-tab>
+
+  <mat-tab label="{{'HardnessScore' | translate }}">
+      <ng-container *ngIf="(score$ | async) as score; else loading">
+          <div *ngFor="let r of score; let i=index" fxLayout fxLayoutAlign="space-between center">
+            <div fxLayout fxLayoutAlign="start center">
+              <p class="rank">{{i+1}}.</p>
+              <app-user-info [userInfo]="r.user" showName="true"></app-user-info>
+            </div>
+    
+            <span class="count">
+              {{r.statistics.score != null ? r.statistics.score : 0}}
+            </span>
+          </div>
+        </ng-container>
+  </mat-tab>
+
+</mat-tab-group>

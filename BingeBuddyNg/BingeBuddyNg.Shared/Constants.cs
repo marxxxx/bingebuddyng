@@ -17,5 +17,11 @@ namespace BingeBuddyNg.Shared
             public const string FriendRequestApplicationUrl = "https://bingebuddy.azureedge.net/friendrequests";
             public const string ApplicationUrl = "https://bingebuddy.azureedge.net";
         }
+
+        public static class Scores
+        {
+            public const int FriendInvitation = 50;
+            public const int StandardDrinkAction = 30;
+        }
     }
 }
