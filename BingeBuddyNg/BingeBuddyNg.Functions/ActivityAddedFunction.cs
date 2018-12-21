@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Functions
@@ -22,10 +21,12 @@ namespace BingeBuddyNg.Functions
         public static readonly INotificationService NotificationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<INotificationService>();
 
         [FunctionName("ActivityAddedFunction")]
-        public static async Task Run([QueueTrigger(Shared.Constants.QueueNames.ActivityAdded, Connection = "AzureWebJobsStorage")]string message,
+        public static async Task Run(
+            [QueueTrigger(Shared.Constants.QueueNames.ActivityAdded, Connection = "AzureWebJobsStorage")]string message,
+            [OrchestrationClient]DurableOrchestrationClient starter,
             ILogger log)
         {
-            
+
             var activityAddedMessage = JsonConvert.DeserializeObject<ActivityAddedMessage>(message);
             var activity = activityAddedMessage.AddedActivity;
 
@@ -39,14 +40,33 @@ namespace BingeBuddyNg.Functions
                 await ActivityRepository.UpdateActivityAsync(activity);
             }
 
+
             try
             {
-                var currentUser = await UserRepository.FindUserAsync(activity.UserId);
+                User currentUser = null;
+                try
+                {
+                    currentUser = await UserRepository.FindUserAsync(activity.UserId);
 
+                    if (currentUser.MonitoringInstanceId != null)
+                    {
+                        await starter.TerminateAsync(currentUser.MonitoringInstanceId, "Drank early enough.");
+                    }
+
+                    // Start timer to remind user about entering his next drink.
+                    var monitoringInstanceId = await starter.StartNewAsync(DrinkReminderFunction.FunctionNameValue, currentUser);
+                    await UserRepository.UpdateMonitoringInstanceAsync(currentUser.Id, monitoringInstanceId);
+                }
+                catch (Exception ex)
+                {
+                    log.LogError($"Error managing monitoring function", ex);
+                }
+
+                UserStatistics userStats = null;
                 try
                 {
                     // Immediately update Stats for current user
-                    await DrinkCalculatorFunction.UpdateStatsForUserAsync(currentUser, log);
+                    userStats = await DrinkCalculatorFunction.UpdateStatsForUserAsync(currentUser, log);
                     await RankingCalculatorFunction.UpdateRankingForUserAsync(currentUser.Id, log);
                 }
                 catch (Exception ex)
@@ -54,27 +74,31 @@ namespace BingeBuddyNg.Functions
                     log.LogError($"Failed to update stats for user [{currentUser}]: [{ex}]");
                 }
 
-                // get friends of this user who didn't mute themselves from him
-                var friendUserIds = currentUser.GetVisibleFriendUserIds(false);
-
-                foreach (var friendUserId in friendUserIds)
+                // remind only first and every 5th drink this night to avoid spamming
+                if (userStats == null || userStats.CurrentNightDrinks == 1 || (userStats.CurrentNightDrinks % 5 == 0))
                 {
-                    try
+                    // get friends of this user who didn't mute themselves from him
+                    var friendUserIds = currentUser.GetVisibleFriendUserIds(false);
+
+                    foreach (var friendUserId in friendUserIds)
                     {
-                        var friendUser = await UserRepository.FindUserAsync(friendUserId);
-                        if (friendUser != null && friendUser.PushInfo != null)
+                        try
                         {
-                            log.LogInformation($"Sending push to [{friendUser}] ...");
+                            var friendUser = await UserRepository.FindUserAsync(friendUserId);
+                            if (friendUser != null && friendUser.PushInfo != null)
+                            {
+                                log.LogInformation($"Sending push to [{friendUser}] ...");
 
-                            // TODO: Localize
-                            var notificationMessage = GetNotificationMessage(activity);
+                                // TODO: Localize
+                                var notificationMessage = GetNotificationMessage(activity);
 
-                            NotificationService.SendMessage(new[] { friendUser.PushInfo }, notificationMessage);
+                                NotificationService.SendMessage(new[] { friendUser.PushInfo }, notificationMessage);
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        log.LogError($"Failed to send push notification to user [{friendUserId}]: [{ex}]");
+                        catch (Exception ex)
+                        {
+                            log.LogError($"Failed to send push notification to user [{friendUserId}]: [{ex}]");
+                        }
                     }
                 }
             }
@@ -82,7 +106,6 @@ namespace BingeBuddyNg.Functions
             {
                 log.LogError($"Failed to send push notification: [{ex}]");
             }
-
         }
 
         private static NotificationMessage GetNotificationMessage(Activity activity)
@@ -107,7 +130,7 @@ namespace BingeBuddyNg.Functions
                     break;
             }
 
-            var notificationMessage = new NotificationMessage(Constants.NotificationIconUrl, 
+            var notificationMessage = new NotificationMessage(Constants.NotificationIconUrl,
                 Constants.NotificationIconUrl, Constants.ApplicationUrl, Constants.ApplicationName,
                     $"{activity.UserName} hat {activityString}");
             return notificationMessage;

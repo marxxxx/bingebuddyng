@@ -13,6 +13,8 @@ namespace BingeBuddyNg.Services.Interfaces
         Task UpdateUserAsync(User user);
         Task CreateOrUpdateUserAsync(User user);
 
+        Task UpdateMonitoringInstanceAsync(string userId, string monitoringInstanceId);
+
         Task AddFriendAsync(string userId, string friendUserId);
         Task RemoveFriendAsync(string userId, string friendUserId);
     }
