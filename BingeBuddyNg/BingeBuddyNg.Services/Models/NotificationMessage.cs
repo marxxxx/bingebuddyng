@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BingeBuddyNg.Shared;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,6 +20,15 @@ namespace BingeBuddyNg.Services.Models
             this.title = title;
             this.body = body;
             this.data = new NotificationData(url);
+        }
+
+        public NotificationMessage(string title, string body)
+        {
+            this.icon = Constants.Urls.ApplicationIconUrl;
+            this.badge = Constants.Urls.ApplicationIconUrl;
+            this.title = title;
+            this.body = body;
+            this.data = new NotificationData(Constants.Urls.ApplicationUrl);
         }
     }
 }

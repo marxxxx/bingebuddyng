@@ -67,6 +67,7 @@ namespace BingeBuddyNg.Services
                 {
                     savedUser.Entity.PushInfo = user.PushInfo;
                 }
+               
                 saveUserOperation = TableOperation.Replace(savedUser);
             }
             else
@@ -148,6 +149,15 @@ namespace BingeBuddyNg.Services
             results[1].RemoveFriend(userId);
 
             await Task.WhenAll(UpdateUserAsync(results[0]), UpdateUserAsync(results[1]));
+        }
+
+        public async Task UpdateMonitoringInstanceAsync(string userId, string monitoringInstanceId)
+        {
+            var user = await FindUserEntityAsync(userId);
+            if(user != null)
+            {
+                user.Entity.MonitoringInstanceId = monitoringInstanceId;
+            }
         }
     }
 }

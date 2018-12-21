@@ -34,13 +34,14 @@ namespace BingeBuddyNg.Functions
             }
         }
 
-        public static async Task UpdateStatsForUserAsync(User user, ILogger log)
+        public static async Task<UserStatistics> UpdateStatsForUserAsync(User user, ILogger log)
         {
             var stats = await CalculationService.CalculateStatsForUserAsync(user);
             var userStats = new UserStatistics(user.Id, stats.CurrentAlcLevel, stats.CurrentNightDrinks);
             await UserStatsRepository.SaveStatisticsForUserAsync(userStats);
 
             log.LogDebug($"Successfully updated stats for user {user}: {userStats}");
+            return userStats;
         }
     }
 }
