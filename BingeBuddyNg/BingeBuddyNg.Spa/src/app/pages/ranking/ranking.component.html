@@ -5,7 +5,7 @@
 <h2>{{'Ranking' | translate }}</h2>
 <p>{{'LastMonth' | translate }}</p>
 
-<div style="z-index: -1; position: relative">
+
   <mat-tab-group>
     <mat-tab label="{{'AlcoholicDrinkCount' | translate }}">
       <ng-container *ngIf="(ranking$ | async) as ranking; else loading">
@@ -38,4 +38,3 @@
     </mat-tab>
 
   </mat-tab-group>
-</div>

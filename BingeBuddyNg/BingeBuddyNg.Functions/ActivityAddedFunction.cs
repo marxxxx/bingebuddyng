@@ -77,7 +77,7 @@ namespace BingeBuddyNg.Functions
                 }
 
                 // remind only first and every 5th drink this night to avoid spamming
-                if (userStats == null || userStats.CurrentNightDrinks == 1 || (userStats.CurrentNightDrinks % 5 == 0))
+                if (ShouldNotifyUsers(activity, userStats))
                 {
                     // get friends of this user who didn't mute themselves from him
                     var friendUserIds = currentUser.GetVisibleFriendUserIds(false);
@@ -136,6 +136,13 @@ namespace BingeBuddyNg.Functions
 
 
             
+        }
+
+        private static bool ShouldNotifyUsers(Activity activity, UserStatistics userStats)
+        {
+            bool shouldNotify = ((activity.ActivityType == ActivityType.Image || activity.ActivityType == ActivityType.Message) ||
+                (userStats == null || userStats.CurrentNightDrinks == 1 || (userStats.CurrentNightDrinks % 5 == 0)));
+            return shouldNotify;
         }
 
         private static NotificationMessage GetNotificationMessage(Activity activity)
