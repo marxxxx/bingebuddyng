@@ -3,38 +3,38 @@
 </ng-template>
 
 <h2>{{'Ranking' | translate }}</h2>
-<p>{{'LastMonth' | translate }}</p>
+<p>{{'RankingInfo' | translate }}</p>
 
 
-  <mat-tab-group>
-    <mat-tab label="{{'AlcoholicDrinkCount' | translate }}">
-      <ng-container *ngIf="(ranking$ | async) as ranking; else loading">
-        <div *ngFor="let r of ranking; let i=index" fxLayout fxLayoutAlign="space-between center">
-          <div fxLayout fxLayoutAlign="start center">
-            <p class="rank">{{i+1}}.</p>
-            <app-user-info [userInfo]="r.user" showName="true"></app-user-info>
-          </div>
-
-          <span class="count">
-            {{r.statistics.totalDrinksLastMonth}}
-          </span>
+<mat-tab-group>
+  <mat-tab label="{{'AlcoholicDrinkCount' | translate }}">
+    <div *ngIf="(ranking$ | async) as ranking; else loading">
+      <div *ngFor="let r of ranking; let i=index" fxLayout fxLayoutAlign="space-between center">
+        <div fxLayout fxLayoutAlign="start center">
+          <p class="rank">{{i+1}}.</p>
+          <app-user-info [userInfo]="r.user" showName="true"></app-user-info>
         </div>
-      </ng-container>
-    </mat-tab>
 
-    <mat-tab label="{{'HardnessScore' | translate }}">
-      <ng-container *ngIf="(score$ | async) as score; else loading">
-        <div *ngFor="let r of score; let i=index" fxLayout fxLayoutAlign="space-between center">
-          <div fxLayout fxLayoutAlign="start center">
-            <p class="rank">{{i+1}}.</p>
-            <app-user-info [userInfo]="r.user" showName="true"></app-user-info>
-          </div>
+        <span class="count">
+          {{r.statistics.totalDrinksLastMonth}}
+        </span>
+      </div>
+    </div>
+  </mat-tab>
 
-          <span class="count">
-            {{r.statistics.score != null ? r.statistics.score : 0}}
-          </span>
+  <mat-tab label="{{'HardnessScore' | translate }}">
+    <div *ngIf="(score$ | async) as score; else loading">
+      <div *ngFor="let r of score; let i=index" fxLayout fxLayoutAlign="space-between center">
+        <div fxLayout fxLayoutAlign="start center">
+          <p class="rank">{{i+1}}.</p>
+          <app-user-info [userInfo]="r.user" showName="true"></app-user-info>
         </div>
-      </ng-container>
-    </mat-tab>
 
-  </mat-tab-group>
+        <span class="count">
+          {{r.statistics.score != null ? r.statistics.score : 0}}
+        </span>
+      </div>
+    </div>
+  </mat-tab>
+
+</mat-tab-group>

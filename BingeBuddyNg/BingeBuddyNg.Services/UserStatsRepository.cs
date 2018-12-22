@@ -58,9 +58,11 @@ namespace BingeBuddyNg.Services
         public async Task<List<UserStatistics>> GetScoreStatisticsAsync()
         {
             string whereClause = TableQuery.GenerateFilterConditionForInt(nameof(UserStatsTableEntity.Score), QueryComparisons.GreaterThan, 0);
+
             var queryResult = await StorageAccessService.QueryTableAsync<UserStatsTableEntity>(TableName, whereClause);
 
-            var result = queryResult.OrderByDescending(r => r.Score)
+            var result = queryResult.Where(s=>s.Score.GetValueOrDefault() > 0)
+                .OrderByDescending(r => r.Score)
                 .Select(r => new UserStatistics(r.RowKey, r.CurrentAlcoholization, r.CurrentNightDrinks, r.Score, r.TotalDrinksLastMonth))
                 .ToList();
 
@@ -98,6 +100,10 @@ namespace BingeBuddyNg.Services
             var table = StorageAccessService.GetTableReference(TableName);
 
             var result = await StorageAccessService.GetTableEntityAsync<UserStatsTableEntity>(TableName, PartitionKeyValue, userId);
+            if(result.Score == null)
+            {
+                result.Score = 0;
+            }
             result.Score += additionalScore;
 
             TableOperation saveOperation = TableOperation.Replace(result);

@@ -62,5 +62,6 @@
     "InvitedBy": "Du wurdest eingeladen von ",
     "InvitationAccepted": "Diese Einladung wurde bereits akzeptiert.",
     "HardnessScore": "Härtepunkte",
-    "LastMonth": "Letztes Monat"
+    "LastMonth": "Letztes Monat",
+    "RankingInfo": "Getränke werden aus dem letzten Monat gezählt. Härtepunkte kannst du dir verdienen indem du neue Trinker einlädst oder Getränkeaktionen gewinnst."
 }

@@ -35,7 +35,9 @@ namespace BingeBuddyNg.Services
             var userIds = userStats.Select(u => u.UserId).Distinct();
             var users = await this.UserRepository.GetUsersAsync(userIds);
 
-            var result = userStats.Select(s => new UserRanking(users.First(u => u.Id == s.UserId).ToUserInfo(), s)).ToList();
+            var result = userStats.Select(s => new UserRanking(users.First(u => u.Id == s.UserId).ToUserInfo(), s))
+                .OrderByDescending( r => r.Statistics.Score)
+                .ToList();
             return result;
         }
     }

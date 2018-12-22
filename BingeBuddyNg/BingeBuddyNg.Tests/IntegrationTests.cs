@@ -120,5 +120,12 @@ namespace BingeBuddyNg.Tests
             drinkEvent.AddScoringUserId(userId);
             await drinkEventRepository.UpdateDrinkEventAsync(drinkEvent);
         }
+
+        [TestMethod]
+        public async Task DrinkStatsTests()
+        {
+            var service = serviceProvider.GetRequiredService<IUserStatsRepository>();
+            await service.IncreaseScoreAsync("facebook|10219014482060805", 1);
+        }
     }
 }

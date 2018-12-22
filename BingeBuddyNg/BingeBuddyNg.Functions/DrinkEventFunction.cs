@@ -27,7 +27,7 @@ namespace BingeBuddyNg.Functions
                 DateTime.UtcNow.DayOfWeek == DayOfWeek.Saturday)
             {
 
-                max = 5;
+                max = 6;
             }
 
             int result = new Random().Next(max);

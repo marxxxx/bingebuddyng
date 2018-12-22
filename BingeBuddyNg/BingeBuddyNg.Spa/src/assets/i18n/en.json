@@ -62,5 +62,6 @@
     "InvitedBy": "You have been invited by ",
     "InvitationAccepted": "This invitation has already been accepted.",
     "HardnessScore": "Hardness Score",
-    "LastMonth": "Last month"
+    "LastMonth": "Last month",
+    "RankingInfo": "Drinks in the last month count. Earn hardness points by inviting friends or winning drink events."
 }
