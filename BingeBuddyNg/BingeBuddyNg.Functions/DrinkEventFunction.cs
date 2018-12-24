@@ -11,7 +11,7 @@ namespace BingeBuddyNg.Functions
 {
     public static class DrinkEventFunction
     {
-        public const int LuckyNumber = 5;
+        public const int LuckyNumber = 1;
 
         public static readonly IUserRepository UserRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
         public static readonly IDrinkEventRepository DrinkEventRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IDrinkEventRepository>();
@@ -22,13 +22,8 @@ namespace BingeBuddyNg.Functions
         {
             log.LogInformation($"Drink Event executed at: {DateTime.Now}");
 
-            int max = 20;
-            if(DateTime.UtcNow.DayOfWeek == DayOfWeek.Friday ||
-                DateTime.UtcNow.DayOfWeek == DayOfWeek.Saturday)
-            {
 
-                max = 6;
-            }
+            int max = CalculateEventProbability();
 
             int result = new Random().Next(max);
 
@@ -50,6 +45,25 @@ namespace BingeBuddyNg.Functions
                     }
                 }
             }
+        }
+
+        private static int CalculateEventProbability()
+        {
+            int max = 20;
+            if ((DateTime.UtcNow.DayOfWeek == DayOfWeek.Friday ||
+                DateTime.UtcNow.DayOfWeek == DayOfWeek.Saturday) &&
+                (DateTime.UtcNow.Hour > 16))
+            {
+                max = 6;
+            };
+
+            if((DateTime.UtcNow.Day == 31 && DateTime.UtcNow.Month == 12 ) ||
+                (DateTime.UtcNow.Day == 1 && DateTime.UtcNow.Month == 1 && DateTime.UtcNow.Hour < 8))
+            {
+                max = 5;
+            }
+
+            return max;
         }
     }
 }

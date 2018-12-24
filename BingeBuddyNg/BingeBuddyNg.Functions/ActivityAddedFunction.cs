@@ -34,12 +34,7 @@ namespace BingeBuddyNg.Functions
 
             if (activity.Location != null && activity.Location.IsValid())
             {
-                var address = await UtilityService.GetAddressFromLongLatAsync(activity.Location);
-                activity.LocationAddress = address.AddressText;
-                activity.CountryLongName = address.CountryLongName;
-                activity.CountryShortName = address.CountryShortName;
-
-                await ActivityRepository.UpdateActivityAsync(activity);
+                await HandleLocationUpdateAsync(activity);
             }
 
 
@@ -49,15 +44,7 @@ namespace BingeBuddyNg.Functions
                 try
                 {
                     currentUser = await UserRepository.FindUserAsync(activity.UserId);
-
-                    if (currentUser.MonitoringInstanceId != null)
-                    {
-                        await starter.TerminateAsync(currentUser.MonitoringInstanceId, "Drank early enough.");
-                    }
-
-                    // Start timer to remind user about entering his next drink.
-                    var monitoringInstanceId = await starter.StartNewAsync(DrinkReminderFunction.FunctionNameValue, currentUser);
-                    await UserRepository.UpdateMonitoringInstanceAsync(currentUser.Id, monitoringInstanceId);
+                    await HandleMonitoringAsync(starter, currentUser);
                 }
                 catch (Exception ex)
                 {
@@ -80,49 +67,13 @@ namespace BingeBuddyNg.Functions
                 if (ShouldNotifyUsers(activity, userStats))
                 {
                     // get friends of this user who didn't mute themselves from him
-                    var friendUserIds = currentUser.GetVisibleFriendUserIds(false);
-
-                    foreach (var friendUserId in friendUserIds)
-                    {
-                        try
-                        {
-                            var friendUser = await UserRepository.FindUserAsync(friendUserId);
-                            if (friendUser != null && friendUser.PushInfo != null)
-                            {
-                                log.LogInformation($"Sending push to [{friendUser}] ...");
-
-                                // TODO: Localize
-                                var notificationMessage = GetNotificationMessage(activity);
-
-                                NotificationService.SendMessage(new[] { friendUser.PushInfo }, notificationMessage);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            log.LogError($"Failed to send push notification to user [{friendUserId}]: [{ex}]");
-                        }
-                    }
+                    await HandleUserNotificationsAsync(log, activity, currentUser);
                 }
 
                 // check for drink events
                 try
                 {
-                    if (activity.ActivityType == ActivityType.Drink || activity.DrinkType != DrinkType.Anti)
-                    {
-                        var drinkEvent = await DrinkEventRepository.FindCurrentDrinkEventAsync();
-                        if (drinkEvent != null)
-                        {
-                            if (drinkEvent.AddScoringUserId(currentUser.Id))
-                            {
-                                await UserStatsRepository.IncreaseScoreAsync(currentUser.Id, Shared.Constants.Scores.StandardDrinkAction);
-
-                                if (currentUser.PushInfo != null)
-                                {
-                                    NotificationService.SendMessage(new[] { currentUser.PushInfo }, new NotificationMessage("Gratuliere!", $"Du hast bei der Drink Aktion gewonnen und dir dabei {Shared.Constants.Scores.StandardDrinkAction} verdient!"));
-                                }
-                            }
-                        }
-                    }
+                    await HandleDrinkEventsAsync(activity, currentUser);
                 }
                 catch (Exception ex)
                 {
@@ -136,6 +87,77 @@ namespace BingeBuddyNg.Functions
 
 
             
+        }
+
+        private static async Task HandleMonitoringAsync(DurableOrchestrationClient starter, User currentUser)
+        {
+            if (currentUser.MonitoringInstanceId != null)
+            {
+                await starter.TerminateAsync(currentUser.MonitoringInstanceId, "Drank early enough.");
+            }
+
+            // Start timer to remind user about entering his next drink.
+            var monitoringInstanceId = await starter.StartNewAsync(DrinkReminderFunction.FunctionNameValue, currentUser);
+            await UserRepository.UpdateMonitoringInstanceAsync(currentUser.Id, monitoringInstanceId);
+        }
+
+        private static async Task HandleLocationUpdateAsync(Activity activity)
+        {
+            var address = await UtilityService.GetAddressFromLongLatAsync(activity.Location);
+            activity.LocationAddress = address.AddressText;
+            activity.CountryLongName = address.CountryLongName;
+            activity.CountryShortName = address.CountryShortName;
+
+            await ActivityRepository.UpdateActivityAsync(activity);
+        }
+
+        private static async Task HandleUserNotificationsAsync(ILogger log, Activity activity, User currentUser)
+        {
+            var friendUserIds = currentUser.GetVisibleFriendUserIds(false);
+
+            foreach (var friendUserId in friendUserIds)
+            {
+                try
+                {
+                    var friendUser = await UserRepository.FindUserAsync(friendUserId);
+                    if (friendUser != null && friendUser.PushInfo != null)
+                    {
+                        log.LogInformation($"Sending push to [{friendUser}] ...");
+
+                        // TODO: Localize
+                        var notificationMessage = GetNotificationMessage(activity);
+
+                        NotificationService.SendMessage(new[] { friendUser.PushInfo }, notificationMessage);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.LogError($"Failed to send push notification to user [{friendUserId}]: [{ex}]");
+                }
+            }
+        }
+
+        private static async Task HandleDrinkEventsAsync(Activity activity, User currentUser)
+        {
+            if (activity.ActivityType == ActivityType.Drink || activity.DrinkType != DrinkType.Anti)
+            {
+                var drinkEvent = await DrinkEventRepository.FindCurrentDrinkEventAsync();
+                if (drinkEvent != null)
+                {
+                    if (drinkEvent.AddScoringUserId(currentUser.Id))
+                    {
+                        await DrinkEventRepository.UpdateDrinkEventAsync(drinkEvent);
+
+                        await UserStatsRepository.IncreaseScoreAsync(currentUser.Id, Shared.Constants.Scores.StandardDrinkAction);
+
+                        if (currentUser.PushInfo != null)
+                        {
+                            string notificationMessage = $"Du hast bei der Trink Aktion gewonnen und dir dabei {Shared.Constants.Scores.StandardDrinkAction} Härtepunkte verdient!";
+                            NotificationService.SendMessage(new[] { currentUser.PushInfo }, new NotificationMessage("Gratuliere!", notificationMessage));
+                        }
+                    }
+                }
+            }
         }
 
         private static bool ShouldNotifyUsers(Activity activity, UserStatistics userStats)
