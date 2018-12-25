@@ -29,6 +29,7 @@ namespace BingeBuddyNg.Tests
 
             IConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
             configurationBuilder.AddEnvironmentVariables();
+            
             services.AddApplicationServices(configurationBuilder.Build());
 
             serviceProvider = services.BuildServiceProvider();
@@ -106,8 +107,25 @@ namespace BingeBuddyNg.Tests
             BingeBuddyNg.Functions.ImageResizingFunction.Run(strm, "portrait.jpg", out byte[] resizedData, new MockLogger());
 
             File.WriteAllBytes(@".\Files\portrait.resized.jpg", resizedData);
+        }
 
+        [TestMethod]
+        public async Task DrinkEventTests()
+        {
+            var drinkEventRepository = serviceProvider.GetRequiredService<IDrinkEventRepository>();
+            await drinkEventRepository.CreateDrinkEventAsync(DateTime.UtcNow, DateTime.UtcNow.AddMinutes(15));
+            var drinkEvent = await drinkEventRepository.FindCurrentDrinkEventAsync();
+            Assert.IsNotNull(drinkEvent);
+            string userId = Guid.NewGuid().ToString();
+            drinkEvent.AddScoringUserId(userId);
+            await drinkEventRepository.UpdateDrinkEventAsync(drinkEvent);
+        }
 
+        [TestMethod]
+        public async Task DrinkStatsTests()
+        {
+            var service = serviceProvider.GetRequiredService<IUserStatsRepository>();
+            await service.IncreaseScoreAsync("facebook|10219014482060805", 1);
         }
     }
 }

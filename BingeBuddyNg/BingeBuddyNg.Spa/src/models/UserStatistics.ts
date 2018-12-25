@@ -3,4 +3,5 @@ export class UserStatistics {
     currentAlcoholization: number;
     currentNightDrinks: number;
     totalDrinksLastMonth?: number;
+    score?: number;
 }

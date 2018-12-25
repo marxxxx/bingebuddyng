@@ -14,6 +14,12 @@ export class RankingService {
   constructor(private http: HttpClient) { }
 
   getRanking(): Observable<UserRanking[]> {
-    return this.http.get<UserRanking[]>(this.baseUrl);
+    const url = `${this.baseUrl}/GetDrinkRanking`;
+    return this.http.get<UserRanking[]>(url);
+  }
+
+  getScores(): Observable<UserRanking[]> {
+    const url = `${this.baseUrl}/GetScoreRanking`;
+    return this.http.get<UserRanking[]>(url);
   }
 }

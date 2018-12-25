@@ -52,7 +52,7 @@
     "NoVideoSupport": "Your browser is outdated.",
     "UnsupportedMediaFormat": "Unsupported media format.",
     "Ranking": "Ranking",
-    "AlcoholicDrinkCountInLastMonth": "alcoholic drink count in the last month",
+    "AlcoholicDrinkCount": "drink count",
     "InviteFriend": "Invite friend",
     "InviteFriendDescription": "Press the button to create an invitation.",
     "InviteShareInfo": "Share this link with your friend.",
@@ -60,5 +60,8 @@
     "InvitationText": "You have been invited by {{userName}} to join Binge Buddy.",
     "CopiedToClipboardNowSend": "Copied to clipboard. Now go and send it to your friend.",
     "InvitedBy": "You have been invited by ",
-    "InvitationAccepted": "This invitation has already been accepted."
+    "InvitationAccepted": "This invitation has already been accepted.",
+    "HardnessScore": "Hardness Score",
+    "LastMonth": "Last month",
+    "RankingInfo": "Drinks in the last month count. Earn hardness points by inviting friends or winning drink events."
 }
