@@ -4,8 +4,8 @@
       <app-user-info [userInfo]="userInfo"></app-user-info>
       <span class="user-name" [routerLink]="['/profile', activity.activity.userId]">{{activity.activity.userName}}</span>
     </div>
-    <mat-chip-list class="stats" *ngIf="activity.userStats.currentNightDrinks + activity.userStats.currentAlcoholization > 0">
-      <mat-chip class="chip">{{activity.userStats.currentNightDrinks}}
+    <mat-chip-list class="stats" *ngIf="activity.activity.drinkCount + activity.userStats.currentNightDrinks + activity.userStats.currentAlcoholization > 0">
+      <mat-chip class="chip">{{activity.activity.drinkCount ? activity.activity.drinkCount : activity.userStats.currentNightDrinks }}
         <mat-icon fxHide fxShow.gt-xs>local_drink</mat-icon>
       </mat-chip>
       <mat-chip class="chip" *ngIf="activity.userStats.currentAlcoholization > 0">{{activity.userStats.currentAlcoholization}}

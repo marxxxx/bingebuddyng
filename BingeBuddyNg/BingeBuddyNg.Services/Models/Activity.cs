@@ -19,6 +19,7 @@ namespace BingeBuddyNg.Services.Models
         public string DrinkName { get; set; }
         public double? DrinkAlcPrc { get; set; }
         public double? DrinkVolume { get; set; }
+        public int DrinkCount { get; set; }
         public string ImageUrl { get; set; }
         public string CountryLongName { get; set; }
         public string CountryShortName { get; set; }
