@@ -20,6 +20,7 @@ namespace BingeBuddyNg.Api
             string webPushPublicKey = configuration.GetValue<string>("Credentials:WebPushPublicKey");
             var appConfiguration = new AppConfiguration(storageConnString, googleApiKey, webPushPublicKey, webPushPrivateKey);
             services.AddSingleton(appConfiguration);
+            services.AddLogging();
 
             // Add Application Services
             services.AddScoped<StorageAccessService>();
@@ -36,7 +37,7 @@ namespace BingeBuddyNg.Api
             services.AddScoped<IFriendRequestService, FriendRequestService>();
             services.AddScoped<IRankingService, RankingService>();
             services.AddScoped<IInvitationService, InvitationService>();
-
+            services.AddScoped<IDrinkEventRepository, DrinkEventRepository>();
         }
     }
 }

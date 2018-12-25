@@ -81,11 +81,12 @@ namespace BingeBuddyNg.Services
 
         public async Task<List<Activity>> GetActivitysForUserAsync(string userId, DateTime startTimeUtc, ActivityType activityType)
         {
+            string startRowKey = GetActivityPerUserRowKey(startTimeUtc);
             var whereClause =
                 TableQuery.CombineFilters(
                 TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId),
                 TableOperators.And,
-                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, GetActivityPerUserRowKey(startTimeUtc)));
+                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, startRowKey));
 
             whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
                 TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.ActivityType), QueryComparisons.Equal, activityType.ToString()));

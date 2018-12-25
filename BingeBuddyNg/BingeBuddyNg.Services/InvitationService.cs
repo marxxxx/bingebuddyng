@@ -2,6 +2,7 @@
 using BingeBuddyNg.Services.Interfaces;
 using BingeBuddyNg.Services.Models;
 using BingeBuddyNg.Shared;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,18 +12,23 @@ namespace BingeBuddyNg.Services
 {
     public class InvitationService : IInvitationService
     {
+        private ILogger<InvitationService> logger;
 
         public IInvitationRepository InvitationRepository { get; }
         public IUserRepository UserRepository { get; }
         public INotificationService NotificationService { get; }
+        public IUserStatsRepository UserStatsRepository { get; }
 
 
         public InvitationService(IInvitationRepository invitationRepository, IUserRepository userRepository,
-            INotificationService notificationService)
+            IUserStatsRepository userStatsRepository,
+            INotificationService notificationService, ILogger<InvitationService> logger)
         {
-            InvitationRepository = invitationRepository ?? throw new ArgumentNullException(nameof(invitationRepository));
-            UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            NotificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+            this.InvitationRepository = invitationRepository ?? throw new ArgumentNullException(nameof(invitationRepository));
+            this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.UserStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
+            this.NotificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<InvitationInfo> GetInvitationInfoAsync(string invitationToken)
@@ -42,13 +48,23 @@ namespace BingeBuddyNg.Services
         {
             var invitation = await this.InvitationRepository.AcceptInvitationAsync(userId, invitationToken);
             if (userId != invitation.InvitingUserId)
-            {
+            {                
                 var invitingUser = await this.UserRepository.FindUserAsync(invitation.InvitingUserId);
                 var acceptingUser = await this.UserRepository.FindUserAsync(invitation.AcceptingUserId);
 
                 if (invitingUser != null && acceptingUser != null)
                 {
                     await this.UserRepository.AddFriendAsync(invitingUser.Id, acceptingUser.Id);
+                }
+
+                try
+                {
+                    await this.UserStatsRepository.IncreaseScoreAsync(invitingUser.Id, Constants.Scores.FriendInvitation);
+                }
+                catch(Exception ex)
+                {
+                    // log error
+                    logger.LogError($"Error increasing score for user {invitingUser}: {ex}");
                 }
 
                 if (invitingUser != null && invitingUser.PushInfo != null)

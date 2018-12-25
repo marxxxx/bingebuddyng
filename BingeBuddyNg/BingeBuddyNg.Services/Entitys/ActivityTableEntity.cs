@@ -12,6 +12,7 @@ namespace BingeBuddyNg.Services.Entitys
         public ActivityType ActivityType { get; set; }
         public bool HasLocation { get; set; }
         public string UserId { get; set; }
+        
 
         public ActivityTableEntity()
         { }
