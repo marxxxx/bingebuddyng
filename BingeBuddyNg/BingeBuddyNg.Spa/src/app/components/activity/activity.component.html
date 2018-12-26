@@ -4,8 +4,8 @@
       <app-user-info [userInfo]="userInfo"></app-user-info>
       <span class="user-name" [routerLink]="['/profile', activity.activity.userId]">{{activity.activity.userName}}</span>
     </div>
-    <mat-chip-list class="stats" *ngIf="activity.activity.drinkCount + activity.userStats.currentNightDrinks + activity.userStats.currentAlcoholization > 0">
-      <mat-chip class="chip">{{activity.activity.drinkCount ? activity.activity.drinkCount : activity.userStats.currentNightDrinks }}
+    <mat-chip-list class="stats" *ngIf="activity.activity.drinkCount + activity.userStats.currentAlcoholization > 0">
+      <mat-chip class="chip">{{activity.activity.drinkCount}}
         <mat-icon fxHide fxShow.gt-xs>local_drink</mat-icon>
       </mat-chip>
       <mat-chip class="chip" *ngIf="activity.userStats.currentAlcoholization > 0">{{activity.userStats.currentAlcoholization}}
@@ -13,9 +13,11 @@
         <mat-icon fxHide fxShow.gt-xs>opacity</mat-icon>
       </mat-chip>
     </mat-chip-list>
-
   </mat-card-title>
   <mat-card-content>
+    <p class="notification" *ngIf="isNotificationActivity()">
+      <span>{{activity.activity.message}}</span>
+    </p>
     <p class="message" *ngIf="isMessageActivity()">
       <span *ngIf="!isMessageLink(activity.activity.message)">{{activity.activity.message}}</span>
       <a *ngIf="isMessageLink(activity.activity.message)" [href]="activity.activity.message">{{activity.activity.message}}</a>

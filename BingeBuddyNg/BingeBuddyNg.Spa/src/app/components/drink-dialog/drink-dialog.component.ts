@@ -69,7 +69,7 @@ export class DrinkDialogComponent implements OnInit {
 
   ngOnInit() {
     this.imageUrl = this.getRandomDrinkImageUrl();
-    setTimeout(() => this.dialogRef.close(), 4000);
+    setTimeout(() => this.dialogRef.close(), 7000);
   }
 
   onClose() {

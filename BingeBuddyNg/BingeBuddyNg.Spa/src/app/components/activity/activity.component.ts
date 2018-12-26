@@ -64,6 +64,9 @@ export class ActivityComponent implements OnInit {
     return this.activity.activity.activityType === ActivityType.Drink;
   }
 
+  isNotificationActivity(): boolean {
+    return this.activity.activity.activityType === ActivityType.Notification;
+  }
   isMessageActivity(): boolean {
     return this.activity.activity.activityType === ActivityType.Message;
   }

@@ -151,10 +151,13 @@ namespace BingeBuddyNg.Services
             ActivityTableEntity entity = await GetActivityEntity(activity.Id);
             
             // extend to other propertys if needed
+            // Note to my future-self: Why do we need this? Just replace entity maybe and we're good?
             entity.Entity.LocationAddress = activity.LocationAddress;
             entity.Entity.Likes = activity.Likes;
             entity.Entity.Comments = activity.Comments;
             entity.Entity.Cheers = activity.Cheers;
+            entity.Entity.DrinkCount = activity.DrinkCount;
+            entity.Entity.AlcLevel = activity.AlcLevel;
 
             TableOperation updateOperation = TableOperation.Replace(entity);
             await table.ExecuteAsync(updateOperation);

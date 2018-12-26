@@ -72,6 +72,7 @@ namespace BingeBuddyNg.Functions
                 if (activity.ActivityType == ActivityType.Drink && userStats != null)
                 {
                     activity.DrinkCount = userStats.CurrentNightDrinks;
+                    activity.AlcLevel = userStats.CurrentAlcoholization;
                     shouldUpdate = true;
                 }
 
@@ -165,6 +166,10 @@ namespace BingeBuddyNg.Functions
                         await DrinkEventRepository.UpdateDrinkEventAsync(drinkEvent);
 
                         await UserStatsRepository.IncreaseScoreAsync(currentUser.Id, Shared.Constants.Scores.StandardDrinkAction);
+
+                        var drinkEventNotificiationActivity = Activity.CreateNotificationActivity(DateTime.UtcNow, currentUser.Id, currentUser.Name,
+                            $"Ich habe bei der Trink Aktion {Shared.Constants.Scores.StandardDrinkAction} Härtepunkte gewonnen! Jippie!");
+                        await ActivityRepository.AddActivityAsync(drinkEventNotificiationActivity);
 
                         if (currentUser.PushInfo != null)
                         {
