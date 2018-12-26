@@ -58,8 +58,17 @@ namespace BingeBuddyNg.Services
             var userId = this.IdentityService.GetCurrentUserId();
             var user = await this.UserRepository.FindUserAsync(userId);
 
+            int drinkCount = 0;
+            if(addedActivity.DrinkType != DrinkType.Anti)
+            {
+                // immediately update drink count
+                var userStats = await UserStatsRepository.GetStatisticsAsync(userId);
+                drinkCount = userStats.CurrentNightDrinks + 1;
+            }
+
             var activity = Activity.CreateDrinkActivity(DateTime.UtcNow, addedActivity.Location, userId, user.Name, 
                 addedActivity.DrinkType, addedActivity.DrinkId, addedActivity.DrinkName, addedActivity.AlcPrc, addedActivity.Volume);
+            activity.DrinkCount = drinkCount;
 
             var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
 
