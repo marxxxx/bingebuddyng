@@ -30,7 +30,7 @@ namespace BingeBuddyNg.Functions
         {
 
             var activityAddedMessage = JsonConvert.DeserializeObject<ActivityAddedMessage>(message);
-            var activity = activityAddedMessage.AddedActivity;
+            var activity = await ActivityRepository.GetActivityAsync(activityAddedMessage.ActivityId);
 
 
             log.LogInformation($"Handling added activity [{activity}] ...");
