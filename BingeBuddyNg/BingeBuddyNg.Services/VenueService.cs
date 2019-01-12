@@ -72,6 +72,7 @@ namespace BingeBuddyNg.Services
 
                 var notificationActivity = Activity.CreateNotificationActivity(DateTime.UtcNow, user.Id, user.Name,
                            $"Ich bin jetzt hier eingekehrt: {venue.Name}");
+                notificationActivity.Location = venue.Location;
                 await this.ActivityRepository.AddActivityAsync(notificationActivity);
 
                 await this.VenueUserRepository.AddUserToVenueAsync(venue.Id, venue.Name, userId, user.Name);

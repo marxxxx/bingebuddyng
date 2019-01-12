@@ -77,9 +77,8 @@ button.btn-icon {
 }
 
 .venue-info {
-    position: fixed;
+    position: sticky;
     bottom: 10px;
     left: 10px;
     opacity: 0.8;
-    z-index: 999;
 }
