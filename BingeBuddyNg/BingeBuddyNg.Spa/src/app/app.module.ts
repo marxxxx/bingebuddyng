@@ -49,6 +49,7 @@ import { AuthGuard } from './services/auth.guard';
 import { RankingComponent } from './pages/ranking/ranking.component';
 import { InviteFriendComponent } from './pages/invite-friend/invite-friend.component';
 import { WelcomeInvitedComponent } from './pages/welcome-invited/welcome-invited.component';
+import { VenueDialogComponent } from './components/venue-dialog/venue-dialog.component';
 
 
 // AoT requires an exported function for factories
@@ -80,9 +81,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     DrinkIconComponent,
     RankingComponent,
     InviteFriendComponent,
-    WelcomeInvitedComponent
+    WelcomeInvitedComponent,
+    VenueDialogComponent
   ],
-  entryComponents: [DrinkDialogComponent, MessageDialogComponent],
+  entryComponents: [DrinkDialogComponent, MessageDialogComponent, VenueDialogComponent],
   imports: [
     BrowserModule,
     InViewportModule,

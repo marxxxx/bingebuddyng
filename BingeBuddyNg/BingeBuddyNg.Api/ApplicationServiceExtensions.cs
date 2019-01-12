@@ -18,7 +18,10 @@ namespace BingeBuddyNg.Api
             string googleApiKey = configuration.GetValue<string>("Credentials:GoogleApiKey");
             string webPushPrivateKey = configuration.GetValue<string>("Credentials:WebPushPrivateKey");
             string webPushPublicKey = configuration.GetValue<string>("Credentials:WebPushPublicKey");
-            var appConfiguration = new AppConfiguration(storageConnString, googleApiKey, webPushPublicKey, webPushPrivateKey);
+            string fourSquareApiClientKey = configuration.GetValue<string>("Credentials:FourSquareApiClientKey");
+            string fourSquareApiClientSecret = configuration.GetValue<string>("Credentials:FourSquareApiClientSecret");
+            var appConfiguration = new AppConfiguration(storageConnString, googleApiKey, webPushPublicKey, webPushPrivateKey, 
+                fourSquareApiClientKey, fourSquareApiClientSecret);
             services.AddSingleton(appConfiguration);
             services.AddLogging();
 
@@ -38,6 +41,8 @@ namespace BingeBuddyNg.Api
             services.AddScoped<IRankingService, RankingService>();
             services.AddScoped<IInvitationService, InvitationService>();
             services.AddScoped<IDrinkEventRepository, DrinkEventRepository>();
+
+            services.AddScoped<IFourSquareService, FourSquareService>();
         }
     }
 }

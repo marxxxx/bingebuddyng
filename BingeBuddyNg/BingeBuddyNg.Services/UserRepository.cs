@@ -67,6 +67,7 @@ namespace BingeBuddyNg.Services
                 {
                     savedUser.Entity.PushInfo = user.PushInfo;
                 }
+                savedUser.Entity.CurrentVenue = user.CurrentVenue;
                
                 saveUserOperation = TableOperation.Replace(savedUser);
             }

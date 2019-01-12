@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BingeBuddyNg.Services.Models.Venue;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -24,6 +25,7 @@ namespace BingeBuddyNg.Services.Models
         public string ImageUrl { get; set; }
         public string CountryLongName { get; set; }
         public string CountryShortName { get; set; }
+        public VenueModel Venue { get; set; }
 
         public List<Reaction> Likes { get; set; } = new List<Reaction>();
         public List<Reaction> Cheers { get; set; } = new List<Reaction>();

@@ -1,3 +1,4 @@
+import { VenueModel } from 'src/models/VenueModel';
 import { DrinkType } from './DrinkType';
 import { LocationDTO } from './LocationDTO';
 import { ActivityType } from './ActivityType';
@@ -17,6 +18,7 @@ export class Activity {
     drinkName: string;
     drinkCount: number;
     imageUrl: string;
+    venue?: VenueModel;
     likes: Reaction[];
     cheers: Reaction[];
     comments: CommentReaction[];

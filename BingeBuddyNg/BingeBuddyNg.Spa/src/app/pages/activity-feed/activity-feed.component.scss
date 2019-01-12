@@ -67,7 +67,18 @@ mat-card {
     height: 23px;
 }
 
+#map-icon {
+    margin-right: 10px;
+}
 
-#btn-message {
-    color: map-get($mat-bingebuddyprimary, 500);
+
+button.btn-icon {
+    color: map-get($mat-bingebuddyprimary, 500) !important;
+}
+
+.venue-info {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    opacity: 0.8;
 }

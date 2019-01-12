@@ -48,6 +48,7 @@ namespace BingeBuddyNg.Services
             var user = await this.UserRepository.FindUserAsync(userId);
 
             var activity = Activity.CreateMessageActivity(DateTime.UtcNow, addedActivity.Location, userId, user.Name, addedActivity.Message);
+            activity.Venue = addedActivity.Venue;
 
             var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
             await AddToActivityAddedQueueAsync(savedActivity);
@@ -68,6 +69,7 @@ namespace BingeBuddyNg.Services
 
             var activity = Activity.CreateDrinkActivity(DateTime.UtcNow, addedActivity.Location, userId, user.Name, 
                 addedActivity.DrinkType, addedActivity.DrinkId, addedActivity.DrinkName, addedActivity.AlcPrc, addedActivity.Volume);
+            activity.Venue = addedActivity.Venue;
             activity.DrinkCount = drinkCount;
 
             var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);

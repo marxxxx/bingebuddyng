@@ -14,6 +14,8 @@ namespace BingeBuddyNg.Services.Entitys
         public string UserId { get; set; }
         public int DrinkCount { get; set; }
         public double? AlcLevel { get; set; }
+        public string VenueId { get; set; }
+        public string VenueName { get; set; }
 
         public ActivityTableEntity()
         { }
@@ -25,6 +27,12 @@ namespace BingeBuddyNg.Services.Entitys
             this.UserId = activity.UserId;
             this.DrinkCount = activity.DrinkCount;
             this.AlcLevel = activity.AlcLevel;
+
+            if (activity.Venue != null)
+            {
+                this.VenueId = activity.Venue.Id;
+                this.VenueName = activity.Venue.Name;
+            }
         }
 
         public override void ReadEntity(IDictionary<string, EntityProperty> properties, OperationContext operationContext)

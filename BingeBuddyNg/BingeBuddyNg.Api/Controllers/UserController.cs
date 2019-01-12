@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Services.DTO;
 using BingeBuddyNg.Services.Interfaces;
 using BingeBuddyNg.Services.Models;
+using BingeBuddyNg.Services.Models.Venue;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -55,6 +56,18 @@ namespace BingeBuddyNg.Api.Controllers
 
             var response = new UpdateUserResponseDTO(!user.Weight.HasValue, user.Gender == Gender.Unknown);
             return response;
+        }
+
+        [HttpPost("venue")]
+        public async Task UpdateCurrentVenue([FromBody]VenueModel venue)
+        {
+            var userId = this.IdentityService.GetCurrentUserId();
+
+            var user = await this.UserRepository.FindUserAsync(userId);
+            user.CurrentVenue = venue;
+
+            await this.UserRepository.UpdateUserAsync(user);
+
         }
 
         [HttpDelete("{friendUserId}")]

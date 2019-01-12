@@ -1,3 +1,8 @@
+import { UserService } from 'src/app/services/user.service';
+import { VenueModel } from 'src/models/VenueModel';
+import { VenueDialogArgs } from './../../components/venue-dialog/VenueDialogArgs';
+import { VenueDialogComponent } from './../../components/venue-dialog/venue-dialog.component';
+import { VenueService } from './../../services/venue.service';
 import { MessageDialogComponent } from './../../components/message-dialog/message-dialog.component';
 import { ActivatedRoute } from '@angular/router';
 import { DrinkType } from './../../../models/DrinkType';
@@ -39,7 +44,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   isBusy = false;
   isBusyAdding = false;
-  location: LocationDTO;
   locationIconId = 'location';
   uploader: FileUploader;
   continuationToken: string = null;
@@ -50,6 +54,9 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   currentUser: UserInfo;
   DrinkType = DrinkType;
   isCommentOpen = false;
+
+  location: LocationDTO;
+  currentVenue: VenueModel;
 
   @ViewChild('#activity-container')
   container: any;
@@ -62,6 +69,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     private shellInteraction: ShellInteractionService,
     private auth: AuthService,
     private notification: NotificationService,
+    private userService: UserService,
     private changeRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private dialog: MatDialog) { }
@@ -165,8 +173,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
           drinkType: DrinkType.Beer,
           drinkName: 'Beer',
           alcPrc: 5,
-          volume: 500,
-          location: this.location
+          volume: 500
         };
         break;
       }
@@ -176,8 +183,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
           drinkType: DrinkType.Wine,
           drinkName: 'Wine',
           alcPrc: 9,
-          volume: 125,
-          location: this.location
+          volume: 125
         };
         break;
       }
@@ -187,8 +193,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
           drinkType: DrinkType.Shot,
           drinkName: 'Shot',
           alcPrc: 20,
-          volume: 40,
-          location: this.location
+          volume: 40
         };
         break;
       }
@@ -204,6 +209,9 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
         break;
       }
     }
+
+    activity.location = this.location;
+    activity.venue = this.currentVenue;
 
     return activity;
   }
@@ -229,6 +237,35 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
         this.shellInteraction.showErrorMessage();
       });
     });
+  }
+
+  onCheckInVenue() {
+
+    const args: VenueDialogArgs = {
+      location: this.location
+    };
+
+    this.dialog.open(VenueDialogComponent, { data: args, width: '100%', position: { right: '00px' } })
+      .afterClosed().subscribe(venue => {
+
+        if (venue) {
+          this.currentVenue = venue;
+
+          // update venue for user in backend
+          this.userService.updateCurrentVenue(this.currentVenue).subscribe(
+            _ => console.log('updated current venue', this.currentVenue),
+            e => console.error('error updating current venue', e));
+        }
+      });
+
+
+  }
+
+  onResetVenue() {
+    this.currentVenue = null;
+    this.userService.updateCurrentVenue(this.currentVenue).subscribe(
+      _ => console.log('updated current venue', this.currentVenue),
+      e => console.error('error updating current venue', e));
   }
 
 

@@ -9,6 +9,12 @@
   <app-no-friends *ngIf="!isBusy && activitys && activitys.length === 0"></app-no-friends>
 </div>
 
+<mat-card class="venue-info" *ngIf="currentVenue">
+  <button mat-button><mat-icon id="map-icon">map</mat-icon>{{'YouAreNowAt' | translate }} {{currentVenue.name}}</button>
+  <button mat-icon-button (click)="onResetVenue()"><mat-icon>close</mat-icon></button>
+</mat-card>
+
+
 <div class="bottom-right">
   <eco-fab-speed-dial *ngIf="!isBusyAdding && !isBusyUploading && !isCommentOpen" animationMode="scale" (openChange)="onActionsOpenChange($event)">
     <eco-fab-speed-dial-trigger [spin]="true">
@@ -30,7 +36,7 @@
       <button mat-mini-fab (click)="onAddDrink(DrinkType.Anti)" matTooltip="{{'Anti' | translate}}" matTooltipPosition="left">
         <app-drink-icon [drinkType]="10"></app-drink-icon>
       </button>
-      <button id="btn-message" mat-mini-fab (click)="onAddMessage()" matTooltip="{{'PostMessage' | translate}}"
+      <button class="btn-icon" mat-mini-fab (click)="onAddMessage()" matTooltip="{{'PostMessage' | translate}}"
         matTooltipPosition="left">
         <mat-icon>message</mat-icon>
       </button>
@@ -38,6 +44,10 @@
         <img id="btn-img" class="action-icon" src="../../assets/img/image.png">
       </button>
 
+      <button class="btn-icon" mat-mini-fab matTooltip="{{'CheckInVenue' | translate}}" (click)="onCheckInVenue()"
+        matTooltipPosition="left">
+        <mat-icon>map</mat-icon>
+      </button>
 
     </eco-fab-speed-dial-actions>
   </eco-fab-speed-dial>
