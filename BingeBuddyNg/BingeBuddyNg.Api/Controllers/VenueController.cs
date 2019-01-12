@@ -15,24 +15,21 @@ namespace BingeBuddyNg.Api.Controllers
     [Route("api/[controller]")]
     public class VenueController : Controller
     {
-        public IVenueService FourSquareService { get; }
+        public IVenueService VenueService { get; }
         public IIdentityService IdentityService { get; set; }
-        public IUserRepository UserRepository { get; set; }
-        public IActivityRepository ActivityRepository { get; set; }
+        
 
-        public VenueController(IVenueService fourSquareService, IIdentityService identityService, IUserRepository userRepository, IActivityRepository activityRepository)
+        public VenueController(IVenueService venueService, IIdentityService identityService)
         {
-            FourSquareService = fourSquareService ?? throw new ArgumentNullException(nameof(fourSquareService));
+            VenueService = venueService ?? throw new ArgumentNullException(nameof(venueService));
             IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
-            UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
         }
 
 
         [HttpGet]
         public async Task<IEnumerable<VenueModel>> SearchVenues(float latitude, float longitude)
         {
-            var venues = await this.FourSquareService.SearchVenuesAsync(latitude, longitude);
+            var venues = await this.VenueService.SearchVenuesAsync(latitude, longitude);
             return venues;
         }
 
@@ -40,18 +37,7 @@ namespace BingeBuddyNg.Api.Controllers
         public async Task UpdateCurrentVenue([FromBody]VenueModel venue)
         {
             var userId = this.IdentityService.GetCurrentUserId();
-
-            var user = await this.UserRepository.FindUserAsync(userId);
-            if (user.CurrentVenue != venue)
-            {
-                user.CurrentVenue = venue;
-
-                await this.UserRepository.UpdateUserAsync(user);
-
-                var notificationActivity = Activity.CreateNotificationActivity(DateTime.UtcNow, user.Id, user.Name,
-                           $"Ich bin jetzt hier eingekehrt: {venue.Name}");
-                await this.ActivityRepository.AddActivityAsync(notificationActivity);
-            }
+            await this.VenueService.UpdateVenueForUserAsync(userId, venue);
         }
 
         [HttpPost("[action]")]
@@ -59,14 +45,8 @@ namespace BingeBuddyNg.Api.Controllers
         {
             var userId = this.IdentityService.GetCurrentUserId();
 
-            var user = await this.UserRepository.FindUserAsync(userId);
-            user.CurrentVenue = null;
-
-            await this.UserRepository.UpdateUserAsync(user);
-
-            var notificationActivity = Activity.CreateNotificationActivity(DateTime.UtcNow, user.Id, user.Name,
-                $"Ich bin jetzt im nirgendwo.");
-            await this.ActivityRepository.AddActivityAsync(notificationActivity);
+            await this.VenueService.ResetVenueForUserAsync(userId);
+            
         }
     }
 }
