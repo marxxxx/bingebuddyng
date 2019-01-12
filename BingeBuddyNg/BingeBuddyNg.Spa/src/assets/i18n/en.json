@@ -67,5 +67,6 @@
     "CheckInVenue": "Check in at a venue",
     "Confirm":"Confirm",
     "SelectVenue": "Select venue",
-    "YouAreNowAt": "You are now at: "
+    "YouAreNowAt": "You are now at: ",
+    "Leave": "Leave"
 }

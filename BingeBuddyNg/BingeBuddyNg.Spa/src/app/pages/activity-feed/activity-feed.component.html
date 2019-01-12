@@ -11,7 +11,7 @@
 
 <mat-card class="venue-info" *ngIf="currentVenue">
   <button mat-button><mat-icon id="map-icon">map</mat-icon>{{'YouAreNowAt' | translate }} {{currentVenue.name}}</button>
-  <button mat-icon-button (click)="onResetVenue()"><mat-icon>close</mat-icon></button>
+  <button mat-icon-button (click)="onResetVenue()" matTooltip="{{'Leave' | translate }}"><mat-icon>directions_run</mat-icon></button>
 </mat-card>
 
 
