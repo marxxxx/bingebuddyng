@@ -42,7 +42,7 @@ namespace BingeBuddyNg.Api
             services.AddScoped<IInvitationService, InvitationService>();
             services.AddScoped<IDrinkEventRepository, DrinkEventRepository>();
 
-            services.AddScoped<IFourSquareService, FourSquareService>();
+            services.AddScoped<IVenueService, VenueService>();
         }
     }
 }

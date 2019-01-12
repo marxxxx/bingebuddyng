@@ -14,15 +14,15 @@ using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services
 {
-    public class FourSquareService : IFourSquareService
+    public class VenueService : IVenueService
     {
         private AppConfiguration configuration;
         private IHttpClientFactory httpClientFactory;
-        private ILogger<FourSquareService> logger;
+        private ILogger<VenueService> logger;
 
         private const string BaseUrl = "https://api.foursquare.com/v2";
 
-        public FourSquareService(AppConfiguration configuration, IHttpClientFactory httpClientFactory, ILogger<FourSquareService> logger)
+        public VenueService(AppConfiguration configuration, IHttpClientFactory httpClientFactory, ILogger<VenueService> logger)
         {
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
@@ -48,6 +48,11 @@ namespace BingeBuddyNg.Services
                 .OrderBy(v=>v.Distance)
                 .ToList();
             return venues;
+        }
+
+        public async Task UpdateVenueForUserAsync(string userId, VenueModel venue)
+        {
+
         }
     }
 }

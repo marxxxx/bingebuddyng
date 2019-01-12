@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services.Interfaces
 {
-    public interface IFourSquareService
+    public interface IVenueService
     {
         Task<List<VenueModel>> SearchVenuesAsync(float latitude, float longitude);
+        Task UpdateVenueForUserAsync(string userId, VenueModel venue);
     }
 }

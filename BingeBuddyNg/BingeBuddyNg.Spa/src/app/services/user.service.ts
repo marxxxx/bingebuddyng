@@ -40,10 +40,7 @@ export class UserService {
     return this.http.post(this.baseUrl, user);
   }
 
-  updateCurrentVenue(venue: VenueModel): Observable<{}> {
-    const url = `${this.baseUrl}/venue`;
-    return this.http.post(url, venue);
-  }
+
 
   setFriendMuteState(friendUserId: string, muteState: boolean): Observable<any> {
     const url = `${this.baseUrl}/SetFriendMuteState?friendUserId=${friendUserId}&muteState=${muteState}`;

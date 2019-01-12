@@ -19,4 +19,13 @@ export class VenueService {
     return this.http.get<VenueModel[]>(url);
   }
 
+  updateCurrentVenue(venue: VenueModel): Observable<{}> {
+    const url = `${this.baseUrl}/UpdateCurrentVenue`;
+    return this.http.post(url, venue);
+  }
+
+  resetCurrentVenue(): Observable<{}> {
+    const url = `${this.baseUrl}/ResetCurrentVenue`;
+    return this.http.post(url, {});
+  }
 }

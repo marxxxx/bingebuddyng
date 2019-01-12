@@ -7,7 +7,7 @@ import { MessageDialogComponent } from './../../components/message-dialog/messag
 import { ActivatedRoute } from '@angular/router';
 import { DrinkType } from './../../../models/DrinkType';
 import { AddDrinkActivityDTO } from './../../../models/AddDrinkActivityDTO';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LocationDTO } from '../../../models/LocationDTO';
 import { ActivityStatsDTO } from '../../../models/ActivityStatsDTO';
@@ -24,6 +24,7 @@ import { trigger, style, transition, animate } from '@angular/animations';
 import { DrinkDialogComponent } from '../../components/drink-dialog/drink-dialog.component';
 import { DrinkDialogArgs } from '../../components/drink-dialog/DrinkDialogArgs';
 import { UserInfo } from './../../../models/UserInfo';
+import { User } from './../../../models/User';
 
 @Component({
   selector: 'app-activity-feed',
@@ -51,7 +52,8 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   isBusyUploading = false;
   currentProgress = 0;
   isReloadSpinnerActive = false;
-  currentUser: UserInfo;
+  currentUserInfo: UserInfo;
+  currentUser: User;
   DrinkType = DrinkType;
   isCommentOpen = false;
 
@@ -69,6 +71,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     private shellInteraction: ShellInteractionService,
     private auth: AuthService,
     private notification: NotificationService,
+    private venueService: VenueService,
     private userService: UserService,
     private changeRef: ChangeDetectorRef,
     private route: ActivatedRoute,
@@ -84,7 +87,19 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.notification.activityReceived$.subscribe(_ => this.load()));
     this.subscriptions.push(this.auth.currentUserProfile$
       .pipe(map(p => (p != null ? { userId: p.sub, userName: p.nickname } : null)))
-      .subscribe(p => this.currentUser = p));
+      .subscribe(p => {
+        this.currentUserInfo = p;
+
+        // load user to get venue info
+        if (p) {
+          this.userService.getUser(p.userId)
+            .subscribe(u => {
+              console.log('loaded user', u);
+              this.currentUser = u;
+              this.currentVenue = u.currentVenue;
+            }, e => console.error('error loading user', p.userId, e));
+        }
+      }));
 
     this.route.paramMap.subscribe(_ => {
       console.log('refreshing location');
@@ -252,20 +267,24 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
           this.currentVenue = venue;
 
           // update venue for user in backend
-          this.userService.updateCurrentVenue(this.currentVenue).subscribe(
-            _ => console.log('updated current venue', this.currentVenue),
+          this.venueService.updateCurrentVenue(this.currentVenue).subscribe(
+            _ => {
+              console.log('updated current venue', this.currentVenue);
+              this.load();
+            },
             e => console.error('error updating current venue', e));
         }
       });
-
-
   }
 
   onResetVenue() {
     this.currentVenue = null;
-    this.userService.updateCurrentVenue(this.currentVenue).subscribe(
-      _ => console.log('updated current venue', this.currentVenue),
-      e => console.error('error updating current venue', e));
+    this.venueService.resetCurrentVenue().subscribe(
+      _ => {
+        console.log('reset current venue');
+        this.load();
+      },
+      e => console.error('error resetting current venue', e));
   }
 
 

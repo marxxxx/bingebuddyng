@@ -57,18 +57,7 @@ namespace BingeBuddyNg.Api.Controllers
             var response = new UpdateUserResponseDTO(!user.Weight.HasValue, user.Gender == Gender.Unknown);
             return response;
         }
-
-        [HttpPost("venue")]
-        public async Task UpdateCurrentVenue([FromBody]VenueModel venue)
-        {
-            var userId = this.IdentityService.GetCurrentUserId();
-
-            var user = await this.UserRepository.FindUserAsync(userId);
-            user.CurrentVenue = venue;
-
-            await this.UserRepository.UpdateUserAsync(user);
-
-        }
+        
 
         [HttpDelete("{friendUserId}")]
         public Task RemoveFriend(string friendUserId)
