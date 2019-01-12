@@ -17,17 +17,21 @@ namespace BingeBuddyNg.Services
         public IInvitationRepository InvitationRepository { get; }
         public IUserRepository UserRepository { get; }
         public INotificationService NotificationService { get; }
+        public IActivityRepository ActivityRepository { get; }
         public IUserStatsRepository UserStatsRepository { get; }
 
 
         public InvitationService(IInvitationRepository invitationRepository, IUserRepository userRepository,
             IUserStatsRepository userStatsRepository,
-            INotificationService notificationService, ILogger<InvitationService> logger)
+            INotificationService notificationService, 
+            IActivityRepository activityRepository,
+            ILogger<InvitationService> logger)
         {
             this.InvitationRepository = invitationRepository ?? throw new ArgumentNullException(nameof(invitationRepository));
             this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             this.UserStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
             this.NotificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+            this.ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -60,6 +64,10 @@ namespace BingeBuddyNg.Services
                 try
                 {
                     await this.UserStatsRepository.IncreaseScoreAsync(invitingUser.Id, Constants.Scores.FriendInvitation);
+
+                    var notificationActivity = Activity.CreateNotificationActivity(DateTime.UtcNow, invitingUser.Id, invitingUser.Name,
+                        $"Ich habe einen neuen Trinker rekrutiert ({acceptingUser.Name}) und dafür {Constants.Scores.FriendInvitation} Härtepunkte kassiert.");
+                    await this.ActivityRepository.AddActivityAsync(notificationActivity);
                 }
                 catch(Exception ex)
                 {

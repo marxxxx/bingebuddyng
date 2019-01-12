@@ -7,14 +7,14 @@ namespace BingeBuddyNg.Services.Messages
 {
     public class ActivityAddedMessage
     {
-        public Activity AddedActivity { get; set; }
+        public string ActivityId { get; set; }
 
         public ActivityAddedMessage()
         { }
 
-        public ActivityAddedMessage(Activity activity)
+        public ActivityAddedMessage(string activityId)
         {
-            this.AddedActivity = activity ?? throw new ArgumentNullException(nameof(activity));
+            this.ActivityId = activityId ?? throw new ArgumentNullException(nameof(activityId));
         }
     }
 }

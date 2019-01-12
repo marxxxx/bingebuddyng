@@ -25,7 +25,11 @@ export class FriendrequestsComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     // get current user id
-    this.subscriptions.push(this.auth.currentUserProfile$.subscribe( p => this.currentUserId = p != null ? p.sub : null));
+    const profileSubscription = this.auth.currentUserProfile$.subscribe( p => {
+      this.currentUserId = p != null ? p.sub : null;
+      this.load();
+    });
+    this.subscriptions.push(profileSubscription);
 
     // load friend requests
     this.subscriptions.push(this.route.paramMap.subscribe(r => {

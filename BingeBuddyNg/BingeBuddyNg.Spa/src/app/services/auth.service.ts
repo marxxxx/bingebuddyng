@@ -63,7 +63,7 @@ export class AuthService {
           this.router.navigate([successRoute]);
         } else {
           console.log('not authenticated -> navigating to root');
-          if (!returnUrl || returnUrl === '/') {
+          if (!returnUrl || returnUrl === '/' || returnUrl.indexOf('welcome-invited') > 0) {
             this.router.navigate([successRoute]);
           } else {
             this.login();

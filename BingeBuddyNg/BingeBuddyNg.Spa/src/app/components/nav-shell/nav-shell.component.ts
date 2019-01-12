@@ -27,7 +27,7 @@ export class NavShellComponent implements OnInit, OnDestroy {
     @ViewChild(MatSidenav)
     sideNav: MatSidenav;
 
-    isHandset$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    isHandset$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
     constructor(private breakpointObserver: BreakpointObserver,
         public auth: AuthService, public shellInteraction: ShellInteractionService,

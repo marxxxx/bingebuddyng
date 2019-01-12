@@ -24,7 +24,6 @@ export class DrinkDialogComponent implements OnInit {
     'https://media.tenor.com/images/9355518a227edcab65dd3fade726b029/tenor.gif',
     'https://frinkiac.com/gif/S04E16/1090221/1096277.gif',
     'http://gif-finder.com/wp-content/uploads/2017/01/Girl-sculling-beer-unreal.gif',
-    'http://www.reactiongifs.com/r/brc.gif',
     'https://i.pinimg.com/originals/8f/d3/2e/8fd32eb9d747fd662c9e30b951b551a9.gif',
     'https://media.giphy.com/media/3o7TKWtIqI2n2Iepwc/giphy.gif',
     'http://www.emugifs.net/wp-content/uploads/2018/05/the-simpsons-duff-beer-contest-2.gif',
@@ -69,7 +68,7 @@ export class DrinkDialogComponent implements OnInit {
 
   ngOnInit() {
     this.imageUrl = this.getRandomDrinkImageUrl();
-    setTimeout(() => this.dialogRef.close(), 4000);
+    setTimeout(() => this.dialogRef.close(), 7000);
   }
 
   onClose() {

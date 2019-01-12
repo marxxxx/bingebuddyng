@@ -15,6 +15,7 @@ export class Activity {
     location: LocationDTO;
     drinkType: DrinkType;
     drinkName: string;
+    drinkCount: number;
     imageUrl: string;
     likes: Reaction[];
     cheers: Reaction[];

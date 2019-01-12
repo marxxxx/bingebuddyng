@@ -30,12 +30,10 @@ namespace BingeBuddyNg.Functions
         {
 
             var activityAddedMessage = JsonConvert.DeserializeObject<ActivityAddedMessage>(message);
-            var activity = activityAddedMessage.AddedActivity;
+            var activity = await ActivityRepository.GetActivityAsync(activityAddedMessage.ActivityId);
 
-            if (activity.Location != null && activity.Location.IsValid())
-            {
-                await HandleLocationUpdateAsync(activity);
-            }
+
+            log.LogInformation($"Handling added activity [{activity}] ...");
 
 
             try
@@ -62,6 +60,27 @@ namespace BingeBuddyNg.Functions
                 {
                     log.LogError($"Failed to update stats for user [{currentUser}]: [{ex}]");
                 }
+
+                bool shouldUpdate = false;
+
+                if (activity.Location != null && activity.Location.IsValid())
+                {
+                    await HandleLocationUpdateAsync(activity);
+                    shouldUpdate = true;
+                }
+
+                if (activity.ActivityType == ActivityType.Drink && userStats != null)
+                {
+                    activity.DrinkCount = userStats.CurrentNightDrinks;
+                    activity.AlcLevel = userStats.CurrentAlcoholization;
+                    shouldUpdate = true;
+                }
+
+                if (shouldUpdate)
+                {
+                    await ActivityRepository.UpdateActivityAsync(activity);
+                }
+
 
                 // remind only first and every 5th drink this night to avoid spamming
                 if (ShouldNotifyUsers(activity, userStats))
@@ -107,8 +126,6 @@ namespace BingeBuddyNg.Functions
             activity.LocationAddress = address.AddressText;
             activity.CountryLongName = address.CountryLongName;
             activity.CountryShortName = address.CountryShortName;
-
-            await ActivityRepository.UpdateActivityAsync(activity);
         }
 
         private static async Task HandleUserNotificationsAsync(ILogger log, Activity activity, User currentUser)
@@ -149,6 +166,10 @@ namespace BingeBuddyNg.Functions
                         await DrinkEventRepository.UpdateDrinkEventAsync(drinkEvent);
 
                         await UserStatsRepository.IncreaseScoreAsync(currentUser.Id, Shared.Constants.Scores.StandardDrinkAction);
+
+                        var drinkEventNotificiationActivity = Activity.CreateNotificationActivity(DateTime.UtcNow, currentUser.Id, currentUser.Name,
+                            $"Ich habe bei der Trink Aktion {Shared.Constants.Scores.StandardDrinkAction} Härtepunkte gewonnen! Jippie!");
+                        await ActivityRepository.AddActivityAsync(drinkEventNotificiationActivity);
 
                         if (currentUser.PushInfo != null)
                         {

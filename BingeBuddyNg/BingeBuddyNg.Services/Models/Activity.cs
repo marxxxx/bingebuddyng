@@ -19,6 +19,8 @@ namespace BingeBuddyNg.Services.Models
         public string DrinkName { get; set; }
         public double? DrinkAlcPrc { get; set; }
         public double? DrinkVolume { get; set; }
+        public int DrinkCount { get; set; }
+        public double? AlcLevel { get; set; }
         public string ImageUrl { get; set; }
         public string CountryLongName { get; set; }
         public string CountryShortName { get; set; }
@@ -27,6 +29,7 @@ namespace BingeBuddyNg.Services.Models
         public List<Reaction> Cheers { get; set; } = new List<Reaction>();
         public List<CommentReaction> Comments { get; set; } = new List<CommentReaction>();
         
+
         public Activity()
         { }
 
@@ -70,6 +73,18 @@ namespace BingeBuddyNg.Services.Models
         {
             var activity = new Activity(ActivityType.Message, activityTimestamp,
                 location, userId, userName)
+            {
+                Message = message
+            };
+
+            return activity;
+        }
+
+        public static Activity CreateNotificationActivity(DateTime activityTimestamp,
+           string userId, string userName, string message)
+        {
+            var activity = new Activity(ActivityType.Notification, activityTimestamp,
+                null, userId, userName)
             {
                 Message = message
             };

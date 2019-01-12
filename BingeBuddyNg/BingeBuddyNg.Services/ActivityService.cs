@@ -58,8 +58,17 @@ namespace BingeBuddyNg.Services
             var userId = this.IdentityService.GetCurrentUserId();
             var user = await this.UserRepository.FindUserAsync(userId);
 
+            int drinkCount = 0;
+            if(addedActivity.DrinkType != DrinkType.Anti)
+            {
+                // immediately update drink count
+                var drinkActivitys = await ActivityRepository.GetActivitysForUserAsync(userId, DateTime.UtcNow.Subtract(TimeSpan.FromHours(12)), ActivityType.Drink);
+                drinkCount = drinkActivitys.Where(a=>a.DrinkType != DrinkType.Anti).Count() + 1;
+            }
+
             var activity = Activity.CreateDrinkActivity(DateTime.UtcNow, addedActivity.Location, userId, user.Name, 
                 addedActivity.DrinkType, addedActivity.DrinkId, addedActivity.DrinkName, addedActivity.AlcPrc, addedActivity.Volume);
+            activity.DrinkCount = drinkCount;
 
             var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
 
@@ -123,7 +132,7 @@ namespace BingeBuddyNg.Services
         private async Task AddToActivityAddedQueueAsync(Activity savedActivity)
         {
             var queueClient = this.StorageAccessService.GetQueueReference(Constants.QueueNames.ActivityAdded);
-            var message = new ActivityAddedMessage(savedActivity);
+            var message = new ActivityAddedMessage(savedActivity.Id);
             await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
         }
 
