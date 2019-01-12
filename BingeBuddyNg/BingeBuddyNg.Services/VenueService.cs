@@ -82,18 +82,18 @@ namespace BingeBuddyNg.Services
         public async Task ResetVenueForUserAsync(string userId)
         {
             var user = await this.UserRepository.FindUserAsync(userId);
-            string currentVenueId = user.CurrentVenue?.Id;
-            user.CurrentVenue = null;
-
-            await this.UserRepository.UpdateUserAsync(user);
-
-            var notificationActivity = Activity.CreateNotificationActivity(DateTime.UtcNow, user.Id, user.Name,
-                $"Ich bin jetzt im nirgendwo.");
-            await this.ActivityRepository.AddActivityAsync(notificationActivity);
-
-            if (string.IsNullOrEmpty(currentVenueId) == false)
+            var currentVenue = user.CurrentVenue;
+            
+            if (currentVenue != null)
             {
-                await this.VenueUserRepository.RemoveUserFromVenueAsync(currentVenueId, userId);
+                user.CurrentVenue = null;
+                await this.UserRepository.UpdateUserAsync(user);
+
+                var notificationActivity = Activity.CreateNotificationActivity(DateTime.UtcNow, user.Id, user.Name,
+                $"Ich habe {currentVenue.Name} verlassen.");
+                await this.ActivityRepository.AddActivityAsync(notificationActivity);
+
+                await this.VenueUserRepository.RemoveUserFromVenueAsync(currentVenue.Id, userId);
             }
         }
     }
