@@ -200,19 +200,22 @@ namespace BingeBuddyNg.Functions
             switch (activity.ActivityType)
             {
                 case ActivityType.Drink:
-                    activityString = $"{activity.DrinkName}{locationSnippet} geschnappt!";
+                    activityString = $"hat {activity.DrinkName}{locationSnippet} geschnappt!";
                     break;
                 case ActivityType.Image:
-                    activityString = $"ein Foto oder Video hochgeladen!";
+                    activityString = $"hat ein Foto oder Video hochgeladen!";
                     break;
                 case ActivityType.Message:
-                    activityString = $"{activity.Message} gesagt!";
+                    activityString = $"hat {activity.Message} gesagt!";
+                    break;
+                case ActivityType.Venue:
+                    activityString = $"ist in {activity.Venue.Name} eingekehrt.";
                     break;
             }
 
             var notificationMessage = new NotificationMessage(Constants.NotificationIconUrl,
                 Constants.NotificationIconUrl, Constants.ApplicationUrl, Constants.ApplicationName,
-                    $"{activity.UserName} hat {activityString}");
+                    $"{activity.UserName} {activityString}");
             return notificationMessage;
 
         }

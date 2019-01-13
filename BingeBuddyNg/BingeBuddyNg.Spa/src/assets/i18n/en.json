@@ -68,5 +68,7 @@
     "Confirm":"Confirm",
     "SelectVenue": "Select venue",
     "YouAreNowAt": "You are now at: ",
-    "Leave": "Leave"
+    "Leave": "Leave",
+    "LeaveVenue": "Leave venue",
+    "ReallyLeaveVenue": "Do you really want to leave this venue?"
 }

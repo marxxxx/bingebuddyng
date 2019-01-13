@@ -1,0 +1,14 @@
+<h2 matDialogTitle fxLayout fxLayoutAlign="start center">
+  <mat-icon *ngIf="data.icon">{{data.icon}}</mat-icon>
+  {{data.title | translate}}
+</h2>
+<mat-dialog-content>
+  <p>{{data.message | translate}}</p>
+  <p *ngIf="data.message2" >{{data.message2 | translate}}</p>
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout fxLayoutAlign="end center">
+  <button mat-button [matDialogClose]="false">{{data.cancelButtonCaption | translate}}</button>
+  <!-- Can optionally provide a result for the closing dialog. -->
+  <button mat-raised-button color="primary" [matDialogClose]="true">{{data.confirmButtonCaption | translate }}</button>
+</mat-dialog-actions>

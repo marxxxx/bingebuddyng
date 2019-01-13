@@ -51,8 +51,10 @@ namespace BingeBuddyNg.Services
             activity.Venue = addedActivity.Venue;
 
             var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
-            await AddToActivityAddedQueueAsync(savedActivity);
+            await AddToActivityAddedQueueAsync(savedActivity.Id);
         }
+
+
 
         public async Task AddDrinkActivityAsync(AddDrinkActivityDTO addedActivity)
         {
@@ -74,7 +76,7 @@ namespace BingeBuddyNg.Services
 
             var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
 
-            await AddToActivityAddedQueueAsync(savedActivity);
+            await AddToActivityAddedQueueAsync(savedActivity.Id);
         }
 
         public async Task AddImageActivityAsync(Stream stream, string fileName, Location location)
@@ -89,9 +91,19 @@ namespace BingeBuddyNg.Services
 
             var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
 
-            await AddToActivityAddedQueueAsync(savedActivity);
+            await AddToActivityAddedQueueAsync(savedActivity.Id);
         }
 
+        public async Task AddVenueActivityAsync(AddVenueActivityDTO activity)
+        {
+            var user = await this.UserRepository.FindUserAsync(activity.UserId);
+            var activityEntity = Activity.CreateVenueActivity(DateTime.UtcNow, activity.UserId, user.Name, 
+                activity.Message, activity.Venue);
+
+            var savedActivity = await this.ActivityRepository.AddActivityAsync(activityEntity);
+
+            await AddToActivityAddedQueueAsync(savedActivity.Id);
+        }
 
         public async Task<List<ActivityAggregationDTO>> GetDrinkActivityAggregationAsync()
         {
@@ -131,10 +143,10 @@ namespace BingeBuddyNg.Services
             return sortedResult;
         }
 
-        private async Task AddToActivityAddedQueueAsync(Activity savedActivity)
+        private async Task AddToActivityAddedQueueAsync(string activityId)
         {
             var queueClient = this.StorageAccessService.GetQueueReference(Constants.QueueNames.ActivityAdded);
-            var message = new ActivityAddedMessage(savedActivity.Id);
+            var message = new ActivityAddedMessage(activityId);
             await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
         }
 

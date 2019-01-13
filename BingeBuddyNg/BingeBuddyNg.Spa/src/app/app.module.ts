@@ -1,3 +1,4 @@
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { MeComponent } from './components/me/me.component';
 import { ActivityService } from './services/activity.service';
 import { AuthHttpInterceptor } from './services/auth.interceptor';
@@ -82,9 +83,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     RankingComponent,
     InviteFriendComponent,
     WelcomeInvitedComponent,
-    VenueDialogComponent
+    VenueDialogComponent,
+    ConfirmationDialogComponent
   ],
-  entryComponents: [DrinkDialogComponent, MessageDialogComponent, VenueDialogComponent],
+  entryComponents: [DrinkDialogComponent, MessageDialogComponent, VenueDialogComponent, ConfirmationDialogComponent],
   imports: [
     BrowserModule,
     InViewportModule,

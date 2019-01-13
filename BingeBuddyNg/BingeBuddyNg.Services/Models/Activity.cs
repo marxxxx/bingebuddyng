@@ -83,12 +83,25 @@ namespace BingeBuddyNg.Services.Models
         }
 
         public static Activity CreateNotificationActivity(DateTime activityTimestamp,
-           string userId, string userName, string message)
+           string userId, string userName, string message, Location location = null)
         {
             var activity = new Activity(ActivityType.Notification, activityTimestamp,
-                null, userId, userName)
+                location, userId, userName)
             {
                 Message = message
+            };
+
+            return activity;
+        }
+
+        public static Activity CreateVenueActivity(DateTime activityTimestamp,
+           string userId, string userName, string message, VenueModel venue)
+        {
+            var activity = new Activity(ActivityType.Venue, activityTimestamp,
+                venue.Location, userId, userName)
+            {
+                Message = message,
+                Venue = venue
             };
 
             return activity;

@@ -1,3 +1,5 @@
+import { ConfirmationDialogComponent } from './../../components/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogArgs } from './../../components/confirmation-dialog/ConfirmationDialogArgs';
 import { UserService } from 'src/app/services/user.service';
 import { VenueModel } from 'src/models/VenueModel';
 import { VenueDialogArgs } from './../../components/venue-dialog/VenueDialogArgs';
@@ -278,13 +280,29 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   }
 
   onResetVenue() {
-    this.currentVenue = null;
-    this.venueService.resetCurrentVenue().subscribe(
-      _ => {
-        console.log('reset current venue');
-        this.load();
-      },
-      e => console.error('error resetting current venue', e));
+
+    const args: ConfirmationDialogArgs = {
+      icon: 'directions_run',
+      title: 'LeaveVenue',
+      message: 'ReallyLeaveVenue',
+      confirmButtonCaption: 'Leave',
+      cancelButtonCaption: 'Cancel'
+    };
+
+    this.dialog.open(ConfirmationDialogComponent, { data: args }).afterClosed().subscribe(isConfirmed => {
+
+      if (isConfirmed) {
+        this.currentVenue = null;
+        this.venueService.resetCurrentVenue().subscribe(
+          _ => {
+            console.log('reset current venue');
+            this.load();
+          },
+          e => console.error('error resetting current venue', e));
+      }
+    });
+
+
   }
 
 

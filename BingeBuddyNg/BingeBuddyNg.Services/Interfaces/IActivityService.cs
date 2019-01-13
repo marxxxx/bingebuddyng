@@ -15,9 +15,10 @@ namespace BingeBuddyNg.Services.Interfaces
         Task<List<ActivityAggregationDTO>> GetDrinkActivityAggregationAsync();
 
         Task AddMessageActivityAsync(AddMessageActivityDTO activity);
-        Task AddDrinkActivityAsync(AddDrinkActivityDTO request);
+        Task AddDrinkActivityAsync(AddDrinkActivityDTO activity);
+        Task AddImageActivityAsync(Stream stream, string fileName, Location location);
+        Task AddVenueActivityAsync(AddVenueActivityDTO activity);
 
         Task AddReactionAsync(ReactionDTO reaction);
-        Task AddImageActivityAsync(Stream stream, string fileName, Location location);
     }
 }

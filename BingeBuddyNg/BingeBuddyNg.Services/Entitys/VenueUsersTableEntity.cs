@@ -12,7 +12,7 @@ namespace BingeBuddyNg.Services.Entitys
         public VenueUsersTableEntity(string venueId, string venueName, string userId, string userName) : base(venueId, userId)
         {
             this.VenueId = venueId;
-            this.VenueName = VenueName;
+            this.VenueName = venueName;
             this.UserId = userId;
             this.UserName = userName;
         }
