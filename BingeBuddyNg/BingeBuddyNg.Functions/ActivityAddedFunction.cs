@@ -42,7 +42,10 @@ namespace BingeBuddyNg.Functions
                 try
                 {
                     currentUser = await UserRepository.FindUserAsync(activity.UserId);
-                    await HandleMonitoringAsync(starter, currentUser);
+                    if (activity.ActivityType == ActivityType.Drink)
+                    {
+                        await HandleMonitoringAsync(starter, currentUser);
+                    }
                 }
                 catch (Exception ex)
                 {
