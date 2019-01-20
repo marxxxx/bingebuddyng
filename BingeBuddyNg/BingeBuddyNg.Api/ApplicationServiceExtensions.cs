@@ -26,7 +26,7 @@ namespace BingeBuddyNg.Api
             services.AddLogging();
 
             // Add Application Services
-            services.AddScoped<StorageAccessService>();
+            services.AddSingleton<StorageAccessService>();
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddSingleton<ITranslationService, TranslationService>();
 

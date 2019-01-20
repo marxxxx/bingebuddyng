@@ -98,19 +98,12 @@ namespace BingeBuddyNg.Services
         {
             var account = GetStorageAccount();
             var blobClient = account.CreateCloudBlobClient();
-
+            
             var container = blobClient.GetContainerReference(containerName);
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(fullPath);
 
-            var blob = container.GetBlockBlobReference(fullPath);
-
-            using (var strm = await blob.OpenReadAsync())
-            {
-                using (StreamReader reader = new StreamReader(strm))
-                {
-                    var content = await reader.ReadToEndAsync();
-                    return content;
-                }
-            }
+            var content =  await blockBlob.DownloadTextAsync();
+            return content;
         }
 
         public async Task<string> SaveFileInBlobStorage(string containerName, string fullPath, Stream file)

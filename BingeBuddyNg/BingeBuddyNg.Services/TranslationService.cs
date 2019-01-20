@@ -33,7 +33,7 @@ namespace BingeBuddyNg.Services
 
         private async Task<JObject> GetTranslationFile(string language)
         {
-            var fileContent = await this.StorageAccessService.GetFileFromStorageAsync("$web", $"/assets/i18n/{language}.json");
+            var fileContent = await this.StorageAccessService.GetFileFromStorageAsync("$web", $"assets/i18n/{language}.json");
             JObject jObject = JObject.Parse(fileContent);
             return jObject;
         }        
