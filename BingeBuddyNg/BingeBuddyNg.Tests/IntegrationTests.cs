@@ -37,6 +37,15 @@ namespace BingeBuddyNg.Tests
         }
 
         [TestMethod]
+        public async Task TestTranslations()
+        {
+            var translationService = serviceProvider.GetRequiredService<ITranslationService>();
+            var translationValue = await translationService.GetTranslationAsync("NewVenue", "de");
+            Assert.IsNotNull(translationValue);
+
+        }
+
+        [TestMethod]
         public async Task MigrateProfileImages()
         {
 

@@ -94,6 +94,18 @@ namespace BingeBuddyNg.Services
             return queue.AddMessageAsync(new CloudQueueMessage(JsonConvert.SerializeObject(message)));
         }
 
+        public async Task<string> GetFileFromStorageAsync(string containerName, string fullPath)
+        {
+            var account = GetStorageAccount();
+            var blobClient = account.CreateCloudBlobClient();
+            
+            var container = blobClient.GetContainerReference(containerName);
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(fullPath);
+
+            var content =  await blockBlob.DownloadTextAsync();
+            return content;
+        }
+
         public async Task<string> SaveFileInBlobStorage(string containerName, string fullPath, Stream file)
         {
             var account = GetStorageAccount();

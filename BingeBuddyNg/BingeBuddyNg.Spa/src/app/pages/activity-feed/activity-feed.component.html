@@ -2,19 +2,30 @@
 <app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
 
 <div id="activity-container" [@listActivities]="isInitialLoad">
+  <!-- The actual activity feed-->
   <app-activity *ngFor="let a of activitys" [activity]="a" [currentUser]="currentUserInfo" (commentOpenChanged)="isCommentOpen = $event"></app-activity>
+
+  <!-- Reload-spinner -->
   <mat-progress-spinner [ngClass]="{noactivityspinner: activitys && activitys.length < 5, activityspinner: activitys && activitys.length >= 5}"
     id="loadingSpinner" *ngIf="isReloadSpinnerActive && activitys && activitys.length > 5" mode="indeterminate" color="primary"
     inViewport [inViewportOptions]="{ threshold: [0] }" (inViewportAction)="onAppear($event)"></mat-progress-spinner>
+
+  <!-- Placeholder when you have no friends (sad panda)-->
   <app-no-friends *ngIf="!isBusy && activitys && activitys.length === 0"></app-no-friends>
 </div>
 
+<!-- Venue Info -->
 <mat-card class="venue-info" *ngIf="currentVenue">
-  <button mat-button><mat-icon id="map-icon">map</mat-icon>{{'YouAreNowAt' | translate }} {{currentVenue.name}}</button>
-  <button mat-icon-button (click)="onResetVenue()" matTooltip="{{'Leave' | translate }}"><mat-icon>directions_run</mat-icon></button>
+  <button mat-button class="venue-name">
+    <mat-icon id="map-icon">map</mat-icon><span>{{currentVenue.name}}</span>
+  </button>
+  <button mat-icon-button (click)="onResetVenue()" matTooltip="{{'Leave' | translate }}">
+    <mat-icon>directions_run</mat-icon>
+  </button>
 </mat-card>
 
 
+<!-- Action FAB Button -->
 <div class="bottom-right">
   <eco-fab-speed-dial *ngIf="!isBusyAdding && !isBusyUploading && !isCommentOpen" animationMode="scale" (openChange)="onActionsOpenChange($event)">
     <eco-fab-speed-dial-trigger [spin]="true">
@@ -44,8 +55,8 @@
         <img id="btn-img" class="action-icon" src="../../assets/img/image.png">
       </button>
 
-      <button *ngIf="location != null" class="btn-icon" mat-mini-fab matTooltip="{{'CheckInVenue' | translate}}" (click)="onCheckInVenue()"
-        matTooltipPosition="left">
+      <button *ngIf="location != null" class="btn-icon" mat-mini-fab matTooltip="{{'CheckInVenue' | translate}}"
+        (click)="onCheckInVenue()" matTooltipPosition="left">
         <mat-icon>map</mat-icon>
       </button>
 

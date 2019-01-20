@@ -20,6 +20,7 @@ namespace BingeBuddyNg.Services.Models
         public List<string> MutedByFriendUserIds { get; set; } = new List<string>();
         public string MonitoringInstanceId { get; set; }
         public VenueModel CurrentVenue { get; set; }
+        public string Language { get; set; }
 
         public User()
         {

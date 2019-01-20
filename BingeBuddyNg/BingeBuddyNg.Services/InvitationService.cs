@@ -18,6 +18,7 @@ namespace BingeBuddyNg.Services
         public IUserRepository UserRepository { get; }
         public INotificationService NotificationService { get; }
         public IActivityRepository ActivityRepository { get; }
+        public ITranslationService TranslationService { get; }
         public IUserStatsRepository UserStatsRepository { get; }
 
 
@@ -25,6 +26,7 @@ namespace BingeBuddyNg.Services
             IUserStatsRepository userStatsRepository,
             INotificationService notificationService, 
             IActivityRepository activityRepository,
+            ITranslationService translationService,
             ILogger<InvitationService> logger)
         {
             this.InvitationRepository = invitationRepository ?? throw new ArgumentNullException(nameof(invitationRepository));
@@ -32,6 +34,7 @@ namespace BingeBuddyNg.Services
             this.UserStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
             this.NotificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
             this.ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -65,8 +68,9 @@ namespace BingeBuddyNg.Services
                 {
                     await this.UserStatsRepository.IncreaseScoreAsync(invitingUser.Id, Constants.Scores.FriendInvitation);
 
-                    var notificationActivity = Activity.CreateNotificationActivity(DateTime.UtcNow, invitingUser.Id, invitingUser.Name,
-                        $"Ich habe einen neuen Trinker rekrutiert ({acceptingUser.Name}) und dafür {Constants.Scores.FriendInvitation} Härtepunkte kassiert.");
+                    var message = await TranslationService.GetTranslationAsync(invitingUser.Language, "RecruitmentActivityMessage", acceptingUser.Name, Constants.Scores.FriendInvitation);
+                    var notificationActivity = Activity.CreateNotificationActivity(DateTime.UtcNow, invitingUser.Id, invitingUser.Name, message);
+
                     await this.ActivityRepository.AddActivityAsync(notificationActivity);
                 }
                 catch(Exception ex)
@@ -77,11 +81,11 @@ namespace BingeBuddyNg.Services
 
                 if (invitingUser != null && invitingUser.PushInfo != null)
                 {
-                    // TODO: Localize!
-                    string userName = acceptingUser?.Name ?? "jemand";
+                    string userName = acceptingUser?.Name ?? await TranslationService.GetTranslationAsync(invitingUser.Language, "Somebody");
+                    string messageContent = await TranslationService.GetTranslationAsync(invitingUser.Language, "AcceptedInvitation", userName);
 
                     var message = new NotificationMessage(Constants.Urls.ApplicationIconUrl, Constants.Urls.ApplicationIconUrl, Constants.Urls.ApplicationUrl,
-                        "Binge Buddy", $"{userName} hat deine Einladung angenommen.");
+                        "Binge Buddy", messageContent);
                     this.NotificationService.SendMessage(new[] { invitingUser.PushInfo }, message);
                 }
             }

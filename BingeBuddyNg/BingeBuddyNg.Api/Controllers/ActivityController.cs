@@ -9,6 +9,7 @@ using BingeBuddyNg.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 
@@ -19,6 +20,9 @@ namespace BingeBuddyNg.Api.Controllers
     [ApiController]
     public class ActivityController : ControllerBase
     {
+        private ITranslationService trans;
+        private ILogger<ActivityController> logger;
+
         public IIdentityService IdentityService { get; }
         public IActivityService ActivityService { get; }
         public IActivityRepository ActivityRepository { get; }

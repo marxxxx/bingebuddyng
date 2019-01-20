@@ -11,4 +11,5 @@ export class User {
     friends?: UserInfo[];
     mutedFriendUserIds?: string[];
     currentVenue?: VenueModel;
+    language?: string;
 }

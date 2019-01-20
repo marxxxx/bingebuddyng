@@ -16,6 +16,7 @@ namespace BingeBuddyNg.Functions
         public static readonly IUserRepository UserRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
         public static readonly IDrinkEventRepository DrinkEventRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IDrinkEventRepository>();
         public static readonly INotificationService NotificationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<INotificationService>();
+        public static readonly ITranslationService TranslationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<ITranslationService>();
 
         [FunctionName("DrinkEventFunction")]
         public static async Task Run([TimerTrigger("0 */60 * * * *")]TimerInfo myTimer, ILogger log)
@@ -40,7 +41,9 @@ namespace BingeBuddyNg.Functions
                 {
                     if (u.PushInfo != null)
                     {
-                        var message = new NotificationMessage("!! Trinkaktion !!", $"Trink etwas innerhalb der nächsten halben Stunde und verdiene dir {Shared.Constants.Scores.StandardDrinkAction} Härtepunkte!");
+                        var subject = await TranslationService.GetTranslationAsync(u.Language, "DrinkEvent");
+                        var messageContent = await TranslationService.GetTranslationAsync(u.Language, "DrinkEventNotificationMessage", Shared.Constants.Scores.StandardDrinkAction);
+                        var message = new NotificationMessage(subject, messageContent);
                         NotificationService.SendMessage(new[] { u.PushInfo }, message);
                     }
                 }
