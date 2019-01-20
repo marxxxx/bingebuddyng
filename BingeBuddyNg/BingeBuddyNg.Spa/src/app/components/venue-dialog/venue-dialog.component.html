@@ -1,6 +1,9 @@
 <h2 mat-dialog-title>
   {{'CheckInVenue' | translate}}
 </h2>
+<h3 mat-dialog-subtitle *ngIf="args.message">
+  {{args.message | translate}}
+</h3>
 <mat-dialog-content>
   <mat-form-field *ngIf="venues$ | async as venues; else loading">
     <mat-select matInput [(ngModel)]="selectedVenue" placeholder="{{'SelectVenue' | translate }}">

@@ -17,7 +17,6 @@ import { ActivityService } from '../../services/activity.service';
 import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, ViewChildren } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { AddMessageActivityDTO } from '../../../models/AddMessageActivityDTO';
-import { UtilService } from '../../services/util.service';
 import { MatDialog, MatTooltip } from '@angular/material';
 import { ShellInteractionService } from '../../services/shell-interaction.service';
 import { FileUploader, FileItem, FileUploaderOptions } from 'ng2-file-upload';
@@ -27,6 +26,7 @@ import { DrinkDialogComponent } from '../../components/drink-dialog/drink-dialog
 import { DrinkDialogArgs } from '../../components/drink-dialog/DrinkDialogArgs';
 import { UserInfo } from './../../../models/UserInfo';
 import { User } from './../../../models/User';
+import { LocationService } from 'src/app/services/location.service';
 
 @Component({
   selector: 'app-activity-feed',
@@ -60,6 +60,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   isCommentOpen = false;
 
   location: LocationDTO;
+  previousLocation: LocationDTO;
   currentVenue: VenueModel;
 
   @ViewChild('#activity-container')
@@ -69,12 +70,12 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   tooltips: MatTooltip[];
 
   constructor(private activityService: ActivityService,
-    private util: UtilService,
     private shellInteraction: ShellInteractionService,
     private auth: AuthService,
     private notification: NotificationService,
     private venueService: VenueService,
     private userService: UserService,
+    private locationService: LocationService,
     private changeRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private dialog: MatDialog) { }
@@ -104,15 +105,33 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
       }));
 
     this.route.paramMap.subscribe(_ => {
+      this.previousLocation = this.locationService.getCurrentLocation();
       console.log('refreshing location');
-      this.util.getLocation().then(l => {
+      this.locationService.getLocation().then(l => {
         this.location = l;
+
+        if (this.hasVenueLocationChanged(this.previousLocation, this.location)) {
+          this.onCheckInVenue('NewVenue');
+        }
+
+        this.locationService.setCurrentLocation(this.location);
       }, e => {
         console.error('error retrieving location');
         console.error(e);
       });
     });
+  }
 
+  hasVenueLocationChanged(previousLocation: LocationDTO, currentLocation: LocationDTO): any {
+
+    if (previousLocation != null && currentLocation != null &&
+      previousLocation.latitude !== currentLocation.latitude &&
+      previousLocation.longitude !== currentLocation.longitude &&
+      this.currentVenue != null) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   onAppear(ev) {
@@ -256,13 +275,14 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     });
   }
 
-  onCheckInVenue() {
+  onCheckInVenue(message?: string) {
 
     const args: VenueDialogArgs = {
-      location: this.location
+      location: this.location,
+      message: message
     };
 
-    this.dialog.open(VenueDialogComponent, { data: args, width: '100%', position: { right: '00px' } })
+    this.dialog.open(VenueDialogComponent, { data: args, width: '100%' })
       .afterClosed().subscribe(venue => {
 
         if (venue) {

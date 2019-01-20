@@ -70,5 +70,6 @@
     "YouAreNowAt": "You are now at: ",
     "Leave": "Leave",
     "LeaveVenue": "Leave venue",
-    "ReallyLeaveVenue": "Do you really want to leave this venue?"
+    "ReallyLeaveVenue": "Do you really want to leave this venue?",
+    "NewVenue": "Did you enter a new bar?"
 }

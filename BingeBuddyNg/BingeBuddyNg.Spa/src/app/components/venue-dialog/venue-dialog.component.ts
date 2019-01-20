@@ -16,7 +16,7 @@ export class VenueDialogComponent implements OnInit {
   selectedVenue: VenueModel;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) args: VenueDialogArgs,
+    @Inject(MAT_DIALOG_DATA) public args: VenueDialogArgs,
     venueService: VenueService) {
     this.venues$ = venueService.getVenues(args.location);
   }
