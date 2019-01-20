@@ -20,6 +20,7 @@ namespace BingeBuddyNg.Functions
         public static readonly IUserStatsRepository UserStatsRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserStatsRepository>();
         public static readonly INotificationService NotificationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<INotificationService>();
         public static readonly IDrinkEventRepository DrinkEventRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IDrinkEventRepository>();
+        public static readonly ITranslationService TranslationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<ITranslationService>();
 
 
         [FunctionName("ActivityAddedFunction")]
@@ -145,7 +146,7 @@ namespace BingeBuddyNg.Functions
                         log.LogInformation($"Sending push to [{friendUser}] ...");
 
                         // TODO: Localize
-                        var notificationMessage = GetNotificationMessage(activity);
+                        var notificationMessage = await GetNotificationMessageAsync(friendUser.Language, activity);
 
                         NotificationService.SendMessage(new[] { friendUser.PushInfo }, notificationMessage);
                     }
@@ -170,13 +171,14 @@ namespace BingeBuddyNg.Functions
 
                         await UserStatsRepository.IncreaseScoreAsync(currentUser.Id, Shared.Constants.Scores.StandardDrinkAction);
 
-                        var drinkEventNotificiationActivity = Activity.CreateNotificationActivity(DateTime.UtcNow, currentUser.Id, currentUser.Name,
-                            $"Ich habe bei der Trink Aktion {Shared.Constants.Scores.StandardDrinkAction} Härtepunkte gewonnen! Jippie!");
+                        string message = await TranslationService.GetTranslationAsync(currentUser.Language, "DrinkEventActivityWinMessage", Shared.Constants.Scores.StandardDrinkAction);
+
+                        var drinkEventNotificiationActivity = Activity.CreateNotificationActivity(DateTime.UtcNow, currentUser.Id, currentUser.Name, message);
                         await ActivityRepository.AddActivityAsync(drinkEventNotificiationActivity);
 
                         if (currentUser.PushInfo != null)
                         {
-                            string notificationMessage = $"Du hast bei der Trink Aktion gewonnen und dir dabei {Shared.Constants.Scores.StandardDrinkAction} Härtepunkte verdient!";
+                            string notificationMessage = await TranslationService.GetTranslationAsync(currentUser.Language, "DrinkEventWinMessage", Shared.Constants.Scores.StandardDrinkAction);
                             NotificationService.SendMessage(new[] { currentUser.PushInfo }, new NotificationMessage("Gratuliere!", notificationMessage));
                         }
                     }
@@ -191,28 +193,28 @@ namespace BingeBuddyNg.Functions
             return shouldNotify;
         }
 
-        private static NotificationMessage GetNotificationMessage(Activity activity)
+        private static async Task<NotificationMessage> GetNotificationMessageAsync(string language, Activity activity)
         {
             string locationSnippet = null;
             if (!string.IsNullOrEmpty(activity.LocationAddress))
             {
-                locationSnippet = $" in {activity.LocationAddress} ";
+                locationSnippet = await TranslationService.GetTranslationAsync(language, "DrinkLocationSnippet", activity.LocationAddress);
             }
 
             string activityString = null;
             switch (activity.ActivityType)
             {
                 case ActivityType.Drink:
-                    activityString = $"hat {activity.DrinkName}{locationSnippet} geschnappt!";
+                    activityString = await TranslationService.GetTranslationAsync(language, "DrinkActivityMessage", activity.DrinkName, locationSnippet);
                     break;
                 case ActivityType.Image:
-                    activityString = $"hat ein Foto oder Video hochgeladen!";
+                    activityString = await TranslationService.GetTranslationAsync(language, "ImageActivityMessage");
                     break;
                 case ActivityType.Message:
-                    activityString = $"hat {activity.Message} gesagt!";
+                    activityString = await TranslationService.GetTranslationAsync(language, "MessageActivityMessage", activity.Message);
                     break;
                 case ActivityType.Venue:
-                    activityString = $"ist in {activity.Venue.Name} eingekehrt.";
+                    activityString = await TranslationService.GetTranslationAsync(language, "VenueEnterActivityMessage", activity.Venue.Name);
                     break;
             }
 

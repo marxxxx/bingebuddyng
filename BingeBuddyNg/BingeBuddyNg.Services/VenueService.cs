@@ -24,17 +24,20 @@ namespace BingeBuddyNg.Services
         public IUserRepository UserRepository { get; set; }
         public IActivityService ActivityService { get; set; }
         public IVenueUserRepository VenueUserRepository { get; }
+        public ITranslationService TranslationService { get; }
 
         private const string BaseUrl = "https://api.foursquare.com/v2";
 
         public VenueService(
             IUserRepository userRepository, IActivityService activityService,
             IVenueUserRepository venueUserRepository,
+            ITranslationService translationService,
             AppConfiguration configuration, IHttpClientFactory httpClientFactory, ILogger<VenueService> logger)
         {
             this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             this.ActivityService = activityService ?? throw new ArgumentNullException(nameof(activityService));
             this.VenueUserRepository = venueUserRepository ?? throw new ArgumentNullException(nameof(venueUserRepository));
+            this.TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
 
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
@@ -69,12 +72,13 @@ namespace BingeBuddyNg.Services
             {
                 user.CurrentVenue = venue;
 
+                var message = await TranslationService.GetTranslationAsync(user.Language, "PersonalVenueEnterActivityMessage", venue.Name);
+
                 var tasks = new[]
                 {
                     this.UserRepository.UpdateUserAsync(user),
                     this.VenueUserRepository.AddUserToVenueAsync(venue.Id, venue.Name, userId, user.Name),
-                    this.ActivityService.AddVenueActivityAsync(new AddVenueActivityDTO(user.Id,
-                        $"Ich bin jetzt hier eingekehrt: {venue.Name}", venue))
+                    this.ActivityService.AddVenueActivityAsync(new AddVenueActivityDTO(user.Id, message, venue))
                 };
 
                 await Task.WhenAll(tasks);
@@ -89,13 +93,13 @@ namespace BingeBuddyNg.Services
             if (currentVenue != null)
             {
                 user.CurrentVenue = null;
+                var message = await TranslationService.GetTranslationAsync(user.Language, "PersonalVenueLeaveActivityMessage", currentVenue.Name);
 
                 var tasks = new[]
                 {
                     this.UserRepository.UpdateUserAsync(user),
                     this.VenueUserRepository.RemoveUserFromVenueAsync(currentVenue.Id, userId),
-                    this.ActivityService.AddVenueActivityAsync(new AddVenueActivityDTO(user.Id,
-                        $"Ich habe {currentVenue.Name} verlassen.", currentVenue))
+                    this.ActivityService.AddVenueActivityAsync(new AddVenueActivityDTO(user.Id, message, currentVenue))
                 };
 
                 await Task.WhenAll(tasks);

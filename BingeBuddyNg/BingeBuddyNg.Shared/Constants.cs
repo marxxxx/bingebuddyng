@@ -4,6 +4,8 @@ namespace BingeBuddyNg.Shared
 {
     public static class Constants
     {
+        public const string DefaultLanguage = "de";
+
         public static class QueueNames
         {
             public const string ProfileUpdate = "profile-update";

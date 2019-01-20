@@ -20,15 +20,20 @@ namespace BingeBuddyNg.Services
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<string> GetTranslationAsync(string key, string language)
+        public async Task<string> GetTranslationAsync(string language, string key, params object[] values)
         {
+            language = language ?? Shared.Constants.DefaultLanguage;
             var translationTask = this.translation.GetOrAdd(language, GetTranslationFile(language));
 
             var translationObject = await translationTask;
 
-            var translationValue = translationObject[key].Value<string>();
-            logger.LogDebug($"Successfully retrieved value [{translationValue}] for key [{key}] in language [{language}].");
-            return translationValue;
+            var translationString = translationObject[key].Value<string>();
+            if(values != null && values.Length > 0)
+            {
+                translationString = string.Format(translationString, values);
+            }
+            logger.LogDebug($"Successfully retrieved value [{translationString}] for key [{key}] in language [{language}].");
+            return translationString;
         }
 
         private async Task<JObject> GetTranslationFile(string language)

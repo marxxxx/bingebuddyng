@@ -31,7 +31,8 @@ namespace BingeBuddyNg.Functions
             var configuration = new AppConfiguration(storageConnectionString, googleApiKey, webPushPublicKey, webPushPrivateKey,
                 fourSquareApiClientKey, fourSquareApiClientSecret);
             services.AddSingleton(configuration);
-            services.AddScoped<StorageAccessService>();
+            services.AddSingleton<StorageAccessService>();
+            services.AddSingleton<ITranslationService, TranslationService>();
             services.AddScoped<IActivityRepository, ActivityRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUtilityService, UtilityService>();

@@ -4,6 +4,6 @@ namespace BingeBuddyNg.Services.Interfaces
 {
     public interface ITranslationService
     {
-        Task<string> GetTranslationAsync(string key, string language);
+        Task<string> GetTranslationAsync(string language, string key, params object[] values);
     }
 }

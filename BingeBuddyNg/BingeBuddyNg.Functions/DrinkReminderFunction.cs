@@ -15,6 +15,7 @@ namespace BingeBuddyNg.Functions
 
         public static IUserRepository UserRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
         public static INotificationService NotificationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<INotificationService>();
+        public static readonly ITranslationService TranslationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<ITranslationService>();
 
         [FunctionName(FunctionNameValue)]
         public static async Task RunOrchestrator(
@@ -38,8 +39,10 @@ namespace BingeBuddyNg.Functions
                     log.LogInformation($"Waiting for next drink to occur.");
                     await context.CreateTimer(DateTime.UtcNow.AddMinutes(30), cts.Token);
 
-                    var reminderMessage = new Services.Models.NotificationMessage("Trink-Erinnerung",
-                        "Schon lang nichts mehr getrunken. Hast du eh nicht vergessen, einzubuchen?");
+                    var subject = await TranslationService.GetTranslationAsync(user.Language, "DrinkReminder");
+                    var messageContent = await TranslationService.GetTranslationAsync(user.Language, "DrinkReminderMessage");
+
+                    var reminderMessage = new Services.Models.NotificationMessage(subject, messageContent);
 
                     NotificationService.SendMessage(new[] { user.PushInfo }, reminderMessage);
                 }
@@ -48,26 +51,5 @@ namespace BingeBuddyNg.Functions
                 log.LogInformation($"Terminating monitoring instance for usr {user}");
             }
         }
-
-        //[FunctionName("DrinkReminderFunction_Hello")]
-        //public static string SayHello([ActivityTrigger] string name, ILogger log)
-        //{
-        //    log.LogInformation($"Saying hello to {name}.");
-        //    return $"Hello {name}!";
-        //}
-
-        //[FunctionName("DrinkReminderFunction_HttpStart")]
-        //public static async Task<HttpResponseMessage> HttpStart(
-        //    [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")]HttpRequestMessage req,
-        //    [OrchestrationClient]DurableOrchestrationClient starter,
-        //    ILogger log)
-        //{
-        //    // Function input comes from the request content.
-        //    string instanceId = await starter.StartNewAsync("DrinkReminderFunction", null);
-
-        //    log.LogInformation($"Started orchestration with ID = '{instanceId}'.");
-
-        //    return starter.CreateCheckStatusResponse(req, instanceId);
-        //}
     }
 }
