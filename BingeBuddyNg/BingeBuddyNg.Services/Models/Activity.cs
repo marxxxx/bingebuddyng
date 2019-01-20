@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BingeBuddyNg.Services.Models.Venue;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -24,6 +25,7 @@ namespace BingeBuddyNg.Services.Models
         public string ImageUrl { get; set; }
         public string CountryLongName { get; set; }
         public string CountryShortName { get; set; }
+        public VenueModel Venue { get; set; }
 
         public List<Reaction> Likes { get; set; } = new List<Reaction>();
         public List<Reaction> Cheers { get; set; } = new List<Reaction>();
@@ -81,12 +83,25 @@ namespace BingeBuddyNg.Services.Models
         }
 
         public static Activity CreateNotificationActivity(DateTime activityTimestamp,
-           string userId, string userName, string message)
+           string userId, string userName, string message, Location location = null)
         {
             var activity = new Activity(ActivityType.Notification, activityTimestamp,
-                null, userId, userName)
+                location, userId, userName)
             {
                 Message = message
+            };
+
+            return activity;
+        }
+
+        public static Activity CreateVenueActivity(DateTime activityTimestamp,
+           string userId, string userName, string message, VenueModel venue)
+        {
+            var activity = new Activity(ActivityType.Venue, activityTimestamp,
+                venue.Location, userId, userName)
+            {
+                Message = message,
+                Venue = venue
             };
 
             return activity;

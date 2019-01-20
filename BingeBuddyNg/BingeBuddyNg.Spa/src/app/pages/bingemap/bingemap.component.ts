@@ -1,9 +1,9 @@
+import { LocationService } from 'src/app/services/location.service';
 import { UserInfo } from './../../../models/UserInfo';
 import { ActivatedRoute } from '@angular/router';
 import { Activity } from '../../../models/Activity';
 import { ActivityService } from '../../services/activity.service';
 import { LocationDTO } from '../../../models/LocationDTO';
-import { UtilService } from '../../services/util.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 
 declare var google: any;
@@ -22,12 +22,12 @@ export class BingemapComponent implements OnInit {
 
   @ViewChild('AgmMap') agmMap: any;
 
-  constructor(private activityService: ActivityService, private util: UtilService,
+  constructor(private activityService: ActivityService, private locationService: LocationService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
 
-    this.util.getLocation().then(l => {
+    this.locationService.getLocation().then(l => {
       this.location = l;
     }).catch(e => {
       console.error('no location available.');

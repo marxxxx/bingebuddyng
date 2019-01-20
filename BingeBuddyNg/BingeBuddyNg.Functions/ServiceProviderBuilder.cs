@@ -22,10 +22,15 @@ namespace BingeBuddyNg.Functions
             string googleApiKey = Environment.GetEnvironmentVariable("GoogleApiKey", EnvironmentVariableTarget.Process);
             string webPushPublicKey = Environment.GetEnvironmentVariable("WebPushPublicKey", EnvironmentVariableTarget.Process);
             string webPushPrivateKey = Environment.GetEnvironmentVariable("WebPushPrivateKey", EnvironmentVariableTarget.Process);
+            string fourSquareApiClientKey = Environment.GetEnvironmentVariable("FourSquareApiClientKey", EnvironmentVariableTarget.Process);
+            string fourSquareApiClientSecret = Environment.GetEnvironmentVariable("FourSquareApiClientSecret", EnvironmentVariableTarget.Process);
+
 
             services.AddHttpClient();
 
-            services.AddSingleton(new AppConfiguration(storageConnectionString, googleApiKey, webPushPublicKey, webPushPrivateKey));
+            var configuration = new AppConfiguration(storageConnectionString, googleApiKey, webPushPublicKey, webPushPrivateKey,
+                fourSquareApiClientKey, fourSquareApiClientSecret);
+            services.AddSingleton(configuration);
             services.AddScoped<StorageAccessService>();
             services.AddScoped<IActivityRepository, ActivityRepository>();
             services.AddScoped<IUserRepository, UserRepository>();

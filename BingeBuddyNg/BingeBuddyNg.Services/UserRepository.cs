@@ -67,7 +67,7 @@ namespace BingeBuddyNg.Services
                 {
                     savedUser.Entity.PushInfo = user.PushInfo;
                 }
-               
+
                 saveUserOperation = TableOperation.Replace(savedUser);
             }
             else

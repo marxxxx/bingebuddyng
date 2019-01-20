@@ -1,3 +1,4 @@
+import { VenueModel } from 'src/models/VenueModel';
 import { UserInfo } from './../../models/UserInfo';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -36,10 +37,10 @@ export class UserService {
   }
 
   saveUser(user: User): Observable<{}> {
-    console.log('registering user');
-    console.log(user);
     return this.http.post(this.baseUrl, user);
   }
+
+
 
   setFriendMuteState(friendUserId: string, muteState: boolean): Observable<any> {
     const url = `${this.baseUrl}/SetFriendMuteState?friendUserId=${friendUserId}&muteState=${muteState}`;

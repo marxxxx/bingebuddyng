@@ -63,5 +63,13 @@
     "InvitationAccepted": "This invitation has already been accepted.",
     "HardnessScore": "Hardness Score",
     "LastMonth": "Last month",
-    "RankingInfo": "Drinks in the last month count. Earn hardness points by inviting friends or winning drink events."
+    "RankingInfo": "Drinks in the last month count. Earn hardness points by inviting friends or winning drink events.",
+    "CheckInVenue": "Check in at a venue",
+    "Confirm":"Confirm",
+    "SelectVenue": "Select venue",
+    "YouAreNowAt": "You are now at: ",
+    "Leave": "Leave",
+    "LeaveVenue": "Leave venue",
+    "ReallyLeaveVenue": "Do you really want to leave this venue?",
+    "NewVenue": "Did you enter a new bar?"
 }

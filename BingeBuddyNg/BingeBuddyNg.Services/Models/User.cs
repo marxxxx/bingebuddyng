@@ -1,4 +1,5 @@
 ﻿using BingeBuddyNg.Services.Exceptions;
+using BingeBuddyNg.Services.Models.Venue;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace BingeBuddyNg.Services.Models
         public List<string> MutedFriendUserIds { get; set; } = new List<string>();
         public List<string> MutedByFriendUserIds { get; set; } = new List<string>();
         public string MonitoringInstanceId { get; set; }
+        public VenueModel CurrentVenue { get; set; }
 
         public User()
         {

@@ -1,10 +1,15 @@
+import { LocationDTO } from 'src/models/LocationDTO';
 import { Injectable } from '@angular/core';
-import { LocationDTO } from '../../models/LocationDTO';
 
+/**
+ * Provides geo-location related utility functions.
+ */
 @Injectable({
   providedIn: 'root'
 })
-export class UtilService {
+export class LocationService {
+
+  private readonly locationStorageKey = 'bingebuddy:location';
 
   constructor() { }
 
@@ -22,5 +27,19 @@ export class UtilService {
     });
 
     return promise;
+  }
+
+
+  setCurrentLocation(location: LocationDTO) {
+    localStorage.setItem(this.locationStorageKey, JSON.stringify(location));
+  }
+
+  getCurrentLocation(): LocationDTO {
+    const location = localStorage.getItem(this.locationStorageKey);
+    if (location == null) {
+      return null;
+    }
+
+    return <LocationDTO>JSON.parse(location);
   }
 }

@@ -43,9 +43,9 @@
         "https://bingebuddystorage.blob.core.windows.net/profileimg/**"
       ],
       "cacheConfig": {
-        "strategy": "freshness",
+        "strategy": "performance",
         "maxSize": 100,
-        "maxAge": "1d",
+        "maxAge": "7d",
         "timeout": "1s"
       }
     }

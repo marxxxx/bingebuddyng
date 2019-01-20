@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Services.DTO;
 using BingeBuddyNg.Services.Interfaces;
 using BingeBuddyNg.Services.Models;
+using BingeBuddyNg.Services.Models.Venue;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -56,6 +57,7 @@ namespace BingeBuddyNg.Api.Controllers
             var response = new UpdateUserResponseDTO(!user.Weight.HasValue, user.Gender == Gender.Unknown);
             return response;
         }
+        
 
         [HttpDelete("{friendUserId}")]
         public Task RemoveFriend(string friendUserId)
