@@ -68,6 +68,11 @@ namespace BingeBuddyNg.Services
                     savedUser.Entity.PushInfo = user.PushInfo;
                 }
 
+                if(savedUser.Entity.Language == null && user.Language != null)
+                {
+                    savedUser.Entity.Language = user.Language;
+                }
+
                 saveUserOperation = TableOperation.Replace(savedUser);
             }
             else
