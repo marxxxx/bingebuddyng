@@ -82,3 +82,11 @@ button.btn-icon {
     left: 10px;
     opacity: 0.8;
 }
+
+.venue-name {
+    max-width: 70%;
+    text-align: left;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
