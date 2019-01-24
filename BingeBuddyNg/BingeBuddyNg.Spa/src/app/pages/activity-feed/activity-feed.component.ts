@@ -17,7 +17,7 @@ import { ActivityService } from '../../services/activity.service';
 import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, ViewChildren } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { AddMessageActivityDTO } from '../../../models/AddMessageActivityDTO';
-import { MatDialog, MatTooltip } from '@angular/material';
+import { MatDialog, MatTooltip, MatSnackBar } from '@angular/material';
 import { ShellInteractionService } from '../../services/shell-interaction.service';
 import { FileUploader, FileItem, FileUploaderOptions } from 'ng2-file-upload';
 import { NotificationService } from '../../services/notification.service';
@@ -29,6 +29,7 @@ import { User } from './../../../models/User';
 import { LocationService } from 'src/app/services/location.service';
 import { VenueDialogMode } from 'src/app/components/venue-dialog/VenueDialogMode';
 import { VenueDialogResult } from 'src/app/components/venue-dialog/VenueDialogResult';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-activity-feed',
@@ -74,9 +75,11 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     private notification: NotificationService,
     private venueService: VenueService,
     private userService: UserService,
-    private locationService: LocationService,
+    public locationService: LocationService,
     private changeRef: ChangeDetectorRef,
     private route: ActivatedRoute,
+    private snackBar: MatSnackBar,
+    private translateService: TranslateService,
     private dialog: MatDialog) { }
 
 
@@ -109,7 +112,12 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     this.subscriptions.push(this.locationService.locationChanged$.subscribe(_ => {
       console.log('location has changed');
-      this.onCheckInVenue(VenueDialogMode.LocationChanged);
+
+      this.snackBar.open(this.translateService.instant('NewVenue'),
+        this.translateService.instant('YesCheckin'), { duration: 3000 }).onAction().subscribe(_ => {
+          this.onCheckInVenue(VenueDialogMode.LocationChanged);
+        });
+
     }));
   }
 
@@ -265,7 +273,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     console.log('venueDialogArgs', args);
 
-    this.dialog.open(VenueDialogComponent, { data: args, width: '100%' })
+    this.dialog.open(VenueDialogComponent, { data: args, width: '90%' })
       .afterClosed().subscribe((result: VenueDialogResult) => {
 
         switch (result.action) {

@@ -72,6 +72,7 @@
     "LeaveVenue": "Lokal verlassen",
     "ReallyLeaveVenue": "Willst du das Lokal wirklich verlassen?",
     "NewVenue": "Bist du in ein neues Lokal eingekehrt?",
+    "YesCheckin": "Jep, einkehren",
 
     "DrinkActivityMessage": "hat ein {0} {1} geschnappt!",
     "DrinkLocationSnippet": "in {0}",

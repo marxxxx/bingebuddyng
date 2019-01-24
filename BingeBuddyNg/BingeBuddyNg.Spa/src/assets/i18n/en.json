@@ -72,6 +72,7 @@
     "LeaveVenue": "Leave venue",
     "ReallyLeaveVenue": "Do you really want to leave this venue?",
     "NewVenue": "Did you enter a new bar?",
+    "YesCheckin": "Yap, check-in",
 
     "DrinkActivityMessage": "had a {0}{1}!",
     "DrinkLocationSnippet": "in {0}",
