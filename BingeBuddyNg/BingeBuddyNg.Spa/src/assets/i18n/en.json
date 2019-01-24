@@ -78,6 +78,7 @@
     "ImageActivityMessage": "uploaded an image or a video!",
     "MessageActivityMessage": "said {0}!",
     "VenueEnterActivityMessage": "entered {0}!",
+    "VenueLeaveActivityMessage": "left {0}!",
     "DrinkEventWinMessage": "You won the drink event and earned {0} hardness points!",
     "DrinkEventActivityWinMessage": "I won {0} hardness points at a drink event! Yeah!",
     "DrinkEvent": "Drink event",

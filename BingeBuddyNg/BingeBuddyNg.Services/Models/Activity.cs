@@ -95,10 +95,15 @@ namespace BingeBuddyNg.Services.Models
         }
 
         public static Activity CreateVenueActivity(DateTime activityTimestamp,
-           string userId, string userName, string message, VenueModel venue)
+           string userId, string userName, string message, VenueModel venue, VenueAction action)
         {
-            var activity = new Activity(ActivityType.Venue, activityTimestamp,
-                venue.Location, userId, userName)
+            if(action == VenueAction.Unknown)
+            {
+                throw new ArgumentException("Invalid venue action!");
+            }
+
+            var activity = new Activity(action == VenueAction.Enter ? ActivityType.VenueEntered : ActivityType.VenueLeft, 
+                activityTimestamp, venue.Location, userId, userName)
             {
                 Message = message,
                 Venue = venue

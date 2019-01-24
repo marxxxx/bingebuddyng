@@ -78,14 +78,14 @@ namespace BingeBuddyNg.Services
                 {
                     this.UserRepository.UpdateUserAsync(user),
                     this.VenueUserRepository.AddUserToVenueAsync(venue.Id, venue.Name, userId, user.Name),
-                    this.ActivityService.AddVenueActivityAsync(new AddVenueActivityDTO(user.Id, message, venue))
+                    this.ActivityService.AddVenueActivityAsync(new AddVenueActivityDTO(user.Id, message, venue, VenueAction.Enter))
                 };
 
                 await Task.WhenAll(tasks);
             }
         }
 
-        public async Task ResetVenueForUserAsync(string userId)
+        public async Task LeaveVenueForUserAsync(string userId)
         {
             var user = await this.UserRepository.FindUserAsync(userId);
             var currentVenue = user.CurrentVenue;
@@ -99,7 +99,7 @@ namespace BingeBuddyNg.Services
                 {
                     this.UserRepository.UpdateUserAsync(user),
                     this.VenueUserRepository.RemoveUserFromVenueAsync(currentVenue.Id, userId),
-                    this.ActivityService.AddVenueActivityAsync(new AddVenueActivityDTO(user.Id, message, currentVenue))
+                    this.ActivityService.AddVenueActivityAsync(new AddVenueActivityDTO(user.Id, message, currentVenue, VenueAction.Leave))
                 };
 
                 await Task.WhenAll(tasks);

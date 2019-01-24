@@ -10,6 +10,6 @@ namespace BingeBuddyNg.Services.Interfaces
     {
         Task<List<VenueModel>> SearchVenuesAsync(float latitude, float longitude);
         Task UpdateVenueForUserAsync(string userId, VenueModel venue);
-        Task ResetVenueForUserAsync(string userId);
+        Task LeaveVenueForUserAsync(string userId);
     }
 }

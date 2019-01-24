@@ -72,7 +72,8 @@ export class ActivityComponent implements OnInit {
   }
 
   isVenueActivity(): boolean {
-    return this.activity.activity.activityType === ActivityType.Venue;
+    return this.activity.activity.activityType === ActivityType.VenueEntered ||
+      this.activity.activity.activityType === ActivityType.VenueLeft;
   }
 
   isImageActivity(): boolean {

@@ -45,7 +45,7 @@ namespace BingeBuddyNg.Api.Controllers
         {
             var userId = this.IdentityService.GetCurrentUserId();
 
-            await this.VenueService.ResetVenueForUserAsync(userId);
+            await this.VenueService.LeaveVenueForUserAsync(userId);
             
         }
     }

@@ -213,8 +213,11 @@ namespace BingeBuddyNg.Functions
                 case ActivityType.Message:
                     activityString = await TranslationService.GetTranslationAsync(language, "MessageActivityMessage", activity.Message);
                     break;
-                case ActivityType.Venue:
+                case ActivityType.VenueEntered:
                     activityString = await TranslationService.GetTranslationAsync(language, "VenueEnterActivityMessage", activity.Venue.Name);
+                    break;
+                case ActivityType.VenueLeft:
+                    activityString = await TranslationService.GetTranslationAsync(language, "VenueLeaveActivityMessage", activity.Venue.Name);
                     break;
             }
 

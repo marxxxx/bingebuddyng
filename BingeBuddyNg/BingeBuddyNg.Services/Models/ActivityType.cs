@@ -11,6 +11,7 @@ namespace BingeBuddyNg.Services.Models
         Drink = 20,        
         Image = 30,
         Notification = 40,
-        Venue = 50
+        VenueEntered = 50,
+        VenueLeft = 51
     }
 }

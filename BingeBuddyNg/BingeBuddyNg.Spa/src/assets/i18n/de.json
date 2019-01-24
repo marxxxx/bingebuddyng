@@ -73,11 +73,12 @@
     "ReallyLeaveVenue": "Willst du das Lokal wirklich verlassen?",
     "NewVenue": "Bist du in ein neues Lokal eingekehrt?",
 
-    "DrinkActivityMessage": "hat ein {0}{1} geschnappt!",
+    "DrinkActivityMessage": "hat ein {0} {1} geschnappt!",
     "DrinkLocationSnippet": "in {0}",
     "ImageActivityMessage": "hat ein Foto oder Video hochgeladen!",
     "MessageActivityMessage": "hat {0} gesagt!",
     "VenueEnterActivityMessage": "ist in {0} eingekehrt!",
+    "VenueLeaveActivityMessage": "hat {0} verlassen!",
     "DrinkEventWinMessage": "Du hast bei der Trink Aktion gewonnen und dir dabei {0} Härtepunkte verdient!",
     "DrinkEventActivityWinMessage": "Ich habe bei der Trink Aktion {0} Härtepunkte gewonnen! Jippie!",
     "DrinkEvent": "Trinkaktion",
