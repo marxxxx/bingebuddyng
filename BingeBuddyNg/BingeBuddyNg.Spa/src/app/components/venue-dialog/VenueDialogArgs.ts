@@ -1,5 +1,6 @@
 import { LocationDTO } from 'src/models/LocationDTO';
+import { VenueDialogMode } from './VenueDialogMode';
 export class VenueDialogArgs {
     location: LocationDTO;
-    message?: string;
+    mode:  VenueDialogMode = VenueDialogMode.Default;
 }

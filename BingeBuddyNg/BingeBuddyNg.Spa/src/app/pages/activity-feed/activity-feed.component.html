@@ -55,7 +55,7 @@
         <img id="btn-img" class="action-icon" src="../../assets/img/image.png">
       </button>
 
-      <button *ngIf="location != null" class="btn-icon" mat-mini-fab matTooltip="{{'CheckInVenue' | translate}}"
+      <button *ngIf="locationService.hasLocation() != null" class="btn-icon" mat-mini-fab matTooltip="{{'CheckInVenue' | translate}}"
         (click)="onCheckInVenue()" matTooltipPosition="left">
         <mat-icon>map</mat-icon>
       </button>

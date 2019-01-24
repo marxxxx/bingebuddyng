@@ -27,6 +27,8 @@ import { DrinkDialogArgs } from '../../components/drink-dialog/DrinkDialogArgs';
 import { UserInfo } from './../../../models/UserInfo';
 import { User } from './../../../models/User';
 import { LocationService } from 'src/app/services/location.service';
+import { VenueDialogMode } from 'src/app/components/venue-dialog/VenueDialogMode';
+import { VenueDialogResult } from 'src/app/components/venue-dialog/VenueDialogResult';
 
 @Component({
   selector: 'app-activity-feed',
@@ -58,9 +60,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   currentUser: User;
   DrinkType = DrinkType;
   isCommentOpen = false;
-
-  location: LocationDTO;
-  previousLocation: LocationDTO;
   currentVenue: VenueModel;
 
   @ViewChild('#activity-container')
@@ -100,39 +99,22 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
               console.log('loaded user', u);
               this.currentUser = u;
               this.currentVenue = u.currentVenue;
+
+              // refresh location
+              this.locationService.refreshLocation(this.currentVenue);
             }, e => console.error('error loading user', p.userId, e));
         }
       }));
 
-    this.route.paramMap.subscribe(_ => {
-      this.previousLocation = this.locationService.getCurrentLocation();
-      console.log('refreshing location');
-      this.locationService.getLocation().then(l => {
-        this.location = l;
 
-        if (this.hasVenueLocationChanged(this.previousLocation, this.location)) {
-          this.onCheckInVenue('NewVenue');
-        }
-
-        this.locationService.setCurrentLocation(this.location);
-      }, e => {
-        console.error('error retrieving location');
-        console.error(e);
-      });
-    });
+    this.subscriptions.push(this.locationService.locationChanged$.subscribe(_ => {
+      console.log('location has changed');
+      this.onCheckInVenue(VenueDialogMode.LocationChanged);
+    }));
   }
 
-  hasVenueLocationChanged(previousLocation: LocationDTO, currentLocation: LocationDTO): any {
 
-    if (previousLocation != null && currentLocation != null &&
-      previousLocation.latitude !== currentLocation.latitude &&
-      previousLocation.longitude !== currentLocation.longitude &&
-      this.currentVenue != null) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+
 
   onAppear(ev) {
 
@@ -239,14 +221,13 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
           drinkType: DrinkType.Anti,
           drinkName: 'Anti',
           alcPrc: 0,
-          volume: 250,
-          location: this.location
+          volume: 250
         };
         break;
       }
     }
 
-    activity.location = this.location;
+    activity.location = this.locationService.getCurrentLocation();
     activity.venue = this.currentVenue;
 
     return activity;
@@ -262,7 +243,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
       this.isBusyAdding = true;
       const activity: AddMessageActivityDTO = {
         message: message,
-        location: this.location
+        location: this.locationService.getCurrentLocation()
       };
 
       this.activityService.addMessageActivity(activity).subscribe(r => {
@@ -275,26 +256,34 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     });
   }
 
-  onCheckInVenue(message?: string) {
+  onCheckInVenue(mode: VenueDialogMode = VenueDialogMode.Default) {
 
     const args: VenueDialogArgs = {
-      location: this.location,
-      message: message
+      location: this.locationService.getCurrentLocation(),
+      mode: mode
     };
 
+    console.log('venueDialogArgs', args);
+
     this.dialog.open(VenueDialogComponent, { data: args, width: '100%' })
-      .afterClosed().subscribe(venue => {
+      .afterClosed().subscribe((result: VenueDialogResult) => {
 
-        if (venue) {
-          this.currentVenue = venue;
+        switch (result.action) {
+          case 'leave': {
+            this.onResetVenue();
+            break;
+          }
+          case 'change': {
+            this.currentVenue = result.venue;
 
-          // update venue for user in backend
-          this.venueService.updateCurrentVenue(this.currentVenue).subscribe(
-            _ => {
-              console.log('updated current venue', this.currentVenue);
-              this.load();
-            },
-            e => console.error('error updating current venue', e));
+            // update venue for user in backend
+            this.venueService.updateCurrentVenue(this.currentVenue).subscribe(
+              _ => {
+                console.log('updated current venue', this.currentVenue);
+                this.load();
+              },
+              e => console.error('error updating current venue', e));
+          }
         }
       });
   }
@@ -337,7 +326,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   getOptions(): FileUploaderOptions {
 
     const options = {
-      url: this.activityService.getAddImageActivityUrl(this.location),
+      url: this.activityService.getAddImageActivityUrl(this.locationService.getCurrentLocation()),
       authTokenHeader: 'Authorization',
       authToken: 'Bearer ' + this.auth.getAccessToken()
     };

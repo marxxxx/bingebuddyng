@@ -4,6 +4,7 @@ import { VenueModel } from 'src/models/VenueModel';
 import { Observable } from 'rxjs';
 import { MAT_DIALOG_DATA } from '@angular/material';
 import { VenueDialogArgs } from './VenueDialogArgs';
+import { VenueDialogMode } from './VenueDialogMode';
 
 @Component({
   selector: 'app-venue-dialog',
@@ -14,6 +15,8 @@ export class VenueDialogComponent implements OnInit {
 
   venues$: Observable<VenueModel[]>;
   selectedVenue: VenueModel;
+
+  VenueDialogMode = VenueDialogMode;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public args: VenueDialogArgs,

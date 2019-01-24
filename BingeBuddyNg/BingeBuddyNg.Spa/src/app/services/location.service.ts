@@ -1,3 +1,5 @@
+import { BehaviorSubject, Subject } from 'rxjs';
+import { VenueModel } from './../../models/VenueModel';
 import { LocationDTO } from 'src/models/LocationDTO';
 import { Injectable } from '@angular/core';
 
@@ -10,8 +12,67 @@ import { Injectable } from '@angular/core';
 export class LocationService {
 
   private readonly locationStorageKey = 'bingebuddy:location';
+  private previousLocation: LocationDTO;
+
+  currentLocation$ = new BehaviorSubject<LocationDTO>(null);
+  locationChanged$ = new Subject();
+
 
   constructor() { }
+
+
+  refreshLocation(currentVenue: VenueModel) {
+    this.previousLocation = this.loadCurrentLocation();
+    console.log('refreshing location');
+    this.getLocation().then(l => {
+      this.currentLocation$.next(l);
+
+      if (this.hasVenueLocationChanged(this.previousLocation, this.currentLocation$.value, currentVenue)) {
+        this.locationChanged$.next();
+      }
+
+      this.storeCurrentLocation(this.currentLocation$.value);
+    }, e => {
+      console.error('error retrieving location');
+      console.error(e);
+    });
+  }
+
+  hasVenueLocationChanged(previousLocation: LocationDTO, currentLocation: LocationDTO, currentVenue: VenueModel): boolean {
+
+    if (!currentVenue) {
+      return false;
+    }
+    const hasBothLocations = previousLocation != null && currentLocation != null;
+    if (hasBothLocations === false) {
+      return false;
+    }
+
+    const hasLocationChanged = (previousLocation.latitude !== currentLocation.latitude ||
+      previousLocation.longitude !== currentLocation.longitude);
+    return hasLocationChanged;
+  }
+
+  storeCurrentLocation(location: LocationDTO) {
+    console.log('storeCurrentLocation', location);
+    localStorage.setItem(this.locationStorageKey, JSON.stringify(location));
+  }
+
+  loadCurrentLocation(): LocationDTO {
+    const location = localStorage.getItem(this.locationStorageKey);
+    if (location == null) {
+      console.warn('current location not found');
+      return null;
+    }
+
+    console.log('current location loaded', location);
+    return JSON.parse(location);
+  }
+
+  getCurrentLocation(): LocationDTO {
+    return this.currentLocation$.value;
+  }
+
 
   getLocation(): Promise<LocationDTO> {
 
@@ -29,17 +90,7 @@ export class LocationService {
     return promise;
   }
 
-
-  setCurrentLocation(location: LocationDTO) {
-    localStorage.setItem(this.locationStorageKey, JSON.stringify(location));
-  }
-
-  getCurrentLocation(): LocationDTO {
-    const location = localStorage.getItem(this.locationStorageKey);
-    if (location == null) {
-      return null;
-    }
-
-    return <LocationDTO>JSON.parse(location);
+  hasLocation(): boolean {
+    return this.currentLocation$.value != null;
   }
 }

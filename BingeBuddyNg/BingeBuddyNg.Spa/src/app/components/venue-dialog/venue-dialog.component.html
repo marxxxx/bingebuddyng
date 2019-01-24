@@ -1,9 +1,9 @@
 <h2 mat-dialog-title>
   {{'CheckInVenue' | translate}}
 </h2>
-<h3 mat-dialog-subtitle *ngIf="args.message">
-  {{args.message | translate}}
-</h3>
+<p mat-dialog-subtitle *ngIf="args.mode === VenueDialogMode.LocationChanged">
+  {{'NewVenue' | translate}}
+</p>
 <mat-dialog-content>
   <mat-form-field *ngIf="venues$ | async as venues; else loading">
     <mat-select matInput [(ngModel)]="selectedVenue" placeholder="{{'SelectVenue' | translate }}">
@@ -17,6 +17,10 @@
   </ng-template>
 </mat-dialog-content>
 <mat-dialog-actions fxLayoutAlign="end center">
-  <button mat-button mat-dialog-close>{{'Cancel' | translate }}</button>
-  <button mat-raised-button [disabled]="!selectedVenue" color="primary" [mat-dialog-close]="selectedVenue">{{'Confirm' | translate }}</button>
+  <button mat-button [mat-dialog-close]="{ action: 'cancel'}">{{'Cancel' | translate }}</button>
+  <button mat-button [mat-dialog-close]="{ action: 'leave'}" *ngIf="args.mode === VenueDialogMode.LocationChanged">
+    {{'Leave' | translate }}</button>
+  <button mat-raised-button [disabled]="!selectedVenue" color="primary" 
+    [mat-dialog-close]="{ venue: selectedVenue, action: 'change' }">
+    {{'Confirm' | translate }}</button>
 </mat-dialog-actions>
