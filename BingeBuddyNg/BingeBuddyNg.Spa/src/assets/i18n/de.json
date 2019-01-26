@@ -102,5 +102,7 @@
     "AcceptedInvitation": "{0} hat deine Einladung angenommen.",
     "Somebody": "jemand",
     "PersonalVenueEnterActivityMessage": "Ich bin hier eingekehrt: {0}.",
-    "PersonalVenueLeaveActivityMessage": "Ich habe {0} verlassen."
+    "PersonalVenueLeaveActivityMessage": "Ich habe {0} verlassen.",
+    "Settings": "Einstellungen",
+    "Language": "Sprache"
 }

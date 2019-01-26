@@ -12,6 +12,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './services/auth.guard';
 import { RankingComponent } from './pages/ranking/ranking.component';
 import { InviteFriendComponent } from './pages/invite-friend/invite-friend.component';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 const routes: Routes = [
   {
@@ -59,6 +60,11 @@ const routes: Routes = [
   {
     path: 'ranking',
     component: RankingComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'settings',
+    component: SettingsComponent,
     canActivate: [AuthGuard]
   },
   {

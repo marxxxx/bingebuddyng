@@ -6,21 +6,24 @@
         <mat-icon>close</mat-icon>
       </button>Menu</mat-toolbar>
     <mat-nav-list (click)="onNavListItemClicked()">
-      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/activity-feed"><img src="../../assets/img/ActivityFeed.png"><span>{{'Activity'
+      <a mat-list-item routerLink="/activity-feed"><img src="../../assets/img/ActivityFeed.png"><span>{{'Activity'
           | translate }}</span></a>
-      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/stats"><img src="../../assets/img/statistics.png"><span>{{'Statistics'
+      <a mat-list-item routerLink="/stats"><img src="../../assets/img/statistics.png"><span>{{'Statistics'
           | translate }}</span></a>
-      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/bingemap"><img src="../../assets/img/map.png"><span>{{'BingeMap'
+      <a mat-list-item routerLink="/bingemap"><img src="../../assets/img/map.png"><span>{{'BingeMap'
           | translate }}</span></a>
-      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/drinkers"><img src="../../assets/img/beer.png"><span>{{'Drinkers'
+      <a mat-list-item routerLink="/drinkers"><img src="../../assets/img/beer.png"><span>{{'Drinkers'
           | translate }}</span></a>
-      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/ranking">
+      <a mat-list-item routerLink="/ranking">
         <mat-icon class="menu-item">cake</mat-icon>{{'Ranking' | translate }}
       </a>
-      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/invite-friend">
+      <a mat-list-item routerLink="/invite-friend">
         <mat-icon class="menu-item">share</mat-icon>{{'InviteFriend' | translate }}
       </a>
-      <a *ngIf="auth.isAuthenticated()" mat-list-item routerLink="/friendrequests"><img src="../../assets/img/like.png"><span>{{'FriendRequests'
+      <a mat-list-item routerLink="/settings">
+        <mat-icon class="menu-item">settings</mat-icon>{{'Settings' | translate }}
+      </a>
+      <a mat-list-item routerLink="/friendrequests"><img src="../../assets/img/like.png"><span>{{'FriendRequests'
           | translate }}</span><span *ngIf="friendRequests && friendRequests.length > 0"> ({{friendRequests.length}})</span></a>
       <mat-divider *ngIf="auth.isAuthenticated()"></mat-divider>
       <a *ngIf="auth.isAuthenticated()" mat-list-item (click)="onLogout()"><img src="../../assets/img/logout.png"><span>{{'Logout'

@@ -1,0 +1,13 @@
+<mat-card>
+  <mat-card-title fxLayout="row" fxLayoutAlign="start center">
+    <mat-icon>language</mat-icon>
+    {{'Language' | translate}}
+  </mat-card-title>
+
+  <mat-card-content>
+    <mat-radio-group [(ngModel)]="currentLanguage" (change)="onLanguageChanged($event)" 
+    fxLayout fxLayoutAlign="start center" fxLayoutGap="16px" fxLayoutGap.gt-sm="24px">
+      <mat-radio-button class="language-option" *ngFor="let l of languages" [value]="l.lang" color="primary">{{l.text}}</mat-radio-button>
+    </mat-radio-group>
+  </mat-card-content>
+</mat-card>

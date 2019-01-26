@@ -1,0 +1,140 @@
+{
+  "configVersion": 1,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "urls": [
+        "/favicon.ico",
+        "/index.html",
+        "/main.ee081d68b1f01f8cdf65.js",
+        "/polyfills.e3439005774a80e44c8d.js",
+        "/runtime.a66f828dca56eeb90e02.js",
+        "/scripts.1d3c093d0c3d8f661c23.js",
+        "/styles.2086ba95f205036f7fcc.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "urls": [
+        "/assets/i18n/de.json",
+        "/assets/i18n/en.json",
+        "/assets/icons/icon-128x128.png",
+        "/assets/icons/icon-144x144.png",
+        "/assets/icons/icon-152x152.png",
+        "/assets/icons/icon-192x192.png",
+        "/assets/icons/icon-384x384.png",
+        "/assets/icons/icon-512x512.png",
+        "/assets/icons/icon-72x72.png",
+        "/assets/icons/icon-96x96.png",
+        "/assets/img/ActivityFeed.png",
+        "/assets/img/AnimateLogo.svg",
+        "/assets/img/Beer_logo.png",
+        "/assets/img/Logo.jpg",
+        "/assets/img/Logo.svg",
+        "/assets/img/anti.png",
+        "/assets/img/beer.png",
+        "/assets/img/cancel.png",
+        "/assets/img/comment.png",
+        "/assets/img/image.png",
+        "/assets/img/like.png",
+        "/assets/img/load_beer.gif",
+        "/assets/img/logo.png",
+        "/assets/img/logout.png",
+        "/assets/img/map.png",
+        "/assets/img/sad_panda.jpg",
+        "/assets/img/send.png",
+        "/assets/img/shot.png",
+        "/assets/img/statistics.png",
+        "/assets/img/wine.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "api",
+      "patterns": [
+        "https:\\/\\/bingebuddyapi\\.azurewebsites\\.net\\/api\\/.*"
+      ],
+      "strategy": "freshness",
+      "maxSize": 100,
+      "maxAge": 86400000,
+      "timeoutMs": 3000,
+      "version": 1
+    },
+    {
+      "name": "userpics",
+      "patterns": [
+        "https:\\/\\/bingebuddystorage\\.blob\\.core\\.windows\\.net\\/profileimg\\/.*"
+      ],
+      "strategy": "freshness",
+      "maxSize": 100,
+      "maxAge": 86400000,
+      "timeoutMs": 1000,
+      "version": 1
+    }
+  ],
+  "hashTable": {
+    "/assets/i18n/de.json": "8cc104bd00349c396212c2db65e7e70255acc59c",
+    "/assets/i18n/en.json": "dc66d3cbb5bf0b90f6f285616e4bf904b6f29844",
+    "/assets/icons/icon-128x128.png": "b16a6b3311ebd1ace3dc2f544f99b7c06a487a07",
+    "/assets/icons/icon-144x144.png": "0f9c36838e95d5356b300ab3575216b60d01a83b",
+    "/assets/icons/icon-152x152.png": "4b348c493b49db757698bc9f599622968f5a82b1",
+    "/assets/icons/icon-192x192.png": "8bbd7951dcf79ce53bea69b61f4097447871a6bb",
+    "/assets/icons/icon-384x384.png": "e56eafb68d213701441f6f85fee63eece86da114",
+    "/assets/icons/icon-512x512.png": "ed5f337f99c1551bafa6231c41e30302f19634ae",
+    "/assets/icons/icon-72x72.png": "3da983bcbc0bba33cc4c4c4a50d1bca5be2899e4",
+    "/assets/icons/icon-96x96.png": "0b646d072ca5e8b09ce34a207497cb26c1a7e8c1",
+    "/assets/img/ActivityFeed.png": "430702a3e2e55c9096e8c751c293c2637ed19ef1",
+    "/assets/img/AnimateLogo.svg": "1a1ed5f884be80d8cd64dabd15ad1839970f2847",
+    "/assets/img/Beer_logo.png": "b6f039ba6012a598110510d1df06e1b467581cad",
+    "/assets/img/Logo.jpg": "d70150be53eab6e60864891c901d0e0c13ac0305",
+    "/assets/img/Logo.svg": "27e6b4b04eb2cfc1552f949fdc414a2e2a7d73d5",
+    "/assets/img/anti.png": "0bfd3b5467d7dd0045b838ebe990d67dcb41bfd9",
+    "/assets/img/beer.png": "97b4faf43635f819050897fa026dedfc33685675",
+    "/assets/img/cancel.png": "cc1c989ca22db399e89a89d984c7a1b5e35e3e2f",
+    "/assets/img/comment.png": "0305b19b36844124b69503173a32dc4429c12b34",
+    "/assets/img/image.png": "ec941cc500fb204963fc80aee4bc024a0617d7eb",
+    "/assets/img/like.png": "6d948b16cf6404efb37724637ea63a5913838564",
+    "/assets/img/load_beer.gif": "2e314f4b412e40e65d359e93576a1d8dd9584f34",
+    "/assets/img/logo.png": "bc012bd8ec173262db2856c74966dfe6e24cd350",
+    "/assets/img/logout.png": "2c5764f3f56d1516b5400c6a0b1af991f2c0ed15",
+    "/assets/img/map.png": "b555610506c10727b6e1ce38b5d6bc7438baa08e",
+    "/assets/img/sad_panda.jpg": "7136439a82195b01b7e6fc6644bbfec1d52ca72b",
+    "/assets/img/send.png": "a2c48f4b7cbf4691c3695757c47c5bfe8a06f074",
+    "/assets/img/shot.png": "d67ff482c264e419d92e6d513e8ecc7c96f26b0f",
+    "/assets/img/statistics.png": "e8ccd7458fbb0dd331ee1e823fa416e5e817ea77",
+    "/assets/img/wine.png": "e6f6edb23b5a1b251a50a9a67b384d68936ea4cd",
+    "/favicon.ico": "d45f89b0d6fc93d52972d16229e5ca941bda0941",
+    "/index.html": "e35a0de1609d66029464b75845c781fd55b54625",
+    "/main.ee081d68b1f01f8cdf65.js": "cf99f42e5128f76807c91ae992a1d9fadf662998",
+    "/polyfills.e3439005774a80e44c8d.js": "8d454c7bef2e65845ee5e18f0b4c6b29a76603ea",
+    "/runtime.a66f828dca56eeb90e02.js": "078e320cc6fdaf355836c3b1c52b059cdd33fc7e",
+    "/scripts.1d3c093d0c3d8f661c23.js": "6f2cc73a1d0683c27aeffd7a7157a9ccf5ca4961",
+    "/styles.2086ba95f205036f7fcc.css": "a93795c216d95f7ff4bf51ac3ee52b2e0e7b2b2d"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ]
+}

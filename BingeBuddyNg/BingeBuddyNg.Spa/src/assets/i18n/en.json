@@ -74,7 +74,7 @@
     "NewVenue": "Did you enter a new bar?",
     "YesCheckin": "Yap, check-in",
 
-    "DrinkActivityMessage": "had a {0}{1}!",
+    "DrinkActivityMessage": "had a {0} {1}!",
     "DrinkLocationSnippet": "in {0}",
     "ImageActivityMessage": "uploaded an image or a video!",
     "MessageActivityMessage": "said {0}!",
@@ -102,5 +102,7 @@
     "AcceptedInvitation": "{0} accepted your invitation.",
     "Somebody": "somebody",
     "PersonalVenueEnterActivityMessage": "I entered {0}.",
-    "PersonalVenueLeaveActivityMessage": "I left {0}."
+    "PersonalVenueLeaveActivityMessage": "I left {0}.",
+    "Settings": "Settings",
+    "Language": "Language"
 }

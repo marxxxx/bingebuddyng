@@ -46,4 +46,9 @@ export class ShellInteractionService {
     const message = this.translate.instant('OperationFailed');
     this.snackbar.open(message, 'OK');
   }
+
+  showMessage(message: string) {
+    const translatedMessage = this.translate.instant(message);
+    this.snackbar.open(translatedMessage, 'OK');
+  }
 }

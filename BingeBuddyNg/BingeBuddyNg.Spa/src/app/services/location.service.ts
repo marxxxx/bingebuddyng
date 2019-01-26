@@ -48,8 +48,10 @@ export class LocationService {
       return false;
     }
 
-    const hasLocationChanged = (previousLocation.latitude !== currentLocation.latitude ||
-      previousLocation.longitude !== currentLocation.longitude);
+    const latDiff = Math.abs(previousLocation.latitude - currentLocation.latitude);
+    const lngDiff = Math.abs(previousLocation.longitude - currentLocation.longitude);
+
+    const hasLocationChanged = (latDiff > 0.01 || lngDiff > 0.01);
     return hasLocationChanged;
   }
 

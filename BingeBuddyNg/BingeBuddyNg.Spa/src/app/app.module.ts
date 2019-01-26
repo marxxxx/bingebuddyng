@@ -51,6 +51,7 @@ import { RankingComponent } from './pages/ranking/ranking.component';
 import { InviteFriendComponent } from './pages/invite-friend/invite-friend.component';
 import { WelcomeInvitedComponent } from './pages/welcome-invited/welcome-invited.component';
 import { VenueDialogComponent } from './components/venue-dialog/venue-dialog.component';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 
 // AoT requires an exported function for factories
@@ -84,7 +85,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     InviteFriendComponent,
     WelcomeInvitedComponent,
     VenueDialogComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    SettingsComponent
   ],
   entryComponents: [DrinkDialogComponent, MessageDialogComponent, VenueDialogComponent, ConfirmationDialogComponent],
   imports: [

@@ -13,6 +13,7 @@ import { PushInfo } from '../models/PushInfo';
 import { NotificationService } from './services/notification.service';
 import { Subscription } from 'rxjs';
 import { InvitationService } from './services/invitation.service';
+import { SettingsService } from './services/settings.service';
 
 @Component({
   selector: 'app-root',
@@ -32,14 +33,15 @@ export class AppComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private notification: NotificationService,
     private invitationService: InvitationService,
+    private settingsService: SettingsService,
     private pushService: SwPush,
     private updateService: SwUpdate) {
 
     auth.handleAuthentication(location.pathname);
 
     // this language will be used as a fallback when a translation isn't found in the current language
-    this.userLanguage = navigator.language.substr(0, 2);
-    translate.setDefaultLang('en');
+    this.userLanguage = this.settingsService.getLanguage();
+    translate.setDefaultLang(this.settingsService.DefaultLanguage);
 
     // the lang to use, if the lang isn't available, it will use the current loader to get them
     translate.use(this.userLanguage);
