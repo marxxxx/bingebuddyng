@@ -1,11 +1,11 @@
-using BingeBuddyNg.Services.Interfaces;
-using BingeBuddyNg.Services.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Functions
 {
@@ -13,8 +13,8 @@ namespace BingeBuddyNg.Functions
     {
         public const string FunctionNameValue = "DrinkReminderFunction";
 
-        public static IUserRepository UserRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
-        public static INotificationService NotificationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<INotificationService>();
+        public static readonly IUserRepository UserRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
+        public static readonly INotificationService NotificationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<INotificationService>();
         public static readonly ITranslationService TranslationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<ITranslationService>();
 
         [FunctionName(FunctionNameValue)]
@@ -42,7 +42,7 @@ namespace BingeBuddyNg.Functions
                     var subject = await TranslationService.GetTranslationAsync(user.Language, "DrinkReminder");
                     var messageContent = await TranslationService.GetTranslationAsync(user.Language, "DrinkReminderMessage");
 
-                    var reminderMessage = new Services.Models.NotificationMessage(subject, messageContent);
+                    var reminderMessage = new NotificationMessage(subject, messageContent);
 
                     NotificationService.SendMessage(new[] { user.PushInfo }, reminderMessage);
                 }

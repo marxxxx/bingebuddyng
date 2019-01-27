@@ -1,12 +1,14 @@
-using BingeBuddyNg.Services.Interfaces;
-using BingeBuddyNg.Services.Messages;
-using BingeBuddyNg.Services.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Calculation;
+using BingeBuddyNg.Services.DrinkEvent;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Functions
 {

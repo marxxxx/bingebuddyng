@@ -1,7 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Interfaces;
-using BingeBuddyNg.Services.Models;
+using BingeBuddyNg.Services.DrinkEvent;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.User;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.DependencyInjection;

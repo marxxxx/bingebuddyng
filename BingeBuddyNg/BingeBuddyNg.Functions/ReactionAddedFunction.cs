@@ -1,6 +1,3 @@
-using BingeBuddyNg.Services.Interfaces;
-using BingeBuddyNg.Services.Messages;
-using BingeBuddyNg.Services.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -8,6 +5,9 @@ using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Functions
 {
@@ -55,7 +55,7 @@ namespace BingeBuddyNg.Functions
                         string message = await GetReactionMessageAsync(userInfo.Language, reactionAddedMessage.ReactionType, reactingUser.Name,
                             activity.UserName, false);
 
-                        var notification = new Services.Models.NotificationMessage(Constants.NotificationIconUrl,
+                        var notification = new NotificationMessage(Constants.NotificationIconUrl,
                             Constants.NotificationIconUrl, Constants.ApplicationUrl, Constants.ApplicationName, message);
                         NotificationService.SendMessage(new[] { userInfo.PushInfo }, notification);
                     }
@@ -77,7 +77,7 @@ namespace BingeBuddyNg.Functions
             if (originUser.PushInfo != null)
             {
                 string message = await GetReactionMessageAsync(originUser.Language, reactionType, reactingUser.Name, originUser.Name);
-                var notification = new Services.Models.NotificationMessage(Constants.NotificationIconUrl,
+                var notification = new NotificationMessage(Constants.NotificationIconUrl,
                     Constants.NotificationIconUrl, Constants.ApplicationUrl, Constants.ApplicationName, message);
                 NotificationService.SendMessage(new[] { originUser.PushInfo }, notification);
             }
@@ -107,13 +107,13 @@ namespace BingeBuddyNg.Functions
 
             switch (reactionType)
             {
-                case Services.Models.ReactionType.Cheers:
+                case ReactionType.Cheers:
                     message = await TranslationService.GetTranslationAsync(language, "CheersReactionMessage" + postFix, originUserName);
                     break;
-                case Services.Models.ReactionType.Like:
+                case ReactionType.Like:
                     message = await TranslationService.GetTranslationAsync(language, "LikeReactionMessage" + postFix, originUserName);
                     break;
-                case Services.Models.ReactionType.Comment:
+                case ReactionType.Comment:
                     message = await TranslationService.GetTranslationAsync(language, "CommentReactionMessage" + postFix, originUserName);
                     break;
             }

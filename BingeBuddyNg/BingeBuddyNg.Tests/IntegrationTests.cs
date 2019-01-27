@@ -1,19 +1,19 @@
-using BingeBuddyNg.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using BingeBuddyNg.Api;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.DTO;
 using System.Linq;
 using BingeBuddyNg.Services;
 using System.IO;
 using BingeBuddyNg.Functions;
-using BingeBuddyNg.Services.Entitys;
+using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.DrinkEvent;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.User;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
-using BingeBuddyNg.Services.Messages;
 
 namespace BingeBuddyNg.Tests
 {

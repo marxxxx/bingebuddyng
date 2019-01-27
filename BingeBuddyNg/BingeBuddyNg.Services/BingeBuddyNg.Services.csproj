@@ -12,10 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Calculation\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BingeBuddyNg.Shared\BingeBuddyNg.Shared.csproj" />
   </ItemGroup>
 

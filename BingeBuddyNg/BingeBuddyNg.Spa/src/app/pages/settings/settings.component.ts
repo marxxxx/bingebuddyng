@@ -67,7 +67,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.settingsService.setLanguage(language.value);
       if (this.currentUser != null) {
         this.currentUser.language = language.value;
-        this.userService.saveUser(this.currentUser).subscribe(_ => console.log('user saved'));
+        this.userService.saveUser(this.currentUser).subscribe(_ => console.log('user saved', this.currentUser));
       }
     } else {
       console.log('SettingsComponent: language unchanged');

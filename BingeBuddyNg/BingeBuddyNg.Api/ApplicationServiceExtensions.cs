@@ -1,12 +1,18 @@
 ﻿using BingeBuddyNg.Services;
-using BingeBuddyNg.Services.Configuration;
-using BingeBuddyNg.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.DrinkEvent;
+using BingeBuddyNg.Services.FriendsRequest;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.Invitation;
+using BingeBuddyNg.Services.Ranking;
+using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Services.Venue;
 
 namespace BingeBuddyNg.Api
 {

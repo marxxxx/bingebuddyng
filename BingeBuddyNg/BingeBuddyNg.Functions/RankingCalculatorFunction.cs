@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Interfaces;
+using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Calculation;
+using BingeBuddyNg.Services.User;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,12 +21,8 @@ namespace BingeBuddyNg.Functions
         [FunctionName("RankingCalculatorFunction")]
         public static async Task Run([TimerTrigger("0 0 */6 * * *")]TimerInfo myTimer, ILogger log)
         {
-            // we stick with poor man's DI for now
-            IUserRepository userRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
-            ICalculationService calculationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<ICalculationService>();
-            IUserStatsRepository userStatsRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserStatsRepository>();
 
-            var users = await userRepository.GetUsersAsync();
+            var users = await UserRepository.GetUsersAsync();
 
             foreach (var u in users)
             {
@@ -44,10 +42,10 @@ namespace BingeBuddyNg.Functions
         {
             DateTime startTimestamp = DateTime.UtcNow.Subtract(TimeSpan.FromDays(30));
 
-            var drinkActivitysLastMonth = await ActivityRepository.GetActivitysForUserAsync(userId, startTimestamp, Services.Models.ActivityType.Drink);
+            var drinkActivityLastMonth = await ActivityRepository.GetActivitysForUserAsync(userId, startTimestamp, ActivityType.Drink);
             
             // filter non-alcoholic drinks and calculate count
-            var alcoholicDrinkCount = drinkActivitysLastMonth.Where(d => d.DrinkType != Services.Models.DrinkType.Anti).Count();
+            var alcoholicDrinkCount = drinkActivityLastMonth.Count(d => d.DrinkType != DrinkType.Anti);
 
             await UserStatsRepository.UpdateTotalDrinkCountLastMonthAsync(userId, alcoholicDrinkCount);
         }

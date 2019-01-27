@@ -1,12 +1,12 @@
 ﻿using BingeBuddyNg.Services;
-using BingeBuddyNg.Services.Interfaces;
-using BingeBuddyNg.Services.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.FriendsRequest;
+using BingeBuddyNg.Services.Infrastructure;
 
 namespace BingeBuddyNg.Api.Controllers
 {

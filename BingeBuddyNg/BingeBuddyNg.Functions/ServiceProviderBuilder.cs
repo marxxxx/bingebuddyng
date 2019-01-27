@@ -1,9 +1,11 @@
 ﻿using BingeBuddyNg.Services;
 using BingeBuddyNg.Services.Calculation;
-using BingeBuddyNg.Services.Configuration;
-using BingeBuddyNg.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.DrinkEvent;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Functions
 {

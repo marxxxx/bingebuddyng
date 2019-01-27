@@ -1,8 +1,8 @@
-﻿using BingeBuddyNg.Services.Interfaces;
-using BingeBuddyNg.Services.Models;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.User;
 
 
 namespace BingeBuddyNg.Services.Calculation
@@ -28,7 +28,7 @@ namespace BingeBuddyNg.Services.Calculation
             orderedAlcoholicDrinks.Add(new DrinkActivityItem(DateTime.UtcNow));
 
             double currentAlcoholization = 0.0;
-            var factor = userDrinkActivity.Gender == Models.Gender.Female ? 0.61 : 0.69;
+            var factor = userDrinkActivity.Gender == Gender.Female ? 0.61 : 0.69;
 
             for (int i = 0; i < orderedAlcoholicDrinks.Count; i++)
             {
@@ -57,11 +57,11 @@ namespace BingeBuddyNg.Services.Calculation
             return new DrinkCalculationResult(userDrinkActivity.UserId, currentAlcoholization, orderedAlcoholicDrinks.Count-1);
         }
 
-        public async Task<DrinkCalculationResult> CalculateStatsForUserAsync(User user)
+        public async Task<DrinkCalculationResult> CalculateStatsForUserAsync(User.User user)
         {
             DateTime startTimestamp = DateTime.UtcNow.Subtract(TimeSpan.FromHours(12));
             var activity = await this.ActivityRepository.GetActivitysForUserAsync(user.Id, startTimestamp,
-                Models.ActivityType.Drink);
+                ActivityType.Drink);
 
             var drinkActivity = activity.Where(a=>a.Timestamp >= startTimestamp).Select(a => new DrinkActivityItem(a.Timestamp, a.DrinkAlcPrc.GetValueOrDefault(),
                 a.DrinkVolume.GetValueOrDefault()));
