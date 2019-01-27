@@ -64,7 +64,7 @@ namespace BingeBuddyNg.Services.User
                     savedUser.Entity.PushInfo = user.PushInfo;
                 }
 
-                if(savedUser.Entity.Language == null && user.Language != null)
+                if(user.Language != null)
                 {
                     savedUser.Entity.Language = user.Language;
                 }
