@@ -37,7 +37,7 @@ namespace BingeBuddyNg.Functions
                 using (var cts = new CancellationTokenSource())
                 {
                     log.LogInformation($"Waiting for next drink to occur.");
-                    await context.CreateTimer(DateTime.UtcNow.AddMinutes(30), cts.Token);
+                    await context.CreateTimer(DateTime.UtcNow.AddHours(1), cts.Token);
 
                     var subject = await TranslationService.GetTranslationAsync(user.Language, "DrinkReminder");
                     var messageContent = await TranslationService.GetTranslationAsync(user.Language, "DrinkReminderMessage");
