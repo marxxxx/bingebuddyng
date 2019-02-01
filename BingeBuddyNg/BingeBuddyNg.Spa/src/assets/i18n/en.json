@@ -104,5 +104,6 @@
     "PersonalVenueEnterActivityMessage": "I entered {0}.",
     "PersonalVenueLeaveActivityMessage": "I left {0}.",
     "Settings": "Settings",
-    "Language": "Language"
+    "Language": "Language",
+    "VenueRanking": "Venue ranking"
 }

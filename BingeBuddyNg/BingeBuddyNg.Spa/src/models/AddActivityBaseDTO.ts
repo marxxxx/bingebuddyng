@@ -1,6 +1,6 @@
 import { VenueModel } from 'src/models/VenueModel';
-import { LocationDTO } from './LocationDTO';
+import { Location } from './Location';
 export class AddActivityBaseDTO {
-    location?: LocationDTO;
+    location?: Location;
     venue?: VenueModel;
 }

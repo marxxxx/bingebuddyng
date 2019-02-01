@@ -15,13 +15,15 @@ namespace BingeBuddyNg.Api.Controllers
     [Route("api/[controller]")]
     public class RankingController : Controller
     {
-        public IRankingService RankingService { get; }
+        public IUserRankingService RankingService { get; }
         public IIdentityService IdentityService { get; set; }
+        public IVenueRankingService VenueRankingService { get; set; }
 
-        public RankingController(IIdentityService identityService, IRankingService rankingService)
+        public RankingController(IIdentityService identityService, IUserRankingService rankingService, IVenueRankingService venueRankingService)
         {
             this.IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.RankingService = rankingService ?? throw new ArgumentNullException(nameof(rankingService));
+            this.VenueRankingService = venueRankingService ?? throw new ArgumentNullException(nameof(venueRankingService));
         }
 
         [HttpGet("[action]")]
@@ -35,6 +37,13 @@ namespace BingeBuddyNg.Api.Controllers
         public async Task<List<UserRanking>> GetScoreRanking()
         {
             var result = await this.RankingService.GetScoreRankingAsync();
+            return result;
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IEnumerable<VenueRanking>> GetVenueRanking()
+        {
+            var result = await this.VenueRankingService.GetVenueRankingAsync();
             return result;
         }
     }

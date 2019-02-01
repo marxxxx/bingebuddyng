@@ -1,8 +1,8 @@
-import { LocationDTO } from './LocationDTO';
+import { Location } from './Location';
 
 export class VenueModel {
     id: string;
-    location: LocationDTO;
+    location: Location;
     name: string;
     distance: number;
 }

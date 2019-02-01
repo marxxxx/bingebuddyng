@@ -45,12 +45,13 @@ namespace BingeBuddyNg.Api
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IFriendRequestService, FriendRequestService>();
-            services.AddScoped<IRankingService, RankingService>();
+            services.AddScoped<IUserRankingService, UserRankingService>();
             services.AddScoped<IInvitationService, InvitationService>();
             services.AddScoped<IDrinkEventRepository, DrinkEventRepository>();
 
             services.AddScoped<IVenueService, VenueService>();
             services.AddScoped<IVenueUserRepository, VenueUserRepository>();
+            services.AddScoped<IVenueRankingService, VenueRankingService>();
         }
     }
 }

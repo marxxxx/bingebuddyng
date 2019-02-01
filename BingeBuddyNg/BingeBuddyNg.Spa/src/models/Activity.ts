@@ -1,6 +1,6 @@
 import { VenueModel } from 'src/models/VenueModel';
 import { DrinkType } from './DrinkType';
-import { LocationDTO } from './LocationDTO';
+import { Location } from './Location';
 import { ActivityType } from './ActivityType';
 import { Reaction } from './Reaction';
 import { CommentReaction } from './CommentReaction';
@@ -13,7 +13,7 @@ export class Activity {
     userName: string;
     message: string;
     locationAddress: string;
-    location: LocationDTO;
+    location: Location;
     drinkType: DrinkType;
     drinkName: string;
     drinkCount: number;

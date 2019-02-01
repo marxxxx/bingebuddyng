@@ -1,4 +1,4 @@
-import { LocationDTO } from '../../models/LocationDTO';
+import { Location } from '../../models/Location';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -14,7 +14,7 @@ export class VenueService {
 
   constructor(private http: HttpClient) { }
 
-  getVenues(location: LocationDTO): Observable<VenueModel[]> {
+  getVenues(location: Location): Observable<VenueModel[]> {
     const url = `${this.baseUrl}?latitude=${location.latitude}&longitude=${location.longitude}`;
     return this.http.get<VenueModel[]>(url);
   }

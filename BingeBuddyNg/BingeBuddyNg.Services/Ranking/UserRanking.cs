@@ -1,6 +1,7 @@
-﻿using System;
+﻿using BingeBuddyNg.Services.User;
+using System;
 
-namespace BingeBuddyNg.Services.User
+namespace BingeBuddyNg.Services.Ranking
 {
     public class UserRanking
     {

@@ -11,7 +11,7 @@ import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { AddMessageActivityDTO } from '../../models/AddMessageActivityDTO';
 import { ReactionDTO } from 'src/models/ReactionDTO';
-import { LocationDTO } from 'src/models/LocationDTO';
+import { Location } from 'src/models/Location';
 
 @Injectable({
   providedIn: 'root'
@@ -56,7 +56,7 @@ export class ActivityService {
     return this.http.post(url, reaction);
   }
 
-  getAddImageActivityUrl(loc: LocationDTO): string {
+  getAddImageActivityUrl(loc: Location): string {
     let url = `${this.baseUrl}/AddImageActivity/`;
     if (loc) {
       url += `${loc.latitude}/${loc.longitude}`;

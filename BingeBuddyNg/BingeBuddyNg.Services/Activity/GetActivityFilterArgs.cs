@@ -9,30 +9,35 @@ namespace BingeBuddyNg.Services.Activity
     {
         private const int DefaultActivityPageSize = 30;
 
-        public bool OnlyWithLocation { get; set; }
+        public ActivityFilterOptions FilterOptions { get; set; }
         public int PageSize { get; set; }
         public TableContinuationToken ContinuationToken { get; set; }
         public List<string> UserIds { get; set; }
+        public ActivityType ActivityType { get; set; }
 
         public GetActivityFilterArgs()
         { }
 
-        public GetActivityFilterArgs(int pageSize, TableContinuationToken continuationToken, bool onlyWithLocation)
+        public GetActivityFilterArgs(int pageSize, TableContinuationToken continuationToken, ActivityFilterOptions filterOptions)
         {
             this.PageSize = pageSize;
             this.ContinuationToken = continuationToken;
-            this.OnlyWithLocation = onlyWithLocation;
+            this.FilterOptions = filterOptions;
         }
 
-        public GetActivityFilterArgs(bool onlyWithLocation, int pageSize = DefaultActivityPageSize, string continuationToken = null)
+        public GetActivityFilterArgs(ActivityFilterOptions filterOptions, 
+            int pageSize = DefaultActivityPageSize,
+            ActivityType activityType = ActivityType.None,
+            string continuationToken = null)
         {
-            this.OnlyWithLocation = onlyWithLocation;
+            this.ActivityType = activityType;
+            this.FilterOptions = filterOptions;
             this.PageSize = pageSize;
             SetContinuationToken(continuationToken);
         }
 
         public GetActivityFilterArgs(IEnumerable<string> userIds, TableContinuationToken continuationToken) 
-            : this(DefaultActivityPageSize, continuationToken, false)
+            : this(DefaultActivityPageSize, continuationToken, ActivityFilterOptions.None)
         {
             this.UserIds = userIds != null ? userIds.ToList() : null;
         }
@@ -47,7 +52,7 @@ namespace BingeBuddyNg.Services.Activity
 
         public override string ToString()
         {
-            return $"{{{nameof(OnlyWithLocation)}={OnlyWithLocation}, {nameof(PageSize)}={PageSize}}}";
+            return $"{{{nameof(FilterOptions)}={FilterOptions}, {nameof(PageSize)}={PageSize}}}";
         }
     }
 }

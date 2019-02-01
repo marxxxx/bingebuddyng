@@ -31,13 +31,25 @@ namespace BingeBuddyNg.Services.Activity
                 TableOperators.Or,
                 TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, previousPartition));
 
-            if (args.OnlyWithLocation)
+            if ((args.FilterOptions & ActivityFilterOptions.WithLocation) == ActivityFilterOptions.WithLocation)
             {
                 whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
                         TableQuery.GenerateFilterConditionForBool(nameof(ActivityTableEntity.HasLocation), QueryComparisons.Equal, true));
             }
 
-            if(args.UserIds != null && args.UserIds.Any())
+            if ((args.FilterOptions & ActivityFilterOptions.WithVenue) == ActivityFilterOptions.WithVenue)
+            {
+                whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
+                        TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.VenueId), QueryComparisons.NotEqual, null));
+            }
+
+            if (args.ActivityType != ActivityType.None)
+            {
+                whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
+                        TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.ActivityType), QueryComparisons.Equal, args.ActivityType.ToString()));
+            }
+
+            if (args.UserIds != null && args.UserIds.Any())
             {
                 string userWhereClause = null;
                 foreach(var userId in args.UserIds)

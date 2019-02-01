@@ -46,6 +46,11 @@ namespace BingeBuddyNg.Api
                     In = "header",
                     Type = "apiKey"
                 });
+
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                {
+                    { "Bearer", new string[] { } }
+                });
             });
 
             // 1. Add Authentication Services

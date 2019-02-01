@@ -104,5 +104,6 @@
     "PersonalVenueEnterActivityMessage": "Ich bin hier eingekehrt: {0}.",
     "PersonalVenueLeaveActivityMessage": "Ich habe {0} verlassen.",
     "Settings": "Einstellungen",
-    "Language": "Sprache"
+    "Language": "Sprache",
+    "VenueRanking": "Lokalwertung"
 }

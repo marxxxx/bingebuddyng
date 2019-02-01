@@ -1,6 +1,6 @@
 import { BehaviorSubject, Subject } from 'rxjs';
 import { VenueModel } from './../../models/VenueModel';
-import { LocationDTO } from 'src/models/LocationDTO';
+import { Location } from 'src/models/Location';
 import { Injectable } from '@angular/core';
 
 /**
@@ -12,9 +12,9 @@ import { Injectable } from '@angular/core';
 export class LocationService {
 
   private readonly locationStorageKey = 'bingebuddy:location';
-  private previousLocation: LocationDTO;
+  private previousLocation: Location;
 
-  currentLocation$ = new BehaviorSubject<LocationDTO>(null);
+  currentLocation$ = new BehaviorSubject<Location>(null);
   locationChanged$ = new Subject();
 
 
@@ -38,7 +38,7 @@ export class LocationService {
     });
   }
 
-  hasVenueLocationChanged(previousLocation: LocationDTO, currentLocation: LocationDTO, currentVenue: VenueModel): boolean {
+  hasVenueLocationChanged(previousLocation: Location, currentLocation: Location, currentVenue: VenueModel): boolean {
 
     if (!currentVenue) {
       return false;
@@ -55,12 +55,12 @@ export class LocationService {
     return hasLocationChanged;
   }
 
-  storeCurrentLocation(location: LocationDTO) {
+  storeCurrentLocation(location: Location) {
     console.log('storeCurrentLocation', location);
     localStorage.setItem(this.locationStorageKey, JSON.stringify(location));
   }
 
-  loadCurrentLocation(): LocationDTO {
+  loadCurrentLocation(): Location {
     const location = localStorage.getItem(this.locationStorageKey);
     if (location == null) {
       console.warn('current location not found');
@@ -71,17 +71,17 @@ export class LocationService {
     return JSON.parse(location);
   }
 
-  getCurrentLocation(): LocationDTO {
+  getCurrentLocation(): Location {
     return this.currentLocation$.value;
   }
 
 
-  getLocation(): Promise<LocationDTO> {
+  getLocation(): Promise<Location> {
 
-    const promise = new Promise<LocationDTO>((resolve, reject) => {
+    const promise = new Promise<Location>((resolve, reject) => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
-          const result = new LocationDTO(position.coords.latitude, position.coords.longitude);
+          const result = new Location(position.coords.latitude, position.coords.longitude);
           resolve(result);
         });
       } else {

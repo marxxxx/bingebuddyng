@@ -3,7 +3,7 @@ import { UserInfo } from './../../../models/UserInfo';
 import { ActivatedRoute } from '@angular/router';
 import { Activity } from '../../../models/Activity';
 import { ActivityService } from '../../services/activity.service';
-import { LocationDTO } from '../../../models/LocationDTO';
+import { Location } from '../../../models/Location';
 import { Component, OnInit, ViewChild } from '@angular/core';
 
 declare var google: any;
@@ -16,7 +16,7 @@ declare var google: any;
 export class BingemapComponent implements OnInit {
 
   selectedActivityId: string;
-  location: LocationDTO;
+  location: Location;
   isBusy = false;
   activitys: Activity[] = [];
 

@@ -4,7 +4,7 @@ using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Services.Ranking
 {
-    public interface IRankingService
+    public interface IUserRankingService
     {
         Task<List<UserRanking>> GetDrinksRankingAsync();
         Task<List<UserRanking>> GetScoreRankingAsync();

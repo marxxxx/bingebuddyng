@@ -1,14 +1,13 @@
-<ng-template #loading>
-  <app-progress-spinner></app-progress-spinner>
-</ng-template>
+<mat-progress-bar *ngIf="isBusy" mode="indeterminate" color="primary"></mat-progress-bar>
 
 <h2>{{'Ranking' | translate }}</h2>
 <p>{{'RankingInfo' | translate }}</p>
 
 
+
 <mat-tab-group>
   <mat-tab label="{{'AlcoholicDrinkCount' | translate }}">
-    <div *ngIf="(ranking$ | async) as ranking; else loading">
+    <div *ngIf="ranking">
       <div *ngFor="let r of ranking; let i=index" fxLayout fxLayoutAlign="space-between center">
         <div fxLayout fxLayoutAlign="start center">
           <p class="rank">{{i+1}}.</p>
@@ -22,8 +21,25 @@
     </div>
   </mat-tab>
 
+
+  <mat-tab label="{{'VenueRanking' | translate }}">
+    <div *ngIf="venueRanking">
+      <div *ngFor="let r of venueRanking; let i=index" fxLayout fxLayoutAlign="space-between center">
+        <div fxLayout fxLayoutAlign="start center">
+          <p class="rank">{{i+1}}.</p>
+          <span>{{r.name}}</span>
+        </div>
+
+        <span class="count">
+          {{r.count}}
+        </span>
+      </div>
+    </div>
+  </mat-tab>
+
+
   <mat-tab label="{{'HardnessScore' | translate }}">
-    <div *ngIf="(score$ | async) as score; else loading">
+    <div *ngIf="score">
       <div *ngFor="let r of score; let i=index" fxLayout fxLayoutAlign="space-between center">
         <div fxLayout fxLayoutAlign="start center">
           <p class="rank">{{i+1}}.</p>
@@ -36,5 +52,6 @@
       </div>
     </div>
   </mat-tab>
+
 
 </mat-tab-group>

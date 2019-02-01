@@ -32,6 +32,7 @@ export class VenueDialogComponent implements OnInit {
   }
 
   load() {
+    this.isBusy = true;
     this.venueService.getVenues(this.args.location)
       .subscribe(r => {
         this.isBusy = false;

@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Services.Ranking
 {
-    public class RankingService : IRankingService
+    public class UserRankingService : IUserRankingService
     {
         public IUserRepository UserRepository { get; }
         public IUserStatsRepository UserStatsRepository { get; }
 
-        public RankingService(IUserRepository userRepository, IUserStatsRepository userStatsRepository)
+        public UserRankingService(IUserRepository userRepository, 
+            IUserStatsRepository userStatsRepository)
         {
             UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             UserStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));

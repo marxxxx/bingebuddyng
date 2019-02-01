@@ -36,15 +36,18 @@ export class AppComponent implements OnInit, OnDestroy {
     private settingsService: SettingsService,
     private pushService: SwPush,
     private updateService: SwUpdate) {
+  }
 
-    auth.handleAuthentication(location.pathname);
+  ngOnInit() {
+
+    this.auth.handleAuthentication(location.pathname);
 
     // this language will be used as a fallback when a translation isn't found in the current language
+    this.translate.setDefaultLang(this.settingsService.DefaultLanguage);
     this.userLanguage = this.settingsService.getLanguage();
-    translate.setDefaultLang(this.settingsService.DefaultLanguage);
 
     // the lang to use, if the lang isn't available, it will use the current loader to get them
-    translate.use(this.userLanguage);
+    this.translate.use(this.userLanguage);
 
     this.sub = this.auth.currentUserProfile$.subscribe(userProfile => {
       this.userProfile = userProfile;
@@ -55,10 +58,8 @@ export class AppComponent implements OnInit, OnDestroy {
       }
 
     });
-  }
 
-  ngOnInit() {
-
+    // subscribe to PWA updates
     this.updateService.available.subscribe(e => {
       const message = this.translate.instant('UpdateAvailableMessage');
       this.snackbar.open(message, 'OK')
@@ -70,6 +71,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     console.log('requesting push subscription ...');
 
+    // registering for web push notifications
     this.pushService.requestSubscription({
       serverPublicKey: this.VAPID_PUBLIC_KEY
     }).then(sub => {
