@@ -11,18 +11,24 @@ using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Functions
 {
-    public static class ReactionAddedFunction
+    public class ReactionAddedFunction
     {
+        public IActivityRepository ActivityRepository { get; }
+        public IUserRepository UserRepository { get; }
+        public INotificationService NotificationService { get; }
+        public ITranslationService TranslationService { get; }
 
-        // we stick with poor man's DI for now
-        public static readonly IActivityRepository ActivityRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IActivityRepository>();
-        public static readonly IUserRepository UserRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
-        public static readonly INotificationService NotificationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<INotificationService>();
-        public static readonly ITranslationService TranslationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<ITranslationService>();
-
+        public ReactionAddedFunction(IActivityRepository activityRepository, IUserRepository userRepository, 
+            INotificationService notificationService, ITranslationService translationService)
+        {
+            this.ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.NotificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+            this.TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
+        }
 
         [FunctionName("ReactionAddedFunction")]
-        public static async Task Run([QueueTrigger(Shared.Constants.QueueNames.ReactionAdded, Connection = "AzureWebJobsStorage")]string reactionQueueItem, ILogger log)
+        public async Task Run([QueueTrigger(Shared.Constants.QueueNames.ReactionAdded, Connection = "AzureWebJobsStorage")]string reactionQueueItem, ILogger log)
         {
             var reactionAddedMessage = JsonConvert.DeserializeObject<ReactionAddedMessage>(reactionQueueItem);
 
@@ -69,7 +75,7 @@ namespace BingeBuddyNg.Functions
 
         }
 
-        private static async Task NotifyOriginUserAsync(
+        private async Task NotifyOriginUserAsync(
             ReactionType reactionType, string originUserId, User reactingUser)
         {
             var originUser = await UserRepository.FindUserAsync(originUserId);
@@ -83,7 +89,7 @@ namespace BingeBuddyNg.Functions
             }
         }
 
-        private static async Task<string> GetReactionMessageAsync(
+        private async Task<string> GetReactionMessageAsync(
             string language,
             ReactionType reactionType,
             string reactingUserName, string originUserName,

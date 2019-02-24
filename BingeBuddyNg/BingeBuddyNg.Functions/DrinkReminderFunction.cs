@@ -9,16 +9,23 @@ using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Functions
 {
-    public static class DrinkReminderFunction
+    public class DrinkReminderFunction
     {
         public const string FunctionNameValue = "DrinkReminderFunction";
 
-        public static readonly IUserRepository UserRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
-        public static readonly INotificationService NotificationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<INotificationService>();
-        public static readonly ITranslationService TranslationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<ITranslationService>();
+        public IUserRepository UserRepository { get; }
+        public INotificationService NotificationService { get; }
+        public ITranslationService TranslationService { get; }
+
+        public DrinkReminderFunction(IUserRepository userRepository, INotificationService notificationService, ITranslationService translationService)
+        {
+            this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.NotificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+            this.TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
+        }
 
         [FunctionName(FunctionNameValue)]
-        public static async Task RunOrchestrator(
+        public async Task RunOrchestrator(
             [OrchestrationTrigger] DurableOrchestrationContext context, ILogger log)
         {
             log.LogInformation($"Running drink reminder function ...");

@@ -12,13 +12,13 @@ using System.IO;
 
 namespace BingeBuddyNg.Functions
 {
-    public static class ImageResizingFunction
+    public class ImageResizingFunction
     {
         private const int ResizeMaxWidth = 1024;
         private const int ResizeMaxHeight = 768;
 
         [FunctionName("ImageResizingFunction")]
-        public static void Run(
+        public void Run(
             [BlobTrigger("img/{name}", Connection = "AzureWebJobsStorage")]Stream strm, string name,
              [Blob("img/{name}", FileAccess.Write, Connection = "AzureWebJobsStorage")]out byte[] resizedData,
             ILogger log)
@@ -57,7 +57,7 @@ namespace BingeBuddyNg.Functions
         }
 
 
-        private static IImageEncoder GetEncoderFromFileName(string name)
+        private IImageEncoder GetEncoderFromFileName(string name)
         {
             string ext = Path.GetExtension(name);
             switch (ext)

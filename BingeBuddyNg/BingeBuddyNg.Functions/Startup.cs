@@ -1,24 +1,24 @@
-﻿using BingeBuddyNg.Services;
-using BingeBuddyNg.Services.Calculation;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using BingeBuddyNg.Functions;
 using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Calculation;
 using BingeBuddyNg.Services.DrinkEvent;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
+[assembly: WebJobsStartup(typeof(Startup))]
 namespace BingeBuddyNg.Functions
 {
-    /// <summary>
-    /// Builds the dependency injection container and registers all services.
-    /// </summary>
-    public static class ServiceProviderBuilder 
-    {
-        public static Lazy<IServiceProvider> Instance = new Lazy<IServiceProvider>(() => BuildServiceProvider(), false);
+    // Implement IWebJobStartup interface.
 
-        private static IServiceProvider BuildServiceProvider()
+    public class Startup : IWebJobsStartup
+    {
+        public void Configure(IWebJobsBuilder builder)
         {
-            var services = new ServiceCollection();
+            var services = builder.Services;
 
             string storageConnectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage", EnvironmentVariableTarget.Process);
             string googleApiKey = Environment.GetEnvironmentVariable("GoogleApiKey", EnvironmentVariableTarget.Process);
@@ -26,8 +26,7 @@ namespace BingeBuddyNg.Functions
             string webPushPrivateKey = Environment.GetEnvironmentVariable("WebPushPrivateKey", EnvironmentVariableTarget.Process);
             string fourSquareApiClientKey = Environment.GetEnvironmentVariable("FourSquareApiClientKey", EnvironmentVariableTarget.Process);
             string fourSquareApiClientSecret = Environment.GetEnvironmentVariable("FourSquareApiClientSecret", EnvironmentVariableTarget.Process);
-
-
+            
             services.AddHttpClient();
 
             var configuration = new AppConfiguration(storageConnectionString, googleApiKey, webPushPublicKey, webPushPrivateKey,
@@ -35,15 +34,15 @@ namespace BingeBuddyNg.Functions
             services.AddSingleton(configuration);
             services.AddSingleton<StorageAccessService>();
             services.AddSingleton<ITranslationService, TranslationService>();
-            services.AddScoped<IActivityRepository, ActivityRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUtilityService, UtilityService>();
-            services.AddScoped<INotificationService, NotificationService>();
-            services.AddScoped<ICalculationService, CalculationService>();
-            services.AddScoped<IUserStatsRepository, UserStatsRepository>();
-            services.AddScoped<IDrinkEventRepository, DrinkEventRepository>();
+            services.AddTransient<IActivityRepository, ActivityRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IUtilityService, UtilityService>();
+            services.AddTransient<INotificationService, NotificationService>();
+            services.AddTransient<ICalculationService, CalculationService>();
+            services.AddTransient<IUserStatsRepository, UserStatsRepository>();
+            services.AddTransient<IDrinkEventRepository, DrinkEventRepository>();
+            services.AddTransient<IUserStatisticsService, UserStatisticsService>();
 
-            return services.BuildServiceProvider();
         }
     }
 }

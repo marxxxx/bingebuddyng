@@ -8,26 +8,31 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
+using System;
 
 namespace BingeBuddyNg.Functions
 {
-    public static class ProfileUpdateFunction
+    public class ProfileUpdateFunction
     {
         private static HttpClient httpClient = new HttpClient();
 
+        public ProfileUpdateFunction(StorageAccessService storageAccessService)
+        {
+            this.StorageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
+        }
+
+        public StorageAccessService StorageAccessService { get; }
+
         [FunctionName("ProfileUpdateFunction")]
-        public static async Task Run([QueueTrigger(Shared.Constants.QueueNames.ProfileUpdate, Connection = "AzureWebJobsStorage")]string queueItem, ILogger log)
+        public async Task Run([QueueTrigger(Shared.Constants.QueueNames.ProfileUpdate, Connection = "AzureWebJobsStorage")]string queueItem, ILogger log)
         {
             var message = JsonConvert.DeserializeObject<ProfileUpdateMessage>(queueItem);
             log.LogInformation($"Updating profile information for user {message.UserId} based on message {queueItem} ...");
 
-            // we stick with poor man's DI for now
-            StorageAccessService storageAccessService = ServiceProviderBuilder.Instance.Value.GetRequiredService<StorageAccessService>();
-
             using (var strm = await httpClient.GetStreamAsync(message.UserProfileImageUrl))
             {
                 string fileName = $"{message.UserId}";
-                await storageAccessService.SaveFileInBlobStorage("profileimg", fileName, strm);
+                await StorageAccessService.SaveFileInBlobStorage("profileimg", fileName, strm);
             }
 
             log.LogInformation($"Successfully updated profile information for user {message.UserId}");

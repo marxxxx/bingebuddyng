@@ -11,17 +11,21 @@ using Microsoft.Extensions.Logging;
 
 namespace BingeBuddyNg.Functions
 {
-    public static class RankingCalculatorFunction
+    public class RankingCalculatorFunction
     {
-        // we stick with poor man's DI for now
-        public static readonly IUserRepository UserRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
-        public static readonly IActivityRepository ActivityRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IActivityRepository>();
-        public static readonly IUserStatsRepository UserStatsRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserStatsRepository>();
+        public IUserRepository UserRepository { get; }
+        
+        public IUserStatisticsService UserStatisticsService { get; }
+
+        public RankingCalculatorFunction(IUserRepository userRepository, IUserStatisticsService userStatisticsService)
+        {
+            this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.UserStatisticsService = userStatisticsService ?? throw new ArgumentNullException(nameof(userStatisticsService));
+        }
 
         [FunctionName("RankingCalculatorFunction")]
-        public static async Task Run([TimerTrigger("0 0 */6 * * *")]TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("0 0 */6 * * *")]TimerInfo myTimer, ILogger log)
         {
-
             var users = await UserRepository.GetUsersAsync();
 
             foreach (var u in users)
@@ -29,7 +33,7 @@ namespace BingeBuddyNg.Functions
                 try
                 {
                     log.LogInformation($"Calculating ranking for user [{u}] ...");
-                    await UpdateRankingForUserAsync(u.Id, log);
+                    await UserStatisticsService.UpdateRankingForUserAsync(u.Id);
                 }
                 catch (Exception ex)
                 {
@@ -38,16 +42,6 @@ namespace BingeBuddyNg.Functions
             }
         }
 
-        public static async Task UpdateRankingForUserAsync(string userId, ILogger log)
-        {
-            DateTime startTimestamp = DateTime.UtcNow.Subtract(TimeSpan.FromDays(30));
 
-            var drinkActivityLastMonth = await ActivityRepository.GetActivitysForUserAsync(userId, startTimestamp, ActivityType.Drink);
-            
-            // filter non-alcoholic drinks and calculate count
-            var alcoholicDrinkCount = drinkActivityLastMonth.Count(d => d.DrinkType != DrinkType.Anti);
-
-            await UserStatsRepository.UpdateTotalDrinkCountLastMonthAsync(userId, alcoholicDrinkCount);
-        }
     }
 }

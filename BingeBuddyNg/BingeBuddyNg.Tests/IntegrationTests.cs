@@ -45,6 +45,7 @@ namespace BingeBuddyNg.Tests
 
         }
 
+        [Ignore]
         [TestMethod]
         public async Task MigrateProfileImages()
         {
@@ -59,6 +60,7 @@ namespace BingeBuddyNg.Tests
             
         }
 
+        [Ignore]
         [TestMethod]
         public async Task MigrateUserId()
         {
@@ -86,10 +88,10 @@ namespace BingeBuddyNg.Tests
         public async Task GetActivityFeedTest()
         {
             IActivityRepository activityRepository = serviceProvider.GetRequiredService<IActivityRepository>();
-            var result = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 1000));
+            var result = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(ActivityFilterOptions.None, pageSize: 1000));
             
             var timestamps = result.ResultPage.Select(p => p.Timestamp).ToList();
-            var nextPage = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 10, result.ContinuationToken));
+            var nextPage = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(ActivityFilterOptions.None, pageSize: 10, continuationToken: result.ContinuationToken));
             var timestampsNextPage = nextPage.ResultPage.Select(p => p.Timestamp).ToList();
             Assert.IsTrue(timestampsNextPage.All(t => timestamps.All(t1 => t1 < t)));
         }
@@ -99,8 +101,9 @@ namespace BingeBuddyNg.Tests
         {
             var strm = File.OpenRead(@".\Files\landscape.jpg");
 
+            var function = new ImageResizingFunction();
             
-            BingeBuddyNg.Functions.ImageResizingFunction.Run(strm, "landscape.jpg", out byte[] resizedData, new MockLogger());
+            function.Run(strm, "landscape.jpg", out byte[] resizedData, new MockLogger());
 
             File.WriteAllBytes(@".\Files\landscape.resized.jpg", resizedData);
 
@@ -112,8 +115,8 @@ namespace BingeBuddyNg.Tests
         {
             var strm = File.OpenRead(@".\Files\portrait.jpg");
 
-
-            BingeBuddyNg.Functions.ImageResizingFunction.Run(strm, "portrait.jpg", out byte[] resizedData, new MockLogger());
+            var function = new ImageResizingFunction();
+            function.Run(strm, "portrait.jpg", out byte[] resizedData, new MockLogger());
 
             File.WriteAllBytes(@".\Files\portrait.resized.jpg", resizedData);
         }
