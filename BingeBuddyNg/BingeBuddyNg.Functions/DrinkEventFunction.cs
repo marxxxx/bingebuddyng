@@ -10,17 +10,26 @@ using Microsoft.Extensions.Logging;
 
 namespace BingeBuddyNg.Functions
 {
-    public static class DrinkEventFunction
+    public class DrinkEventFunction
     {
         public const int LuckyNumber = 1;
 
-        public static readonly IUserRepository UserRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
-        public static readonly IDrinkEventRepository DrinkEventRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IDrinkEventRepository>();
-        public static readonly INotificationService NotificationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<INotificationService>();
-        public static readonly ITranslationService TranslationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<ITranslationService>();
+        public IUserRepository UserRepository { get; }
+        public IDrinkEventRepository DrinkEventRepository { get; }
+        public INotificationService NotificationService { get; }
+        public ITranslationService TranslationService { get; }
+
+        public DrinkEventFunction(IUserRepository userRepository, IDrinkEventRepository drinkEventRepository, 
+            INotificationService notificationService, ITranslationService translationService)
+        {
+            this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.DrinkEventRepository = drinkEventRepository ?? throw new ArgumentNullException(nameof(drinkEventRepository));
+            this.NotificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+            this.TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
+        }
 
         [FunctionName("DrinkEventFunction")]
-        public static async Task Run([TimerTrigger("0 */60 * * * *")]TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("0 */60 * * * *")]TimerInfo myTimer, ILogger log)
         {
             log.LogInformation($"Drink Event executed at: {DateTime.Now}");
 
@@ -51,20 +60,20 @@ namespace BingeBuddyNg.Functions
             }
         }
 
-        private static int CalculateEventProbability()
+        private int CalculateEventProbability()
         {
-            int max = 20;
+            int max = 30;
             if ((DateTime.UtcNow.DayOfWeek == DayOfWeek.Friday ||
                 DateTime.UtcNow.DayOfWeek == DayOfWeek.Saturday) &&
                 (DateTime.UtcNow.Hour > 16))
             {
-                max = 6;
+                max = 10;
             };
 
             if((DateTime.UtcNow.Day == 31 && DateTime.UtcNow.Month == 12 ) ||
                 (DateTime.UtcNow.Day == 1 && DateTime.UtcNow.Month == 1 && DateTime.UtcNow.Hour < 8))
             {
-                max = 5;
+                max = 7;
             }
 
             return max;

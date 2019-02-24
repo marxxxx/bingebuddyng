@@ -12,21 +12,35 @@ using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Functions
 {
-    public static class ActivityAddedFunction
+    public class ActivityAddedFunction
     {
-        // we stick with poor man's DI for now
-        public static readonly IUtilityService UtilityService = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUtilityService>();
-        public static readonly IActivityRepository ActivityRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IActivityRepository>();
-        public static readonly IUserRepository UserRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserRepository>();
-        public static readonly ICalculationService CalculationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<ICalculationService>();
-        public static readonly IUserStatsRepository UserStatsRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IUserStatsRepository>();
-        public static readonly INotificationService NotificationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<INotificationService>();
-        public static readonly IDrinkEventRepository DrinkEventRepository = ServiceProviderBuilder.Instance.Value.GetRequiredService<IDrinkEventRepository>();
-        public static readonly ITranslationService TranslationService = ServiceProviderBuilder.Instance.Value.GetRequiredService<ITranslationService>();
+        public IUtilityService UtilityService { get; }
+        public IActivityRepository ActivityRepository { get; }
+        public IUserRepository UserRepository { get; }        
+        public IUserStatsRepository UserStatsRepository { get; }
+        public INotificationService NotificationService { get; }
+        public IDrinkEventRepository DrinkEventRepository { get; }
+        public ITranslationService TranslationService { get; }
+        public IUserStatisticsService UserStatisticsService { get; }
 
+
+        public ActivityAddedFunction(IUtilityService utilityService, IActivityRepository activityRepository,
+            IUserRepository userRepository, IUserStatsRepository userStatsRepository, 
+            INotificationService notificationService, IDrinkEventRepository drinkEventRepository, 
+            ITranslationService translationService, IUserStatisticsService userStatisticsService)
+        {
+            UtilityService = utilityService ?? throw new ArgumentNullException(nameof(utilityService));
+            ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            UserStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
+            NotificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+            DrinkEventRepository = drinkEventRepository ?? throw new ArgumentNullException(nameof(drinkEventRepository));
+            TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
+            UserStatisticsService = userStatisticsService ?? throw new ArgumentNullException(nameof(userStatisticsService));
+        }
 
         [FunctionName("ActivityAddedFunction")]
-        public static async Task Run(
+        public async Task Run(
             [QueueTrigger(Shared.Constants.QueueNames.ActivityAdded, Connection = "AzureWebJobsStorage")]string message,
             [OrchestrationClient]DurableOrchestrationClient starter,
             ILogger log)
@@ -59,8 +73,8 @@ namespace BingeBuddyNg.Functions
                 try
                 {
                     // Immediately update Stats for current user
-                    userStats = await DrinkCalculatorFunction.UpdateStatsForUserAsync(currentUser, log);
-                    await RankingCalculatorFunction.UpdateRankingForUserAsync(currentUser.Id, log);
+                    userStats = await UserStatisticsService.UpdateStatsForUserAsync(currentUser);
+                    await UserStatisticsService.UpdateRankingForUserAsync(currentUser.Id);
                 }
                 catch (Exception ex)
                 {
@@ -114,7 +128,7 @@ namespace BingeBuddyNg.Functions
             
         }
 
-        private static async Task HandleMonitoringAsync(DurableOrchestrationClient starter, User currentUser)
+        private async Task HandleMonitoringAsync(DurableOrchestrationClient starter, User currentUser)
         {
             if (currentUser.MonitoringInstanceId != null)
             {
@@ -126,7 +140,7 @@ namespace BingeBuddyNg.Functions
             await UserRepository.UpdateMonitoringInstanceAsync(currentUser.Id, monitoringInstanceId);
         }
 
-        private static async Task HandleLocationUpdateAsync(Activity activity)
+        private async Task HandleLocationUpdateAsync(Activity activity)
         {
             var address = await UtilityService.GetAddressFromLongLatAsync(activity.Location);
             activity.LocationAddress = address.AddressText;
@@ -134,7 +148,7 @@ namespace BingeBuddyNg.Functions
             activity.CountryShortName = address.CountryShortName;
         }
 
-        private static async Task HandleUserNotificationsAsync(ILogger log, Activity activity, User currentUser)
+        private async Task HandleUserNotificationsAsync(ILogger log, Activity activity, User currentUser)
         {
             var friendUserIds = currentUser.GetVisibleFriendUserIds(false);
 
@@ -160,7 +174,7 @@ namespace BingeBuddyNg.Functions
             }
         }
 
-        private static async Task HandleDrinkEventsAsync(Activity activity, User currentUser)
+        private async Task HandleDrinkEventsAsync(Activity activity, User currentUser)
         {
             if (activity.ActivityType == ActivityType.Drink || activity.DrinkType != DrinkType.Anti)
             {
@@ -188,14 +202,14 @@ namespace BingeBuddyNg.Functions
             }
         }
 
-        private static bool ShouldNotifyUsers(Activity activity, UserStatistics userStats)
+        private bool ShouldNotifyUsers(Activity activity, UserStatistics userStats)
         {
             bool shouldNotify = ((activity.ActivityType == ActivityType.Image || activity.ActivityType == ActivityType.Message) ||
                 (userStats == null || userStats.CurrentNightDrinks == 1 || (userStats.CurrentNightDrinks % 5 == 0)));
             return shouldNotify;
         }
 
-        private static async Task<NotificationMessage> GetNotificationMessageAsync(string language, Activity activity)
+        private async Task<NotificationMessage> GetNotificationMessageAsync(string language, Activity activity)
         {
             string locationSnippet = null;
             if (!string.IsNullOrEmpty(activity.LocationAddress))

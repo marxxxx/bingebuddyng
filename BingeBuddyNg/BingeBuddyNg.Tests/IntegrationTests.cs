@@ -101,8 +101,9 @@ namespace BingeBuddyNg.Tests
         {
             var strm = File.OpenRead(@".\Files\landscape.jpg");
 
+            var function = new ImageResizingFunction();
             
-            BingeBuddyNg.Functions.ImageResizingFunction.Run(strm, "landscape.jpg", out byte[] resizedData, new MockLogger());
+            function.Run(strm, "landscape.jpg", out byte[] resizedData, new MockLogger());
 
             File.WriteAllBytes(@".\Files\landscape.resized.jpg", resizedData);
 
@@ -114,8 +115,8 @@ namespace BingeBuddyNg.Tests
         {
             var strm = File.OpenRead(@".\Files\portrait.jpg");
 
-
-            BingeBuddyNg.Functions.ImageResizingFunction.Run(strm, "portrait.jpg", out byte[] resizedData, new MockLogger());
+            var function = new ImageResizingFunction();
+            function.Run(strm, "portrait.jpg", out byte[] resizedData, new MockLogger());
 
             File.WriteAllBytes(@".\Files\portrait.resized.jpg", resizedData);
         }
