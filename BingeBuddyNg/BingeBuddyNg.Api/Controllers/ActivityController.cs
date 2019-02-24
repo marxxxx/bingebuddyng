@@ -19,9 +19,6 @@ namespace BingeBuddyNg.Api.Controllers
     [ApiController]
     public class ActivityController : ControllerBase
     {
-        private ITranslationService trans;
-        private ILogger<ActivityController> logger;
-
         public IIdentityService IdentityService { get; }
         public IActivityService ActivityService { get; }
         public IActivityRepository ActivityRepository { get; }

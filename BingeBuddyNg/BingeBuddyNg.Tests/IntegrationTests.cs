@@ -45,6 +45,7 @@ namespace BingeBuddyNg.Tests
 
         }
 
+        [Ignore]
         [TestMethod]
         public async Task MigrateProfileImages()
         {
@@ -59,6 +60,7 @@ namespace BingeBuddyNg.Tests
             
         }
 
+        [Ignore]
         [TestMethod]
         public async Task MigrateUserId()
         {
@@ -86,10 +88,10 @@ namespace BingeBuddyNg.Tests
         public async Task GetActivityFeedTest()
         {
             IActivityRepository activityRepository = serviceProvider.GetRequiredService<IActivityRepository>();
-            var result = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 1000));
+            var result = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(ActivityFilterOptions.None, pageSize: 1000));
             
             var timestamps = result.ResultPage.Select(p => p.Timestamp).ToList();
-            var nextPage = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(false, 10, result.ContinuationToken));
+            var nextPage = await activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(ActivityFilterOptions.None, pageSize: 10, continuationToken: result.ContinuationToken));
             var timestampsNextPage = nextPage.ResultPage.Select(p => p.Timestamp).ToList();
             Assert.IsTrue(timestampsNextPage.All(t => timestamps.All(t1 => t1 < t)));
         }
