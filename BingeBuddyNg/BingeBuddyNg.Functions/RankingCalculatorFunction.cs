@@ -26,7 +26,6 @@ namespace BingeBuddyNg.Functions
         [FunctionName("RankingCalculatorFunction")]
         public async Task Run([TimerTrigger("0 0 */6 * * *")]TimerInfo myTimer, ILogger log)
         {
-
             var users = await UserRepository.GetUsersAsync();
 
             foreach (var u in users)
