@@ -173,7 +173,9 @@ namespace BingeBuddyNg.Services.Activity
 
         private string GetPartitionKey(DateTime timestampUtc)
         {
-            return $"{MaxTimestamp.Year- timestampUtc.Year}-{12-timestampUtc.Month}";
+            int year = MaxTimestamp.Year - timestampUtc.Year;
+            int month = 12 - timestampUtc.Month;
+            return string.Format("{0:D2}-{1:D2}", year, month);
         }
 
         private string GetPartitionKey(string rowKey)
