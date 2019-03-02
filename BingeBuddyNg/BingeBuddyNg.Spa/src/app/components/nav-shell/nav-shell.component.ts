@@ -67,17 +67,6 @@ export class NavShellComponent implements OnInit, OnDestroy {
     private updatePendingFriendRequests(currentUserId: any) {
         this.friendRequestService.getPendingFriendRequests().subscribe(r => {
             this.friendRequests = r.filter(f => f.requestingUser.userId !== currentUserId);
-            const id = 'friendrequests';
-            if (this.friendRequests.length > 0) {
-                this.shellInteraction.addShellIcon({
-                    id: id,
-                    name: 'sentiment_satisfied_alt',
-                    tooltip: 'PendingFriendRequests',
-                    link: '/friendrequests'
-                });
-            } else {
-                this.shellInteraction.removeShellIcon(id);
-            }
         });
     }
 
