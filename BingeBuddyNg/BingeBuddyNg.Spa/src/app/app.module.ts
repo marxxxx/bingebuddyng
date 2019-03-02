@@ -3,7 +3,7 @@ import { MeComponent } from './components/me/me.component';
 import { ActivityService } from './services/activity.service';
 import { AuthHttpInterceptor } from './services/auth.interceptor';
 import { AuthService } from './services/auth.service';
-import { DataService } from './services/data.service';
+import { DrinkEventService } from './services/drinkevent.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -17,7 +17,7 @@ import { ActivityFeedComponent } from './pages/activity-feed/activity-feed.compo
 import { StatsComponent } from './pages/stats/stats.component';
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { CallbackComponent } from './components/callback/callback.component';
-import { AppMaterialModule } from './app-material/app-material.module';
+import { AppMaterialModule } from './app-material.module';
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -52,6 +52,7 @@ import { InviteFriendComponent } from './pages/invite-friend/invite-friend.compo
 import { WelcomeInvitedComponent } from './pages/welcome-invited/welcome-invited.component';
 import { VenueDialogComponent } from './components/venue-dialog/venue-dialog.component';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { DrinkEventCounterComponent } from './components/drink-event-counter/drink-event-counter.component';
 
 
 // AoT requires an exported function for factories
@@ -86,7 +87,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     WelcomeInvitedComponent,
     VenueDialogComponent,
     ConfirmationDialogComponent,
-    SettingsComponent
+    SettingsComponent,
+    DrinkEventCounterComponent
   ],
   entryComponents: [DrinkDialogComponent, MessageDialogComponent, VenueDialogComponent, ConfirmationDialogComponent],
   imports: [
@@ -115,7 +117,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FileUploadModule
   ],
   providers: [
-    DataService, AuthService, UserService, ActivityService, NotificationService,
+    DrinkEventService, AuthService, UserService, ActivityService, NotificationService,
     FriendRequestService,
     {
       provide: HTTP_INTERCEPTORS,

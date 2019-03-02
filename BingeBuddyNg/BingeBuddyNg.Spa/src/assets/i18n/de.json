@@ -105,5 +105,7 @@
     "PersonalVenueLeaveActivityMessage": "Ich habe {0} verlassen.",
     "Settings": "Einstellungen",
     "Language": "Sprache",
-    "VenueRanking": "Lokalwertung"
+    "VenueRanking": "Lokalwertung",
+
+    "DrinkEventMessage": "Trink etwas bevor der Countdown abläuft und verdiene dir damit Härtepunkte!"
 }

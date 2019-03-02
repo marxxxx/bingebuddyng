@@ -2,7 +2,7 @@ import { UserProfile } from './../models/UserProfile';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { User } from '../models/User';
 import { UserService } from './services/user.service';
-import { DataService } from './services/data.service';
+import { DrinkEventService } from './services/drinkevent.service';
 import { MatSnackBar } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from './services/auth.service';

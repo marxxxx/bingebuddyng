@@ -38,6 +38,9 @@
 
       <span>Binge Buddy</span>
       <div class="right" fxLayout fxLayoutAlign="space-between center">
+
+        <!-- Drink Event counter-->
+        <app-drink-event-counter></app-drink-event-counter>
         <!-- Friendsrequests -->
         <button mat-icon-button *ngIf="friendRequests.length > 0" routerLink="/friendrequests">
           <mat-icon [matBadge]="friendRequests.length" matBadgeColor="warn">sentiment_satisfied_alt</mat-icon>

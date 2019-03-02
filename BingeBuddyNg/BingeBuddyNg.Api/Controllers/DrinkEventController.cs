@@ -23,10 +23,11 @@ namespace BingeBuddyNg.Api.Controllers
             this.DrinkEventRepository = drinkEventRepository ?? throw new ArgumentNullException(nameof(drinkEventRepository));
         }
 
-        [HttpGet("[action]")]
+        [HttpGet("current")]
         public async Task<DrinkEvent> GetCurrentDrinkEvent()
         {
             var result = await this.DrinkEventRepository.FindCurrentDrinkEventAsync();
+
             return result;
         }
     }

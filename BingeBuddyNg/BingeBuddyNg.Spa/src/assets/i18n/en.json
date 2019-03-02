@@ -105,5 +105,7 @@
     "PersonalVenueLeaveActivityMessage": "I left {0}.",
     "Settings": "Settings",
     "Language": "Language",
-    "VenueRanking": "Venue ranking"
+    "VenueRanking": "Venue ranking",
+
+    "DrinkEventMessage": "Drink something before the countdown expires and earn hardness points!"
 }
