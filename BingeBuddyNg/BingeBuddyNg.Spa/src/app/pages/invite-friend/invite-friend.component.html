@@ -9,8 +9,8 @@
 
   <div *ngIf="invitationToken" class="margin-top">{{'InviteShareInfo'| translate}}</div>
 
-  <div fxLayout *ngIf="invitationToken" class="margin-top">
-    <textarea #invitationTokenArea fxFlex="90" readonly>{{getInvitationLink()}}</textarea>
+  <div fxLayout *ngIf="invitationToken" class="margin-top" style="width: 100%">
+    <textarea #invitationTokenArea fxFlex="90" readonly (click)="onCopyToClipboard(invitationTokenArea)">{{getInvitationLink()}}</textarea>
     <button *ngIf="!isSharingSupported()" class="share-button" mat-icon-button fxFlex="10" (click)="onCopyToClipboard(invitationTokenArea)">
       <mat-icon>file_copy</mat-icon>
     </button>

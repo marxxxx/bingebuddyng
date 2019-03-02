@@ -14,7 +14,7 @@ import { MatSnackBar } from '@angular/material';
 export class InviteFriendComponent implements OnInit {
 
   isBusy = false;
-  invitationToken: string;
+  invitationToken: string = 'xxx';
   currentUserProfile: UserProfile;
   navigatorInstance: any = navigator;
 
@@ -47,9 +47,6 @@ export class InviteFriendComponent implements OnInit {
     document.execCommand('copy');
 
     this.snackbar.open(this.translateService.instant('CopiedToClipboardNowSend'), 'OK');
-
-    this.invitationToken = null;
-
   }
 
   onShare() {
