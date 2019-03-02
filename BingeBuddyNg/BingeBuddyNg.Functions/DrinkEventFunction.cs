@@ -67,13 +67,13 @@ namespace BingeBuddyNg.Functions
                 DateTime.UtcNow.DayOfWeek == DayOfWeek.Saturday) &&
                 (DateTime.UtcNow.Hour > 16))
             {
-                max = 10;
+                max = 7;
             };
 
             if((DateTime.UtcNow.Day == 31 && DateTime.UtcNow.Month == 12 ) ||
                 (DateTime.UtcNow.Day == 1 && DateTime.UtcNow.Month == 1 && DateTime.UtcNow.Hour < 8))
             {
-                max = 7;
+                max = 5;
             }
 
             return max;
