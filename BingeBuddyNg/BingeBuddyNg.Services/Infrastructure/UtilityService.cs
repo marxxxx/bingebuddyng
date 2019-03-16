@@ -9,6 +9,11 @@ namespace BingeBuddyNg.Services.Infrastructure
 {
     public class UtilityService : IUtilityService
     {
+        /// <summary>
+        /// Using static client for now until IHttpClientFactory issue with .NET Core 2.2 is resolved.
+        /// </summary>
+        private static HttpClient httpClient = new HttpClient();
+
         public IHttpClientFactory HttpClientFactory { get; }
         public AppConfiguration Configuration { get; }
 
@@ -25,7 +30,7 @@ namespace BingeBuddyNg.Services.Infrastructure
             string lon = location.Longitude.ToString().Replace(',', '.');
             var url = $"https://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lon}&sensor=true&key={Configuration.GoogleAPIKey}";
 
-            var httpClient = this.HttpClientFactory.CreateClient();
+            //var httpClient = this.HttpClientFactory.CreateClient();
             var result = await httpClient.GetStringAsync(url);
 
             GoogleGeoCodeResponse response = JsonConvert.DeserializeObject<GoogleGeoCodeResponse>(result);

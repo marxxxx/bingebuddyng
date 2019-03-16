@@ -42,6 +42,7 @@ namespace BingeBuddyNg.Functions
             services.AddTransient<IUserStatsRepository, UserStatsRepository>();
             services.AddTransient<IDrinkEventRepository, DrinkEventRepository>();
             services.AddTransient<IUserStatisticsService, UserStatisticsService>();
+            services.AddTransient<IUtilityService, UtilityService>();
 
         }
     }
