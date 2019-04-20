@@ -1,4 +1,4 @@
-﻿namespace BingeBuddyNg.Services.Activity
+﻿namespace BingeBuddyNg.Services.Drink
 {
     public enum DrinkType
     {

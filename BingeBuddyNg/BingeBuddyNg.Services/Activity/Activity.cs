@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Venue;
 
 namespace BingeBuddyNg.Services.Activity

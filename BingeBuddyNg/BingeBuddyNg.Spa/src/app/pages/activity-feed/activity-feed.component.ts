@@ -225,7 +225,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
       }
       case DrinkType.Anti: {
         activity = {
-          drinkId: '3',
+          drinkId: '4',
           drinkType: DrinkType.Anti,
           drinkName: 'Anti',
           alcPrc: 0,
