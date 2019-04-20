@@ -24,10 +24,12 @@ export class DrinkEventCounterComponent implements OnInit, OnDestroy {
       r => {
         this.currentDrinkEvent = r;
         if (this.currentDrinkEvent != null) {
-          console.log('DrinkEventCounterComponent: Active drink event detected! Starting counter.')
+          console.log(
+            'DrinkEventCounterComponent: Active drink event detected! Starting counter.'
+          );
           this.startCounter();
         } else {
-          console.log('DrinkEventCounterComponent: No active drink event.')
+          console.log('DrinkEventCounterComponent: No active drink event.');
         }
       },
       e => {
@@ -40,10 +42,7 @@ export class DrinkEventCounterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-      this.intervalId = null;
-    }
+    this.stopCounter();
   }
 
   startCounter(): any {
@@ -52,11 +51,25 @@ export class DrinkEventCounterComponent implements OnInit, OnDestroy {
     this.intervalId = setInterval(() => this.updateRemainingTime(), 1000);
   }
 
-  updateRemainingTime() {
-    const remainingSeconds = moment(this.currentDrinkEvent.endUtc).diff(moment(), 'seconds');
-    const duration = moment.duration(remainingSeconds, 'seconds');
-    this.remainingTime = duration.minutes() + ':' + duration.seconds();
+  stopCounter() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+  }
 
-    console.log('DrinkEventCounter: remaining time', this.remainingTime);
+  updateRemainingTime() {
+    const remainingSeconds = moment(this.currentDrinkEvent.endUtc).diff(
+      moment(),
+      'seconds'
+    );
+    if (remainingSeconds < 0) {
+      this.stopCounter();
+    } else {
+      const duration = moment.duration(remainingSeconds, 'seconds');
+      this.remainingTime = duration.minutes() + ':' + duration.seconds();
+
+      console.log('DrinkEventCounter: remaining time', this.remainingTime);
+    }
   }
 }

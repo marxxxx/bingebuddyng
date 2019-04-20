@@ -44,7 +44,7 @@ export class AuthHttpInterceptor implements HttpInterceptor {
 
 
     isApiCall(request: HttpRequest<any>): boolean {
-        return request.url.indexOf('/api/') >= 0;
+        return request.url.indexOf('/api') >= 0;
     }
 
     addAccessTokenToRequest(request: HttpRequest<any>): HttpRequest<any> {
