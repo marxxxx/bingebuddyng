@@ -36,10 +36,10 @@ namespace BingeBuddyNg.Api.Controllers
 
         // POST api/<controller>
         [HttpPost]
-        public async Task Post([FromBody]Drink drink)
+        public async Task Post([FromBody]IEnumerable<Drink> drinks)
         {
             var userId = this.IdentityService.GetCurrentUserId();
-            await this.DrinkRepository.SaveDrinkAsync(userId, drink);
+            await this.DrinkRepository.SaveDrinksAsync(userId, drinks);
         }
 
      

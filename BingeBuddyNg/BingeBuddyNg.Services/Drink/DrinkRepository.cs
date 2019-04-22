@@ -49,13 +49,18 @@ namespace BingeBuddyNg.Services.Drink
             }
         }
 
-        public async Task SaveDrinkAsync(string userId, Drink drink)
+        public async Task SaveDrinksAsync(string userId, IEnumerable<Drink> drinks)
         {
-            var entity = new DrinkEntity(userId, drink);
+            TableBatchOperation batch = new TableBatchOperation();
+            foreach(var drink in drinks)
+            {
+                var entity = new DrinkEntity(userId, drink);
+                batch.Add(TableOperation.InsertOrReplace(entity));
+            }
 
             var table = StorageAccessService.GetTableReference(TableName);
 
-            await table.ExecuteAsync(TableOperation.InsertOrReplace(entity));
+            await table.ExecuteBatchAsync(batch);
         }
 
         public async Task DeleteDrinkAsync(string userId, string drinkId)
