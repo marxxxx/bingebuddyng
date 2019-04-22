@@ -1,3 +1,9 @@
 <app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
 
 <h2>{{'Drinks' | translate }}</h2>
+
+<div fxLayout="row" *ngFor="let d of drinks">
+<app-drink-icon [drinkType]="d.drinkType"></app-drink-icon>
+<span class="drink-name">{{d.name}}</span>
+<span class="drink-info">({{d.volume}} ml, {{d.alcPrc}} % vol.)</span>
+</div>

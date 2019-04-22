@@ -30,6 +30,8 @@ import { LocationService } from 'src/app/services/location.service';
 import { VenueDialogMode } from 'src/app/components/venue-dialog/VenueDialogMode';
 import { VenueDialogResult } from 'src/app/components/venue-dialog/VenueDialogResult';
 import { TranslateService } from '@ngx-translate/core';
+import { DrinkService } from 'src/app/services/drink.service';
+import { Drink } from 'src/models/Drink';
 
 @Component({
   selector: 'app-activity-feed',
@@ -62,6 +64,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   DrinkType = DrinkType;
   isCommentOpen = false;
   currentVenue: VenueModel;
+  drinks: Drink[];
 
   @ViewChild('#activity-container')
   container: any;
@@ -76,8 +79,8 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     private venueService: VenueService,
     private userService: UserService,
     public locationService: LocationService,
+    private drinkService: DrinkService,
     private changeRef: ChangeDetectorRef,
-    private route: ActivatedRoute,
     private snackBar: MatSnackBar,
     private translateService: TranslateService,
     private dialog: MatDialog) { }
@@ -88,6 +91,8 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     this.initFileUploader();
 
     this.load();
+
+    this.loadDrinks();
 
     this.subscriptions.push(this.notification.activityReceived$.subscribe(_ => this.load()));
     this.subscriptions.push(this.auth.currentUserProfile$
@@ -119,6 +124,16 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
         });
 
     }));
+  }
+
+  loadDrinks() {
+
+    this.drinkService.getDrinks().subscribe( d => {
+      this.drinks = d;
+      console.log('successfully got drinks', this.drinks);
+    }, e => {
+      console.error('failed to get drinks', e);
+    })
   }
 
 
@@ -175,11 +190,19 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     return this.dialog.open(DrinkDialogComponent, { data: args, width: '90%' }).afterClosed();
   }
 
+  onDrink( drink: Drink) {
+    const activity: AddDrinkActivityDTO = {
+      drinkId: drink.id,
+      drinkType: drink.drinkType,
+      drinkName: drink.name,
+      alcPrc: drink.alcPrc,
+      volume: drink.volume,
+      location: this.locationService.getCurrentLocation(),
+      venue: this.currentVenue
+    };
 
-  onAddDrink(drinkType: DrinkType) {
-    this.displayDrinkDialog(drinkType).subscribe(_ => {
+    this.displayDrinkDialog(drink.drinkType).subscribe(_ => {
       this.isBusyAdding = true;
-      const activity = this.getDrinkActivity(drinkType);
       this.activityService.addDrinkActivity(activity).subscribe(r => {
         this.isBusyAdding = false;
         this.load();
@@ -190,56 +213,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     });
   }
 
-  getDrinkActivity(type: DrinkType): AddDrinkActivityDTO {
-    let activity: AddDrinkActivityDTO = null;
-    switch (type) {
-      case DrinkType.Beer: {
-        activity = {
-          drinkId: '1',
-          drinkType: DrinkType.Beer,
-          drinkName: 'Beer',
-          alcPrc: 5,
-          volume: 500
-        };
-        break;
-      }
-      case DrinkType.Wine: {
-        activity = {
-          drinkId: '2',
-          drinkType: DrinkType.Wine,
-          drinkName: 'Wine',
-          alcPrc: 9,
-          volume: 125
-        };
-        break;
-      }
-      case DrinkType.Shot: {
-        activity = {
-          drinkId: '3',
-          drinkType: DrinkType.Shot,
-          drinkName: 'Shot',
-          alcPrc: 20,
-          volume: 40
-        };
-        break;
-      }
-      case DrinkType.Anti: {
-        activity = {
-          drinkId: '4',
-          drinkType: DrinkType.Anti,
-          drinkName: 'Anti',
-          alcPrc: 0,
-          volume: 250
-        };
-        break;
-      }
-    }
-
-    activity.location = this.locationService.getCurrentLocation();
-    activity.venue = this.currentVenue;
-
-    return activity;
-  }
 
   onAddMessage() {
     this.dialog.open(MessageDialogComponent, { width: '80%' }).afterClosed().subscribe(message => {
