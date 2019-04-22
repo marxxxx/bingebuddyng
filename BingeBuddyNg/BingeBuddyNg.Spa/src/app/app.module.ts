@@ -53,7 +53,7 @@ import { WelcomeInvitedComponent } from './pages/welcome-invited/welcome-invited
 import { VenueDialogComponent } from './components/venue-dialog/venue-dialog.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { DrinkEventCounterComponent } from './components/drink-event-counter/drink-event-counter.component';
-
+import { DrinksComponent } from './pages/drinks/drinks.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -88,7 +88,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     VenueDialogComponent,
     ConfirmationDialogComponent,
     SettingsComponent,
-    DrinkEventCounterComponent
+    DrinkEventCounterComponent,
+    DrinksComponent
   ],
   entryComponents: [DrinkDialogComponent, MessageDialogComponent, VenueDialogComponent, ConfirmationDialogComponent],
   imports: [

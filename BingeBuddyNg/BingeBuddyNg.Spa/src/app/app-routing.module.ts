@@ -13,6 +13,7 @@ import { AuthGuard } from './services/auth.guard';
 import { RankingComponent } from './pages/ranking/ranking.component';
 import { InviteFriendComponent } from './pages/invite-friend/invite-friend.component';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { DrinksComponent } from './pages/drinks/drinks.component';
 
 const routes: Routes = [
   {
@@ -60,6 +61,11 @@ const routes: Routes = [
   {
     path: 'ranking',
     component: RankingComponent,
+    canActivate: [AuthGuard]
+  },
+   {
+    path: 'drinks',
+    component: DrinksComponent,
     canActivate: [AuthGuard]
   },
   {
