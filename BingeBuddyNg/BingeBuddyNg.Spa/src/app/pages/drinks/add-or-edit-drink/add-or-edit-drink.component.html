@@ -1,0 +1,22 @@
+<form [formGroup]="form">
+  <fieldset>
+    <label>{{ 'Name' | translate }}</label>
+    <input type="text" formControlName="name" />
+  </fieldset>
+
+  <fieldset>
+    <label>{{ 'DrinkType' | translate }}</label>
+  </fieldset>
+
+  <fieldset>
+    <label>{{ 'AlcPrc' | translate }}</label>
+    <input type="text" formControlName="alcPrc" />
+  </fieldset>
+
+  <fieldset>
+    <label>{{ 'Volume' | translate }}</label>
+    <input type="text" formControlName="volume" />
+  </fieldset>
+  <button mat-raised-button color="primary" type="submit">{{'Save' | translate }}</button>
+  <button mat-button>{{'Cancel' | translate }}</button>
+</form>

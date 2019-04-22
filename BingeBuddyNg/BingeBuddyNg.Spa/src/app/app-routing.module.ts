@@ -14,6 +14,7 @@ import { RankingComponent } from './pages/ranking/ranking.component';
 import { InviteFriendComponent } from './pages/invite-friend/invite-friend.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { DrinksComponent } from './pages/drinks/drinks.component';
+import { AddOrEditDrinkComponent } from './pages/drinks/add-or-edit-drink/add-or-edit-drink.component';
 
 const routes: Routes = [
   {
@@ -63,10 +64,22 @@ const routes: Routes = [
     component: RankingComponent,
     canActivate: [AuthGuard]
   },
-   {
+  {
     path: 'drinks',
     component: DrinksComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'add',
+        component: AddOrEditDrinkComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'edit/:drinkId',
+        component: AddOrEditDrinkComponent,
+        canActivate: [AuthGuard]
+      }
+    ]
   },
   {
     path: 'settings',
@@ -88,4 +101,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

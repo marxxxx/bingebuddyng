@@ -32,7 +32,13 @@ namespace BingeBuddyNg.Api.Controllers
             return await this.DrinkRepository.GetDrinksAsync(userId);
         }
 
-      
+        [HttpGet("{drinkId}")]
+        public async Task<Drink> GetById(string drinkId)
+        {
+            var userId = this.IdentityService.GetCurrentUserId();
+            return await this.DrinkRepository.GetDrinkAsync(userId, drinkId);
+        }
+
 
         // POST api/<controller>
         [HttpPost]

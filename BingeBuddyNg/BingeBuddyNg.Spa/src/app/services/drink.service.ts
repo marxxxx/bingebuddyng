@@ -18,6 +18,10 @@ export class DrinkService {
     return this.http.get<Drink[]>(this.baseUrl);
   }
 
+  getDrink(drinkId: string): Observable<Drink> {
+    return this.http.get<Drink>(`${this.baseUrl}/${drinkId}`);
+  }
+
   saveDrinks(drinks: Drink[]): Observable<any> {
     return this.http.post(this.baseUrl, drinks);
   }

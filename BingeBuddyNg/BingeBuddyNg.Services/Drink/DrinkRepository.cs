@@ -49,6 +49,12 @@ namespace BingeBuddyNg.Services.Drink
             }
         }
 
+        public async Task<Drink> GetDrinkAsync(string userId, string drinkId)
+        {
+            var drink = await this.StorageAccessService.GetTableEntityAsync<DrinkEntity>(TableName, userId, drinkId);
+            return drink.ToDrink();
+        }
+
         public async Task SaveDrinksAsync(string userId, IEnumerable<Drink> drinks)
         {
             TableBatchOperation batch = new TableBatchOperation();

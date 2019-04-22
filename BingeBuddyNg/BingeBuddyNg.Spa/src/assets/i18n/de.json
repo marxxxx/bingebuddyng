@@ -107,5 +107,7 @@
     "Language": "Sprache",
     "VenueRanking": "Lokalwertung",
 
-    "DrinkEventMessage": "Trink etwas bevor der Countdown abläuft und verdiene dir damit Härtepunkte!"
+    "DrinkEventMessage": "Trink etwas bevor der Countdown abläuft und verdiene dir damit Härtepunkte!",
+    "DeleteDrink": "Getränk löschen",
+    "ReallyDeleteDrink": "Willst du das Getränk wirklich löschen?"
 }
