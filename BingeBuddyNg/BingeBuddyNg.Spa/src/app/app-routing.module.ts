@@ -67,19 +67,19 @@ const routes: Routes = [
   {
     path: 'drinks',
     component: DrinksComponent,
-    canActivate: [AuthGuard],
-    children: [
-      {
-        path: 'add',
-        component: AddOrEditDrinkComponent,
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'edit/:drinkId',
-        component: AddOrEditDrinkComponent,
-        canActivate: [AuthGuard]
-      }
-    ]
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'add-drink',
+    component: AddOrEditDrinkComponent,
+    canActivate: [AuthGuard]
+
+  },
+  {
+    path: 'edit-drink/:drinkId',
+    component: AddOrEditDrinkComponent,
+    canActivate: [AuthGuard]
+
   },
   {
     path: 'settings',
