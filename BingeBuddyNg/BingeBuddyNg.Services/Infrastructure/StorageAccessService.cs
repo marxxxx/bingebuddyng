@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace BingeBuddyNg.Services.Infrastructure
 {
-    public class StorageAccessService
+    public class StorageAccessService : IStorageAccessService
     {
         private AppConfiguration config;
 

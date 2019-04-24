@@ -1,6 +1,7 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport="true"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="false">
     <mat-toolbar *ngIf="!(isHandset$ | async)" color="primary">Menu</mat-toolbar>
     <mat-toolbar *ngIf="isHandset$ | async" color="primary"><button mat-icon-button (click)="onNavListItemClicked()">
         <mat-icon>close</mat-icon>
@@ -12,10 +13,15 @@
           | translate }}</span></a>
       <a mat-list-item routerLink="/bingemap"><img src="../../assets/img/map.png"><span>{{'BingeMap'
           | translate }}</span></a>
-      <a mat-list-item routerLink="/drinkers"><img src="../../assets/img/beer.png"><span>{{'Drinkers'
-          | translate }}</span></a>
+      <a mat-list-item routerLink="/drinkers">
+        <mat-icon class="menu-item">people</mat-icon>{{'Drinkers'
+          | translate }}
+      </a>
       <a mat-list-item routerLink="/ranking">
         <mat-icon class="menu-item">cake</mat-icon>{{'Ranking' | translate }}
+      </a>
+      <a mat-list-item routerLink="/drinks">
+        <img src="../../assets/img/beer.png"><span>{{'Drinks' | translate }}</span>
       </a>
       <a mat-list-item routerLink="/invite-friend">
         <mat-icon class="menu-item">share</mat-icon>{{'InviteFriend' | translate }}
@@ -24,7 +30,8 @@
         <mat-icon class="menu-item">settings</mat-icon>{{'Settings' | translate }}
       </a>
       <a mat-list-item routerLink="/friendrequests"><img src="../../assets/img/like.png"><span>{{'FriendRequests'
-          | translate }}</span><span *ngIf="friendRequests && friendRequests.length > 0"> ({{friendRequests.length}})</span></a>
+          | translate }}</span><span *ngIf="friendRequests && friendRequests.length > 0">
+          ({{friendRequests.length}})</span></a>
       <mat-divider *ngIf="auth.isAuthenticated()"></mat-divider>
       <a *ngIf="auth.isAuthenticated()" mat-list-item (click)="onLogout()"><img src="../../assets/img/logout.png"><span>{{'Logout'
           | translate }}</span></a>
@@ -32,7 +39,8 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
 

@@ -1,0 +1,29 @@
+.drink-name {
+  margin-left: 10px;
+  font-size: 22px;
+}
+
+.drink-info {
+  justify-self: center;
+  align-self: center;
+
+}
+
+
+.drink {
+  margin-bottom: 20px;
+}
+
+button[mat-fab] {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+}
+
+mat-card-actions {
+  text-align: right;
+}
+
+mat-card-actions button {
+  text-transform: uppercase;
+}

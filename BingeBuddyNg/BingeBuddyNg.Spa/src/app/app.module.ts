@@ -31,7 +31,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { EcoFabSpeedDialModule } from '@ecodev/fab-speed-dial';
 import { ActivityComponent } from './components/activity/activity.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProgressSpinnerComponent } from './components/progress-spinner/progress-spinner.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import { NotificationService } from './services/notification.service';
@@ -53,6 +53,8 @@ import { WelcomeInvitedComponent } from './pages/welcome-invited/welcome-invited
 import { VenueDialogComponent } from './components/venue-dialog/venue-dialog.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { DrinkEventCounterComponent } from './components/drink-event-counter/drink-event-counter.component';
+import { DrinksComponent } from './pages/drinks/drinks.component';
+import { AddOrEditDrinkComponent } from './pages/drinks/add-or-edit-drink/add-or-edit-drink.component';
 
 
 // AoT requires an exported function for factories
@@ -88,13 +90,16 @@ export function HttpLoaderFactory(http: HttpClient) {
     VenueDialogComponent,
     ConfirmationDialogComponent,
     SettingsComponent,
-    DrinkEventCounterComponent
+    DrinkEventCounterComponent,
+    DrinksComponent,
+    AddOrEditDrinkComponent
   ],
   entryComponents: [DrinkDialogComponent, MessageDialogComponent, VenueDialogComponent, ConfirmationDialogComponent],
   imports: [
     BrowserModule,
     InViewportModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     ChartsModule,
     EcoFabSpeedDialModule,

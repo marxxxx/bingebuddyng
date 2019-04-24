@@ -13,6 +13,7 @@ using BingeBuddyNg.Services.Invitation;
 using BingeBuddyNg.Services.Ranking;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.Venue;
+using BingeBuddyNg.Services.Drink;
 
 namespace BingeBuddyNg.Api
 {
@@ -52,6 +53,8 @@ namespace BingeBuddyNg.Api
             services.AddScoped<IVenueService, VenueService>();
             services.AddScoped<IVenueUserRepository, VenueUserRepository>();
             services.AddScoped<IVenueRankingService, VenueRankingService>();
+
+            services.AddScoped<IDrinkRepository, DrinkRepository>();
         }
     }
 }

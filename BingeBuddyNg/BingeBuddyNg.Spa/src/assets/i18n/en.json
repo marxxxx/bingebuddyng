@@ -107,5 +107,13 @@
     "Language": "Language",
     "VenueRanking": "Venue ranking",
 
-    "DrinkEventMessage": "Drink something before the countdown expires and earn hardness points!"
+    "DrinkEventMessage": "Drink something before the countdown expires and earn hardness points!",
+    "DeleteDrink": "Delete drink",
+    "ReallyDeleteDrink": "Do you really want to delete this drink?",
+    "AddNewDrink": "Add new drink",
+    "DrinkType": "drink type",
+    "AlcPrc": "alcohol percentage",
+    "Volume":"volume",
+    "Save":"Save",
+    "EditDrink": "Edit drink"
 }

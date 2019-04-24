@@ -14,6 +14,7 @@ using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
+using BingeBuddyNg.Services.Drink;
 
 namespace BingeBuddyNg.Tests
 {
@@ -36,6 +37,20 @@ namespace BingeBuddyNg.Tests
 
         }
 
+        [TestMethod]
+        public async Task AddCustomDrinks()
+        {
+            var drinkSvc = serviceProvider.GetRequiredService<IDrinkRepository>();
+            var userSvc = serviceProvider.GetRequiredService<IUserRepository>();
+
+            var users = await userSvc.GetUsersAsync();
+            foreach(var u in users)
+            {
+                await drinkSvc.SaveDrinksAsync(u.Id, DrinkRepository.DefaultDrinks);
+            }
+        }
+
+        [Ignore]
         [TestMethod]
         public async Task TestTranslations()
         {

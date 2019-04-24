@@ -9,6 +9,7 @@ using BingeBuddyNg.Services.Calculation;
 using BingeBuddyNg.Services.DrinkEvent;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Services.Drink;
 
 namespace BingeBuddyNg.Functions
 {
