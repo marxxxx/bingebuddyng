@@ -14,7 +14,7 @@ namespace BingeBuddyNg.Services.Drink
         private const string TableName = "drinks";
 
 
-        private static readonly IEnumerable<Drink> DefaultDrinks = new List<Drink>()
+        public static readonly IEnumerable<Drink> DefaultDrinks = new List<Drink>()
             {
             new Drink("1", DrinkType.Beer, "Beer", 5, 500 ),
             new Drink("2", DrinkType.Wine, "Wine", 9, 125),
@@ -37,30 +37,37 @@ namespace BingeBuddyNg.Services.Drink
             string whereClause =
                    TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId);
 
-            var drinks = await this.StorageAccessService.QueryTableAsync<DrinkEntity>(TableName, whereClause);
+            var drinks = await this.StorageAccessService.QueryTableAsync<DrinkTableEntity>(TableName, whereClause);
 
-            if(drinks.Count == 0)
+            if (drinks.Count == 0)
             {
                 return DefaultDrinks;
             }
             else
             {
-                return drinks.Select(d=>d.ToDrink());
+                return drinks.Select(d => d.ToDrink());
             }
         }
 
         public async Task<Drink> GetDrinkAsync(string userId, string drinkId)
         {
-            var drink = await this.StorageAccessService.GetTableEntityAsync<DrinkEntity>(TableName, userId, drinkId);
+            var drink = await this.StorageAccessService.GetTableEntityAsync<DrinkTableEntity>(TableName, userId, drinkId);
             return drink.ToDrink();
         }
 
         public async Task SaveDrinksAsync(string userId, IEnumerable<Drink> drinks)
         {
-            TableBatchOperation batch = new TableBatchOperation();
-            foreach(var drink in drinks)
+
+            foreach (var d in drinks.Where(d => string.IsNullOrEmpty(d.Id)))
             {
-                var entity = new DrinkEntity(userId, drink);
+                d.Id = Guid.NewGuid().ToString();
+            }
+
+
+            TableBatchOperation batch = new TableBatchOperation();
+            foreach (var drink in drinks)
+            {
+                var entity = new DrinkTableEntity(userId, drink);
                 batch.Add(TableOperation.InsertOrReplace(entity));
             }
 
@@ -71,7 +78,7 @@ namespace BingeBuddyNg.Services.Drink
 
         public async Task DeleteDrinkAsync(string userId, string drinkId)
         {
-            var entity = await StorageAccessService.GetTableEntityAsync<DrinkEntity>(TableName, userId, drinkId);
+            var entity = await StorageAccessService.GetTableEntityAsync<DrinkTableEntity>(TableName, userId, drinkId);
 
             var table = StorageAccessService.GetTableReference(TableName);
             await table.ExecuteAsync(TableOperation.Delete(entity));

@@ -109,5 +109,11 @@
 
     "DrinkEventMessage": "Trink etwas bevor der Countdown abläuft und verdiene dir damit Härtepunkte!",
     "DeleteDrink": "Getränk löschen",
-    "ReallyDeleteDrink": "Willst du das Getränk wirklich löschen?"
+    "ReallyDeleteDrink": "Willst du das Getränk wirklich löschen?",
+    "AddNewDrink": "Neues Getränk hinzufügen",
+    "DrinkType": "Getränketyp",
+    "AlcPrc": "Alkoholgehalt",
+    "Volume":"Menge",
+    "Save":"Speichern",
+    "EditDrink":"Getränk bearbeiten"
 }

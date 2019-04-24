@@ -42,14 +42,14 @@ export class DrinksComponent implements OnInit {
     };
 
     this.shellInteraction.showConfirmationDialog(args).subscribe(isConfirmed => {
-      if(isConfirmed) {
-        this.drinkService.deleteDrink(d.id).subscribe( d => {
+      if (isConfirmed) {
+        this.drinkService.deleteDrink(d.id).subscribe(d => {
           this.load();
-        }, e=> {
+        }, e => {
           console.error(e);
-        })
+        });
       }
-    })
+    });
   }
 
 }

@@ -1,7 +1,7 @@
 import { DrinkType } from './DrinkType';
 
 export class Drink {
-  id: string;
+  id?: string;
   drinkType: DrinkType;
   name: string;
   alcPrc: number;
