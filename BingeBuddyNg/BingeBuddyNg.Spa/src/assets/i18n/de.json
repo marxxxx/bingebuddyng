@@ -115,5 +115,8 @@
     "AlcPrc": "Alkoholgehalt",
     "Volume":"Menge",
     "Save":"Speichern",
-    "EditDrink":"Getränk bearbeiten"
+    "EditDrink":"Getränk bearbeiten",
+    "Delete": "Löschen",
+    "Edit": "Ändern",
+    "Drink": "Trinken"
 }

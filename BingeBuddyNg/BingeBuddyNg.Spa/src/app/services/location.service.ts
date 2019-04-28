@@ -1,4 +1,5 @@
-import { BehaviorSubject, Subject } from 'rxjs';
+import { VenueService } from './venue.service';
+import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { VenueModel } from './../../models/VenueModel';
 import { Location } from 'src/models/Location';
 import { Injectable } from '@angular/core';
@@ -17,8 +18,9 @@ export class LocationService {
   currentLocation$ = new BehaviorSubject<Location>(null);
   locationChanged$ = new Subject();
 
+  currentVenue: VenueModel;
 
-  constructor() { }
+  constructor(private venueService: VenueService) { }
 
 
   refreshLocation(currentVenue: VenueModel) {
@@ -36,6 +38,24 @@ export class LocationService {
       console.error('error retrieving location');
       console.error(e);
     });
+  }
+
+  setCurrentVenue(venue: VenueModel): Observable<{}> {
+    this.currentVenue = venue;
+    this.refreshLocation(venue);
+
+    // update venue for user in backend
+    return this.venueService.updateCurrentVenue(venue);
+  }
+
+  resetCurrentVenue(): Observable<{}> {
+    this.currentVenue = null;
+    return this.venueService.resetCurrentVenue();
+  }
+
+
+  getCurrentVenue(): VenueModel {
+    return this.currentVenue;
   }
 
   hasVenueLocationChanged(previousLocation: Location, currentLocation: Location, currentVenue: VenueModel): boolean {

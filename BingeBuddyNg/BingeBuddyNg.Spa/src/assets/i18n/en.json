@@ -115,5 +115,8 @@
     "AlcPrc": "alcohol percentage",
     "Volume":"volume",
     "Save":"Save",
-    "EditDrink": "Edit drink"
+    "EditDrink": "Edit drink",
+    "Delete": "Delete",
+    "Edit": "Edit",
+    "Drink": "Drink"
 }

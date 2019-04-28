@@ -3,6 +3,9 @@ import { DrinkService } from 'src/app/services/drink.service';
 import { Drink } from 'src/models/Drink';
 import { ShellInteractionService } from 'src/app/services/shell-interaction.service';
 import { ConfirmationDialogArgs } from 'src/app/components/confirmation-dialog/ConfirmationDialogArgs';
+import { filter } from 'rxjs/operators';
+import { DrinkActivityService } from 'src/app/services/drink-activity.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-drinks',
@@ -15,6 +18,8 @@ export class DrinksComponent implements OnInit {
   isBusy = false;
 
   constructor(private drinkService: DrinkService,
+    private drinkActivityService: DrinkActivityService,
+    private router: Router,
     private shellInteraction: ShellInteractionService) { }
 
   ngOnInit() {
@@ -41,15 +46,19 @@ export class DrinksComponent implements OnInit {
       cancelButtonCaption: 'Cancel'
     };
 
-    this.shellInteraction.showConfirmationDialog(args).subscribe(isConfirmed => {
-      if (isConfirmed) {
-        this.drinkService.deleteDrink(d.id).subscribe(d => {
+    this.shellInteraction.showConfirmationDialog(args)
+      .pipe(filter(isConfirmed => isConfirmed)).subscribe(_ => {
+        this.drinkService.deleteDrink(d.id).subscribe(_ => {
           this.load();
         }, e => {
           console.error(e);
         });
-      }
-    });
+      });
+  }
+
+  onDrink(d: Drink) {
+    this.drinkActivityService.drink(d).subscribe(_ => this.router.navigateByUrl('/activity'),
+      e => console.error('Error drinking drink', d, e));
   }
 
 }

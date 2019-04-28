@@ -1,3 +1,4 @@
+import { DrinkActivityService } from './../../services/drink-activity.service';
 import { ConfirmationDialogComponent } from './../../components/confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationDialogArgs } from './../../components/confirmation-dialog/ConfirmationDialogArgs';
 import { UserService } from 'src/app/services/user.service';
@@ -10,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DrinkType } from './../../../models/DrinkType';
 import { AddDrinkActivityDTO } from './../../../models/AddDrinkActivityDTO';
 import { Observable, Subscription, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 import { Location } from '../../../models/Location';
 import { ActivityStatsDTO } from '../../../models/ActivityStatsDTO';
 import { ActivityService } from '../../services/activity.service';
@@ -22,8 +23,6 @@ import { ShellInteractionService } from '../../services/shell-interaction.servic
 import { FileUploader, FileItem, FileUploaderOptions } from 'ng2-file-upload';
 import { NotificationService } from '../../services/notification.service';
 import { trigger, style, transition, animate } from '@angular/animations';
-import { DrinkDialogComponent } from '../../components/drink-dialog/drink-dialog.component';
-import { DrinkDialogArgs } from '../../components/drink-dialog/DrinkDialogArgs';
 import { UserInfo } from './../../../models/UserInfo';
 import { User } from './../../../models/User';
 import { LocationService } from 'src/app/services/location.service';
@@ -63,7 +62,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   currentUser: User;
   DrinkType = DrinkType;
   isCommentOpen = false;
-  currentVenue: VenueModel;
   drinks: Drink[];
 
   @ViewChild('#activity-container')
@@ -79,6 +77,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     private venueService: VenueService,
     private userService: UserService,
     public locationService: LocationService,
+    private drinkActivityService: DrinkActivityService,
     private drinkService: DrinkService,
     private changeRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
@@ -90,27 +89,27 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     this.initFileUploader();
 
-    this.load();
-
-    this.loadDrinks();
-
     this.subscriptions.push(this.notification.activityReceived$.subscribe(_ => this.load()));
     this.subscriptions.push(this.auth.currentUserProfile$
       .pipe(map(p => (p != null ? { userId: p.sub, userName: p.nickname } : null)))
-      .subscribe(p => {
-        this.currentUserInfo = p;
+      .subscribe(user => {
+        this.currentUserInfo = user;
 
         // load user to get venue info
-        if (p) {
-          this.userService.getUser(p.userId)
+        if (user) {
+
+
+          this.load();
+          this.loadDrinks();
+
+          this.userService.getUser(user.userId)
             .subscribe(u => {
               console.log('loaded user', u);
               this.currentUser = u;
-              this.currentVenue = u.currentVenue;
+              this.locationService.setCurrentVenue(u.currentVenue);
 
-              // refresh location
-              this.locationService.refreshLocation(this.currentVenue);
-            }, e => console.error('error loading user', p.userId, e));
+            }, e => console.error('error loading user', user.userId, e));
+
         }
       }));
 
@@ -128,12 +127,12 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
   loadDrinks() {
 
-    this.drinkService.getDrinks().subscribe( d => {
+    this.drinkService.getDrinks().subscribe(d => {
       this.drinks = d;
       console.log('successfully got drinks', this.drinks);
     }, e => {
       console.error('failed to get drinks', e);
-    })
+    });
   }
 
 
@@ -185,32 +184,19 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     });
   }
 
-  displayDrinkDialog(type: DrinkType): Observable<any> {
-    const args: DrinkDialogArgs = { drinkType: type };
-    return this.dialog.open(DrinkDialogComponent, { data: args, width: '90%' }).afterClosed();
-  }
 
-  onDrink( drink: Drink) {
-    const activity: AddDrinkActivityDTO = {
-      drinkId: drink.id,
-      drinkType: drink.drinkType,
-      drinkName: drink.name,
-      alcPrc: drink.alcPrc,
-      volume: drink.volume,
-      location: this.locationService.getCurrentLocation(),
-      venue: this.currentVenue
-    };
 
-    this.displayDrinkDialog(drink.drinkType).subscribe(_ => {
-      this.isBusyAdding = true;
-      this.activityService.addDrinkActivity(activity).subscribe(r => {
+  onDrink(drink: Drink) {
+    this.isBusyAdding = true;
+
+    this.drinkActivityService.drink(drink)
+      .subscribe(r => {
         this.isBusyAdding = false;
         this.load();
       }, e => {
         this.isBusyAdding = false;
         this.shellInteraction.showErrorMessage();
       });
-    });
   }
 
 
@@ -255,15 +241,8 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
             break;
           }
           case 'change': {
-            this.currentVenue = result.venue;
-
-            // update venue for user in backend
-            this.venueService.updateCurrentVenue(this.currentVenue).subscribe(
-              _ => {
-                console.log('updated current venue', this.currentVenue);
-                this.load();
-              },
-              e => console.error('error updating current venue', e));
+            this.locationService.setCurrentVenue(result.venue).subscribe(_ => this.load());
+            break;
           }
         }
       });
@@ -279,20 +258,11 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
       cancelButtonCaption: 'Cancel'
     };
 
-    this.dialog.open(ConfirmationDialogComponent, { data: args }).afterClosed().subscribe(isConfirmed => {
-
-      if (isConfirmed) {
-        this.currentVenue = null;
-        this.venueService.resetCurrentVenue().subscribe(
-          _ => {
-            console.log('reset current venue');
-            this.load();
-          },
-          e => console.error('error resetting current venue', e));
-      }
-    });
-
-
+    this.dialog.open(ConfirmationDialogComponent, { data: args }).afterClosed()
+      .pipe(filter(isConfirmed => isConfirmed))
+      .subscribe(_ =>
+        this.locationService.resetCurrentVenue().subscribe( _ => this.load())
+      );
   }
 
 

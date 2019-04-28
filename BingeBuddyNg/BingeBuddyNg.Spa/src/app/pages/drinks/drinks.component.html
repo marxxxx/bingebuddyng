@@ -12,6 +12,7 @@
   <mat-card-actions>
     <button mat-button (click)="onDelete(d)">{{'Delete' | translate }}</button>
     <button mat-button [routerLink]="['/edit-drink', d.id]">{{'Edit' | translate }}</button>
+    <button mat-raised-button color="primary" (click)="onDrink(d)">{{'Drink' | translate }}</button>
   </mat-card-actions>
 </mat-card>
 

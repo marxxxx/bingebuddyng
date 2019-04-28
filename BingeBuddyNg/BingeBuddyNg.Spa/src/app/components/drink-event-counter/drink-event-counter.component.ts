@@ -3,6 +3,9 @@ import { DrinkEventService } from 'src/app/services/drinkevent.service';
 import { DrinkEvent } from 'src/models/DrinkEvent';
 import * as moment from 'moment';
 import { MatTooltip } from '@angular/material';
+import { AuthService } from 'src/app/services/auth.service';
+import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-drink-event-counter',
@@ -13,23 +16,43 @@ export class DrinkEventCounterComponent implements OnInit, OnDestroy {
   remainingTime: string;
   currentDrinkEvent: DrinkEvent;
   intervalId: any;
+  subscriptions: Subscription[] = [];
 
   @ViewChild(MatTooltip)
   tooltips: MatTooltip;
 
-  constructor(private drinkEventService: DrinkEventService) {}
+  constructor(private authService: AuthService, private drinkEventService: DrinkEventService) { }
 
   ngOnInit() {
+
+    this.subscriptions.push(this.authService.isLoggedIn$.pipe(filter(isLoggedIn => isLoggedIn))
+      .subscribe(_ => {
+        this.load();
+      }));
+
+    this.subscriptions.push(this.drinkEventService.currentUserScored$.subscribe(_ => this.currentDrinkEvent = null));
+  }
+
+  isVisible(): boolean {
+
+    if (this.currentDrinkEvent === null) {
+      return false;
+    }
+
+    const currentUserAlreadyScored = this.currentDrinkEvent.scoringUserIds.includes(this.authService.currentUserProfile$.value.sub);
+    if (currentUserAlreadyScored === true) {
+      return false;
+    }
+
+    return true;
+  }
+
+  load() {
     this.drinkEventService.getCurrentDrinkEvent().subscribe(
       r => {
         this.currentDrinkEvent = r;
-        if (this.currentDrinkEvent != null) {
-          console.log(
-            'DrinkEventCounterComponent: Active drink event detected! Starting counter.'
-          );
+        if (this.isVisible()) {
           this.startCounter();
-        } else {
-          console.log('DrinkEventCounterComponent: No active drink event.');
         }
       },
       e => {
@@ -43,6 +66,8 @@ export class DrinkEventCounterComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.stopCounter();
+
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   startCounter(): any {

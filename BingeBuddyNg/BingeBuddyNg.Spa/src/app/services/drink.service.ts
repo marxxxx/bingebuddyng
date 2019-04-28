@@ -26,7 +26,7 @@ export class DrinkService {
     return this.http.post(this.baseUrl, drinks);
   }
 
-  deleteDrink(drinkId: string) : Observable<any> {
+  deleteDrink(drinkId: string): Observable<any> {
     const url = `${this.baseUrl}/${drinkId}`;
     return this.http.delete(url);
   }
