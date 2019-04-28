@@ -14,14 +14,14 @@ namespace BingeBuddyNg.Functions
 {
     public class ProfileUpdateFunction
     {
-        private static HttpClient httpClient = new HttpClient();
-
-        public ProfileUpdateFunction(StorageAccessService storageAccessService)
+        public ProfileUpdateFunction(StorageAccessService storageAccessService, IHttpClientFactory httpClientFactory)
         {
             this.StorageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
+            this.HttpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
         }
 
         public StorageAccessService StorageAccessService { get; }
+        public IHttpClientFactory HttpClientFactory { get; }
 
         [FunctionName("ProfileUpdateFunction")]
         public async Task Run([QueueTrigger(Shared.Constants.QueueNames.ProfileUpdate, Connection = "AzureWebJobsStorage")]string queueItem, ILogger log)
@@ -29,6 +29,7 @@ namespace BingeBuddyNg.Functions
             var message = JsonConvert.DeserializeObject<ProfileUpdateMessage>(queueItem);
             log.LogInformation($"Updating profile information for user {message.UserId} based on message {queueItem} ...");
 
+            var httpClient = HttpClientFactory.CreateClient();
             using (var strm = await httpClient.GetStreamAsync(message.UserProfileImageUrl))
             {
                 string fileName = $"{message.UserId}";

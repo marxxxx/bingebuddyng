@@ -11,8 +11,6 @@ namespace BingeBuddyNg.Functions
 {
     public class DrinkReminderFunction
     {
-        public const string FunctionNameValue = "DrinkReminderFunction";
-
         public IUserRepository UserRepository { get; }
         public INotificationService NotificationService { get; }
         public ITranslationService TranslationService { get; }
@@ -24,7 +22,7 @@ namespace BingeBuddyNg.Functions
             this.TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
         }
 
-        [FunctionName(FunctionNameValue)]
+        [FunctionName(nameof(DrinkReminderFunction))]
         public async Task RunOrchestrator(
             [OrchestrationTrigger] DurableOrchestrationContext context, ILogger log)
         {

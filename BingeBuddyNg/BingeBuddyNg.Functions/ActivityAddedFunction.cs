@@ -137,7 +137,7 @@ namespace BingeBuddyNg.Functions
             }
 
             // Start timer to remind user about entering his next drink.
-            var monitoringInstanceId = await starter.StartNewAsync(DrinkReminderFunction.FunctionNameValue, currentUser);
+            var monitoringInstanceId = await starter.StartNewAsync(nameof(DrinkReminderFunction), currentUser);
             await UserRepository.UpdateMonitoringInstanceAsync(currentUser.Id, monitoringInstanceId);
         }
 
@@ -162,7 +162,6 @@ namespace BingeBuddyNg.Functions
                     {
                         log.LogInformation($"Sending push to [{friendUser}] ...");
 
-                        // TODO: Localize
                         var notificationMessage = await GetNotificationMessageAsync(friendUser.Language, activity);
 
                         NotificationService.SendMessage(new[] { friendUser.PushInfo }, notificationMessage);
