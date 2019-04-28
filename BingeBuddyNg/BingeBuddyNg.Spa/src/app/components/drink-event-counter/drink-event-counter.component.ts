@@ -35,11 +35,12 @@ export class DrinkEventCounterComponent implements OnInit, OnDestroy {
 
   isVisible(): boolean {
 
-    if (this.currentDrinkEvent === null) {
+    if (!this.currentDrinkEvent) {
       return false;
     }
 
-    const currentUserAlreadyScored = this.currentDrinkEvent.scoringUserIds.includes(this.authService.currentUserProfile$.value.sub);
+    const currentUserAlreadyScored = this.currentDrinkEvent.scoringUserIds &&
+      this.currentDrinkEvent.scoringUserIds.includes(this.authService.currentUserProfile$.value.sub);
     if (currentUserAlreadyScored === true) {
       return false;
     }

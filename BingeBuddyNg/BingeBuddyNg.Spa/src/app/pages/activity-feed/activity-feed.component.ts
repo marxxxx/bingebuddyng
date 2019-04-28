@@ -2,17 +2,12 @@ import { DrinkActivityService } from './../../services/drink-activity.service';
 import { ConfirmationDialogComponent } from './../../components/confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationDialogArgs } from './../../components/confirmation-dialog/ConfirmationDialogArgs';
 import { UserService } from 'src/app/services/user.service';
-import { VenueModel } from 'src/models/VenueModel';
 import { VenueDialogArgs } from './../../components/venue-dialog/VenueDialogArgs';
 import { VenueDialogComponent } from './../../components/venue-dialog/venue-dialog.component';
-import { VenueService } from './../../services/venue.service';
 import { MessageDialogComponent } from './../../components/message-dialog/message-dialog.component';
-import { ActivatedRoute } from '@angular/router';
 import { DrinkType } from './../../../models/DrinkType';
-import { AddDrinkActivityDTO } from './../../../models/AddDrinkActivityDTO';
-import { Observable, Subscription, forkJoin } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
-import { Location } from '../../../models/Location';
 import { ActivityStatsDTO } from '../../../models/ActivityStatsDTO';
 import { ActivityService } from '../../services/activity.service';
 import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, ViewChildren } from '@angular/core';
@@ -74,7 +69,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     private shellInteraction: ShellInteractionService,
     private auth: AuthService,
     private notification: NotificationService,
-    private venueService: VenueService,
     private userService: UserService,
     public locationService: LocationService,
     private drinkActivityService: DrinkActivityService,

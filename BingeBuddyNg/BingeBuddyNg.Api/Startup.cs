@@ -98,7 +98,13 @@ namespace BingeBuddyNg.Api
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "BingeBuddy API V1");
             });
 
-            app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
+            string frontendUrl = Configuration.GetValue<string>("FrontendUrl");
+
+            app.UseCors(c =>
+                c.AllowAnyHeader()
+                .AllowAnyMethod()
+                .WithOrigins(frontendUrl)
+                .AllowCredentials());
 
             app.UseHttpsRedirection();
             app.UseMvc();
