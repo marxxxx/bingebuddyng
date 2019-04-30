@@ -14,7 +14,7 @@ import { MatSnackBar } from '@angular/material';
 export class InviteFriendComponent implements OnInit {
 
   isBusy = false;
-  invitationToken: string = 'xxx';
+  invitationToken: string;
   currentUserProfile: UserProfile;
   navigatorInstance: any = navigator;
 
