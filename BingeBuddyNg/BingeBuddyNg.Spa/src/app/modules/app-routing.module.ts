@@ -1,20 +1,21 @@
-import { WelcomeInvitedComponent } from './pages/welcome-invited/welcome-invited.component';
-import { DrinkersComponent } from './pages/drinkers/drinkers.component';
-import { FriendrequestsComponent } from './pages/friendrequests/friendrequests.component';
-import { ProfileComponent } from './pages/profile/profile.component';
-import { BingemapComponent } from './pages/bingemap/bingemap.component';
-import { CallbackComponent } from './components/callback/callback.component';
-import { StatsComponent } from './pages/stats/stats.component';
-import { ActivityFeedComponent } from './pages/activity-feed/activity-feed.component';
-import { WelcomeComponent } from './pages/welcome/welcome.component';
+import { WelcomeInvitedComponent } from '../pages/welcome-invited/welcome-invited.component';
+import { DrinkersComponent } from '../pages/drinkers/drinkers.component';
+import { FriendrequestsComponent } from '../pages/friendrequests/friendrequests.component';
+import { ProfileComponent } from '../pages/profile/profile.component';
+import { BingemapComponent } from '../pages/bingemap/bingemap.component';
+import { CallbackComponent } from '../components/callback/callback.component';
+import { StatsComponent } from '../pages/stats/stats.component';
+import { ActivityFeedComponent } from '../pages/activity-feed/activity-feed.component';
+import { WelcomeComponent } from '../pages/welcome/welcome.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from './services/auth.guard';
-import { RankingComponent } from './pages/ranking/ranking.component';
-import { InviteFriendComponent } from './pages/invite-friend/invite-friend.component';
-import { SettingsComponent } from './pages/settings/settings.component';
-import { DrinksComponent } from './pages/drinks/drinks.component';
-import { AddOrEditDrinkComponent } from './pages/drinks/add-or-edit-drink/add-or-edit-drink.component';
+import { AuthGuard } from '../services/auth.guard';
+import { RankingComponent } from '../pages/ranking/ranking.component';
+import { InviteFriendComponent } from '../pages/invite-friend/invite-friend.component';
+import { SettingsComponent } from '../pages/settings/settings.component';
+import { DrinksComponent } from '../pages/drinks/drinks.component';
+import { AddOrEditDrinkComponent } from '../pages/drinks/add-or-edit-drink/add-or-edit-drink.component';
+import { OnboardingComponent } from '../pages/onboarding/onboarding.component';
 
 const routes: Routes = [
   {
@@ -90,6 +91,10 @@ const routes: Routes = [
     path: 'invite-friend',
     component: InviteFriendComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'onboarding',
+    component: OnboardingComponent
   },
   {
     path: '',

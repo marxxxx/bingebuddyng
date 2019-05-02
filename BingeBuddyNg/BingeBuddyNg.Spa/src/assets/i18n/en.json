@@ -118,5 +118,6 @@
     "EditDrink": "Edit drink",
     "Delete": "Delete",
     "Edit": "Edit",
-    "Drink": "Drink"
+    "Drink": "Drink",
+    "WelcomeNewUserMessage": "{{userName}} joined. Welcome to the jungle!"
 }

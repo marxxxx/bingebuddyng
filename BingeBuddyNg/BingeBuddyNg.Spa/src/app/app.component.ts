@@ -21,25 +21,28 @@ import { SettingsService } from './services/settings.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
-
-  readonly VAPID_PUBLIC_KEY = 'BP7M6mvrmwidRr7II8ewUIRSg8n7_mKAlWagRziRRluXnMc_d_rPUoVWGHb79YexnD0olGIFe_xackYqe1fmoxo';
+  readonly VAPID_PUBLIC_KEY =
+    'BP7M6mvrmwidRr7II8ewUIRSg8n7_mKAlWagRziRRluXnMc_d_rPUoVWGHb79YexnD0olGIFe_xackYqe1fmoxo';
   private pushInfo: PushInfo;
   private sub: Subscription;
   private userProfile: UserProfile;
   private userLanguage: string;
 
-  constructor(public auth: AuthService, private translate: TranslateService, activatedRoute: ActivatedRoute,
+  constructor(
+    public auth: AuthService,
+    private translate: TranslateService,
+    activatedRoute: ActivatedRoute,
     private userService: UserService,
     private snackbar: MatSnackBar,
     private notification: NotificationService,
     private invitationService: InvitationService,
     private settingsService: SettingsService,
     private pushService: SwPush,
-    private updateService: SwUpdate) {
-  }
+    private updateService: SwUpdate,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-
     this.auth.handleAuthentication(location.pathname);
 
     // this language will be used as a fallback when a translation isn't found in the current language
@@ -55,34 +58,39 @@ export class AppComponent implements OnInit, OnDestroy {
       if (userProfile) {
         this.registerUser(this.pushInfo);
         this.handleInvitations();
-      }
 
+        //this.handleOnboarding();
+      }
     });
 
     // subscribe to PWA updates
     this.updateService.available.subscribe(e => {
       const message = this.translate.instant('UpdateAvailableMessage');
-      this.snackbar.open(message, 'OK')
-        .onAction().subscribe(r => {
+      this.snackbar
+        .open(message, 'OK')
+        .onAction()
+        .subscribe(r => {
           location.reload(true);
         });
     });
 
-
     console.log('requesting push subscription ...');
 
     // registering for web push notifications
-    this.pushService.requestSubscription({
-      serverPublicKey: this.VAPID_PUBLIC_KEY
-    }).then(sub => {
-      console.log('Subscription received');
-      console.log(sub);
+    this.pushService
+      .requestSubscription({
+        serverPublicKey: this.VAPID_PUBLIC_KEY
+      })
+      .then(sub => {
+        console.log('Subscription received');
+        console.log(sub);
 
-      this.pushInfo = this.getPushInfo(sub);
-      this.registerUser(this.pushInfo);
-    }).catch(err => {
-      console.error(err);
-    });
+        this.pushInfo = this.getPushInfo(sub);
+        this.registerUser(this.pushInfo);
+      })
+      .catch(err => {
+        console.error(err);
+      });
 
     this.pushService.messages.subscribe((m: any) => {
       if (m.notification && m.notification.body) {
@@ -93,9 +101,16 @@ export class AppComponent implements OnInit, OnDestroy {
 
     // this.pushService.notificationClicks.subscribe( event => {
     //   const url = event.notification.data.url || 'https://bingebuddy.azureedge.net';
-    //   // window.open(url);
+    //   window.open(url);
     //   console.log('[Service Worker] Notification click Received. event', event);
     // });
+  }
+
+  private handleOnboarding() {
+    if (this.settingsService.getIsOnboarded() === false) {
+      console.log('going to onboarding ...');
+      this.router.navigateByUrl('/onboarding');
+    }
   }
 
   ngOnDestroy() {
@@ -106,22 +121,22 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   handleInvitations() {
-
     const invitationToken = localStorage.getItem('invitationToken');
     if (invitationToken) {
-
       console.log('accepting invitation ...', invitationToken);
-      this.invitationService.acceptInvitation(invitationToken).subscribe(r => {
-        console.log('successfully accepted invitation');
-        localStorage.removeItem('invitationToken');
-      }, e => {
-        console.error('error accepting invitation', e);
-      });
+      this.invitationService.acceptInvitation(invitationToken).subscribe(
+        r => {
+          console.log('successfully accepted invitation');
+          localStorage.removeItem('invitationToken');
+        },
+        e => {
+          console.error('error accepting invitation', e);
+        }
+      );
     }
   }
 
   getPushInfo(sub: PushSubscription): PushInfo {
-
     const subJSObject = JSON.parse(JSON.stringify(sub));
 
     const pushInfo: PushInfo = {
@@ -136,7 +151,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   registerUser(pushInfo: PushInfo) {
-
     // register user
     const user: User = {
       id: this.userProfile.sub,
@@ -148,11 +162,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
     console.log('registering user ...');
     console.log(user);
-    this.userService.saveUser(user).subscribe(
-      _ => console.log('user registration completed'),
-      e => console.error('error registering user info', e));
-
+    this.userService
+      .saveUser(user)
+      .subscribe(
+        _ => console.log('user registration completed'),
+        e => console.error('error registering user info', e)
+      );
   }
 }
-
-

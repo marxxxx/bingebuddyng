@@ -22,6 +22,7 @@ export class Activity {
     likes: Reaction[];
     cheers: Reaction[];
     comments: CommentReaction[];
+    registrationUser?: UserInfo;
 
     getUserInfo(): UserInfo {
         const userInfo: UserInfo = {

@@ -46,14 +46,14 @@ namespace BingeBuddyNg.Services.User
         }
 
 
-        public async Task CreateOrUpdateUserAsync(User user)
+        public async Task<CreateOrUpdateUserResult> CreateOrUpdateUserAsync(User user)
         {
             var table = StorageAccess.GetTableReference(TableName);
 
             TableOperation saveUserOperation = null;
             bool profilePicHasChanged = true;
             var savedUser = await FindUserEntityAsync(user.Id);
-            
+            bool isNewUser = false;
             if (savedUser != null)
             {
                 profilePicHasChanged = savedUser.Entity.ProfileImageUrl != user.ProfileImageUrl;
@@ -74,6 +74,7 @@ namespace BingeBuddyNg.Services.User
             else
             {
                 saveUserOperation = TableOperation.Insert(new JsonTableEntity<User>(PartitionKeyValue, user.Id, user));
+                isNewUser = true;
             }
 
             await table.ExecuteAsync(saveUserOperation);
@@ -85,6 +86,8 @@ namespace BingeBuddyNg.Services.User
                 var message = new ProfileUpdateMessage(user.Id, user.ProfileImageUrl);
                 await queue.AddMessageAsync(new CloudQueueMessage(JsonConvert.SerializeObject(message)));
             }
+
+            return new CreateOrUpdateUserResult(isNewUser);
         }
 
         public async Task UpdateUserAsync(User user)

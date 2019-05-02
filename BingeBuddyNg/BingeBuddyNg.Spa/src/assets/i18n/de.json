@@ -118,5 +118,8 @@
     "EditDrink":"Getränk bearbeiten",
     "Delete": "Löschen",
     "Edit": "Ändern",
-    "Drink": "Trinken"
+    "Drink": "Trinken",
+    "WelcomeNewUserMessage": "{{userName}} hat sich angemeldet. Willkommen im Dschungel!"
+
+
 }

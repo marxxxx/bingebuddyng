@@ -85,12 +85,21 @@ export class ActivityComponent implements OnInit {
       this.activity.activity.imageUrl && this.activity.activity.imageUrl.endsWith('mp4');
   }
 
+  isRegistrationActivity(): boolean {
+    return this.activity.activity.activityType === ActivityType.Registration;
+  }
+
   getDrinkMessage(): string {
     if (!this.activity.activity.drinkName) {
       return this.activity.activity.message;
     }
     const message = this.translate.instant('IJustHadA',
       { value: this.translate.instant(this.activity.activity.drinkName) });
+    return message;
+  }
+
+  getRegistrationMessage(): string {
+    const message = this.translate.instant('WelcomeNewUserMessage', {userName: this.activity.activity.registrationUser.userName});
     return message;
   }
 

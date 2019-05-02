@@ -8,6 +8,7 @@
         Image = 30,
         Notification = 40,
         VenueEntered = 50,
-        VenueLeft = 51
+        VenueLeft = 51,
+        Registration = 60
     }
 }

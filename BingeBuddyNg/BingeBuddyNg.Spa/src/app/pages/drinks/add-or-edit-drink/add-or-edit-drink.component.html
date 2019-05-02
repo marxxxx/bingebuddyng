@@ -4,13 +4,13 @@
 <form [formGroup]="form" fxLayout="column">
 
     <mat-form-field>
-      <input matInput placeholder="{{'Name' | translate }}" type="text" formControlName="name" />
+      <input matInput autofocus placeholder="{{'Name' | translate }}" type="text" formControlName="name" />
     </mat-form-field>
 
     <mat-form-field>
       <label>{{ 'DrinkType' | translate }}</label>
       <mat-select formControlName="drinkType">
-       <mat-option *ngFor="let t of drinkTypes" [value]="t.type">{{t.name | translate}}</mat-option> 
+       <mat-option *ngFor="let t of drinkTypes" [value]="t.type">{{t.name | translate}}</mat-option>
       </mat-select>
     </mat-form-field>
 
@@ -30,5 +30,5 @@
     </div>
 
     <mat-progress-spinner diameter="48" mode="indeterminate" *ngIf="isSaving"></mat-progress-spinner>
-    
+
 </form>

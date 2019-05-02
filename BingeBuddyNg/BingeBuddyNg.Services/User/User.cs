@@ -7,6 +7,9 @@ namespace BingeBuddyNg.Services.User
 {
     public class User
     {
+        public static readonly string BingeBuddyUserId = "bingebuddy";
+        public static readonly string BingeBuddyUserName = "Binge Buddy";
+
         public string Id { get; set; }
         public string Name { get; set; }
         public int? Weight { get; set; }
@@ -36,7 +39,7 @@ namespace BingeBuddyNg.Services.User
             var visibleUserIds = Friends.Select(f => f.UserId).Except(MutedByFriendUserIds);
             if(includeMe)
             {
-                visibleUserIds = visibleUserIds.Union(new[] { this.Id });
+                visibleUserIds = visibleUserIds.Union(new[] { this.Id, BingeBuddyUserId });
             }
             return visibleUserIds.ToList();
         }

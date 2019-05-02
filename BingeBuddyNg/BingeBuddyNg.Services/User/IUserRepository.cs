@@ -8,7 +8,7 @@ namespace BingeBuddyNg.Services.User
         Task<List<User>> GetUsersAsync(IEnumerable<string> userIds = null);
         Task<User> FindUserAsync(string id);
         Task UpdateUserAsync(User user);
-        Task CreateOrUpdateUserAsync(User user);
+        Task<CreateOrUpdateUserResult> CreateOrUpdateUserAsync(User user);
 
         Task UpdateMonitoringInstanceAsync(string userId, string monitoringInstanceId);
 

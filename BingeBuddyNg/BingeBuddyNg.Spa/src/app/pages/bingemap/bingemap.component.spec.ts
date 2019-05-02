@@ -1,7 +1,7 @@
 import { AgmCoreModule } from '@agm/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { AppMaterialModule } from './../../app-material.module';
+import { AppMaterialModule } from '../../modules/app-material.module';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BingemapComponent } from './bingemap.component';

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
 using Microsoft.AspNetCore.Authorization;
@@ -16,12 +17,16 @@ namespace BingeBuddyNg.Api.Controllers
     public class UserController : Controller
     {
         public IUserRepository UserRepository { get; }
+        public IActivityRepository ActivityRepository { get; }
+
         public IIdentityService IdentityService { get; set; }
 
-        public UserController(IIdentityService identityService, IUserRepository userRepository)
+        public UserController(IIdentityService identityService, IUserRepository userRepository, 
+            IActivityRepository activityRepository)
         {
             this.IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
         }
 
         [HttpGet]
@@ -50,7 +55,12 @@ namespace BingeBuddyNg.Api.Controllers
         [HttpPost]
         public async Task<UpdateUserResponseDTO> UpdateUserProfile([FromBody]User user)
         {
-            await this.UserRepository.CreateOrUpdateUserAsync(user);
+            var result = await this.UserRepository.CreateOrUpdateUserAsync(user);
+            if(result.IsNewUser)
+            {
+                await ActivityRepository.AddActivityAsync(Activity.CreateRegistrationActivity(
+                    Services.User.User.BingeBuddyUserId, Services.User.User.BingeBuddyUserName, user.ToUserInfo()));
+            }
 
             var response = new UpdateUserResponseDTO(!user.Weight.HasValue, user.Gender == Gender.Unknown);
             return response;

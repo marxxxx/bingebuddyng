@@ -1,14 +1,29 @@
 <mat-card>
   <mat-card-title fxLayout fxLayoutAlign="space-between center">
     <div fxLayout fxLayoutAlign="start center">
-      <app-user-info [userInfo]="userInfo"></app-user-info>
-      <span class="user-name" [routerLink]="['/profile', activity.activity.userId]">{{activity.activity.userName}}</span>
+      <app-user-info [userInfo]="isRegistrationActivity() ? activity.activity.registrationUser : userInfo" [showName]="true"></app-user-info>
+      <!-- <span
+        class="user-name"
+        [routerLink]="['/profile', activity.activity.userId]"
+        >{{ activity.activity.userName }}</span
+      > -->
     </div>
-    <mat-chip-list class="stats" *ngIf="activity.activity.drinkCount + activity.userStats.currentAlcoholization > 0">
-      <mat-chip class="chip" *ngIf="activity.activity.drinkCount > 0">{{activity.activity.drinkCount}}
+    <mat-chip-list
+      class="stats"
+      *ngIf="
+        activity.activity.drinkCount +
+          activity.userStats.currentAlcoholization >
+        0
+      "
+    >
+      <mat-chip class="chip" *ngIf="activity.activity.drinkCount > 0"
+        >{{ activity.activity.drinkCount }}
         <mat-icon fxHide fxShow.gt-xs>local_drink</mat-icon>
       </mat-chip>
-      <mat-chip class="chip" *ngIf="activity.userStats.currentAlcoholization > 0">{{activity.userStats.currentAlcoholization}}
+      <mat-chip
+        class="chip"
+        *ngIf="activity.userStats.currentAlcoholization > 0"
+        >{{ activity.userStats.currentAlcoholization }}
         <span fxHide fxShow.xs>‰</span>
         <mat-icon fxHide fxShow.gt-xs>opacity</mat-icon>
       </mat-chip>
@@ -16,81 +31,196 @@
   </mat-card-title>
   <mat-card-content>
     <p class="notification" *ngIf="isNotificationActivity()">
-      <span>{{activity.activity.message}}</span>
+      <span>{{ activity.activity.message }}</span>
     </p>
     <p class="venue" *ngIf="isVenueActivity()">
-      <span>{{activity.activity.message}}</span>
+      <span>{{ activity.activity.message }}</span>
     </p>
     <p class="message" *ngIf="isMessageActivity()">
-      <span *ngIf="!isMessageLink(activity.activity.message)">{{activity.activity.message}}</span>
-      <a *ngIf="isMessageLink(activity.activity.message)" [href]="activity.activity.message">{{activity.activity.message}}</a>
+      <span *ngIf="!isMessageLink(activity.activity.message)">{{
+        activity.activity.message
+      }}</span>
+      <a
+        *ngIf="isMessageLink(activity.activity.message)"
+        [href]="activity.activity.message"
+        >{{ activity.activity.message }}</a
+      >
     </p>
     <span class="drink" *ngIf="isDrinkActivity()">
-      {{getDrinkMessage()}}
+      {{ getDrinkMessage() }}
     </span>
     <div class="image" *ngIf="isImageActivity()">
-      <img [src]="activity.activity.imageUrl">
+      <img [src]="activity.activity.imageUrl" />
     </div>
     <div class="image" *ngIf="isVideoActivity()">
       <video width="320" height="240" controls>
-        <source [src]="activity.activity.imageUrl" type="video/mp4">
-        {{'NoVideoSupport' | translate }}
+        <source [src]="activity.activity.imageUrl" type="video/mp4" />
+        {{ 'NoVideoSupport' | translate }}
       </video>
     </div>
+    <div class="message" *ngIf="isRegistrationActivity()">
+      <!-- <app-user-info [userInfo]="activity.activity.registrationUser"></app-user-info> -->
+      <span>{{getRegistrationMessage()}}</span>
+    </div>
     <div class="metadata" fxLayout fxLayoutAlign="space-between center">
-      <span class="timestamp">{{activity.activity.timestamp | date:'dd.MM.yyyy HH:mm'}}</span>
-      <span class="address" *ngIf="activity.activity.venue" (click)="onLocationClick()"> {{activity.activity.venue.name}}</span>
-      <span class="address" *ngIf="!activity.activity.venue" (click)="onLocationClick()"> {{activity.activity.locationAddress}}</span>
+      <span class="timestamp">{{
+        activity.activity.timestamp | date: 'dd.MM.yyyy HH:mm'
+      }}</span>
+      <span
+        class="address"
+        *ngIf="activity.activity.venue"
+        (click)="onLocationClick()"
+      >
+        {{ activity.activity.venue.name }}</span
+      >
+      <span
+        class="address"
+        *ngIf="!activity.activity.venue"
+        (click)="onLocationClick()"
+      >
+        {{ activity.activity.locationAddress }}</span
+      >
     </div>
 
     <mat-divider></mat-divider>
 
     <!-- Action Area -->
-    <div fxLayout fxLayoutAlign="space-between center" class="actions" (click)="onShowTooltips()">
+    <div
+      fxLayout
+      fxLayoutAlign="space-between center"
+      class="actions"
+      (click)="onShowTooltips()"
+    >
       <div fxLayout>
         <!-- Like -->
-        <button *ngIf="!isBusyLiking" [disabled]="!currentUser || isLikedByMe()" mat-icon-button [matTooltip]="getLikeUserNames()"
-          (click)="onLike()">
-          <img src="../../assets/img/like.png"></button>
-        <span class="count" *ngIf="activity.activity.likes && activity.activity.likes.length > 0">{{activity.activity.likes.length}}</span>
-        <mat-progress-spinner *ngIf="isBusyLiking" color="primary" mode="indeterminate" diameter="32"></mat-progress-spinner>
+        <button
+          *ngIf="!isBusyLiking"
+          [disabled]="!currentUser || isLikedByMe()"
+          mat-icon-button
+          [matTooltip]="getLikeUserNames()"
+          (click)="onLike()"
+        >
+          <img src="../../assets/img/like.png" />
+        </button>
+
+        <span
+          class="count"
+          *ngIf="activity.activity.likes && activity.activity.likes.length > 0"
+          >{{ activity.activity.likes.length }}</span
+        >
+        <mat-progress-spinner
+          *ngIf="isBusyLiking"
+          color="primary"
+          mode="indeterminate"
+          diameter="32"
+        ></mat-progress-spinner>
 
         <!-- Cheers -->
-        <button *ngIf="!isBusyCheering" [disabled]="!currentUser || isCheeredByMe()" [matTooltip]="getCheersUserNames()"
-          mat-icon-button (click)="onCheers()">
-          <img src="../../assets/img/beer.png"></button>
-        <span class="count" *ngIf="activity.activity.cheers && activity.activity.cheers.length > 0">{{activity.activity.cheers.length}}</span>
-        <mat-progress-spinner *ngIf="isBusyCheering" color="primary" mode="indeterminate" diameter="32"></mat-progress-spinner>
+        <button
+          *ngIf="!isBusyCheering"
+          [disabled]="!currentUser || isCheeredByMe()"
+          [matTooltip]="getCheersUserNames()"
+          mat-icon-button
+          (click)="onCheers()"
+        >
+          <img src="../../assets/img/beer.png" />
+        </button>
+
+        <span
+          class="count"
+          *ngIf="
+            activity.activity.cheers && activity.activity.cheers.length > 0
+          "
+          >{{ activity.activity.cheers.length }}</span
+        >
+        <mat-progress-spinner
+          *ngIf="isBusyCheering"
+          color="primary"
+          mode="indeterminate"
+          diameter="32"
+        ></mat-progress-spinner>
       </div>
 
       <div>
         <button mat-icon-button (click)="onCommentClicked($event)">
-          <img *ngIf="!isCommentVisible" id="btn-comm" src="../../assets/img/comment.png">
-          <img *ngIf="isCommentVisible" id="btn-cls" src="../../assets/img/cancel.png">
+          <img
+            *ngIf="!isCommentVisible"
+            id="btn-comm"
+            src="../../assets/img/comment.png"
+          />
+          <img
+            *ngIf="isCommentVisible"
+            id="btn-cls"
+            src="../../assets/img/cancel.png"
+          />
         </button>
-        <span class="count" id="comm" *ngIf="activity.activity.comments && activity.activity.comments.length > 0 && !isCommentVisible">{{activity.activity.comments.length}}</span>
+        <span
+          class="count"
+          id="comm"
+          *ngIf="
+            activity.activity.comments &&
+            activity.activity.comments.length > 0 &&
+            !isCommentVisible
+          "
+          >{{ activity.activity.comments.length }}</span
+        >
       </div>
     </div>
 
     <!-- Comments -->
     <div *ngIf="isCommentVisible" class="comments">
       <mat-divider></mat-divider>
-      <div fxLayout fxLayoutAlign="space-between center" *ngIf="isCommentVisible">
+      <div
+        fxLayout
+        fxLayoutAlign="space-between center"
+        *ngIf="isCommentVisible"
+      >
         <mat-form-field>
-          <input type="text" autofocus matInput placeholder="{{'Comment' | translate}}" [(ngModel)]="comment"
-            [disabled]="isBusyCommenting" (keydown)="onKeydown($event)">
+          <input
+            type="text"
+            autofocus
+            matInput
+            placeholder="{{ 'Comment' | translate }}"
+            [(ngModel)]="comment"
+            [disabled]="isBusyCommenting"
+            (keydown)="onKeydown($event)"
+          />
         </mat-form-field>
-        <button mat-icon-button [disabled]="!currentUser" *ngIf="!isBusyCommenting" (click)="onComment()"><img src="../../assets/img/send.png"></button>
-        <mat-progress-spinner *ngIf="isBusyCommenting" color="primary" mode="indeterminate" diameter="32"></mat-progress-spinner>
+        <button
+          mat-icon-button
+          [disabled]="!currentUser"
+          *ngIf="!isBusyCommenting"
+          (click)="onComment()"
+        >
+          <img src="../../assets/img/send.png" />
+        </button>
+        <mat-progress-spinner
+          *ngIf="isBusyCommenting"
+          color="primary"
+          mode="indeterminate"
+          diameter="32"
+        ></mat-progress-spinner>
       </div>
 
       <mat-list>
         <mat-list-item *ngFor="let c of activity.activity.comments">
-          <img matListAvatar [src]="userService.getProfileImageUrl(c.userId)" [routerLink]="['/profile', c.userId]">
-          <h3 matLine> {{c.userName}} </h3>
-          <p matLine fxLayout fxLayoutAlign="space-between center" fxLayout.lt-sm="column" fxLayoutAlign.lt-sm="start start">
-            <span class="comment-text">{{c.comment}}</span>
-            <span class="metadata"> {{c.timestamp | date:'dd.MM.yyyy HH:mm'}} </span>
+          <img
+            matListAvatar
+            [src]="userService.getProfileImageUrl(c.userId)"
+            [routerLink]="['/profile', c.userId]"
+          />
+          <h3 matLine>{{ c.userName }}</h3>
+          <p
+            matLine
+            fxLayout
+            fxLayoutAlign="space-between center"
+            fxLayout.lt-sm="column"
+            fxLayoutAlign.lt-sm="start start"
+          >
+            <span class="comment-text">{{ c.comment }}</span>
+            <span class="metadata">
+              {{ c.timestamp | date: 'dd.MM.yyyy HH:mm' }}
+            </span>
           </p>
         </mat-list-item>
       </mat-list>

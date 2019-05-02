@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using BingeBuddyNg.Services.Drink;
+﻿using BingeBuddyNg.Services.Drink;
+using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.Venue;
+using System;
+using System.Collections.Generic;
 
 namespace BingeBuddyNg.Services.Activity
 {
@@ -27,10 +28,12 @@ namespace BingeBuddyNg.Services.Activity
         public string CountryShortName { get; set; }
         public VenueModel Venue { get; set; }
 
+        public UserInfo RegistrationUser { get; set; }
+
         public List<Reaction> Likes { get; set; } = new List<Reaction>();
         public List<Reaction> Cheers { get; set; } = new List<Reaction>();
         public List<CommentReaction> Comments { get; set; } = new List<CommentReaction>();
-        
+
 
         public Activity()
         { }
@@ -41,7 +44,7 @@ namespace BingeBuddyNg.Services.Activity
         {
         }
 
-        public Activity(string id, ActivityType type, DateTime timestamp, Location location, 
+        public Activity(string id, ActivityType type, DateTime timestamp, Location location,
             string userId, string userName)
         {
             this.Id = id;
@@ -57,7 +60,7 @@ namespace BingeBuddyNg.Services.Activity
            DrinkType drinkType, string drinkId, string drinkName,
            double drinkAlcPrc, double drinkVolume)
         {
-            var activity = new Activity( ActivityType.Drink, activityTimestamp,
+            var activity = new Activity(ActivityType.Drink, activityTimestamp,
                 location, userId, userName)
             {
                 DrinkType = drinkType,
@@ -94,15 +97,27 @@ namespace BingeBuddyNg.Services.Activity
             return activity;
         }
 
+        public static Activity CreateRegistrationActivity(string userId, string userName, UserInfo registrationUser)
+        {
+            var activity = new Activity(ActivityType.Registration, DateTime.UtcNow, null,
+                userId, userName)
+            {
+                RegistrationUser = registrationUser
+            };
+
+            return activity;
+        }
+
+
         public static Activity CreateVenueActivity(DateTime activityTimestamp,
            string userId, string userName, string message, VenueModel venue, VenueAction action)
         {
-            if(action == VenueAction.Unknown)
+            if (action == VenueAction.Unknown)
             {
                 throw new ArgumentException("Invalid venue action!");
             }
 
-            var activity = new Activity(action == VenueAction.Enter ? ActivityType.VenueEntered : ActivityType.VenueLeft, 
+            var activity = new Activity(action == VenueAction.Enter ? ActivityType.VenueEntered : ActivityType.VenueLeft,
                 activityTimestamp, venue.Location, userId, userName)
             {
                 Message = message,

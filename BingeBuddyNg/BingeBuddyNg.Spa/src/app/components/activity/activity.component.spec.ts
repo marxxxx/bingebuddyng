@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ActivityComponent } from './activity.component';
-import { AppMaterialModule } from 'src/app/app-material.module';
+import { AppMaterialModule } from 'src/app/modules/app-material.module';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';

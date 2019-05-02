@@ -7,7 +7,7 @@ import { DrinkEventService } from './services/drinkevent.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule } from './modules/app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavShellComponent } from './components/nav-shell/nav-shell.component';
@@ -17,7 +17,7 @@ import { ActivityFeedComponent } from './pages/activity-feed/activity-feed.compo
 import { StatsComponent } from './pages/stats/stats.component';
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { CallbackComponent } from './components/callback/callback.component';
-import { AppMaterialModule } from './app-material.module';
+import { AppMaterialModule } from './modules/app-material.module';
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -55,6 +55,7 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { DrinkEventCounterComponent } from './components/drink-event-counter/drink-event-counter.component';
 import { DrinksComponent } from './pages/drinks/drinks.component';
 import { AddOrEditDrinkComponent } from './pages/drinks/add-or-edit-drink/add-or-edit-drink.component';
+import { OnboardingComponent } from './pages/onboarding/onboarding.component';
 
 
 // AoT requires an exported function for factories
@@ -92,7 +93,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     SettingsComponent,
     DrinkEventCounterComponent,
     DrinksComponent,
-    AddOrEditDrinkComponent
+    AddOrEditDrinkComponent,
+    OnboardingComponent
   ],
   entryComponents: [DrinkDialogComponent, MessageDialogComponent, VenueDialogComponent, ConfirmationDialogComponent],
   imports: [
