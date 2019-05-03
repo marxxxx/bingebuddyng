@@ -1,5 +1,5 @@
-import { UserRanking } from './../../../models/UserRanking';
-import { RankingService } from './../../services/ranking.service';
+import { UserRanking } from '../../../models/UserRanking';
+import { RankingService } from '../ranking.service';
 import { Component, OnInit } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { VenueRanking } from 'src/models/VenueRanking';

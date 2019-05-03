@@ -10,7 +10,7 @@ import { WelcomeComponent } from '../pages/welcome/welcome.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../core/auth.guard';
-import { RankingComponent } from '../pages/ranking/ranking.component';
+import { RankingComponent } from '../ranking/ranking/ranking.component';
 import { InviteFriendComponent } from '../pages/invite-friend/invite-friend.component';
 import { SettingsComponent } from '../pages/settings/settings.component';
 import { DrinksComponent } from '../drinks/drinks.component';
@@ -61,11 +61,6 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'ranking',
-    component: RankingComponent,
-    canActivate: [AuthGuard]
-  },
-  {
     path: 'settings',
     component: SettingsComponent,
     canActivate: [AuthGuard]
@@ -78,6 +73,10 @@ const routes: Routes = [
   {
     path: 'onboarding',
     component: OnboardingComponent
+  },
+  {
+    path: 'ranking',
+    loadChildren: 'src/app/ranking/ranking.module#RankingModule',
   },
   {
     path: 'drinks',

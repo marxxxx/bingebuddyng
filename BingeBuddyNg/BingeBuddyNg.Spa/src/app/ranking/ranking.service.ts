@@ -1,13 +1,11 @@
-import { VenueRanking } from './../../models/VenueRanking';
+import { VenueRanking } from '../../models/VenueRanking';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { UserRanking } from 'src/models/UserRanking';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class RankingService {
 
   baseUrl = environment.BaseDataUrl + '/ranking';

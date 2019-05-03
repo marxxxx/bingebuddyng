@@ -1,7 +1,7 @@
 import { User } from './../../../models/User';
 import { AuthService } from '../../core/auth.service';
 import { UserService } from 'src/app/services/user.service';
-import { SettingsService } from './../../services/settings.service';
+import { SettingsService } from '../../core/settings.service';
 import { ShellInteractionService } from './../../services/shell-interaction.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';

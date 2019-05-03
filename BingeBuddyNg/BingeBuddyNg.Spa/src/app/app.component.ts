@@ -13,7 +13,7 @@ import { PushInfo } from '../models/PushInfo';
 import { NotificationService } from './services/notification.service';
 import { Subscription } from 'rxjs';
 import { InvitationService } from './services/invitation.service';
-import { SettingsService } from './services/settings.service';
+import { SettingsService } from './core/settings.service';
 
 @Component({
   selector: 'app-root',

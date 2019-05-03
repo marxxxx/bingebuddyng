@@ -1,13 +1,11 @@
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { MeComponent } from './components/me/me.component';
 import { ActivityService } from './services/activity.service';
-import { AuthHttpInterceptor } from './core/auth.interceptor';
-import { AuthService } from './core/auth.service';
 import { DrinkEventService } from './services/drinkevent.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { AppMaterialModule } from './common/app-material.module';
+
 import { AppRoutingModule } from './common/app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,13 +17,8 @@ import { StatsComponent } from './pages/stats/stats.component';
 import { CallbackComponent } from './components/callback/callback.component';
 
 import {
-  HttpClientModule,
-  HTTP_INTERCEPTORS,
-  HttpClient
+  HttpClientModule
 } from '@angular/common/http';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import 'hammerjs';
 import { ChartsModule } from 'ng2-charts';
 import { UserService } from './services/user.service';
@@ -48,8 +41,6 @@ import { DrinkersComponent } from './pages/drinkers/drinkers.component';
 import { DrinkDialogComponent } from './components/drink-dialog/drink-dialog.component';
 import { NoFriendsComponent } from './components/no-friends/no-friends.component';
 import { MessageDialogComponent } from './components/message-dialog/message-dialog.component';
-import { AuthGuard } from './core/auth.guard';
-import { RankingComponent } from './pages/ranking/ranking.component';
 import { InviteFriendComponent } from './pages/invite-friend/invite-friend.component';
 import { WelcomeInvitedComponent } from './pages/welcome-invited/welcome-invited.component';
 import { VenueDialogComponent } from './components/venue-dialog/venue-dialog.component';
@@ -78,7 +69,6 @@ import { SharedModule } from './shared/shared.module';
     DrinkDialogComponent,
     NoFriendsComponent,
     MessageDialogComponent,
-    RankingComponent,
     InviteFriendComponent,
     WelcomeInvitedComponent,
     VenueDialogComponent,
