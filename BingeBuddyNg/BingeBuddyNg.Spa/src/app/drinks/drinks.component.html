@@ -11,9 +11,9 @@
   <span class="drink-info">{{ d.volume }} ml, {{ d.alcPrc }} % vol.</span>
   <mat-card-actions>
     <button mat-button (click)="onDelete(d)">{{'Delete' | translate }}</button>
-    <button mat-button [routerLink]="['/edit-drink', d.id]">{{'Edit' | translate }}</button>
+    <button mat-button [routerLink]="['/drinks/edit', d.id]">{{'Edit' | translate }}</button>
     <button mat-raised-button color="primary" (click)="onDrink(d)">{{'Drink' | translate }}</button>
   </mat-card-actions>
 </mat-card>
 
-<button mat-fab color="primary" [routerLink]="['/add-drink']" ><mat-icon>add</mat-icon></button>
+<button mat-fab color="primary" [routerLink]="['/drinks/add']" ><mat-icon>add</mat-icon></button>

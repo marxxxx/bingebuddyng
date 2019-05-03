@@ -5,7 +5,7 @@ import { Component, OnInit, Input, ViewChildren, EventEmitter, Output } from '@a
 import { TranslateService } from '../../../../node_modules/@ngx-translate/core';
 import { ActivityService } from '../../services/activity.service';
 import { ReactionDTO } from '../../../models/ReactionDTO';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../core/auth.service';
 import { ReactionType } from '../../../models/ReactionType';
 import { Reaction } from '../../../models/Reaction';
 import { CommentReaction } from '../../../models/CommentReaction';

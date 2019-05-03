@@ -1,9 +1,9 @@
-import { StateService } from './../../services/state.service';
-import { ShellIconInfo } from './../../../models/ShellIconInfo';
-import { FriendRequestInfo } from './../../../models/FriendRequestInfo';
-import { FriendRequestService } from './../../services/friendrequest.service';
+import { StateService } from '../state.service';
+import { ShellIconInfo } from '../../../models/ShellIconInfo';
+import { FriendRequestInfo } from '../../../models/FriendRequestInfo';
+import { FriendRequestService } from '../../services/friendrequest.service';
 import { ShellInteractionService } from '../../services/shell-interaction.service';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../auth.service';
 import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { BehaviorSubject, Subscription } from 'rxjs';

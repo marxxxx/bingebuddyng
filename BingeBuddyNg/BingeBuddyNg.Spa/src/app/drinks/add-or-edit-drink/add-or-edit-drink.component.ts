@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Drink } from 'src/models/Drink';
-import { DrinkService } from 'src/app/services/drink.service';
+import { DrinkService } from 'src/app/drinks/drink.service';
 import { ShellInteractionService } from 'src/app/services/shell-interaction.service';
 import { DrinkType } from 'src/models/DrinkType';
 

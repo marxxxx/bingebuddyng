@@ -5,7 +5,7 @@ import { UserService } from './services/user.service';
 import { DrinkEventService } from './services/drinkevent.service';
 import { MatSnackBar } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AuthService } from './services/auth.service';
+import { AuthService } from './core/auth.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { SwPush, SwUpdate } from '@angular/service-worker';

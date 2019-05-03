@@ -11,7 +11,7 @@ import { map, filter } from 'rxjs/operators';
 import { ActivityStatsDTO } from '../../../models/ActivityStatsDTO';
 import { ActivityService } from '../../services/activity.service';
 import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, ViewChildren } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../core/auth.service';
 import { AddMessageActivityDTO } from '../../../models/AddMessageActivityDTO';
 import { MatDialog, MatTooltip, MatSnackBar } from '@angular/material';
 import { ShellInteractionService } from '../../services/shell-interaction.service';
@@ -24,7 +24,7 @@ import { LocationService } from 'src/app/services/location.service';
 import { VenueDialogMode } from 'src/app/components/venue-dialog/VenueDialogMode';
 import { VenueDialogResult } from 'src/app/components/venue-dialog/VenueDialogResult';
 import { TranslateService } from '@ngx-translate/core';
-import { DrinkService } from 'src/app/services/drink.service';
+import { DrinkService } from 'src/app/drinks/drink.service';
 import { Drink } from 'src/models/Drink';
 
 @Component({

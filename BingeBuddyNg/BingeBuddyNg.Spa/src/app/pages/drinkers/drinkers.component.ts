@@ -2,7 +2,7 @@ import { Subscription, forkJoin } from 'rxjs';
 import { FriendRequestInfo } from './../../../models/FriendRequestInfo';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material';
-import { AuthService } from './../../services/auth.service';
+import { AuthService } from '../../core/auth.service';
 import { UserInfo } from './../../../models/UserInfo';
 import { User } from './../../../models/User';
 import { Component, OnInit, OnDestroy } from '@angular/core';

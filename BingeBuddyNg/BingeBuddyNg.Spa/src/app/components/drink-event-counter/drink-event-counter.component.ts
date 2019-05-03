@@ -3,7 +3,7 @@ import { DrinkEventService } from 'src/app/services/drinkevent.service';
 import { DrinkEvent } from 'src/models/DrinkEvent';
 import * as moment from 'moment';
 import { MatTooltip } from '@angular/material';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/core/auth.service';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 

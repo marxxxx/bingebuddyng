@@ -1,5 +1,5 @@
 import { UserProfile } from './../../../models/UserProfile';
-import { AuthService } from './../../services/auth.service';
+import { AuthService } from '../../core/auth.service';
 import { ShellInteractionService } from './../../services/shell-interaction.service';
 import { Component, OnInit } from '@angular/core';
 import { InvitationService } from 'src/app/services/invitation.service';

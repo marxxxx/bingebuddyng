@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DrinkService } from 'src/app/services/drink.service';
+import { DrinkService } from 'src/app/drinks/drink.service';
 import { Drink } from 'src/models/Drink';
 import { ShellInteractionService } from 'src/app/services/shell-interaction.service';
 import { ConfirmationDialogArgs } from 'src/app/components/confirmation-dialog/ConfirmationDialogArgs';

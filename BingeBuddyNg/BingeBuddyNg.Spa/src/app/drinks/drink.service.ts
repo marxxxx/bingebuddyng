@@ -5,9 +5,7 @@ import { Drink } from 'src/models/Drink';
 import { Observable } from 'rxjs';
 
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class DrinkService {
 
   baseUrl = environment.BaseDataUrl + '/drink';

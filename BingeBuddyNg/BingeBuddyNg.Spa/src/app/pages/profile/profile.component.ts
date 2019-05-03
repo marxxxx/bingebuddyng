@@ -6,7 +6,7 @@ import { Subscription, Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../core/auth.service';
 import { User } from '../../../models/User';
 import { UserInfo } from '../../../models/UserInfo';
 

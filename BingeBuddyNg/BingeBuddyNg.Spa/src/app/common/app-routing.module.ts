@@ -9,12 +9,12 @@ import { ActivityFeedComponent } from '../pages/activity-feed/activity-feed.comp
 import { WelcomeComponent } from '../pages/welcome/welcome.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from '../services/auth.guard';
+import { AuthGuard } from '../core/auth.guard';
 import { RankingComponent } from '../pages/ranking/ranking.component';
 import { InviteFriendComponent } from '../pages/invite-friend/invite-friend.component';
 import { SettingsComponent } from '../pages/settings/settings.component';
-import { DrinksComponent } from '../pages/drinks/drinks.component';
-import { AddOrEditDrinkComponent } from '../pages/drinks/add-or-edit-drink/add-or-edit-drink.component';
+import { DrinksComponent } from '../drinks/drinks.component';
+import { AddOrEditDrinkComponent } from '../drinks/add-or-edit-drink/add-or-edit-drink.component';
 import { OnboardingComponent } from '../pages/onboarding/onboarding.component';
 
 const routes: Routes = [
@@ -66,23 +66,6 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'drinks',
-    component: DrinksComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'add-drink',
-    component: AddOrEditDrinkComponent,
-    canActivate: [AuthGuard]
-
-  },
-  {
-    path: 'edit-drink/:drinkId',
-    component: AddOrEditDrinkComponent,
-    canActivate: [AuthGuard]
-
-  },
-  {
     path: 'settings',
     component: SettingsComponent,
     canActivate: [AuthGuard]
@@ -95,6 +78,10 @@ const routes: Routes = [
   {
     path: 'onboarding',
     component: OnboardingComponent
+  },
+  {
+    path: 'drinks',
+    loadChildren: 'src/app/drinks/drinks.module#DrinksModule'
   },
   {
     path: '',

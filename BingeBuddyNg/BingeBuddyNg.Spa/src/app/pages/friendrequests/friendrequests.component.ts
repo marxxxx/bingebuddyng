@@ -1,5 +1,5 @@
-import { StateService } from './../../services/state.service';
-import { AuthService } from './../../services/auth.service';
+import { StateService } from '../../core/state.service';
+import { AuthService } from '../../core/auth.service';
 import { UserInfo } from './../../../models/UserInfo';
 import { FriendRequestService } from './../../services/friendrequest.service';
 import { ActivatedRoute } from '@angular/router';

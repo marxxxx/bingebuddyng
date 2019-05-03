@@ -1,5 +1,5 @@
 import { User } from './../../../models/User';
-import { AuthService } from './../../services/auth.service';
+import { AuthService } from '../../core/auth.service';
 import { UserService } from 'src/app/services/user.service';
 import { SettingsService } from './../../services/settings.service';
 import { ShellInteractionService } from './../../services/shell-interaction.service';

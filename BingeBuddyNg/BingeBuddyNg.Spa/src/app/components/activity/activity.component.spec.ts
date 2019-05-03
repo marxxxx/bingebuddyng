@@ -7,7 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UserInfoComponent } from '../user-info/user-info.component';
+import { UserInfoComponent } from '../../shared/user-info/user-info.component';
 
 describe('ActivityComponent', () => {
   let component: ActivityComponent;
