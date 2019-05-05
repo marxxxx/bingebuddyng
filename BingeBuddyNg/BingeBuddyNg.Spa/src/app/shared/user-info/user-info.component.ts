@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { UserService } from '../../services/user.service';
+import { UserService } from '../../core/user.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { UserInfo } from '../../../models/UserInfo';
 
@@ -16,13 +16,9 @@ export class UserInfoComponent implements OnInit {
   @Input()
   showName: boolean;
 
-  constructor(private router: Router, private userService: UserService) { }
+  constructor(private userService: UserService) { }
 
   ngOnInit() {
-  }
-
-  onClick() {
-    this.router.navigate(['/profile', this.userInfo.userId]);
   }
 
   getProfileImageUrl() {

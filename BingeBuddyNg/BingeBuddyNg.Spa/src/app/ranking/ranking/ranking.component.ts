@@ -3,7 +3,7 @@ import { RankingService } from '../ranking.service';
 import { Component, OnInit } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { VenueRanking } from 'src/models/VenueRanking';
-import { ShellInteractionService } from 'src/app/services/shell-interaction.service';
+import { ShellInteractionService } from 'src/app/core/shell-interaction.service';
 
 @Component({
   selector: 'app-ranking',

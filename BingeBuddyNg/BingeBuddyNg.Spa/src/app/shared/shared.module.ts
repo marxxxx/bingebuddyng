@@ -1,19 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppMaterialModule } from '../common/app-material.module';
+import { AppMaterialModule } from './app-material.module';
 import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.component';
 import { UserInfoComponent } from './user-info/user-info.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateModule } from '@ngx-translate/core';
 import { DrinkIconComponent } from './drink-icon/drink-icon.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { FileUploadModule } from 'ng2-file-upload';
+import { RouterModule } from '@angular/router';
 
-// AoT requires an exported function for factories
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
-}
+
 
 @NgModule({
   imports: [
@@ -22,13 +20,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     ReactiveFormsModule,
     AppMaterialModule,
     FlexLayoutModule,
-    TranslateModule.forChild({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    })
+    TranslateModule.forChild(),
+    FileUploadModule,
+    RouterModule
   ],
   exports: [
     CommonModule,
@@ -36,15 +30,18 @@ export function HttpLoaderFactory(http: HttpClient) {
     FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule,
+    TranslateModule,
+    FileUploadModule,
     ProgressSpinnerComponent,
     UserInfoComponent,
     DrinkIconComponent,
-    TranslateModule
+    ConfirmationDialogComponent
   ],
   declarations: [
     ProgressSpinnerComponent,
     UserInfoComponent,
-    DrinkIconComponent
+    DrinkIconComponent,
+    ConfirmationDialogComponent
   ],
   providers: []
 })

@@ -1,8 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class StateService {
 
   private currentUserId: string;

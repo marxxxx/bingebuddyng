@@ -1,0 +1,46 @@
+import { VenueService } from '../venue.service';
+import { Component, OnInit, Inject } from '@angular/core';
+import { VenueModel } from 'src/models/VenueModel';
+import { Observable } from 'rxjs';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { VenueDialogArgs } from './VenueDialogArgs';
+import { VenueDialogMode } from './VenueDialogMode';
+import { VenueDialogResult } from './VenueDialogResult';
+
+@Component({
+  selector: 'app-venue-dialog',
+  templateUrl: './venue-dialog.component.html',
+  styleUrls: ['./venue-dialog.component.css']
+})
+export class VenueDialogComponent implements OnInit {
+
+  isBusy = false;
+  venues: VenueModel[];
+  selectedVenue: VenueModel;
+
+  VenueDialogMode = VenueDialogMode;
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public args: VenueDialogArgs,
+    private dialog: MatDialogRef<VenueDialogComponent>,
+    private venueService: VenueService) {
+
+  }
+
+  ngOnInit() {
+    this.load();
+  }
+
+  load() {
+    this.isBusy = true;
+    this.venueService.getVenues(this.args.location)
+      .subscribe(r => {
+        this.isBusy = false;
+        this.venues = r;
+      }, e => {
+        this.isBusy = false;
+        const ret: VenueDialogResult = { action: 'cancel'};
+        this.dialog.close(ret);
+      });
+  }
+}

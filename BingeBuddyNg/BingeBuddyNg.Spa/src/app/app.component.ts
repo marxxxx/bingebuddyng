@@ -1,8 +1,8 @@
 import { UserProfile } from './../models/UserProfile';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { User } from '../models/User';
-import { UserService } from './services/user.service';
-import { DrinkEventService } from './services/drinkevent.service';
+import { UserService } from './core/user.service';
+import { DrinkEventService } from './core/drinkevent.service';
 import { MatSnackBar } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from './core/auth.service';
@@ -10,9 +10,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { SwPush, SwUpdate } from '@angular/service-worker';
 import { PushInfo } from '../models/PushInfo';
-import { NotificationService } from './services/notification.service';
+import { NotificationService } from './core/notification.service';
 import { Subscription } from 'rxjs';
-import { InvitationService } from './services/invitation.service';
+import { InvitationService } from './invitation/invitation.service';
 import { SettingsService } from './core/settings.service';
 
 @Component({
@@ -21,8 +21,7 @@ import { SettingsService } from './core/settings.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  readonly VAPID_PUBLIC_KEY =
-    'BP7M6mvrmwidRr7II8ewUIRSg8n7_mKAlWagRziRRluXnMc_d_rPUoVWGHb79YexnD0olGIFe_xackYqe1fmoxo';
+  readonly VAPID_PUBLIC_KEY = 'BP7M6mvrmwidRr7II8ewUIRSg8n7_mKAlWagRziRRluXnMc_d_rPUoVWGHb79YexnD0olGIFe_xackYqe1fmoxo';
   private pushInfo: PushInfo;
   private sub: Subscription;
   private userProfile: UserProfile;
@@ -43,7 +42,9 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.auth.handleAuthentication(location.pathname);
+    if (location.pathname.indexOf('invitation') < 0) {
+      this.auth.handleAuthentication(location.pathname);
+    }
 
     // this language will be used as a fallback when a translation isn't found in the current language
     this.translate.setDefaultLang(this.settingsService.DefaultLanguage);
@@ -106,12 +107,12 @@ export class AppComponent implements OnInit, OnDestroy {
     // });
   }
 
-  private handleOnboarding() {
-    if (this.settingsService.getIsOnboarded() === false) {
-      console.log('going to onboarding ...');
-      this.router.navigateByUrl('/onboarding');
-    }
-  }
+  // private handleOnboarding() {
+  //   if (this.settingsService.getIsOnboarded() === false) {
+  //     console.log('going to onboarding ...');
+  //     this.router.navigateByUrl('/onboarding');
+  //   }
+  // }
 
   ngOnDestroy() {
     if (this.sub) {
@@ -164,9 +165,6 @@ export class AppComponent implements OnInit, OnDestroy {
     console.log(user);
     this.userService
       .saveUser(user)
-      .subscribe(
-        _ => console.log('user registration completed'),
-        e => console.error('error registering user info', e)
-      );
+      .subscribe(_ => console.log('user registration completed'), e => console.error('error registering user info', e));
   }
 }
