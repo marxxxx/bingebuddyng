@@ -1,11 +1,11 @@
 
-import { CallbackComponent } from './core/callback/callback.component';
-import { ActivityFeedComponent } from './activity/activity-feed/activity-feed.component';
+import { CallbackComponent } from './core/components/callback/callback.component';
+import { ActivityFeedComponent } from './activity/components/activity-feed/activity-feed.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from './core/auth.guard';
-import { SettingsComponent } from './core/settings/settings.component';
-import { WelcomeComponent } from './onboarding/welcome/welcome.component';
+import { AuthGuard } from './core/services/auth.guard';
+import { SettingsComponent } from './core/components/settings/settings.component';
+import { WelcomeComponent } from './onboarding/components/welcome/welcome.component';
 
 const routes: Routes = [
   {

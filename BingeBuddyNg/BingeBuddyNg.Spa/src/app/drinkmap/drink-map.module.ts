@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { BingemapComponent } from './bingemap/bingemap.component';
+import { BingemapComponent } from './components/bingemap/bingemap.component';
 import { AgmCoreModule } from '@agm/core';
 import { SharedModule } from '../shared/shared.module';
 

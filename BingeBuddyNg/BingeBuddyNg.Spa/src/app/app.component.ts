@@ -1,19 +1,16 @@
 import { UserProfile } from './../models/UserProfile';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { User } from '../models/User';
-import { UserService } from './core/user.service';
-import { DrinkEventService } from './core/drinkevent.service';
+import { UserService } from './core/services/user.service';
 import { MatSnackBar } from '@angular/material';
-import { Router, ActivatedRoute } from '@angular/router';
-import { AuthService } from './core/auth.service';
+import { AuthService } from './core/services/auth.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { SwPush, SwUpdate } from '@angular/service-worker';
 import { PushInfo } from '../models/PushInfo';
-import { NotificationService } from './core/notification.service';
+import { NotificationService } from './core/services/notification.service';
 import { Subscription } from 'rxjs';
-import { InvitationService } from './invitation/invitation.service';
-import { SettingsService } from './core/settings.service';
+import { InvitationService } from './invitation/services/invitation.service';
+import { SettingsService } from './core/services/settings.service';
 
 @Component({
   selector: 'app-root',
@@ -30,15 +27,13 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     public auth: AuthService,
     private translate: TranslateService,
-    activatedRoute: ActivatedRoute,
     private userService: UserService,
     private snackbar: MatSnackBar,
     private notification: NotificationService,
     private invitationService: InvitationService,
     private settingsService: SettingsService,
     private pushService: SwPush,
-    private updateService: SwUpdate,
-    private router: Router
+    private updateService: SwUpdate
   ) {}
 
   ngOnInit() {

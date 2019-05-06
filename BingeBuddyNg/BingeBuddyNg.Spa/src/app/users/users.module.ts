@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ProfileComponent } from './profile/profile.component';
-import { SettingsComponent } from '../core/settings/settings.component';
-import { DrinkersComponent } from './drinkers/drinkers.component';
-import { AuthGuard } from '../core/auth.guard';
+import { ProfileComponent } from './components/profile/profile.component';
+import { DrinkersComponent } from './components/drinkers/drinkers.component';
+import { AuthGuard } from '../core/services/auth.guard';
 import { SharedModule } from '../shared/shared.module';
-import { FriendrequestsComponent } from './friendrequests/friendrequests.component';
+import { FriendrequestsComponent } from './components/friendrequests/friendrequests.component';
 
 const routes: Routes = [
   {

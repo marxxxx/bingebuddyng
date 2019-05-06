@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppMaterialModule } from './app-material.module';
-import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.component';
-import { UserInfoComponent } from './user-info/user-info.component';
+import { ProgressSpinnerComponent } from './components/progress-spinner/progress-spinner.component';
+import { UserInfoComponent } from './components/user-info/user-info.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { TranslateModule } from '@ngx-translate/core';
-import { DrinkIconComponent } from './drink-icon/drink-icon.component';
+import { DrinkIconComponent } from './components/drink-icon/drink-icon.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import { RouterModule } from '@angular/router';
 

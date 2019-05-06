@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 
-import { StatsComponent } from './stats/stats.component';
-import { DrinkChartComponent } from './stats/drink-chart/drink-chart.component';
-import { DrinkRatioChartComponent } from './stats/drink-ratio-chart/drink-ratio-chart.component';
+import { StatsComponent } from './components/stats/stats.component';
+import { DrinkChartComponent } from './components/drink-chart/drink-chart.component';
+import { DrinkRatioChartComponent } from './components/drink-ratio-chart/drink-ratio-chart.component';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from '../core/auth.guard';
+import { AuthGuard } from '../core/services/auth.guard';
 import { ChartsModule } from 'ng2-charts';
 import { SharedModule } from '../shared/shared.module';
 

@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
-import { InviteFriendComponent } from './invite-friend/invite-friend.component';
+import { InviteFriendComponent } from './components/invite-friend/invite-friend.component';
 import { Routes, RouterModule } from '@angular/router';
-import { WelcomeInvitedComponent } from './welcome-invited/welcome-invited.component';
-import { AuthGuard } from '../core/auth.guard';
+import { WelcomeInvitedComponent } from './components/welcome-invited/welcome-invited.component';
+import { AuthGuard } from '../core/services/auth.guard';
 
 const routes: Routes = [
   {
