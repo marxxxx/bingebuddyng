@@ -1,0 +1,56 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport="true"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="false">
+    <mat-toolbar *ngIf="!(isHandset$ | async)" color="primary">Menu</mat-toolbar>
+    <mat-toolbar *ngIf="isHandset$ | async" color="primary">
+      <button mat-icon-button (click)="onNavListItemClicked()">
+        <mat-icon>close</mat-icon></button>Menu</mat-toolbar>
+    <mat-nav-list (click)="onNavListItemClicked()">
+      <a mat-list-item routerLink="/activity-feed"
+        ><img src="../../assets/img/ActivityFeed.png" /><span>{{ 'Activity' | translate }}</span></a>
+      <a mat-list-item routerLink="/stats"
+        ><img src="../../assets/img/statistics.png" /><span>{{ 'Statistics' | translate }}</span></a>
+      <a mat-list-item routerLink="/bingemap"
+        ><img src="../../assets/img/map.png" /><span>{{ 'BingeMap' | translate }}</span></a>
+      <a mat-list-item routerLink="/users"> <mat-icon class="menu-item">people</mat-icon>{{ 'Drinkers' | translate }} </a>
+      <a mat-list-item routerLink="/ranking"> <mat-icon class="menu-item">cake</mat-icon>{{ 'Ranking' | translate }} </a>
+      <a mat-list-item routerLink="/drinks">
+        <img src="../../assets/img/beer.png" /><span>{{ 'Drinks' | translate }}</span>
+      </a>
+      <a mat-list-item routerLink="/invitation/invite-friend">
+        <mat-icon class="menu-item">share</mat-icon>{{ 'InviteFriend' | translate }}
+      </a>
+      <a mat-list-item routerLink="/settings"> <mat-icon class="menu-item">settings</mat-icon>{{ 'Settings' | translate }} </a>
+      <mat-divider *ngIf="auth.isAuthenticated()"></mat-divider>
+      <a *ngIf="auth.isAuthenticated()" mat-list-item (click)="onLogout()"
+        ><img src="../../assets/img/logout.png" /><span>{{ 'Logout' | translate }}</span></a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+
+      <span>Binge Buddy</span>
+      <div class="right" fxLayout fxLayoutAlign="space-between center">
+        <!-- Drink Event counter-->
+        <app-drink-event-counter></app-drink-event-counter>
+        <!-- Friendsrequests -->
+        <button mat-icon-button *ngIf="friendRequests.length > 0" routerLink="/users/friendrequests">
+          <mat-icon [matBadge]="friendRequests.length" matBadgeColor="warn">sentiment_satisfied_alt</mat-icon>
+        </button>
+
+        <app-me></app-me>
+      </div>
+    </mat-toolbar>
+    <div class="content-container">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

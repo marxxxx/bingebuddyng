@@ -1,6 +1,0 @@
-<ng-container *ngIf="userInfo">
-  <div fxLayout fxLayoutAlign="start center" (click)="onClick()">
-    <img [src]="getProfileImageUrl()" class="avatar">
-    <h4 *ngIf="showName" class="nickname">{{ userInfo.userName }}</h4>
-  </div>
-</ng-container>

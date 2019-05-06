@@ -1,19 +1,16 @@
 import { UserProfile } from './../models/UserProfile';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { User } from '../models/User';
-import { UserService } from './services/user.service';
-import { DrinkEventService } from './services/drinkevent.service';
+import { UserService } from './core/services/user.service';
 import { MatSnackBar } from '@angular/material';
-import { Router, ActivatedRoute } from '@angular/router';
-import { AuthService } from './services/auth.service';
+import { AuthService } from './core/services/auth.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { SwPush, SwUpdate } from '@angular/service-worker';
 import { PushInfo } from '../models/PushInfo';
-import { NotificationService } from './services/notification.service';
+import { NotificationService } from './core/services/notification.service';
 import { Subscription } from 'rxjs';
-import { InvitationService } from './services/invitation.service';
-import { SettingsService } from './services/settings.service';
+import { InvitationService } from './invitation/services/invitation.service';
+import { SettingsService } from './core/services/settings.service';
 
 @Component({
   selector: 'app-root',
@@ -21,8 +18,7 @@ import { SettingsService } from './services/settings.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  readonly VAPID_PUBLIC_KEY =
-    'BP7M6mvrmwidRr7II8ewUIRSg8n7_mKAlWagRziRRluXnMc_d_rPUoVWGHb79YexnD0olGIFe_xackYqe1fmoxo';
+  readonly vapidPublicKey = 'BP7M6mvrmwidRr7II8ewUIRSg8n7_mKAlWagRziRRluXnMc_d_rPUoVWGHb79YexnD0olGIFe_xackYqe1fmoxo';
   private pushInfo: PushInfo;
   private sub: Subscription;
   private userProfile: UserProfile;
@@ -31,19 +27,19 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     public auth: AuthService,
     private translate: TranslateService,
-    activatedRoute: ActivatedRoute,
     private userService: UserService,
     private snackbar: MatSnackBar,
     private notification: NotificationService,
     private invitationService: InvitationService,
     private settingsService: SettingsService,
     private pushService: SwPush,
-    private updateService: SwUpdate,
-    private router: Router
+    private updateService: SwUpdate
   ) {}
 
   ngOnInit() {
-    this.auth.handleAuthentication(location.pathname);
+    if (location.pathname.indexOf('invitation') < 0) {
+      this.auth.handleAuthentication(location.pathname);
+    }
 
     // this language will be used as a fallback when a translation isn't found in the current language
     this.translate.setDefaultLang(this.settingsService.DefaultLanguage);
@@ -79,7 +75,7 @@ export class AppComponent implements OnInit, OnDestroy {
     // registering for web push notifications
     this.pushService
       .requestSubscription({
-        serverPublicKey: this.VAPID_PUBLIC_KEY
+        serverPublicKey: this.vapidPublicKey
       })
       .then(sub => {
         console.log('Subscription received');
@@ -106,12 +102,12 @@ export class AppComponent implements OnInit, OnDestroy {
     // });
   }
 
-  private handleOnboarding() {
-    if (this.settingsService.getIsOnboarded() === false) {
-      console.log('going to onboarding ...');
-      this.router.navigateByUrl('/onboarding');
-    }
-  }
+  // private handleOnboarding() {
+  //   if (this.settingsService.getIsOnboarded() === false) {
+  //     console.log('going to onboarding ...');
+  //     this.router.navigateByUrl('/onboarding');
+  //   }
+  // }
 
   ngOnDestroy() {
     if (this.sub) {
@@ -164,9 +160,6 @@ export class AppComponent implements OnInit, OnDestroy {
     console.log(user);
     this.userService
       .saveUser(user)
-      .subscribe(
-        _ => console.log('user registration completed'),
-        e => console.error('error registering user info', e)
-      );
+      .subscribe(_ => console.log('user registration completed'), e => console.error('error registering user info', e));
   }
 }

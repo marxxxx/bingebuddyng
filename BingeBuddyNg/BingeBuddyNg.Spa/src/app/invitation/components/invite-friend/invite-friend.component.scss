@@ -1,0 +1,21 @@
+@import '../../../../theme.scss';
+
+.share-button  {
+    margin-left: 10px;
+    color: map-get($mat-bingebuddyprimary, 500)
+}
+
+img {
+    max-height: 50%;
+    max-width: 50%;
+}
+
+textarea {
+    background-color: transparent;
+    color: white;
+}
+
+.margin-top {
+    margin-top: 20px;
+}
+
