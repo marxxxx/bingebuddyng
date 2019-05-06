@@ -11,11 +11,11 @@
     inViewport [inViewportOptions]="{ threshold: [0] }" (inViewportAction)="onAppear($event)"></mat-progress-spinner>
 
   <!-- Placeholder when you have no friends (sad panda)-->
-  <app-no-friends *ngIf="!isBusy && activitys && activitys.length === 0"></app-no-friends>
+  <app-no-friends *ngIf="!isBusy && !isInitialLoad && activitys && activitys.length === 0"></app-no-friends>
 </div>
 
 <!-- Venue Info -->
-<mat-card class="venue-info" *ngIf="locationService.currentVenue">
+<mat-card class="venue-info" *ngIf="locationService.currentVenue && !isBusy">
   <button mat-button class="venue-name">
     <mat-icon id="map-icon">map</mat-icon><span>{{locationService.currentVenue.name}}</span>
   </button>

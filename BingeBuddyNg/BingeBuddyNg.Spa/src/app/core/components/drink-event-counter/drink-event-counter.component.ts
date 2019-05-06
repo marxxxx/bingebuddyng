@@ -6,6 +6,7 @@ import { MatTooltip } from '@angular/material';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-drink-event-counter',
@@ -21,25 +22,35 @@ export class DrinkEventCounterComponent implements OnInit, OnDestroy {
   @ViewChild(MatTooltip)
   tooltips: MatTooltip;
 
-  constructor(private authService: AuthService, private drinkEventService: DrinkEventService) { }
+  constructor(
+    private authService: AuthService,
+    private drinkEventService: DrinkEventService,
+    private notificationService: NotificationService
+  ) {}
 
   ngOnInit() {
-
-    this.subscriptions.push(this.authService.isLoggedIn$.pipe(filter(isLoggedIn => isLoggedIn))
-      .subscribe(_ => {
+    this.subscriptions.push(
+      this.authService.isLoggedIn$.pipe(filter(isLoggedIn => isLoggedIn)).subscribe(_ => {
         this.load();
-      }));
+      })
+    );
 
-    this.subscriptions.push(this.drinkEventService.currentUserScored$.subscribe(_ => this.currentDrinkEvent = null));
+    this.subscriptions.push(
+      this.notificationService.activityReceived$.subscribe(_ => {
+        this.load();
+      })
+    );
+
+    this.subscriptions.push(this.drinkEventService.currentUserScored$.subscribe(_ => (this.currentDrinkEvent = null)));
   }
 
   isVisible(): boolean {
-
     if (!this.currentDrinkEvent) {
       return false;
     }
 
-    const currentUserAlreadyScored = this.currentDrinkEvent.scoringUserIds &&
+    const currentUserAlreadyScored =
+      this.currentDrinkEvent.scoringUserIds &&
       this.currentDrinkEvent.scoringUserIds.includes(this.authService.currentUserProfile$.value.sub);
     if (currentUserAlreadyScored === true) {
       return false;
@@ -57,10 +68,7 @@ export class DrinkEventCounterComponent implements OnInit, OnDestroy {
         }
       },
       e => {
-        console.error(
-          'DrinkEventCounterComponent: Error loading drink event info',
-          e
-        );
+        console.error('DrinkEventCounterComponent: Error loading drink event info', e);
       }
     );
   }
@@ -85,17 +93,24 @@ export class DrinkEventCounterComponent implements OnInit, OnDestroy {
   }
 
   updateRemainingTime() {
-    const remainingSeconds = moment(this.currentDrinkEvent.endUtc).diff(
-      moment(),
-      'seconds'
-    );
+    const remainingSeconds = moment(this.currentDrinkEvent.endUtc).diff(moment(), 'seconds');
     if (remainingSeconds < 0) {
       this.stopCounter();
+      this.currentDrinkEvent = null;
     } else {
       const duration = moment.duration(remainingSeconds, 'seconds');
-      this.remainingTime = duration.minutes() + ':' + duration.seconds();
+      this.remainingTime = duration.minutes() + ':' + this.getTwoDigitNumber(duration.seconds());
 
       console.log('DrinkEventCounter: remaining time', this.remainingTime);
     }
+  }
+
+  getTwoDigitNumber(num: number): string {
+    if(num > 10) {
+      return num.toString();
+    } else {
+      return '0' + num.toString();
+    }
+
   }
 }
