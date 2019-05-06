@@ -18,7 +18,7 @@ import { SettingsService } from './core/services/settings.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  readonly VAPID_PUBLIC_KEY = 'BP7M6mvrmwidRr7II8ewUIRSg8n7_mKAlWagRziRRluXnMc_d_rPUoVWGHb79YexnD0olGIFe_xackYqe1fmoxo';
+  readonly vapidPublicKey = 'BP7M6mvrmwidRr7II8ewUIRSg8n7_mKAlWagRziRRluXnMc_d_rPUoVWGHb79YexnD0olGIFe_xackYqe1fmoxo';
   private pushInfo: PushInfo;
   private sub: Subscription;
   private userProfile: UserProfile;
@@ -75,7 +75,7 @@ export class AppComponent implements OnInit, OnDestroy {
     // registering for web push notifications
     this.pushService
       .requestSubscription({
-        serverPublicKey: this.VAPID_PUBLIC_KEY
+        serverPublicKey: this.vapidPublicKey
       })
       .then(sub => {
         console.log('Subscription received');
