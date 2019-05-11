@@ -5,7 +5,7 @@ namespace BingeBuddyNg.Services.Statistics
 {
     public interface IUserStatsHistoryRepository
     {
-        Task<List<UserStatisticHistory>> GetStatisticHistoryForUsersAsync(string userId);
+        Task<List<UserStatisticHistory>> GetStatisticHistoryForUserAsync(string userId);
         Task SaveStatisticsHistoryAsync(UserStatisticHistory userStatistics);
     }
 }

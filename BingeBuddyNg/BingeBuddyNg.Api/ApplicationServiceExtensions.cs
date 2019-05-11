@@ -35,6 +35,7 @@ namespace BingeBuddyNg.Api
 
             // Add Application Services
             services.AddSingleton<StorageAccessService>();
+            services.AddSingleton<IStorageAccessService, StorageAccessService>();
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddSingleton<ITranslationService, TranslationService>();
 
@@ -56,6 +57,7 @@ namespace BingeBuddyNg.Api
             services.AddScoped<IVenueRankingService, VenueRankingService>();
 
             services.AddScoped<IDrinkRepository, DrinkRepository>();
+            services.AddScoped<IUserStatsHistoryRepository, UserStatsHistoryRepository>();
         }
     }
 }

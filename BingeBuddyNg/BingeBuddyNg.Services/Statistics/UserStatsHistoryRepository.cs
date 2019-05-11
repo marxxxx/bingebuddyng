@@ -20,7 +20,7 @@ namespace BingeBuddyNg.Services.Statistics
         }
 
 
-        public async Task<List<UserStatisticHistory>> GetStatisticHistoryForUsersAsync(string userId)
+        public async Task<List<UserStatisticHistory>> GetStatisticHistoryForUserAsync(string userId)
         {
             string whereClause =
                 TableQuery.CombineFilters(

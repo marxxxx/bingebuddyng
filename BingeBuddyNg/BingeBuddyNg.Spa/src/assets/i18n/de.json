@@ -119,7 +119,8 @@
     "Delete": "Löschen",
     "Edit": "Ändern",
     "Drink": "Trinken",
-    "WelcomeNewUserMessage": "{{userName}} hat sich angemeldet. Willkommen im Club!"
+    "WelcomeNewUserMessage": "{{userName}} hat sich angemeldet. Willkommen im Club!",
+    "TodayAlcHistory": "Heutige Promilleentwicklung"
 
 
 }

@@ -119,5 +119,6 @@
     "Delete": "Delete",
     "Edit": "Edit",
     "Drink": "Drink",
-    "WelcomeNewUserMessage": "{{userName}} joined. Welcome to the jungle!"
+    "WelcomeNewUserMessage": "{{userName}} joined. Welcome to the jungle!",
+    "TodayAlcHistory": "Today's alcohol level"
 }

@@ -10,6 +10,13 @@
   </mat-card>
 
   <mat-card fxFlex>
+    <mat-card-title>{{'TodayAlcHistory' | translate}}</mat-card-title>
+    <mat-card-content>
+      <app-alc-history-chart [userStatsHistory]="userStatsHistory"></app-alc-history-chart>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card fxFlex>
     <mat-card-title>{{'MonthlyDrinkStatistic' | translate}}</mat-card-title>
     <mat-card-content>
       <app-drink-chart [activities]="activities" [isLegendVisible]="isLegendVisible"></app-drink-chart>

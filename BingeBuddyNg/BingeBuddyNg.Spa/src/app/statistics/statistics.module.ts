@@ -7,6 +7,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../core/services/auth.guard';
 import { ChartsModule } from 'ng2-charts';
 import { SharedModule } from '../shared/shared.module';
+import { AlcHistoryChartComponent } from './components/alc-history-chart/alc-history-chart.component';
+import { StatisticsService } from './services/statistics.service';
 
 const routes: Routes = [{
   path: '',
@@ -17,6 +19,7 @@ const routes: Routes = [{
 @NgModule({
   imports: [SharedModule, RouterModule.forChild(routes), ChartsModule],
   exports: [],
-  declarations: [StatsComponent, DrinkChartComponent, DrinkRatioChartComponent]
+  declarations: [StatsComponent, DrinkChartComponent, DrinkRatioChartComponent, AlcHistoryChartComponent],
+  providers: [StatisticsService]
 })
 export class StatisticsModule {}

@@ -1,9 +1,15 @@
-import { Subscription } from 'rxjs';
+import { ShellInteractionService } from 'src/app/core/services/shell-interaction.service';
+import { StatisticsService } from './../../services/statistics.service';
+import { Subscription, forkJoin, combineLatest } from 'rxjs';
 import { ActivityService } from '../../../activity/services/activity.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ActivityAggregationDTO } from 'src/models/ActivityAggregationDTO';
 import { ObservableMedia, MediaChange } from '@angular/flex-layout';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { UserProfile } from 'src/models/UserProfile';
+import { UserStatisticsDto } from '../../services/UserStatisticDto';
+import { filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-stats',
@@ -11,19 +17,26 @@ import { ObservableMedia, MediaChange } from '@angular/flex-layout';
   styleUrls: ['./stats.component.css']
 })
 export class StatsComponent implements OnInit, OnDestroy {
+  userStatsHistory: UserStatisticsDto[];
   isBusy = false;
   avgDrinksPerDay = 0;
   isLegendVisible = true;
+  userProfile: UserProfile;
 
   private subscriptions: Subscription[] = [];
   activities: ActivityAggregationDTO[];
 
-  constructor(private route: ActivatedRoute, private activityService: ActivityService, private media: ObservableMedia) {}
+  constructor(private route: ActivatedRoute, private activityService: ActivityService,
+    private statisticsService: StatisticsService, private authService: AuthService,
+    private shellInteraction: ShellInteractionService,
+    private media: ObservableMedia) { }
 
   ngOnInit() {
-    const routeSubscription = this.route.params.subscribe(r => {
-      this.load();
-    });
+
+    const sub = combineLatest([this.authService.currentUserProfile$, this.route.params])
+      .pipe(filter(r => r[0] != null))
+      .pipe(tap(r => this.userProfile = r[0]))
+      .subscribe(() => this.load());
 
     const mediaSubscription = this.media.subscribe((change: MediaChange) => {
       console.log('media change');
@@ -35,27 +48,29 @@ export class StatsComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.subscriptions.push(routeSubscription, mediaSubscription);
+    this.subscriptions.push(sub, mediaSubscription);
   }
 
   load(): void {
     this.isBusy = true;
 
-    this.activityService.getActivityAggregation().subscribe(
-      a => {
+    forkJoin([this.activityService.getActivityAggregation(),
+    this.statisticsService.getStatisticsForUser(this.userProfile.sub)])
+      .subscribe(r => {
+        const activities = r[0];
+        this.userStatsHistory = r[1];
+
         this.isBusy = false;
-        this.activities = a;
+        this.activities = activities;
 
         // calculate avg drinks per day
         let sum = 0;
-        a.forEach(d => (sum += d.countAlc));
-        this.avgDrinksPerDay = Math.round((sum / a.length) * 100) / 100;
-      },
-      e => {
-        console.error(e);
+        activities.forEach(d => (sum += d.countAlc));
+        this.avgDrinksPerDay = Math.round((sum / activities.length) * 100) / 100;
+      }, e => {
         this.isBusy = false;
-      }
-    );
+        this.shellInteraction.showErrorMessage();
+      });
   }
 
   ngOnDestroy() {
