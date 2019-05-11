@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "xyz.appmaker.zrvgly",
+      "sha256_cert_fingerprints": ["D0:C7:D7:15:64:01:EF:CA:E0:3F:09:69:21:0E:B0:D8:D1:3F:20:0F:AE:EB:4B:27:FD:20:50:F7:52:DE:04:37", "SHA256: D0:C7:D7:15:64:01:EF:CA:E0:3F:09:69:21:0E:B0:D8:D1:3F:20:0F:AE:EB:4B:27:FD:20:50:F7:52:DE:04:37"]
+    }
+  }
+]
