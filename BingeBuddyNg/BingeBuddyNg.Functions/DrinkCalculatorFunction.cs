@@ -1,10 +1,9 @@
+using BingeBuddyNg.Services.Statistics;
+using BingeBuddyNg.Services.User;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Calculation;
-using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Functions
 {
@@ -39,6 +38,6 @@ namespace BingeBuddyNg.Functions
             }
         }
 
-        
+
     }
 }

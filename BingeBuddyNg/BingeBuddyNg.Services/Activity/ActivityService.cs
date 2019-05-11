@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Shared;
 using Microsoft.Extensions.Logging;

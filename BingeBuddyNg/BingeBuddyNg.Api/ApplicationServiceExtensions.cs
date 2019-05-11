@@ -14,6 +14,7 @@ using BingeBuddyNg.Services.Ranking;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.Venue;
 using BingeBuddyNg.Services.Drink;
+using BingeBuddyNg.Services.Statistics;
 
 namespace BingeBuddyNg.Api
 {

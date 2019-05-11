@@ -3,6 +3,7 @@ using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Calculation;
 using BingeBuddyNg.Services.DrinkEvent;
 using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Hosting;
@@ -33,6 +34,7 @@ namespace BingeBuddyNg.Functions
                 fourSquareApiClientKey, fourSquareApiClientSecret);
             services.AddSingleton(configuration);
             services.AddSingleton<StorageAccessService>();
+            services.AddSingleton<IStorageAccessService, StorageAccessService>();
             services.AddSingleton<ITranslationService, TranslationService>();
             services.AddTransient<IActivityRepository, ActivityRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
@@ -42,6 +44,7 @@ namespace BingeBuddyNg.Functions
             services.AddTransient<IUserStatsRepository, UserStatsRepository>();
             services.AddTransient<IDrinkEventRepository, DrinkEventRepository>();
             services.AddTransient<IUserStatisticsService, UserStatisticsService>();
+            services.AddTransient<IUserStatsHistoryRepository, UserStatsHistoryRepository>();
             services.AddTransient<IUtilityService, UtilityService>();
 
         }

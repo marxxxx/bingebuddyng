@@ -1,4 +1,5 @@
-﻿using BingeBuddyNg.Services.User;
+﻿using BingeBuddyNg.Services.Statistics;
+using BingeBuddyNg.Services.User;
 using System;
 
 namespace BingeBuddyNg.Services.Ranking

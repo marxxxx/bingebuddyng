@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Shared;
 using Microsoft.Extensions.Logging;

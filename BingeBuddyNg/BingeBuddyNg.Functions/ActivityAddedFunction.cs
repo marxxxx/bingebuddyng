@@ -10,6 +10,7 @@ using BingeBuddyNg.Services.DrinkEvent;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.Drink;
+using BingeBuddyNg.Services.Statistics;
 
 namespace BingeBuddyNg.Functions
 {

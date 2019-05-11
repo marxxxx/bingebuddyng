@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.User
+namespace BingeBuddyNg.Services.Statistics
 {
     public interface IUserStatsRepository
     {

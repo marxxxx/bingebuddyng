@@ -15,6 +15,7 @@ using BingeBuddyNg.Services.User;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 using BingeBuddyNg.Services.Drink;
+using BingeBuddyNg.Services.Statistics;
 
 namespace BingeBuddyNg.Tests
 {
