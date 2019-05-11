@@ -124,8 +124,6 @@ export class AuthService {
         this.isLoggedIn$.next(true);
       });
 
-      console.log('user is authenticated');
-      this.isLoggedIn$.next(true);
     }
 
     return isAuth;

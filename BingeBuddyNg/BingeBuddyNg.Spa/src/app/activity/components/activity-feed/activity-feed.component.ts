@@ -77,14 +77,18 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private translateService: TranslateService,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initFileUploader();
 
     this.subscriptions.push(this.notification.activityReceived$.subscribe(_ => this.load()));
     this.subscriptions.push(
-      this.auth.currentUserProfile$.pipe(map(p => (p != null ? { userId: p.sub, userName: p.nickname } : null))).subscribe(user => {
+      this.auth.currentUserProfile$
+      .pipe(filter(p => p != null))
+      .pipe(map(p => ({ userId: p.sub, userName: p.nickname })))
+      .subscribe(user => {
+        console.log('ActivityFeedComponent: got current user profile', user);
         this.currentUserInfo = user;
 
         // load user to get venue info

@@ -20,6 +20,7 @@ import { Router } from '@angular/router';
 })
 export class ActivityComponent implements OnInit {
 
+  ActivityType = ActivityType;
   isBusyLiking = false;
   isBusyCheering = false;
   isBusyCommenting = false;
