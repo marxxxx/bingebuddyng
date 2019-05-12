@@ -21,6 +21,9 @@
     <p class="notification" *ngIf="activity.activity.activityType === ActivityType.Notification">
       <span>{{ activity.activity.message }}</span>
     </p>
+    <p class="notification" *ngIf="activity.activity.activityType === ActivityType.Rename">
+      <span>{{ 'RenameMessage' | translate:activity.activity }}</span>
+    </p>
     <p class="venue" *ngIf="activity.activity.activityType === ActivityType.VenueEntered ||
     this.activity.activity.activityType === ActivityType.VenueLeft">
       <span>{{ activity.activity.message }}</span>

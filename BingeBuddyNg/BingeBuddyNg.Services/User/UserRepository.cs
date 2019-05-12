@@ -29,6 +29,7 @@ namespace BingeBuddyNg.Services.User
             if (result != null)
             {
                 user = result.Entity;
+                user.LastOnline = result.Timestamp.UtcDateTime;
             }
 
             return user;
@@ -52,11 +53,17 @@ namespace BingeBuddyNg.Services.User
 
             TableOperation saveUserOperation = null;
             bool profilePicHasChanged = true;
+            bool nameHasChanged = false;
             var savedUser = await FindUserEntityAsync(user.Id);
             bool isNewUser = false;
+            string originalUserName = null;
             if (savedUser != null)
             {
+                originalUserName = savedUser.Entity.Name;
+
                 profilePicHasChanged = savedUser.Entity.ProfileImageUrl != user.ProfileImageUrl;
+                nameHasChanged = savedUser.Entity.Name != user.Name;
+
                 savedUser.Entity.Name = user.Name;
                 savedUser.Entity.ProfileImageUrl = user.ProfileImageUrl;
                 if (user.PushInfo != null && user.PushInfo.HasValue())
@@ -79,15 +86,7 @@ namespace BingeBuddyNg.Services.User
 
             await table.ExecuteAsync(saveUserOperation);
 
-            // enqueue profile image update change
-            if (profilePicHasChanged)
-            {
-                var queue = StorageAccess.GetQueueReference(Shared.Constants.QueueNames.ProfileUpdate);
-                var message = new ProfileUpdateMessage(user.Id, user.ProfileImageUrl);
-                await queue.AddMessageAsync(new CloudQueueMessage(JsonConvert.SerializeObject(message)));
-            }
-
-            return new CreateOrUpdateUserResult(isNewUser);
+            return new CreateOrUpdateUserResult(isNewUser, profilePicHasChanged, nameHasChanged, originalUserName);
         }
 
         public async Task UpdateUserAsync(User user)
@@ -107,7 +106,12 @@ namespace BingeBuddyNg.Services.User
 
             var result = await StorageAccess.QueryTableAsync<JsonTableEntity<User>>(TableName, whereClause);
 
-            var users = result.OrderByDescending(u=>u.Timestamp).Select(r => r.Entity).ToList();
+            var users = result.OrderByDescending(u=>u.Timestamp).Select(r =>
+            {
+                var user = r.Entity;
+                user.LastOnline = r.Timestamp.UtcDateTime;
+                return user;
+            }).ToList();
             return users;
         }
 

@@ -6,5 +6,6 @@ export enum ActivityType {
     Notification = 40,
     VenueEntered = 50,
     VenueLeft = 51,
-    Registration = 60
+    Registration = 60,
+    Rename = 70
 }

@@ -1,3 +1,4 @@
+import { UserService } from 'src/app/core/services/user.service';
 import { Injectable } from '@angular/core';
 import * as auth0 from 'auth0-js';
 import { Router } from '@angular/router';
@@ -31,7 +32,7 @@ export class AuthService {
   isLoggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   currentUserProfile$: BehaviorSubject<UserProfile> = new BehaviorSubject<UserProfile>(null);
 
-  constructor(public router: Router) { }
+  constructor(public router: Router, private userService: UserService) { }
 
   public login(): void {
     this.auth0.authorize();
@@ -92,9 +93,17 @@ export class AuthService {
     const self = this;
     this.auth0.client.userInfo(accessToken, (err, profile) => {
       if (profile) {
-        self.userProfile = profile;
+        this.userService.getUser(profile.sub).subscribe(u => {
+          profile.nickname = u.name;
+          profile.name = u.name;
+          cb(null, profile);
+        }, e => { }, () => {
+          console.log('AuthService: updating profile', profile);
+          self.userProfile = profile;
+        });
+      } else {
+        cb(err, profile);
       }
-      cb(err, profile);
     });
   }
 

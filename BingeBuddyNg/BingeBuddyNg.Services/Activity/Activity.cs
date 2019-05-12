@@ -1,6 +1,7 @@
 ﻿using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.Venue;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -29,6 +30,9 @@ namespace BingeBuddyNg.Services.Activity
         public VenueModel Venue { get; set; }
 
         public UserInfo RegistrationUser { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string OriginalUserName { get; set; }
 
         public List<Reaction> Likes { get; set; } = new List<Reaction>();
         public List<Reaction> Cheers { get; set; } = new List<Reaction>();
@@ -103,6 +107,17 @@ namespace BingeBuddyNg.Services.Activity
                 userId, userName)
             {
                 RegistrationUser = registrationUser
+            };
+
+            return activity;
+        }
+
+        public static Activity CreateRenameActivity(string userId, string userName, string originalUserName)
+        {
+            var activity = new Activity(ActivityType.Rename, DateTime.UtcNow, null,
+                userId, userName)
+            {
+                OriginalUserName = originalUserName
             };
 
             return activity;

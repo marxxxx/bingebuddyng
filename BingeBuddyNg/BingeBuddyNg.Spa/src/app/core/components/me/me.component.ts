@@ -1,8 +1,8 @@
 import { UserInfo } from '../../../../models/UserInfo';
 import { AuthService } from '../../services/auth.service';
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-me',
@@ -17,6 +17,7 @@ export class MeComponent implements OnInit {
 
   ngOnInit() {
     this.userInfo$ = this.authService.currentUserProfile$
-      .pipe(map(profile => (profile != null ? { userId: profile.sub, userName: profile.nickname } : null)));
+      .pipe(filter(profile => (profile != null)))
+      .pipe(map(profile => ({ userId: profile.sub, userName: profile.nickname })));
   }
 }

@@ -23,6 +23,7 @@ export class Activity {
     cheers: Reaction[];
     comments: CommentReaction[];
     registrationUser?: UserInfo;
+    originalUserName?: string;
 
     getUserInfo(): UserInfo {
         const userInfo: UserInfo = {

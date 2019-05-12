@@ -159,7 +159,8 @@ namespace BingeBuddyNg.Functions
                 try
                 {
                     var friendUser = await UserRepository.FindUserAsync(friendUserId);
-                    if (friendUser != null && friendUser.PushInfo != null)
+                    if (friendUser != null && friendUser.PushInfo != null && 
+                        friendUser.LastOnline > DateTime.UtcNow.Subtract(TimeSpan.FromDays(30)))
                     {
                         log.LogInformation($"Sending push to [{friendUser}] ...");
 

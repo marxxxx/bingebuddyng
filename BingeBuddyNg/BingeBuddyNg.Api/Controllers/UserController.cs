@@ -7,6 +7,8 @@ using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.WindowsAzure.Storage.Queue;
+using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,15 +19,17 @@ namespace BingeBuddyNg.Api.Controllers
     public class UserController : Controller
     {
         public IUserRepository UserRepository { get; }
+        public IUserService UserService { get; }
         public IActivityRepository ActivityRepository { get; }
-
         public IIdentityService IdentityService { get; set; }
 
         public UserController(IIdentityService identityService, IUserRepository userRepository, 
+            IUserService userService,
             IActivityRepository activityRepository)
         {
             this.IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.UserService = userService ?? throw new ArgumentNullException(nameof(userService));
             this.ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
         }
 
@@ -46,24 +50,26 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
         [HttpGet("{userId}")]
-        public async Task<User> GetUser(string userId)
+        public async Task<ActionResult<User>> GetUser(string userId)
         {
             var user = await this.UserRepository.FindUserAsync(userId);
+            if(user == null)
+            {
+                return NotFound($"User {userId} not found.");
+            }
             return user;
         }
                 
         [HttpPost]
-        public async Task<UpdateUserResponseDTO> UpdateUserProfile([FromBody]User user)
+        public async Task<ActionResult<UpdateUserResponseDTO>> UpdateUserProfile([FromBody]User user)
         {
-            var result = await this.UserRepository.CreateOrUpdateUserAsync(user);
-            if(result.IsNewUser)
+            var userId = this.IdentityService.GetCurrentUserId();
+            if(user.Id != userId)
             {
-                await ActivityRepository.AddActivityAsync(Activity.CreateRegistrationActivity(
-                    Services.User.User.BingeBuddyUserId, Services.User.User.BingeBuddyUserName, user.ToUserInfo()));
+                return Unauthorized();
             }
-
-            var response = new UpdateUserResponseDTO(!user.Weight.HasValue, user.Gender == Gender.Unknown);
-            return response;
+            var result = await this.UserService.UpdateUserProfileAsync(user);
+            return result;
         }
         
 

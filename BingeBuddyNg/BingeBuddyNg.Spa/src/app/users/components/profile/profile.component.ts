@@ -19,10 +19,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   user: User;
+  originalUserName: string;
   currentUserId: string;
   userId: string;
   hasPendingRequest = false;
   isBusy = false;
+  isEditingUserName = false;
+  isBusyUpdatingUserName = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -53,8 +56,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     this.userService.getUser(this.userId).subscribe(
       r => {
-        this.user = r;
         console.log('got user information', r);
+
+        this.user = r;
+        this.originalUserName = r.name;
 
         if (!this.isYou()) {
           this.friendRequests.hasPendingFriendRequests(this.userId).subscribe(
@@ -75,6 +80,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       },
       e => {
         console.error(e);
+        this.isBusy = false;
         this.shellInteraction.showErrorMessage();
       }
     );
@@ -156,5 +162,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   getProfileImageUrl() {
     return this.userService.getProfileImageUrl(this.userId);
+  }
+
+  onUpdateUserName() {
+    this.isBusyUpdatingUserName = true;
+    this.userService.saveUser(this.user).subscribe( () => {
+      this.originalUserName = this.user.name;
+      this.isEditingUserName = false;
+      this.isBusyUpdatingUserName = false;
+      this.shellInteraction.showMessage('DataUpdateSuccessful');
+    }, e => {
+      console.error('error updating username', e);
+      this.shellInteraction.showErrorMessage();
+      this.isBusyUpdatingUserName = false;
+    });
   }
 }

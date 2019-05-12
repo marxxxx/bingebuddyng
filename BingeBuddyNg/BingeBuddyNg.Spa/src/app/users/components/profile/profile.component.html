@@ -3,8 +3,16 @@
 
 <div class="container" *ngIf="user" fxLayout="column" fxLayoutAlign="center center">
   <img [src]="getProfileImageUrl()">
-  <h3>{{user.name}}</h3>
-
+  <div fxLayout fxLayoutAlign="center center">
+    <h3 *ngIf="!isEditingUserName && user">{{user.name}}</h3>
+    <mat-form-field *ngIf="isEditingUserName">
+      <input type="text" matInput [(ngModel)]="user.name"  [disabled]="isBusyUpdatingUserName">
+    </mat-form-field>
+    <button mat-icon-button *ngIf="isYou() && !isEditingUserName && !isBusyUpdatingUserName" (click)="isEditingUserName = true"><mat-icon>edit</mat-icon></button>
+    <button mat-icon-button *ngIf="isEditingUserName && !isBusyUpdatingUserName" (click)="isEditingUserName = false; user.name = originalUserName"><mat-icon>close</mat-icon></button>
+    <button mat-icon-button *ngIf="isEditingUserName && !isBusyUpdatingUserName" (click)="onUpdateUserName()"><mat-icon>save</mat-icon></button>
+    <mat-progress-spinner *ngIf="isBusyUpdatingUserName" mode="indeterminate" color="primary" diameter="48"></mat-progress-spinner>
+  </div>
   <p *ngIf="!isBusy && isYourFriend()" fxLayout>
     <img src="../../assets/img/like.png">{{'YouAreFriends' | translate}}
   </p>
@@ -34,8 +42,12 @@
 
   <div *ngFor="let f of user?.friends" fxLayout fxLayoutAlign="space-between center">
     <app-user-info [userInfo]="f" [showName]="true" [matTooltip]="f.userName"></app-user-info>
-    <button mat-icon-button *ngIf="isYou() && !isMutedFriend(f.userId)" (click)="setFriendMuteState(f.userId, true)"><mat-icon>volume_up</mat-icon></button>
-    <button mat-icon-button *ngIf="isYou() && isMutedFriend(f.userId)" (click)="setFriendMuteState(f.userId, false)"><mat-icon>volume_off</mat-icon></button>
+    <button mat-icon-button *ngIf="isYou() && !isMutedFriend(f.userId)" (click)="setFriendMuteState(f.userId, true)">
+      <mat-icon>volume_up</mat-icon>
+    </button>
+    <button mat-icon-button *ngIf="isYou() && isMutedFriend(f.userId)" (click)="setFriendMuteState(f.userId, false)">
+      <mat-icon>volume_off</mat-icon>
+    </button>
   </div>
 
 

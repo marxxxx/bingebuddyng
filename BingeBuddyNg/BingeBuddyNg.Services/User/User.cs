@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Venue;
@@ -22,6 +23,7 @@ namespace BingeBuddyNg.Services.User
         public string MonitoringInstanceId { get; set; }
         public VenueModel CurrentVenue { get; set; }
         public string Language { get; set; }
+        public DateTime LastOnline { get; set; }
 
         public User()
         {

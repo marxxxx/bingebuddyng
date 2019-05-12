@@ -121,5 +121,7 @@
     "Drink": "Drink",
     "WelcomeNewUserMessage": "{{userName}} joined. Welcome to the jungle!",
     "TodayAlcHistory": "Today's alcohol level",
-    "BackToActivity": "Back to activities!"
+    "BackToActivity": "Back to activities!",
+    "DataUpdateSuccessful": "Data update successful.",
+    "RenameMessage": "{{originalUserName}} has renamed and is now known as {{userName}}!"
 }
