@@ -39,6 +39,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (location.pathname.indexOf('invitation') < 0) {
       this.auth.handleAuthentication(location.pathname);
+      this.auth.scheduleRenewal();
     }
 
     // this language will be used as a fallback when a translation isn't found in the current language
@@ -55,7 +56,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.registerUser(this.pushInfo);
         this.handleInvitations();
 
-        //this.handleOnboarding();
+        // this.handleOnboarding();
       }
     });
 
@@ -95,11 +96,11 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     });
 
-    // this.pushService.notificationClicks.subscribe( event => {
-    //   const url = event.notification.data.url || 'https://bingebuddy.azureedge.net';
-    //   window.open(url);
-    //   console.log('[Service Worker] Notification click Received. event', event);
-    // });
+    this.pushService.notificationClicks.subscribe( event => {
+      const url = event.notification.data.url || 'https://bingebuddy.azureedge.net';
+      window.open(url);
+      console.log('[Service Worker] Notification click Received. event', event);
+    });
   }
 
   // private handleOnboarding() {

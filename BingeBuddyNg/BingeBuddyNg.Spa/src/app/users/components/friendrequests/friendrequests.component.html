@@ -20,3 +20,7 @@
 <p fxLayout fxLayoutAlign="start center" *ngIf="!isBusy">
   <mat-icon>info</mat-icon>{{'FriendRequestHint' | translate }}
 </p>
+
+<button *ngIf="!isBusy" mat-raised-button color="primary" [routerLink]="['/activity-feed']">
+  {{'BackToActivity' | translate}}
+</button>

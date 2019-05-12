@@ -120,5 +120,6 @@
     "Edit": "Edit",
     "Drink": "Drink",
     "WelcomeNewUserMessage": "{{userName}} joined. Welcome to the jungle!",
-    "TodayAlcHistory": "Today's alcohol level"
+    "TodayAlcHistory": "Today's alcohol level",
+    "BackToActivity": "Back to activities!"
 }

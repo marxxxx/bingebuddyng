@@ -1,8 +1,10 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as auth0 from 'auth0-js';
 import { Router } from '@angular/router';
 import { UserProfile } from '../../../models/UserProfile';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, of, timer } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +12,7 @@ import { BehaviorSubject } from 'rxjs';
 export class AuthService {
 
   private userProfile: UserProfile;
+  refreshSubscription: Subscription;
 
   readonly idTokenStorageKey = 'id_token';
   readonly tokenStorageKey = 'token';
@@ -133,6 +136,11 @@ export class AuthService {
     return localStorage.getItem('access_token');
   }
 
+  getExpiresAt(): any {
+    const expiresAt = JSON.parse(localStorage.getItem('expires_at') || '{}');
+    return expiresAt;
+  }
+
   public logout(): void {
     // Remove tokens and expiry time from localStorage
     localStorage.removeItem('access_token');
@@ -150,10 +158,54 @@ export class AuthService {
   public isAuthenticated(): boolean {
     // Check whether the current time is past the
     // Access Token's expiry time
-    const expiresAt = JSON.parse(localStorage.getItem('expires_at') || '{}');
+    const expiresAt = this.getExpiresAt();
     return new Date().getTime() < expiresAt;
   }
 
+  public renewTokens() {
+    this.auth0.checkSession({}, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        this.setSession(result);
+        this.scheduleRenewal();
+      }
+    });
+  }
+
+  public scheduleRenewal() {
+    if (!this.isAuthenticated()) { return; }
+    this.unscheduleRenewal();
+
+    const expiresAt = this.getExpiresAt();
+
+    const expiresIn$ = of(expiresAt).pipe(
+      mergeMap(
+        x => {
+          const now = Date.now();
+          // Use timer to track delay until expiration
+          // to run the refresh at the proper time
+          return timer(Math.max(1, x - now));
+        }
+      )
+    );
+
+    // Once the delay time from above is
+    // reached, get a new JWT and schedule
+    // additional refreshes
+    this.refreshSubscription = expiresIn$.subscribe(
+      () => {
+        this.renewTokens();
+        this.scheduleRenewal();
+      }
+    );
+  }
+
+  public unscheduleRenewal() {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
+  }
 
   resetAuthInformation() {
     localStorage.removeItem(this.idTokenStorageKey);

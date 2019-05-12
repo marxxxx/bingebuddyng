@@ -60,22 +60,6 @@ export class ActivityComponent implements OnInit {
   ngOnInit() {
   }
 
-  isDrinkActivity(): boolean {
-    return this.activity.activity.activityType === ActivityType.Drink;
-  }
-
-  isNotificationActivity(): boolean {
-    return this.activity.activity.activityType === ActivityType.Notification;
-  }
-  isMessageActivity(): boolean {
-    return this.activity.activity.activityType === ActivityType.Message;
-  }
-
-  isVenueActivity(): boolean {
-    return this.activity.activity.activityType === ActivityType.VenueEntered ||
-      this.activity.activity.activityType === ActivityType.VenueLeft;
-  }
-
   isImageActivity(): boolean {
     return this.activity.activity.activityType === ActivityType.Image && !this.isVideoActivity();
   }
@@ -85,9 +69,6 @@ export class ActivityComponent implements OnInit {
       this.activity.activity.imageUrl && this.activity.activity.imageUrl.endsWith('mp4');
   }
 
-  isRegistrationActivity(): boolean {
-    return this.activity.activity.activityType === ActivityType.Registration;
-  }
 
   getDrinkMessage(): string {
     if (!this.activity.activity.drinkName) {

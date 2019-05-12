@@ -1,14 +1,12 @@
 <mat-card>
   <mat-card-title fxLayout fxLayoutAlign="space-between center">
     <div fxLayout fxLayoutAlign="start center">
-      <app-user-info [userInfo]="isRegistrationActivity() ? activity.activity.registrationUser : userInfo"
+      <app-user-info [userInfo]="activity.activity.activityType === ActivityType.Registration ? activity.activity.registrationUser : userInfo"
         [showName]="true"></app-user-info>
     </div>
     <mat-chip-list class="stats" *ngIf="
         activity.activity.drinkCount +
-          activity.userStats.currentAlcoholization >
-        0
-      ">
+          activity.userStats.currentAlcoholization > 0">
       <mat-chip class="chip" *ngIf="activity.activity.drinkCount > 0">{{ activity.activity.drinkCount }}
         <mat-icon fxHide fxShow.gt-xs>local_drink</mat-icon>
       </mat-chip>
@@ -20,20 +18,21 @@
     </mat-chip-list>
   </mat-card-title>
   <mat-card-content>
-    <p class="notification" *ngIf="isNotificationActivity()">
+    <p class="notification" *ngIf="activity.activity.activityType === ActivityType.Notification">
       <span>{{ activity.activity.message }}</span>
     </p>
-    <p class="venue" *ngIf="isVenueActivity()">
+    <p class="venue" *ngIf="activity.activity.activityType === ActivityType.VenueEntered ||
+    this.activity.activity.activityType === ActivityType.VenueLeft">
       <span>{{ activity.activity.message }}</span>
     </p>
-    <p class="message" *ngIf="isMessageActivity()">
+    <p class="message" *ngIf="activity.activity.activityType === ActivityType.Message">
       <span *ngIf="!isMessageLink(activity.activity.message)">{{
         activity.activity.message
       }}</span>
       <a *ngIf="isMessageLink(activity.activity.message)"
         [href]="activity.activity.message">{{ activity.activity.message }}</a>
     </p>
-    <span class="drink" *ngIf="isDrinkActivity()">
+    <span class="drink" *ngIf="activity.activity.activityType === ActivityType.Drink">
       {{ getDrinkMessage() }}
     </span>
     <div class="image" *ngIf="isImageActivity()">
@@ -45,7 +44,7 @@
         {{ 'NoVideoSupport' | translate }}
       </video>
     </div>
-    <div class="message" *ngIf="isRegistrationActivity()">
+    <div class="message" *ngIf="activity.activity.activityType === ActivityType.Registration">
       <span>{{getRegistrationMessage()}}</span>
     </div>
     <div class="metadata" fxLayout fxLayoutAlign="space-between center">

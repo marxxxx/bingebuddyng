@@ -46,8 +46,10 @@ namespace BingeBuddyNg.Services.Statistics
             var userStats = new UserStatistics(user.Id, stats.CurrentAlcLevel, stats.CurrentNightDrinks);
 
             await UserStatsRepository.SaveStatisticsForUserAsync(userStats);
-            await StatsHistoryRepository.SaveStatisticsHistoryAsync(new UserStatisticHistory(user.Id, DateTime.UtcNow, stats.CurrentAlcLevel));
-
+            if (userStats.CurrentAlcoholization > 0)
+            {
+                await StatsHistoryRepository.SaveStatisticsHistoryAsync(new UserStatisticHistory(user.Id, DateTime.UtcNow, stats.CurrentAlcLevel));
+            }
             logger.LogDebug($"Successfully updated stats for user {user}: {userStats}");
             return userStats;
         }

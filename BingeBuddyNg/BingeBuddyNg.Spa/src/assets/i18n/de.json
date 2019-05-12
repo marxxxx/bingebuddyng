@@ -120,7 +120,6 @@
     "Edit": "Ändern",
     "Drink": "Trinken",
     "WelcomeNewUserMessage": "{{userName}} hat sich angemeldet. Willkommen im Club!",
-    "TodayAlcHistory": "Heutige Promilleentwicklung"
-
-
+    "TodayAlcHistory": "Heutige Promilleentwicklung",
+    "BackToActivity": "Zurück zu den Aktivitäten!"
 }
