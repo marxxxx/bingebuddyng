@@ -1,7 +1,8 @@
 <mat-card>
   <mat-card-title fxLayout fxLayoutAlign="space-between center">
     <div fxLayout fxLayoutAlign="start center">
-      <app-user-info [userInfo]="activity.activity.activityType === ActivityType.Registration ? activity.activity.registrationUser : userInfo"
+      <app-user-info
+        [userInfo]="activity.activity.activityType === ActivityType.Registration ? activity.activity.registrationUser : userInfo"
         [showName]="true"></app-user-info>
     </div>
     <mat-chip-list class="stats" *ngIf="
@@ -16,6 +17,15 @@
         <mat-icon fxHide fxShow.gt-xs>opacity</mat-icon>
       </mat-chip>
     </mat-chip-list>
+    <!-- Context Menu -->
+    <div>
+      <button mat-icon-button *ngIf="activity.activity.userId === currentUser.userId" [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="onDelete()"><mat-icon>delete</mat-icon>{{'Delete' | translate }}</button>
+      </mat-menu>
+    </div>
   </mat-card-title>
   <mat-card-content>
     <p class="notification" *ngIf="activity.activity.activityType === ActivityType.Notification">
@@ -48,7 +58,10 @@
       </video>
     </div>
     <div class="message" *ngIf="activity.activity.activityType === ActivityType.Registration">
-      <span>{{getRegistrationMessage()}}</span>
+      <span>{{'WelcomeNewUserMessage' | translate: activity.activity}}</span>
+    </div>
+    <div class="message" *ngIf="activity.activity.activityType === ActivityType.ProfileImageUpdate">
+      <span>{{'ProfileImageUpdateMessage' | translate:activity.activity }}</span>
     </div>
     <div class="metadata" fxLayout fxLayoutAlign="space-between center">
       <span class="timestamp">{{

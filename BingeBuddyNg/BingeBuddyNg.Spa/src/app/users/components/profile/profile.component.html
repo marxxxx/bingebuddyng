@@ -2,7 +2,8 @@
 
 
 <div class="container" *ngIf="user" fxLayout="column" fxLayoutAlign="center center">
-  <img [src]="getProfileImageUrl()">
+  <img *ngIf="!isBusyUpdatingProfilePic" [src]="getProfileImageUrl()" (click)="fileUpload.click()">
+  <mat-progress-spinner *ngIf="isBusyUpdatingProfilePic" mode="indeterminate" color="primary" diameter="64"></mat-progress-spinner>
   <div fxLayout fxLayoutAlign="center center">
     <h3 *ngIf="!isEditingUserName && user">{{user.name}}</h3>
     <mat-form-field *ngIf="isEditingUserName">
@@ -13,6 +14,9 @@
     <button mat-icon-button *ngIf="isEditingUserName && !isBusyUpdatingUserName" (click)="onUpdateUserName()"><mat-icon>save</mat-icon></button>
     <mat-progress-spinner *ngIf="isBusyUpdatingUserName" mode="indeterminate" color="primary" diameter="48"></mat-progress-spinner>
   </div>
+  
+  <input type="file" #fileUpload id="fileUpload" ng2FileSelect style="display:none;" [uploader]="uploader" />
+
   <p *ngIf="!isBusy && isYourFriend()" fxLayout>
     <img src="../../assets/img/like.png">{{'YouAreFriends' | translate}}
   </p>

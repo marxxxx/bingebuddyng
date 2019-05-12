@@ -123,5 +123,8 @@
     "TodayAlcHistory": "Today's alcohol level",
     "BackToActivity": "Back to activities!",
     "DataUpdateSuccessful": "Data update successful.",
-    "RenameMessage": "{{originalUserName}} has renamed and is now known as {{userName}}!"
+    "RenameMessage": "{{originalUserName}} has renamed and is now known as {{userName}}!",
+    "ProfileImageUpdateMessage": "{{userName}} has a new profile image!",
+    "DeleteActivity": "Delete activity",
+    "ReallyDeleteActivity": "Do you really want to delete this activity?"
 }

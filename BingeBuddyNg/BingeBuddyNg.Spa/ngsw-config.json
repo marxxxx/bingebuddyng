@@ -36,18 +36,6 @@
         "maxAge": "1d",
         "timeout": "3s"
       }
-    },
-    {
-      "name": "userpics",
-      "urls": [
-        "https://bingebuddystorage.blob.core.windows.net/profileimg/**"
-      ],
-      "cacheConfig": {
-        "strategy": "performance",
-        "maxSize": 100,
-        "maxAge": "7d",
-        "timeout": "1s"
-      }
     }
   ]
 }

@@ -3,7 +3,8 @@
 
 <div id="activity-container" [@listActivities]="isInitialLoad">
   <!-- The actual activity feed-->
-  <app-activity *ngFor="let a of activitys" [activity]="a" [currentUser]="currentUserInfo" (commentOpenChanged)="isCommentOpen = $event"></app-activity>
+  <app-activity *ngFor="let a of activitys" [activity]="a" [currentUser]="currentUserInfo" (commentOpenChanged)="isCommentOpen = $event"
+  (deleted)="load()"></app-activity>
 
   <!-- Reload-spinner -->
   <mat-progress-spinner [ngClass]="{noactivityspinner: activitys && activitys.length < 5, activityspinner: activitys && activitys.length >= 5}"

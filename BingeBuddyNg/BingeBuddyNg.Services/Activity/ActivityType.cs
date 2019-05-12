@@ -10,6 +10,7 @@
         VenueEntered = 50,
         VenueLeft = 51,
         Registration = 60,
-        Rename = 70
+        Rename = 70,
+        ProfileImageUpdate = 80
     }
 }

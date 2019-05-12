@@ -49,4 +49,8 @@ export class UserService {
   getProfileImageUrl(userId: string): string {
     return `https://bingebuddystorage.blob.core.windows.net/profileimg/${userId}`;
   }
+
+  getUpdateProfilePicUrl(): string {
+    return `${this.baseUrl}/UpdateUserProfilePic`;
+  }
 }

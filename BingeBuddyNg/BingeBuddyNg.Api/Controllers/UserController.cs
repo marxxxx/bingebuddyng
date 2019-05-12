@@ -6,6 +6,7 @@ using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
@@ -71,7 +72,16 @@ namespace BingeBuddyNg.Api.Controllers
             var result = await this.UserService.UpdateUserProfileAsync(user);
             return result;
         }
-        
+
+
+        [HttpPost("[action]")]
+        public async Task UpdateUserProfilePic(IFormFile file)
+        {
+            var currentUserId = this.IdentityService.GetCurrentUserId();
+           
+            await this.UserService.UpdateUserProfilePicAsync(currentUserId, file);
+        }
+
 
         [HttpDelete("{friendUserId}")]
         public Task RemoveFriend(string friendUserId)

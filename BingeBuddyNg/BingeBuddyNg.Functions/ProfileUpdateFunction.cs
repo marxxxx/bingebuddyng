@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
 using System;
+using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Functions
 {
@@ -33,7 +34,7 @@ namespace BingeBuddyNg.Functions
             using (var strm = await httpClient.GetStreamAsync(message.UserProfileImageUrl))
             {
                 string fileName = $"{message.UserId}";
-                await StorageAccessService.SaveFileInBlobStorage("profileimg", fileName, strm);
+                await StorageAccessService.SaveFileInBlobStorage(ContainerNames.ProfileImages, fileName, strm);
             }
 
             log.LogInformation($"Successfully updated profile information for user {message.UserId}");

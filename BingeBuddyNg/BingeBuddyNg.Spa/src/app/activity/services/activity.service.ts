@@ -54,6 +54,11 @@ export class ActivityService {
     return this.http.post(url, reaction);
   }
 
+  deleteActivity(id: string): Observable<any> {
+    const url = `${this.baseUrl}/${id}`;
+    return this.http.delete(url);
+  }
+
   getAddImageActivityUrl(loc: Location): string {
     let url = `${this.baseUrl}/AddImageActivity/`;
     if (loc) {

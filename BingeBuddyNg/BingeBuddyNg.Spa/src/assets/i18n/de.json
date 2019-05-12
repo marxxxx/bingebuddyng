@@ -123,5 +123,8 @@
     "TodayAlcHistory": "Heutige Promilleentwicklung",
     "BackToActivity": "Zurück zu den Aktivitäten!",
     "DataUpdateSuccessful": "Die Daten wurden erfolgreich aktualisiert.",
-    "RenameMessage": "{{originalUserName}} hat sich umbenannt und wird nun {{userName}} genannt!"
+    "RenameMessage": "{{originalUserName}} hat sich umbenannt und wird nun {{userName}} genannt!",
+    "ProfileImageUpdateMessage": "{{userName}} hat ein neues Profilbild!",
+    "DeleteActivity": "Aktivität löschen",
+    "ReallyDeleteActivity": "Willst du diese Aktivität wirklich löschen?"
 }

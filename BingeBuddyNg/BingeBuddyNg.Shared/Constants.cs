@@ -6,6 +6,11 @@ namespace BingeBuddyNg.Shared
     {
         public const string DefaultLanguage = "de";
 
+        public static class ContainerNames
+        {
+            public const string ProfileImages = "profileimg";
+        }
+
         public static class QueueNames
         {
             public const string ProfileUpdate = "profile-update";

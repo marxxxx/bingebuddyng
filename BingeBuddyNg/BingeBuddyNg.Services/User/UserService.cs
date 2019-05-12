@@ -1,9 +1,11 @@
 ﻿using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Infrastructure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
+using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Services.User
 {
@@ -50,6 +52,17 @@ namespace BingeBuddyNg.Services.User
 
             var response = new UpdateUserResponseDTO(!user.Weight.HasValue, user.Gender == Gender.Unknown);
             return response;
+        }
+
+        public async Task UpdateUserProfilePicAsync(string userId, IFormFile file)
+        {
+            var user = await this.UserRepository.FindUserAsync(userId);
+            using (var stream = file.OpenReadStream())
+            {
+                await StorageAccessService.SaveFileInBlobStorage(ContainerNames.ProfileImages, userId, stream);
+                var activity = Activity.Activity.CreateProfileImageUpdateActivity(userId, user.Name);
+                await ActivityRepository.AddActivityAsync(activity);
+            }
         }
     }
 }

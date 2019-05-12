@@ -132,12 +132,12 @@ namespace BingeBuddyNg.Services.Activity
 
         public async Task<Activity> GetActivityAsync(string id)
         {
-            ActivityTableEntity entity = await GetActivityEntity(id);
+            ActivityTableEntity entity = await GetActivityEntityAsync(id);
 
             return entity.Entity;
         }
 
-        private async Task<ActivityTableEntity> GetActivityEntity(string id)
+        private async Task<ActivityTableEntity> GetActivityEntityAsync(string id)
         {
             string partitionKey = GetPartitionKey(id);
 
@@ -156,7 +156,7 @@ namespace BingeBuddyNg.Services.Activity
         {
             var table = this.StorageAccessService.GetTableReference(ActivityTableName);
 
-            ActivityTableEntity entity = await GetActivityEntity(activity.Id);
+            ActivityTableEntity entity = await GetActivityEntityAsync(activity.Id);
             
             // extend to other propertys if needed
             // Note to my future-self: Why do we need this? Just replace entity maybe and we're good?
@@ -169,6 +169,18 @@ namespace BingeBuddyNg.Services.Activity
 
             TableOperation updateOperation = TableOperation.Replace(entity);
             await table.ExecuteAsync(updateOperation);
+        }
+
+        public async Task DeleteActivityAsync(string userId, string id)
+        {
+            var table = this.StorageAccessService.GetTableReference(ActivityTableName);
+            var activity = await this.GetActivityEntityAsync(id);
+            if(string.Compare(activity.UserId,  userId, true) != 0)
+            {
+                throw new UnauthorizedAccessException($"User {userId} is not permitted to delete an activity of user {activity.UserId}");
+            }
+
+            await table.ExecuteAsync(TableOperation.Delete(activity));
         }
 
         private string GetPartitionKey(DateTime timestampUtc)

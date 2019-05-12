@@ -123,6 +123,14 @@ namespace BingeBuddyNg.Services.Activity
             return activity;
         }
 
+        public static Activity CreateProfileImageUpdateActivity(string userId, string userName)
+        {
+            var activity = new Activity(ActivityType.ProfileImageUpdate, DateTime.UtcNow, null,
+                userId, userName);
+
+            return activity;
+        }
+
 
         public static Activity CreateVenueActivity(DateTime activityTimestamp,
            string userId, string userName, string message, VenueModel venue, VenueAction action)

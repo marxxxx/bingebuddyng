@@ -116,5 +116,13 @@ namespace BingeBuddyNg.Api.Controllers
             await this.ActivityService.AddReactionAsync(reaction);
         }
 
+
+        [HttpDelete("{id}")]
+        public async Task DeleteActivity(string id)
+        {
+            string userId = this.IdentityService.GetCurrentUserId();
+            await this.ActivityRepository.DeleteActivityAsync(userId, id);
+        }
+
     }
 }

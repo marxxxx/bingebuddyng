@@ -9,6 +9,7 @@ import { UserService } from '../../../core/services/user.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../../models/User';
 import { filter } from 'rxjs/internal/operators/filter';
+import { FileUploader, FileUploaderOptions, FileItem } from 'ng2-file-upload';
 
 @Component({
   selector: 'app-profile',
@@ -26,6 +27,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isBusy = false;
   isEditingUserName = false;
   isBusyUpdatingUserName = false;
+  isBusyUpdatingProfilePic = false;
+  uploader: FileUploader;
 
   constructor(
     private route: ActivatedRoute,
@@ -38,6 +41,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.initFileUploader();
     console.log('on init called');
     const sub = combineLatest([this.route.paramMap, this.auth.currentUserProfile$.pipe(filter(p => p != null))]).subscribe(result => {
       console.log('got information for profile page', result);
@@ -49,6 +53,38 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     this.subscriptions.push(sub);
   }
+
+  initFileUploader(): void {
+    this.uploader = new FileUploader(this.getOptions());
+
+    this.uploader.onAfterAddingFile = this.onAfterAddingFile.bind(this);
+    this.uploader.onCompleteAll = this.onCompleteAll.bind(this);
+  }
+
+  onAfterAddingFile(fileItem: FileItem) {
+    this.uploader.setOptions(this.getOptions());
+
+    // upload
+    this.isBusyUpdatingProfilePic = true;
+    this.uploader.uploadAll();
+  }
+
+  getOptions(): FileUploaderOptions {
+    const options = {
+      url: this.userService.getUpdateProfilePicUrl(),
+      authTokenHeader: 'Authorization',
+      authToken: 'Bearer ' + this.auth.getAccessToken()
+    };
+
+    return options;
+  }
+
+  onCompleteAll() {
+    this.uploader.clearQueue();
+    this.isBusyUpdatingProfilePic = false;
+    location.reload();
+  }
+
 
   load(): void {
     console.log('loading user profile', this.userId);

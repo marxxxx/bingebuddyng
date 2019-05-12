@@ -11,6 +11,8 @@ import { CommentReaction } from '../../../../models/CommentReaction';
 import { UserService } from 'src/app/core/services/user.service';
 import { MatTooltip } from '@angular/material';
 import { Router } from '@angular/router';
+import { ShellInteractionService } from 'src/app/core/services/shell-interaction.service';
+import { filter } from 'rxjs/operators';
 
 
 @Component({
@@ -48,6 +50,9 @@ export class ActivityComponent implements OnInit {
   @Output()
   commentOpenChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+  @Output()
+  deleted = new EventEmitter();
+
   @ViewChildren(MatTooltip)
   tooltips: MatTooltip[];
 
@@ -55,6 +60,7 @@ export class ActivityComponent implements OnInit {
   constructor(private translate: TranslateService,
     private router: Router,
     private activityService: ActivityService,
+    private shellInteraction: ShellInteractionService,
     public userService: UserService) { }
 
   ngOnInit() {
@@ -80,7 +86,7 @@ export class ActivityComponent implements OnInit {
   }
 
   getRegistrationMessage(): string {
-    const message = this.translate.instant('WelcomeNewUserMessage', {userName: this.activity.activity.registrationUser.userName});
+    const message = this.translate.instant('WelcomeNewUserMessage', { userName: this.activity.activity.registrationUser.userName });
     return message;
   }
 
@@ -131,6 +137,23 @@ export class ActivityComponent implements OnInit {
       this.setCommentVisible(false);
       console.error(e);
     });
+  }
+
+  onDelete() {
+    this.shellInteraction.showConfirmationDialog({
+      icon: 'delete',
+      title: 'DeleteActivity',
+      message: 'ReallyDeleteActivity',
+      confirmButtonCaption: 'Delete',
+      cancelButtonCaption: 'Cancel'
+    }).pipe(filter(isConfirmed => isConfirmed))
+      .subscribe(() => {
+        console.log('deleting activity', this.activity.activity.id);
+        this.activityService.deleteActivity(this.activity.activity.id).subscribe(() => this.deleted.emit(), e => {
+          this.shellInteraction.showErrorMessage();
+          console.error(e);
+        });
+      });
   }
 
   onKeydown(ev) {
