@@ -22,7 +22,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   // members
   ///////////////////////////////////////////////////////
   public isBusy = false;
-  public languages = [{ lang: 'de', text: 'Deutsch' }, { lang: 'en', text: 'English' }];
+  public languages = [{lang: 'at', text: 'Österreichisch'}, { lang: 'de', text: 'Deutsch' }, { lang: 'en', text: 'English' }];
   public currentLanguage = this.settingsService.getLanguage();
   subscriptions: Subscription[] = [];
   currentUser: User;
