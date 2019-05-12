@@ -107,13 +107,13 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.push(
-      this.locationService.locationChanged$.subscribe(_ => {
+      this.locationService.locationChanged$.subscribe(() => {
         console.log('location has changed');
 
         this.snackBar
           .open(this.translateService.instant('NewVenue'), this.translateService.instant('YesCheckin'), { duration: 3000 })
           .onAction()
-          .subscribe(_ => {
+          .subscribe(() => {
             this.onCheckInVenue(VenueDialogMode.LocationChanged);
           });
       })
@@ -196,11 +196,8 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     this.dialog
       .open(MessageDialogComponent, { width: '80%' })
       .afterClosed()
+      .pipe(filter(message => message))
       .subscribe(message => {
-        if (!message) {
-          return;
-        }
-
         this.isBusyAdding = true;
         const activity: AddMessageActivityDTO = {
           message: message,
@@ -258,7 +255,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
       .open(ConfirmationDialogComponent, { data: args })
       .afterClosed()
       .pipe(filter(isConfirmed => isConfirmed))
-      .subscribe(_ => this.locationService.resetCurrentVenue().subscribe(_ => this.load()));
+      .subscribe(_ => this.locationService.resetCurrentVenue().subscribe(() => this.load()));
   }
 
   onAfterAddingFile(fileItem: FileItem) {

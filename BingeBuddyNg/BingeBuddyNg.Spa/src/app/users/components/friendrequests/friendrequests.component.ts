@@ -4,7 +4,8 @@ import { UserInfo } from '../../../../models/UserInfo';
 import { FriendRequestService } from '../../../core/services/friendrequest.service';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, combineLatest } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-friendrequests',
@@ -25,16 +26,15 @@ export class FriendrequestsComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     // get current user id
-    const profileSubscription = this.auth.currentUserProfile$.subscribe( p => {
-      this.currentUserId = p != null ? p.sub : null;
+    const sub = combineLatest([
+      this.auth.currentUserProfile$.pipe(filter(p => p != null)).pipe(map(p => p.sub)),
+      this.route.paramMap
+    ]).subscribe(r => {
+      this.currentUserId = r[0];
       this.load();
     });
-    this.subscriptions.push(profileSubscription);
 
-    // load friend requests
-    this.subscriptions.push(this.route.paramMap.subscribe(r => {
-      this.load();
-    }));
+    this.subscriptions.push(sub);
   }
 
   ngOnDestroy() {

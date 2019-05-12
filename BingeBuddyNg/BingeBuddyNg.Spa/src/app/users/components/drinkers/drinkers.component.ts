@@ -1,4 +1,4 @@
-import { Subscription, forkJoin } from 'rxjs';
+import { Subscription, forkJoin, combineLatest } from 'rxjs';
 import { FriendRequestInfo } from '../../../../models/FriendRequestInfo';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material';
@@ -10,6 +10,7 @@ import { UserService } from '../../../core/services/user.service';
 import { FriendRequestService } from '../../../core/services/friendrequest.service';
 import { ActivatedRoute } from '@angular/router';
 import { ShellInteractionService } from '../../../core/services/shell-interaction.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-drinkers',
@@ -37,15 +38,15 @@ export class DrinkersComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.subs.push(this.auth.currentUserProfile$.subscribe(profile => {
-      if (profile) {
-        this.currentUserId = profile.sub;
-      }
-    }));
-
-    this.subs.push(this.route.paramMap.subscribe(p => {
-      this.load();
-    }));
+    this.subs.push(
+      combineLatest([
+        this.auth.currentUserProfile$.pipe(filter(profile => profile != null)),
+        this.route.paramMap]
+      )
+      .subscribe(r => {
+        this.currentUserId = r[0].sub;
+        this.load();
+      }));
   }
 
   ngOnDestroy() {

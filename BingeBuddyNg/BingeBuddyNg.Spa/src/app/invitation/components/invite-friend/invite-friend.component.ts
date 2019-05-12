@@ -1,22 +1,25 @@
 import { UserProfile } from '../../../../models/UserProfile';
 import { AuthService } from '../../../core/services/auth.service';
 import { ShellInteractionService } from '../../../core/services/shell-interaction.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { InvitationService } from 'src/app/invitation/services/invitation.service';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-invite-friend',
   templateUrl: './invite-friend.component.html',
   styleUrls: ['./invite-friend.component.scss']
 })
-export class InviteFriendComponent implements OnInit {
+export class InviteFriendComponent implements OnInit, OnDestroy {
 
   isBusy = false;
   invitationToken: string;
   currentUserProfile: UserProfile;
   navigatorInstance: any = navigator;
+  subscriptions: Subscription[] = [];
 
   constructor(private invitationService: InvitationService,
     private shellInteractionService: ShellInteractionService,
@@ -25,7 +28,11 @@ export class InviteFriendComponent implements OnInit {
     private snackbar: MatSnackBar) { }
 
   ngOnInit() {
-    this.authService.currentUserProfile$.subscribe(p => this.currentUserProfile = p);
+    this.subscriptions.push(this.authService.currentUserProfile$.pipe(filter(p => p != null)).subscribe(p => this.currentUserProfile = p));
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   async onInvite() {
