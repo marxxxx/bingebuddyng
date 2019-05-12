@@ -28,16 +28,20 @@
     </div>
   </mat-card-title>
   <mat-card-content>
+    <!-- Notification-->
     <p class="notification" *ngIf="activity.activity.activityType === ActivityType.Notification">
       <span>{{ activity.activity.message }}</span>
     </p>
+    <!-- Rename -->
     <p class="notification" *ngIf="activity.activity.activityType === ActivityType.Rename">
       <span>{{ 'RenameMessage' | translate:activity.activity }}</span>
     </p>
+    <!-- Venue -->
     <p class="venue" *ngIf="activity.activity.activityType === ActivityType.VenueEntered ||
     this.activity.activity.activityType === ActivityType.VenueLeft">
       <span>{{ activity.activity.message }}</span>
     </p>
+    <!-- Message -->
     <p class="message" *ngIf="activity.activity.activityType === ActivityType.Message">
       <span *ngIf="!isMessageLink(activity.activity.message)">{{
         activity.activity.message
@@ -45,18 +49,22 @@
       <a *ngIf="isMessageLink(activity.activity.message)"
         [href]="activity.activity.message">{{ activity.activity.message }}</a>
     </p>
+    <!-- Drink -->
     <span class="drink" *ngIf="activity.activity.activityType === ActivityType.Drink">
-      {{ getDrinkMessage() }}
+      {{ 'IJustHadA' | translate: activity.activity }}
     </span>
+    <!-- Image-->
     <div class="image" *ngIf="isImageActivity()">
       <img [src]="activity.activity.imageUrl" />
     </div>
+    <!-- Video -->
     <div class="image" *ngIf="isVideoActivity()">
       <video width="320" height="240" controls>
         <source [src]="activity.activity.imageUrl" type="video/mp4" />
         {{ 'NoVideoSupport' | translate }}
       </video>
     </div>
+    <!-- Welcome User-->
     <div class="message" *ngIf="activity.activity.activityType === ActivityType.Registration">
       <span>{{'WelcomeNewUserMessage' | translate: activity.activity}}</span>
     </div>
