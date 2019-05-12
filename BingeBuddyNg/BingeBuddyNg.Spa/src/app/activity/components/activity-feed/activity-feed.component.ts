@@ -82,6 +82,8 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.initFileUploader();
 
+
+    this.isBusy = true;
     this.subscriptions.push(this.notification.activityReceived$.subscribe(_ => this.load()));
     this.subscriptions.push(
       this.auth.currentUserProfile$
@@ -90,6 +92,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
       .subscribe(user => {
         console.log('ActivityFeedComponent: got current user profile', user);
         this.currentUserInfo = user;
+        this.isBusy = false;
 
         // load user to get venue info
         this.load();
