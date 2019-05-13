@@ -8,9 +8,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { SwPush, SwUpdate } from '@angular/service-worker';
 import { PushInfo } from '../models/PushInfo';
 import { NotificationService } from './core/services/notification.service';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin, combineLatest, Observable, from } from 'rxjs';
 import { InvitationService } from './invitation/services/invitation.service';
 import { SettingsService } from './core/services/settings.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -34,7 +35,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private settingsService: SettingsService,
     private pushService: SwPush,
     private updateService: SwUpdate
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (location.pathname.indexOf('invitation') < 0) {
@@ -49,16 +50,23 @@ export class AppComponent implements OnInit, OnDestroy {
     // the lang to use, if the lang isn't available, it will use the current loader to get them
     this.translate.use(this.userLanguage);
 
-    this.sub = this.auth.currentUserProfile$.subscribe(userProfile => {
-      this.userProfile = userProfile;
+    combineLatest([
+      this.auth.currentUserProfile$.pipe(filter(userProfile => userProfile != null)),
+      from(this.pushService
+        .requestSubscription({
+          serverPublicKey: this.vapidPublicKey
+        }))
+    ]).subscribe(r => {
 
-      if (userProfile) {
-        this.registerUser(this.pushInfo);
-        this.handleInvitations();
+      this.userProfile = r[0];
+      const sub = r[1];
+      console.log('Subscription received', sub);
 
-        // this.handleOnboarding();
-      }
+      this.pushInfo = this.getPushInfo(sub);
+      this.registerUser(this.pushInfo);
+      this.handleInvitations();
     });
+
 
     // subscribe to PWA updates
     this.updateService.available.subscribe(e => {
@@ -71,24 +79,6 @@ export class AppComponent implements OnInit, OnDestroy {
         });
     });
 
-    console.log('requesting push subscription ...');
-
-    // registering for web push notifications
-    this.pushService
-      .requestSubscription({
-        serverPublicKey: this.vapidPublicKey
-      })
-      .then(sub => {
-        console.log('Subscription received');
-        console.log(sub);
-
-        this.pushInfo = this.getPushInfo(sub);
-        this.registerUser(this.pushInfo);
-      })
-      .catch(err => {
-        console.error(err);
-      });
-
     this.pushService.messages.subscribe((m: any) => {
       if (m.notification && m.notification.body) {
         this.snackbar.open(m.notification.body, 'OK');
@@ -96,7 +86,7 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.pushService.notificationClicks.subscribe( event => {
+    this.pushService.notificationClicks.subscribe(event => {
       const url = event.notification.data.url || 'https://bingebuddy.azureedge.net';
       window.open(url);
       console.log('[Service Worker] Notification click Received. event', event);
@@ -142,8 +132,7 @@ export class AppComponent implements OnInit, OnDestroy {
       p256dh: subJSObject.keys.p256dh
     };
 
-    console.log('got push info');
-    console.log(pushInfo);
+    console.log('got push info', pushInfo);
     return pushInfo;
   }
 

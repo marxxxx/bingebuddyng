@@ -36,13 +36,6 @@ namespace BingeBuddyNg.Services.User
                     Services.User.User.BingeBuddyUserId, Services.User.User.BingeBuddyUserName, user.ToUserInfo()));
             }
 
-            // enqueue profile image update change
-            if (result.ProfilePicHasChanged)
-            {
-                var queue = StorageAccessService.GetQueueReference(Shared.Constants.QueueNames.ProfileUpdate);
-                var message = new ProfileUpdateMessage(user.Id, user.ProfileImageUrl);
-                await queue.AddMessageAsync(new CloudQueueMessage(JsonConvert.SerializeObject(message)));
-            }
 
             if (result.NameHasChanged)
             {

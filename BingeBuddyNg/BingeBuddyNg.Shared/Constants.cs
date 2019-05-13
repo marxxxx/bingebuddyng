@@ -13,7 +13,6 @@ namespace BingeBuddyNg.Shared
 
         public static class QueueNames
         {
-            public const string ProfileUpdate = "profile-update";
             public const string ActivityAdded = "activity-added";
             public const string ReactionAdded = "reaction-added";
         }
