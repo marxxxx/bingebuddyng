@@ -11,8 +11,10 @@ import { User } from '../../../models/User';
 export class UserService {
 
   baseUrl = environment.BaseDataUrl + '/user';
+  timestamp = new Date().toISOString();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   getAllUsers(filterText: string): Observable<UserInfo[]> {
     let url = this.baseUrl;
@@ -47,7 +49,7 @@ export class UserService {
   }
 
   getProfileImageUrl(userId: string): string {
-    return `https://bingebuddystorage.blob.core.windows.net/profileimg/${userId}`;
+    return `https://bingebuddystorage.blob.core.windows.net/profileimg/${userId}?t=${this.timestamp}`;
   }
 
   getUpdateProfilePicUrl(): string {
