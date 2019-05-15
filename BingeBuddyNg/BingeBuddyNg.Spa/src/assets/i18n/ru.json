@@ -125,7 +125,7 @@
     "BackToActivity": "Назад к ленте новостей!",
     "DataUpdateSuccessful": "Данные были успешно актуализированы.",
     "RenameMessage": "{{originalUserName}} переименовал себя и сейчас его зовут {{userName}} !",
-    "ProfileImageUpdateMessage": "{{userName}} измени фотографию профиля!",
+    "ProfileImageUpdateMessage": "{{userName}} изменил фотографию профиля!",
     "DeleteActivity": "Удалить",
     "ReallyDeleteActivity": "Ты действительно хочешь удалить эту активность?"
 }

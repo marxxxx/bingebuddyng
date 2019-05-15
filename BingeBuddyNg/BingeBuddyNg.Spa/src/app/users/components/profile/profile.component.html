@@ -2,7 +2,7 @@
 
 
 <div class="container" *ngIf="user" fxLayout="column" fxLayoutAlign="center center">
-  <img *ngIf="!isBusyUpdatingProfilePic" [src]="getProfileImageUrl()" (click)="fileUpload.click()">
+  <img *ngIf="!isBusyUpdatingProfilePic" [src]="getProfileImageUrl()" (click)="onProfileImageClick()">
   <mat-progress-spinner *ngIf="isBusyUpdatingProfilePic" mode="indeterminate" color="primary" diameter="64"></mat-progress-spinner>
   <div fxLayout fxLayoutAlign="center center">
     <h3 *ngIf="!isEditingUserName && user">{{user.name}}</h3>

@@ -1,15 +1,17 @@
+import { ProfileImageDialogComponent } from './../profile-image-dialog/profile-image-dialog.component';
 import { ShellInteractionService } from '../../../core/services/shell-interaction.service';
 import { TranslateService } from '@ngx-translate/core';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
 import { FriendRequestService } from '../../../core/services/friendrequest.service';
 import { Subscription, combineLatest } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { UserService } from '../../../core/services/user.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../../models/User';
 import { filter } from 'rxjs/internal/operators/filter';
 import { FileUploader, FileUploaderOptions, FileItem } from 'ng2-file-upload';
+import { ProfileImageDialogArgs } from '../profile-image-dialog/ProfileImageDialogArgs';
 
 @Component({
   selector: 'app-profile',
@@ -30,6 +32,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isBusyUpdatingProfilePic = false;
   uploader: FileUploader;
 
+  // @ViewChild('fileUpload')
+  // fileUpload: any;
+
+
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
@@ -37,8 +43,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private translate: TranslateService,
     private snackBar: MatSnackBar,
-    private shellInteraction: ShellInteractionService
-  ) {}
+    private shellInteraction: ShellInteractionService,
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit() {
     this.initFileUploader();
@@ -202,7 +209,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onUpdateUserName() {
     this.isBusyUpdatingUserName = true;
-    this.userService.saveUser(this.user).subscribe( () => {
+    this.userService.saveUser(this.user).subscribe(() => {
       this.originalUserName = this.user.name;
       this.isEditingUserName = false;
       this.isBusyUpdatingUserName = false;
@@ -212,5 +219,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.shellInteraction.showErrorMessage();
       this.isBusyUpdatingUserName = false;
     });
+  }
+
+  onProfileImageClick() {
+    if (this.isYou()) {
+      document.getElementById('fileUpload').click();
+    } else {
+      const userProfileImageUrl = this.userService.getProfileImageUrl(this.userId);
+      const args: ProfileImageDialogArgs = new ProfileImageDialogArgs(userProfileImageUrl);
+      this.dialog.open(ProfileImageDialogComponent, {
+        data: args,
+        height: '90%'
+      });
+    }
   }
 }
