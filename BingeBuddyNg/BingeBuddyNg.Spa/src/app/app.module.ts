@@ -17,6 +17,7 @@ import { SharedModule } from './shared/shared.module';
 import { ActivityModule } from './activity/activity.module';
 import { OnboardingModule } from './onboarding/onboarding.module';
 
+
 @NgModule({
   declarations: [
     AppComponent

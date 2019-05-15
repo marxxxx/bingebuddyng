@@ -5,6 +5,7 @@ import { DrinkersComponent } from './components/drinkers/drinkers.component';
 import { AuthGuard } from '../core/services/auth.guard';
 import { SharedModule } from '../shared/shared.module';
 import { FriendrequestsComponent } from './components/friendrequests/friendrequests.component';
+import { ProfileImageDialogComponent } from './components/profile-image-dialog/profile-image-dialog.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,7 @@ const routes: Routes = [
 @NgModule({
   imports: [SharedModule, RouterModule.forChild(routes)],
   exports: [],
-  declarations: [ProfileComponent, DrinkersComponent, FriendrequestsComponent]
+  entryComponents: [ProfileImageDialogComponent],
+  declarations: [ProfileComponent, DrinkersComponent, FriendrequestsComponent, ProfileImageDialogComponent]
 })
 export class UsersModule {}
