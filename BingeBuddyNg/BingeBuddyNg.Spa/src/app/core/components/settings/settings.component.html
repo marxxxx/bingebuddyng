@@ -5,9 +5,10 @@
   </mat-card-title>
 
   <mat-card-content>
-    <mat-radio-group [(ngModel)]="currentLanguage" (change)="onLanguageChanged($event)" 
-    fxLayout fxLayoutAlign="start center" fxLayoutGap="16px" fxLayoutGap.gt-sm="24px">
-      <mat-radio-button class="language-option" *ngFor="let l of languages" [value]="l.lang" color="primary">{{l.text}}</mat-radio-button>
-    </mat-radio-group>
+    <mat-form-field>
+      <mat-select [(ngModel)]="currentLanguage" (selectionChange)="onLanguageChanged($event)">
+        <mat-option *ngFor="let l of languages" [value]="l.lang">{{l.text}}</mat-option>
+      </mat-select>
+    </mat-form-field>
   </mat-card-content>
 </mat-card>

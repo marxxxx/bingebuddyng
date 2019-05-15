@@ -17,23 +17,27 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit, OnDestroy {
-
   ///////////////////////////////////////////////////////
   // members
   ///////////////////////////////////////////////////////
   public isBusy = false;
-  public languages = [{lang: 'at', text: 'Österreichisch'}, { lang: 'de', text: 'Deutsch' }, { lang: 'en', text: 'English' }];
+  public languages = [
+    { lang: 'at', text: 'Österreichisch' },
+    { lang: 'de', text: 'Deutsch' },
+    { lang: 'en', text: 'English' },
+    { lang: 'ru', text: 'русский' }
+  ];
   public currentLanguage = this.settingsService.getLanguage();
   subscriptions: Subscription[] = [];
   currentUser: User;
 
-  constructor(private translateService: TranslateService,
+  constructor(
+    private translateService: TranslateService,
     private settingsService: SettingsService,
     private userService: UserService,
     private authService: AuthService,
-    private route: ActivatedRoute) {
-  }
-
+    private route: ActivatedRoute
+  ) {}
 
   ///////////////////////////////////////////////////////
   // functions
@@ -49,15 +53,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(sub);
 
-
-    this.subscriptions.push(this.authService.currentUserProfile$.subscribe(p => {
-      if (p != null) {
-        this.userService.getUser(p.sub).subscribe(u => this.currentUser = u);
-      }
-    }));
-
+    this.subscriptions.push(
+      this.authService.currentUserProfile$.subscribe(p => {
+        if (p != null) {
+          this.userService.getUser(p.sub).subscribe(u => (this.currentUser = u));
+        }
+      })
+    );
   }
-
 
   onLanguageChanged(language) {
     if (language) {
@@ -77,5 +80,3 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 }
-
-
