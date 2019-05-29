@@ -9,7 +9,7 @@ import { ReactionType } from '../../../../models/ReactionType';
 import { Reaction } from '../../../../models/Reaction';
 import { CommentReaction } from '../../../../models/CommentReaction';
 import { UserService } from 'src/app/core/services/user.service';
-import { MatTooltip } from '@angular/material';
+import { MatTooltip } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { ShellInteractionService } from 'src/app/core/services/shell-interaction.service';
 import { filter } from 'rxjs/operators';

@@ -13,7 +13,9 @@ import { ActivityService } from '../../services/activity.service';
 import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, ViewChildren } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { AddMessageActivityDTO } from '../../../../models/AddMessageActivityDTO';
-import { MatDialog, MatTooltip, MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ShellInteractionService } from '../../../core/services/shell-interaction.service';
 import { FileUploader, FileItem, FileUploaderOptions } from 'ng2-file-upload';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -58,7 +60,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   isCommentOpen = false;
   drinks: Drink[];
 
-  @ViewChild('#activity-container')
+  @ViewChild('#activity-container', { static: false })
   container: any;
 
   @ViewChildren(MatTooltip)
@@ -301,5 +303,9 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     } else {
       this.tooltips.forEach(t => t.hide());
     }
+  }
+
+  trackByActivity(index, item: ActivityStatsDTO) {
+    return item.activity.id;
   }
 }

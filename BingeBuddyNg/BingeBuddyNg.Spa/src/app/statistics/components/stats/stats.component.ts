@@ -5,7 +5,7 @@ import { ActivityService } from '../../../activity/services/activity.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ActivityAggregationDTO } from 'src/models/ActivityAggregationDTO';
-import { ObservableMedia, MediaChange } from '@angular/flex-layout';
+import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { UserProfile } from 'src/models/UserProfile';
 import { UserStatisticsDto } from '../../services/UserStatisticDto';
@@ -29,7 +29,7 @@ export class StatsComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute, private activityService: ActivityService,
     private statisticsService: StatisticsService, private authService: AuthService,
     private shellInteraction: ShellInteractionService,
-    private media: ObservableMedia) { }
+    private media: MediaObserver) { }
 
   ngOnInit() {
 
@@ -38,7 +38,7 @@ export class StatsComponent implements OnInit, OnDestroy {
       .pipe(tap(r => this.userProfile = r[0]))
       .subscribe(() => this.load());
 
-    const mediaSubscription = this.media.subscribe((change: MediaChange) => {
+    const mediaSubscription = this.media.media$.subscribe((change: MediaChange) => {
       console.log('media change');
       console.log(change);
       if (change.mqAlias === 'xs') {

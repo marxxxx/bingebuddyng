@@ -8,7 +8,7 @@ import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { MatSidenav } from '@angular/material';
+import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { UserProfile } from 'src/models/UserProfile';
 
@@ -24,7 +24,7 @@ export class NavShellComponent implements OnInit, OnDestroy {
     friendRequests: FriendRequestInfo[] = [];
 
 
-    @ViewChild(MatSidenav)
+    @ViewChild(MatSidenav, { static: true })
     sideNav: MatSidenav;
 
     isHandset$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);

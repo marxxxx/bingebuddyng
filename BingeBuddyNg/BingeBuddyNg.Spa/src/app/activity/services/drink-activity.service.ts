@@ -1,4 +1,4 @@
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivityService } from './activity.service';
 import { LocationService } from './location.service';
 import { Injectable } from '@angular/core';
