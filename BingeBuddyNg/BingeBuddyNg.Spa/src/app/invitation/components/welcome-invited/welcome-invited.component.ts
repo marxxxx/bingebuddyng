@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '../../services/invitation.service';
 import { Component, OnInit } from '@angular/core';
 import { InvitationInfo } from 'src/models/InvitationInfo';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-welcome-invited',

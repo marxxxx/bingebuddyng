@@ -4,7 +4,7 @@ import { ShellInteractionService } from '../../../core/services/shell-interactio
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { InvitationService } from 'src/app/invitation/services/invitation.service';
 import { TranslateService } from '@ngx-translate/core';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 

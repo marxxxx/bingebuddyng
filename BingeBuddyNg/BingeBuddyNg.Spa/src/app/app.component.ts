@@ -1,7 +1,7 @@
 import { UserProfile } from './../models/UserProfile';
 import { User } from '../models/User';
 import { UserService } from './core/services/user.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from './core/services/auth.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';

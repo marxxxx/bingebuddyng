@@ -1,7 +1,7 @@
 import { Subscription, forkJoin, combineLatest } from 'rxjs';
 import { FriendRequestInfo } from '../../../../models/FriendRequestInfo';
 import { TranslateService } from '@ngx-translate/core';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserInfo } from '../../../../models/UserInfo';
 import { User } from '../../../../models/User';

@@ -28,29 +28,32 @@ const routes: Routes = [
   },
   {
     path: 'stats',
-    loadChildren: 'src/app/statistics/statistics.module#StatisticsModule',
+    loadChildren: () => import('src/app/statistics/statistics.module').then(m => m.StatisticsModule),
     canActivate: [AuthGuard]
   },
   {
     path: 'bingemap',
-    loadChildren: 'src/app/drinkmap/drink-map.module#DrinkMapModule',
+    loadChildren: () => import('src/app/drinkmap/drink-map.module').then(m => m.DrinkMapModule),
     canActivate: [AuthGuard]
   },
   {
     path: 'invitation',
-    loadChildren: 'src/app/invitation/invitation.module#InvitationModule',
+    loadChildren: () => import('src/app/invitation/invitation.module').then(m => m.InvitationModule)
   },
   {
     path: 'ranking',
-    loadChildren: 'src/app/ranking/ranking.module#RankingModule',
+    loadChildren: () => import('src/app/ranking/ranking.module').then(m => m.RankingModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'drinks',
-    loadChildren: 'src/app/drinks/drinks.module#DrinksModule'
+    loadChildren: () => import('src/app/drinks/drinks.module').then(m => m.DrinksModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'users',
-    loadChildren: 'src/app/users/users.module#UsersModule'
+    loadChildren: () => import('src/app/users/users.module').then(m => m.UsersModule),
+    canActivate: [AuthGuard]
   },
   {
     path: '',
@@ -62,4 +65,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

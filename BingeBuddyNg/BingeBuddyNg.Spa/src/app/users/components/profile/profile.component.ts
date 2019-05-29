@@ -1,11 +1,12 @@
 import { ProfileImageDialogComponent } from './../profile-image-dialog/profile-image-dialog.component';
 import { ShellInteractionService } from '../../../core/services/shell-interaction.service';
 import { TranslateService } from '@ngx-translate/core';
-import { MatSnackBar, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { FriendRequestService } from '../../../core/services/friendrequest.service';
 import { Subscription, combineLatest } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { UserService } from '../../../core/services/user.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../../models/User';
@@ -32,8 +33,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isBusyUpdatingProfilePic = false;
   uploader: FileUploader;
 
-  // @ViewChild('fileUpload')
-  // fileUpload: any;
+  @ViewChild('fileUpload', { static: false })
+  fileUpload: ElementRef;
 
 
   constructor(
@@ -223,7 +224,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onProfileImageClick() {
     if (this.isYou()) {
-      document.getElementById('fileUpload').click();
+      this.fileUpload.nativeElement.click();
     } else {
       const userProfileImageUrl = this.userService.getProfileImageUrl(this.userId);
       const args: ProfileImageDialogArgs = new ProfileImageDialogArgs(userProfileImageUrl);

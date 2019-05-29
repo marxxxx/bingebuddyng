@@ -4,6 +4,9 @@
     "outDir": "../out-tsc/app",
     "types": []
   },
+  "angularCompilerOptions": {
+    "enableIvy": false
+  },
   "exclude": [
     "src/test.ts",
     "**/*.spec.ts"

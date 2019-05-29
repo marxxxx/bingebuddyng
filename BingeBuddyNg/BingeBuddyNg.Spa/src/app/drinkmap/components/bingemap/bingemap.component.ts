@@ -20,7 +20,7 @@ export class BingemapComponent implements OnInit {
   isBusy = false;
   activitys: Activity[] = [];
 
-  @ViewChild('AgmMap') agmMap: any;
+  @ViewChild('AgmMap', { static: true }) agmMap: any;
 
   constructor(private activityService: ActivityService, private locationService: LocationService,
     private route: ActivatedRoute) { }
