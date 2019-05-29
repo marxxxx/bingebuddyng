@@ -38,10 +38,13 @@ export class AppComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    console.log('ngOnInit');
     if (location.pathname.indexOf('invitation') < 0) {
       this.auth.handleAuthentication(location.pathname);
       this.auth.scheduleRenewal();
     }
+
+    console.log('ngOnInit - passed invitation check');
 
     // this language will be used as a fallback when a translation isn't found in the current language
     this.translate.setDefaultLang(this.settingsService.DefaultLanguage);
@@ -50,6 +53,7 @@ export class AppComponent implements OnInit, OnDestroy {
     // the lang to use, if the lang isn't available, it will use the current loader to get them
     this.translate.use(this.userLanguage);
 
+    console.log('ngOnInit - set user language');
     combineLatest([
       this.auth.currentUserProfile$.pipe(filter(userProfile => userProfile != null)),
       from(this.pushService
@@ -57,6 +61,7 @@ export class AppComponent implements OnInit, OnDestroy {
           serverPublicKey: this.vapidPublicKey
         }))
     ]).subscribe(r => {
+      console.log('ngOnInit - got user and subscription', r);
 
       this.userProfile = r[0];
       const sub = r[1];
@@ -68,6 +73,7 @@ export class AppComponent implements OnInit, OnDestroy {
     });
 
 
+    console.log('ngOnInit - before subscribing to updates');
     // subscribe to PWA updates
     this.updateService.available.subscribe(e => {
       const message = this.translate.instant('UpdateAvailableMessage');
@@ -79,6 +85,8 @@ export class AppComponent implements OnInit, OnDestroy {
         });
     });
 
+    console.log('ngOnInit - before subscribing to messages');
+
     this.pushService.messages.subscribe((m: any) => {
       if (m.notification && m.notification.body) {
         this.snackbar.open(m.notification.body, 'OK');
@@ -86,6 +94,7 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     });
 
+    console.log('ngOnInit - before subscribing to clicks');
     this.pushService.notificationClicks.subscribe(event => {
       const url = event.notification.data.url || 'https://bingebuddy.azureedge.net';
       window.open(url);
@@ -150,6 +159,6 @@ export class AppComponent implements OnInit, OnDestroy {
     console.log(user);
     this.userService
       .saveUser(user)
-      .subscribe(_ => console.log('user registration completed'), e => console.error('error registering user info', e));
+      .subscribe(() => console.log('user registration completed'), e => console.error('error registering user info', e));
   }
 }
