@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using static BingeBuddyNg.Shared.Constants;
 
@@ -15,16 +16,19 @@ namespace BingeBuddyNg.Services.User
         public IActivityRepository ActivityRepository { get; }
         public IStorageAccessService StorageAccessService { get; set; }
         public ITranslationService TranslationService { get; }
+        public IHttpClientFactory HttpClientFactory { get; }
 
         public UserService(IUserRepository userRepository,
             IActivityRepository activityRepository,
             IStorageAccessService storageAccessService,
-            ITranslationService translationService)
+            ITranslationService translationService,
+            IHttpClientFactory httpClientFactory)
         {
             this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             this.ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
             this.StorageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
             this.TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
+            this.HttpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
         }
 
         public async Task<UpdateUserResponseDTO> UpdateUserProfileAsync(User user)
@@ -32,8 +36,19 @@ namespace BingeBuddyNg.Services.User
             var result = await this.UserRepository.CreateOrUpdateUserAsync(user);
             if (result.IsNewUser)
             {
+
+                if (!string.IsNullOrEmpty(user.ProfileImageUrl))
+                {
+                    var httpClient = this.HttpClientFactory.CreateClient();
+                    using (var profileImageStream = await httpClient.GetStreamAsync(user.ProfileImageUrl))
+                    {
+                        await StorageAccessService.SaveFileInBlobStorage(ContainerNames.ProfileImages, user.Id, profileImageStream);
+                    }
+                }
+
                 await ActivityRepository.AddActivityAsync(Activity.Activity.CreateRegistrationActivity(
                     Services.User.User.BingeBuddyUserId, Services.User.User.BingeBuddyUserName, user.ToUserInfo()));
+
             }
 
 

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { UserProfile } from '../../../models/UserProfile';
 import { BehaviorSubject, Observable, Subscription, of, timer } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
+import { User } from 'src/models/User';
 
 
 @Injectable({
@@ -93,13 +94,26 @@ export class AuthService {
     const self = this;
     this.auth0.client.userInfo(accessToken, (err, profile) => {
       if (profile) {
+        self.userProfile = profile;
         this.userService.getUser(profile.sub).subscribe(u => {
           profile.nickname = u.name;
           profile.name = u.name;
           cb(null, profile);
-        }, e => { }, () => {
+        }, e => {
           console.log('AuthService: updating profile', profile);
-          self.userProfile = profile;
+
+
+          // FUCKING DIRY HACK! SORRY SORRY SORRY TO MY FUTURE SELF!
+          // FIX SOON PLEASE!!
+
+          // register user
+          const user: User = {
+            id: this.userProfile.sub,
+            name: this.userProfile.nickname,
+            profileImageUrl: this.userProfile.picture
+          };
+
+          this.userService.saveUser(user).subscribe(ru => cb(null, profile));
         });
       } else {
         cb(err, profile);
