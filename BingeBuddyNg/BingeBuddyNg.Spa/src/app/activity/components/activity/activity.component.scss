@@ -110,3 +110,7 @@ img[matListAvatar] {
 .address {
     cursor: pointer;
 }
+
+mat-icon {
+    color: map-get($mat-bingebuddyprimary, 500)
+}
