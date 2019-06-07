@@ -57,7 +57,7 @@ export class ActivityComponent implements OnInit {
   tooltips: MatTooltip[];
 
 
-  constructor(private translate: TranslateService,
+  constructor(
     private router: Router,
     private activityService: ActivityService,
     private shellInteraction: ShellInteractionService,

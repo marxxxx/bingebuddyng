@@ -7,7 +7,6 @@ namespace BingeBuddyNg.Services.Invitation
     {
         public string InviationToken { get; set; }
         public string InvitingUserId { get; set; }
-        public string AcceptingUserId { get; set; }
 
         public InvitationTableEntity()
         { }

@@ -36,13 +36,12 @@ namespace BingeBuddyNg.Services.Invitation
         {
             var table = StorageAccess.GetTableReference(TableName);
             var invitationEntity = await FindInvitationEntityAsync(token);
-            invitationEntity.AcceptingUserId = userId;
             
             TableOperation operation = TableOperation.Replace(invitationEntity);
 
             await table.ExecuteAsync(operation);
 
-            var result = new Invitation(invitationEntity.InviationToken, invitationEntity.InvitingUserId, invitationEntity.AcceptingUserId);
+            var result = new Invitation(invitationEntity.InviationToken, invitationEntity.InvitingUserId);
             return result;
         }
 
@@ -54,7 +53,7 @@ namespace BingeBuddyNg.Services.Invitation
                 throw new NotFoundException($"Invitation {invitationToken} not found!");
             }
 
-            var result = new Invitation(invitationToken, invitationEntity.InvitingUserId, invitationEntity.AcceptingUserId);
+            var result = new Invitation(invitationToken, invitationEntity.InvitingUserId);
             return result;
             
         }

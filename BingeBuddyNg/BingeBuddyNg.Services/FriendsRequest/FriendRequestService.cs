@@ -56,7 +56,7 @@ namespace BingeBuddyNg.Services.FriendsRequest
             if (requestingUser.PushInfo != null)
             {
                 var subject = await TranslationService.GetTranslationAsync(requestingUser.Language, "FriendsRequest");
-                var message = await TranslationService.GetTranslationAsync(requestingUser.Language, "AcceptedFriendsRequest", requestingUser.Name);
+                var message = await TranslationService.GetTranslationAsync(requestingUser.Language, "AcceptedFriendsRequest", acceptingUser.Name);
 
                 NotificationService.SendMessage(new[] { requestingUser.PushInfo }, new NotificationMessage(Constants.Urls.ApplicationIconUrl,
                     Constants.Urls.ApplicationIconUrl, Constants.Urls.FriendRequestApplicationUrl, subject, message));

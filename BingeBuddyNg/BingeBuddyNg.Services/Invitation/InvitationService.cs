@@ -50,13 +50,13 @@ namespace BingeBuddyNg.Services.Invitation
             return result;
         }
 
-        public async Task AcceptInvitationAsync(string userId, string invitationToken)
+        public async Task AcceptInvitationAsync(string acceptingUserId, string invitationToken)
         {
-            var invitation = await this.InvitationRepository.AcceptInvitationAsync(userId, invitationToken);
-            if (userId != invitation.InvitingUserId)
+            var invitation = await this.InvitationRepository.AcceptInvitationAsync(acceptingUserId, invitationToken);
+            if (acceptingUserId != invitation.InvitingUserId)
             {                
                 var invitingUser = await this.UserRepository.FindUserAsync(invitation.InvitingUserId);
-                var acceptingUser = await this.UserRepository.FindUserAsync(invitation.AcceptingUserId);
+                var acceptingUser = await this.UserRepository.FindUserAsync(acceptingUserId);
 
                 if (invitingUser != null && acceptingUser != null)
                 {
