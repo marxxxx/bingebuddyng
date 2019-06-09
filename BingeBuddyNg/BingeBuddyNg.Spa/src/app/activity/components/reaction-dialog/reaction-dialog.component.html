@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>
+  {{'Reactions' | translate}}
+</h2>
+<mat-dialog-content>
+  <mat-tab-group [selectedIndex]="selectedTabIndex">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <div fxLayout fxLayoutGap="5px" fxLayoutAlign="space-between center">
+          <mat-icon>thumb_up</mat-icon>
+          <span>{{'Likes' | translate}} ({{data.likes?.length}})</span>
+        </div>
+      </ng-template>
+      <app-reaction-list [reactions]="data.likes"></app-reaction-list>
+      <span class="empty" *ngIf="!data.likes?.length">
+        {{'NobodyLikesThis' | translate}}
+      </span>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <div fxLayout fxLayoutGap="5px" fxLayoutAlign="space-between center">
+          <img src="../../assets/img/beer.png" />
+          <span>{{'Cheers' | translate }} ({{data.cheers?.length}})</span>
+        </div>
+      </ng-template>
+      <app-reaction-list [reactions]="data.cheers"></app-reaction-list>
+      <span class="empty" *ngIf="!data.cheers?.length">
+        {{'NobodyCheered' | translate}}
+      </span>
+    </mat-tab>
+  </mat-tab-group>
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="end center">
+  <button mat-raised-button color="primary" mat-dialog-close>{{'Close' | translate }}</button>
+</mat-dialog-actions>

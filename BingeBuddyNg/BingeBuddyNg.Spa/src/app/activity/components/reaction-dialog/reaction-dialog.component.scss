@@ -1,0 +1,12 @@
+@import '../../../../theme.scss';
+
+.empty {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-style: italic;
+    font-size: medium;
+}
+
+mat-icon {
+    color: map-get($mat-bingebuddyprimary, 500)
+}

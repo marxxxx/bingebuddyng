@@ -127,5 +127,12 @@
     "RenameMessage": "{{originalUserName}} переименовал себя и сейчас его зовут {{userName}} !",
     "ProfileImageUpdateMessage": "{{userName}} изменил фотографию профиля!",
     "DeleteActivity": "Удалить",
-    "ReallyDeleteActivity": "Ты действительно хочешь удалить эту активность?"
+    "ReallyDeleteActivity": "Ты действительно хочешь удалить эту активность?",
+
+    "NobodyLikesThis":"Nobody likes this.",
+    "NobodyCheered": "Nobody cheered.",
+    "Cheers":"Cheers",
+    "Likes":"Likes",
+    "Reactions": "Reactions",
+    "Close": "Close"
 }

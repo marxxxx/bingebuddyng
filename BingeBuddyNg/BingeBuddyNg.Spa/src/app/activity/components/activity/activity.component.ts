@@ -1,8 +1,8 @@
+import { ReactionDialogComponent } from './../reaction-dialog/reaction-dialog.component';
 import { UserInfo } from '../../../../models/UserInfo';
 import { ActivityType } from '../../../../models/ActivityType';
 import { ActivityStatsDTO } from '../../../../models/ActivityStatsDTO';
 import { Component, OnInit, Input, ViewChildren, EventEmitter, Output } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { ActivityService } from './../../services/activity.service';
 import { ReactionDTO } from '../../../../models/ReactionDTO';
 import { ReactionType } from '../../../../models/ReactionType';
@@ -13,6 +13,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { ShellInteractionService } from 'src/app/core/services/shell-interaction.service';
 import { filter } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
 
 
 @Component({
@@ -53,13 +54,11 @@ export class ActivityComponent implements OnInit {
   @Output()
   deleted = new EventEmitter();
 
-  @ViewChildren(MatTooltip)
-  tooltips: MatTooltip[];
-
 
   constructor(
     private router: Router,
     private activityService: ActivityService,
+    private dialog: MatDialog,
     private shellInteraction: ShellInteractionService,
     public userService: UserService) { }
 
@@ -75,15 +74,15 @@ export class ActivityComponent implements OnInit {
       this.activity.activity.imageUrl && this.activity.activity.imageUrl.endsWith('mp4');
   }
 
-  onShowTooltips() {
-    this.tooltips.forEach(t => t.show());
+  onShowReactions() {
+    this.dialog.open(ReactionDialogComponent, {width: '80%', data: this.activity.activity});
   }
 
   onLike() {
 
     this.isBusyLiking = true;
     const reaction = this.createReactionDTO(ReactionType.Like);
-    this.activityService.addReaction(reaction).subscribe(r => {
+    this.activityService.addReaction(reaction).subscribe(() => {
       this.isBusyLiking = false;
       const addedLike = this.createReaction(ReactionType.Like);
       this.activity.activity.likes.push(addedLike);
@@ -99,7 +98,7 @@ export class ActivityComponent implements OnInit {
 
     this.isBusyCheering = true;
     const reaction = this.createReactionDTO(ReactionType.Cheers);
-    this.activityService.addReaction(reaction).subscribe(r => {
+    this.activityService.addReaction(reaction).subscribe(() => {
       this.isBusyCheering = false;
       const addedCheers = this.createReaction(ReactionType.Cheers);
       this.activity.activity.cheers.push(addedCheers);
@@ -112,7 +111,7 @@ export class ActivityComponent implements OnInit {
   onComment() {
     this.isBusyCommenting = true;
     const reaction = this.createReactionDTO(ReactionType.Comment, this.comment);
-    this.activityService.addReaction(reaction).subscribe(r => {
+    this.activityService.addReaction(reaction).subscribe(() => {
       this.isBusyCommenting = false;
       const addedComment = this.createCommentReaction(this.comment);
       this.activity.activity.comments.push(addedComment);
@@ -141,19 +140,12 @@ export class ActivityComponent implements OnInit {
       });
   }
 
-  onKeydown(ev) {
-    if (ev.key === 'Enter') {
-      this.onComment();
-    }
-  }
-
   onLocationClick() {
     this.router.navigate(['bingemap'], { queryParams: { selectedActivityId: this.activity.activity.id } });
   }
 
   onCommentClicked(ev) {
     this.setCommentVisible(!this.isCommentVisible);
-    this.tooltips.forEach(t => t.hide());
     ev.preventDefault();
     ev.stopPropagation();
   }
@@ -200,20 +192,6 @@ export class ActivityComponent implements OnInit {
     }
     const result = this.activity.activity.cheers.filter(l => l.userId === this.currentUser.userId).length > 0;
     return result;
-  }
-
-  getLikeUserNames(): string {
-    if (!this.hasData() || this.activity.activity.likes == null) {
-      return null;
-    }
-    return this.activity.activity.likes.map(l => l.userName).join(',');
-  }
-
-  getCheersUserNames(): string {
-    if (!this.hasData() || this.activity.activity.cheers == null) {
-      return null;
-    }
-    return this.activity.activity.cheers.map(l => l.userName).join(',');
   }
 
   isMessageLink(link: string): boolean {

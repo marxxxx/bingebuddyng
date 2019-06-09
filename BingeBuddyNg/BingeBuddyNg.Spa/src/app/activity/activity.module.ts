@@ -11,6 +11,8 @@ import { InViewportModule } from 'ng-in-viewport';
 import { EcoFabSpeedDialModule } from '@ecodev/fab-speed-dial';
 import { RouterModule } from '@angular/router';
 import { DrinkRetrieverService } from './services/drink-retriever.service';
+import { ReactionDialogComponent } from './components/reaction-dialog/reaction-dialog.component';
+import { ReactionListComponent } from './components/reaction-dialog/reaction-list/reaction-list.component';
 
 @NgModule({
   imports: [SharedModule, InViewportModule, EcoFabSpeedDialModule, RouterModule],
@@ -21,12 +23,15 @@ import { DrinkRetrieverService } from './services/drink-retriever.service';
     NoFriendsComponent,
     DrinkDialogComponent,
     MessageDialogComponent,
-    VenueDialogComponent
+    VenueDialogComponent,
+    ReactionDialogComponent,
+    ReactionListComponent
   ],
   entryComponents: [
     DrinkDialogComponent,
     MessageDialogComponent,
-    VenueDialogComponent
+    VenueDialogComponent,
+    ReactionDialogComponent
   ],
   providers: [ActivityService, DrinkRetrieverService]
 })

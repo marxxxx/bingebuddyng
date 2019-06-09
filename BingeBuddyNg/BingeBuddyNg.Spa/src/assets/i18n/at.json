@@ -127,5 +127,11 @@
     "RenameMessage": "{{originalUserName}} hot se umbenaunnt und hast jetzt {{userName}}!",
     "ProfileImageUpdateMessage": "{{userName}} hot a neichs Büdl!",
     "DeleteActivity": "Aktivität löschn",
-    "ReallyDeleteActivity": "Wüllst de Aktivität wirkli löschn?"
+    "ReallyDeleteActivity": "Wüllst de Aktivität wirkli löschn?",
+    "NobodyLikesThis":"Des gfoit nermt.",
+    "NobodyCheered": "Kana hot zuaprostet.",
+    "Cheers":"Zuaprostn",
+    "Likes":"Gfoin",
+    "Reactions": "Reaktionen",
+    "Close": "Zuamocha"
 }
