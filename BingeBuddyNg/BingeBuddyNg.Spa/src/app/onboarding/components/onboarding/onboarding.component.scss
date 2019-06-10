@@ -1,0 +1,14 @@
+@import '../../../../theme.scss';
+
+mat-icon.yellow {
+    color: map-get($mat-bingebuddyprimary, 500);
+    font-size: x-large;
+}
+
+img {
+    width: 70%
+}
+
+button.right {
+    align-self: flex-end;
+}

@@ -7,7 +7,7 @@
       <ng-template mat-tab-label>
         <div fxLayout fxLayoutGap="5px" fxLayoutAlign="space-between center">
           <mat-icon>thumb_up</mat-icon>
-          <span>{{'Likes' | translate}} ({{data.likes?.length}})</span>
+          <span>({{data.likes?.length}})</span>
         </div>
       </ng-template>
       <app-reaction-list [reactions]="data.likes"></app-reaction-list>
@@ -19,7 +19,7 @@
       <ng-template mat-tab-label>
         <div fxLayout fxLayoutGap="5px" fxLayoutAlign="space-between center">
           <img src="../../assets/img/beer.png" />
-          <span>{{'Cheers' | translate }} ({{data.cheers?.length}})</span>
+          <span>({{data.cheers?.length}})</span>
         </div>
       </ng-template>
       <app-reaction-list [reactions]="data.cheers"></app-reaction-list>

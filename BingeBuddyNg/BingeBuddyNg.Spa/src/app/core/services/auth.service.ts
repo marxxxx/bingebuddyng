@@ -6,6 +6,7 @@ import { UserProfile } from '../../../models/UserProfile';
 import { BehaviorSubject, Observable, Subscription, of, timer } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { User } from 'src/models/User';
+import { SettingsService } from './settings.service';
 
 
 @Injectable({
@@ -33,7 +34,7 @@ export class AuthService {
   isLoggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   currentUserProfile$: BehaviorSubject<UserProfile> = new BehaviorSubject<UserProfile>(null);
 
-  constructor(public router: Router, private userService: UserService) { }
+  constructor(public router: Router, private userService: UserService, private settings: SettingsService) { }
 
   public login(): void {
     this.auth0.authorize();
@@ -42,7 +43,8 @@ export class AuthService {
   public handleAuthentication(returnUrl?: string): void {
 
     console.log('handling authentication', returnUrl);
-    const successRoute = (returnUrl != null && returnUrl !== '/callback') ? returnUrl : '/activity-feed';
+    const successRoute = (returnUrl != null && returnUrl !== '/callback') ? returnUrl :
+      this.settings.getIsOnboarded() ? '/activity-feed' : '/onboarding';
     returnUrl = returnUrl || '/';
 
     this.auth0.parseHash((err, authResult) => {

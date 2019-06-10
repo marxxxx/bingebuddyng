@@ -102,12 +102,7 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-  // private handleOnboarding() {
-  //   if (this.settingsService.getIsOnboarded() === false) {
-  //     console.log('going to onboarding ...');
-  //     this.router.navigateByUrl('/onboarding');
-  //   }
-  // }
+
 
   ngOnDestroy() {
     if (this.sub) {

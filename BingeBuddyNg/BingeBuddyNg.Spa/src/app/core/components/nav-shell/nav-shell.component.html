@@ -26,6 +26,7 @@
         <mat-icon class="menu-item">share</mat-icon>{{ 'InviteFriend' | translate }}
       </a>
       <a mat-list-item routerLink="/settings"> <mat-icon class="menu-item">settings</mat-icon>{{ 'Settings' | translate }} </a>
+      <a mat-list-item routerLink="/onboarding"> <mat-icon class="menu-item">help</mat-icon>{{ 'Onboarding_Navmenu_Entry' | translate }} </a>
       <mat-divider *ngIf="auth.isAuthenticated()"></mat-divider>
       <a *ngIf="auth.isAuthenticated()" mat-list-item (click)="onLogout()"
         ><img src="../../assets/img/logout.png" /><span>{{ 'Logout' | translate }}</span></a>

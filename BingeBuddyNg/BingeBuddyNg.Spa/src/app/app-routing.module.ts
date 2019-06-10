@@ -1,3 +1,4 @@
+import { OnboardingComponent } from './onboarding/components/onboarding/onboarding.component';
 
 import { CallbackComponent } from './core/components/callback/callback.component';
 import { ActivityFeedComponent } from './activity/components/activity-feed/activity-feed.component';
@@ -20,6 +21,10 @@ const routes: Routes = [
   {
     path: 'welcome',
     component: WelcomeComponent
+  },
+  {
+    path: 'onboarding',
+    component: OnboardingComponent
   },
   {
     path: 'activity-feed',

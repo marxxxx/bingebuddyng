@@ -133,5 +133,26 @@
     "Cheers":"Cheers",
     "Likes":"Likes",
     "Reactions": "Reactions",
-    "Close": "Close"
+    "Close": "Close",
+
+    "Onboarding_Navmenu_Entry": "Tutorial",
+    "Onboarding_Heading": "What's this all about?",
+    "Onboarding_Label_Activitys": "Activitys",
+    "Onboarding_Description_Activitys": "Enter drinks using the plus-symbol, upload pics and videos and show where you are currently drinking by entering a bar.",
+    "Onboarding_Label_Navmenu": "Navigation",
+    "Onboarding_Description_Navmenu": "Open the navigation menu to explore what you can do.",
+    "Onboarding_Label_Drinkers": "Drinkers",
+    "Onboarding_Description_Drinkers": "Find friends in the drinkers view.",
+    "Onboarding_Label_Stats": "Statistics",
+    "Onboarding_Description_Stats": "Get rich statistics about your drinking habits.",
+    "Onboarding_Label_Map": "Drinker map",
+    "Onboarding_Description_Map": "Find out where your friends are currently drinking.",
+    "Onboarding_Label_Profile": "Your profile",
+    "Onboarding_Description_Profile": "Change your name and upload a profile image.",
+    "Onboarding_Label_Drinks": "Favorite drinks",
+    "Onboarding_Description_Drinks": "Create your favorite drinks for use within the application.",
+    "Onboarding_Label_Completed": "Done",
+    "Onboarding_Done": "Congrats! You've made it so far!",
+    "Onboarding_Done_Message":"Let me have a drink now",
+    "Onboarding_Next": "alright"
 }

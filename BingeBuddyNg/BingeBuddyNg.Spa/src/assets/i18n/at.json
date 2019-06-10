@@ -133,5 +133,26 @@
     "Cheers":"Zuaprostn",
     "Likes":"Gfoin",
     "Reactions": "Reaktionen",
-    "Close": "Zuamocha"
+    "Close": "Zuamocha",
+
+    "Onboarding_Navmenu_Entry": "Hüfe",
+    "Onboarding_Heading": "Um wos gehts do üwahaupt?",
+    "Onboarding_Label_Activitys": "Aktivitätn",
+    "Onboarding_Description_Activitys": "Buch mitn Plus-Symbol Trangln ei, lod Büdln hoch oder zag wost grod saufst indemst in a Beisl eikehrst.",
+    "Onboarding_Label_Navmenu": "Navigation",
+    "Onboarding_Description_Navmenu": "Möch s'Navigationsmenü auf damitst siachst wost ois tuan kaust.",
+    "Onboarding_Label_Drinkers": "Saufkepf",
+    "Onboarding_Description_Drinkers": "Find Gleichgesinnte in da Saufkepf-Ansicht.",
+    "Onboarding_Label_Stats": "Statistikn",
+    "Onboarding_Description_Stats": "Do siachst wiavüst eigentlich saufst.",
+    "Onboarding_Label_Map": "Sauflaundkoatn",
+    "Onboarding_Description_Map": "Do siachst wo grod wer wos sauft.",
+    "Onboarding_Label_Profile": "Dei Profü",
+    "Onboarding_Description_Profile": "Do kaust dein Naum ändern und a eigenes Büdl hochlodn.",
+    "Onboarding_Label_Drinks": "Lieblingstrangln",
+    "Onboarding_Description_Drinks": "Do kaust da deine persönlichen Lieblings-Trangln aulegn.",
+    "Onboarding_Label_Completed": "Fertig",
+    "Onboarding_Done": "Gratulier da! Du host d'Einführung gschofft!",
+    "Onboarding_Done_Message":"I wü jetzt wos tringa",
+    "Onboarding_Next": "eh kloa"
 }

@@ -75,7 +75,7 @@ export class ActivityComponent implements OnInit {
   }
 
   onShowReactions() {
-    this.dialog.open(ReactionDialogComponent, {width: '80%', data: this.activity.activity});
+    this.dialog.open(ReactionDialogComponent, {width: '95%', data: this.activity.activity});
   }
 
   onLike() {

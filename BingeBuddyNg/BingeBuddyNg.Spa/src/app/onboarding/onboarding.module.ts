@@ -10,4 +10,4 @@ import { OnboardingComponent } from './components/onboarding/onboarding.componen
   exports: [],
   declarations: [WelcomeComponent, OnboardingComponent]
 })
-export class OnboardingModule {}
+export class OnboardingModule { }

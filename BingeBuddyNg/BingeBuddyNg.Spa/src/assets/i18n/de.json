@@ -133,5 +133,26 @@
     "Cheers":"Zugeprostet",
     "Likes":"Likes",
     "Reactions": "Reaktionen",
-    "Close": "Schließen"
+    "Close": "Schließen",
+
+    "Onboarding_Navmenu_Entry": "Einführung",
+    "Onboarding_Heading": "Worum geht's hier eigentlich?",
+    "Onboarding_Label_Activitys": "Aktivitäten",
+    "Onboarding_Description_Activitys": "Buche mit dem Plus-Symbol deine Getränke ein, lade Bilder hoch, zeig wo du bist indem du in ein Lokal einkehrst.",
+    "Onboarding_Label_Navmenu": "Navigation",
+    "Onboarding_Description_Navmenu": "Öffne das Navigationsmenü um alle Funktionen auszuprobieren.",
+    "Onboarding_Label_Drinkers": "Trinker",
+    "Onboarding_Description_Drinkers": "Finde gleichgesinnte Freunde in der Trinker-Ansicht.",
+    "Onboarding_Label_Stats": "Statistiken",
+    "Onboarding_Description_Stats": "Erhalte reichhaltige Statistiken über dein Trinkverhalten.",
+    "Onboarding_Label_Map": "Sauflandkarte",
+    "Onboarding_Description_Map": "Finde raus wo deine Freunde gerade trinken.",
+    "Onboarding_Label_Profile": "Dein Profil",
+    "Onboarding_Description_Profile": "Ändere deinen Namen und lade ein eigenes Profilbild hoch.",
+    "Onboarding_Label_Drinks": "Lieblingsgetränke",
+    "Onboarding_Description_Drinks": "Leg dir deine persönlichen Lieblingsgetränke an.",
+    "Onboarding_Label_Completed": "Fertig",
+    "Onboarding_Done": "Gratuliere! Du hast die Einführung abgeschlossen!",
+    "Onboarding_Done_Message":"Lass mich was trinken",
+    "Onboarding_Next": "Kapiert"
 }

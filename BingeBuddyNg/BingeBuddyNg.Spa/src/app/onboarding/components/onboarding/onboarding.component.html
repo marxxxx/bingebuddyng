@@ -1,3 +1,26 @@
-<p>
-  onboarding works!
-</p>
+<h3>{{'Onboarding_Heading' | translate }}</h3>
+<mat-vertical-stepper>
+  <mat-step *ngFor="let s of steps" [label]="s.label | translate">
+    <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="5px">
+      <p>{{s.description | translate }}</p>
+      <mat-divider></mat-divider>
+      <img fxFlex="50" [src]="s.image">
+      <button class="right" mat-raised-button matStepperNext color="primary">
+        <mat-icon>done</mat-icon>
+        <span>{{'Onboarding_Next' | translate }}</span>
+      </button>
+    </div>
+  </mat-step>
+  <mat-step [label]="'Onboarding_Label_Completed' | translate">
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <mat-icon class="yellow">done</mat-icon>
+      <p>{{'Onboarding_Done' | translate }}</p>
+      <button mat-raised-button [routerLink]="['/activity-feed']"
+        color="primary">{{'Onboarding_Done_Message' | translate }}</button>
+    </div>
+  </mat-step>
+
+  <ng-template matStepperIcon="done">
+      <mat-icon>done_all</mat-icon>
+    </ng-template>
+</mat-vertical-stepper>
