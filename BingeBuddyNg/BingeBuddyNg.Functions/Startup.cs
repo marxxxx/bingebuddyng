@@ -5,19 +5,18 @@ using BingeBuddyNg.Services.DrinkEvent;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Hosting;
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-[assembly: WebJobsStartup(typeof(Startup))]
+[assembly: FunctionsStartup(typeof(Startup))]
 namespace BingeBuddyNg.Functions
 {
     // Implement IWebJobStartup interface.
 
-    public class Startup : IWebJobsStartup
+    public class Startup : FunctionsStartup
     {
-        public void Configure(IWebJobsBuilder builder)
+        public override void Configure(IFunctionsHostBuilder builder)
         {
             var services = builder.Services;
 
@@ -27,7 +26,7 @@ namespace BingeBuddyNg.Functions
             string webPushPrivateKey = Environment.GetEnvironmentVariable("WebPushPrivateKey", EnvironmentVariableTarget.Process);
             string fourSquareApiClientKey = Environment.GetEnvironmentVariable("FourSquareApiClientKey", EnvironmentVariableTarget.Process);
             string fourSquareApiClientSecret = Environment.GetEnvironmentVariable("FourSquareApiClientSecret", EnvironmentVariableTarget.Process);
-            
+
             services.AddHttpClient();
 
             var configuration = new AppConfiguration(storageConnectionString, googleApiKey, webPushPublicKey, webPushPrivateKey,
@@ -46,7 +45,6 @@ namespace BingeBuddyNg.Functions
             services.AddTransient<IUserStatisticsService, UserStatisticsService>();
             services.AddTransient<IUserStatsHistoryRepository, UserStatsHistoryRepository>();
             services.AddTransient<IUtilityService, UtilityService>();
-
         }
     }
 }

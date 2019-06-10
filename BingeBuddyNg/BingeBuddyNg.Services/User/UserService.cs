@@ -56,6 +56,9 @@ namespace BingeBuddyNg.Services.User
             {
                 var activity = Activity.Activity.CreateRenameActivity(user.Id, user.Name, result.OriginalUserName);
                 await ActivityRepository.AddActivityAsync(activity);
+
+                var renameMessage = new UserRenamedMessage(user.Id, result.OriginalUserName, user.Name);
+                await StorageAccessService.AddQueueMessage(QueueNames.UserRenamed, renameMessage);
             }
 
             var response = new UpdateUserResponseDTO(!user.Weight.HasValue, user.Gender == Gender.Unknown);

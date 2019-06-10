@@ -140,7 +140,6 @@ namespace BingeBuddyNg.Services.Activity
         private async Task<ActivityTableEntity> GetActivityEntityAsync(string id)
         {
             string partitionKey = GetPartitionKey(id);
-
             var table = this.StorageAccessService.GetTableReference(ActivityTableName);
 
             TableOperation retrieveOperation = TableOperation.Retrieve<ActivityTableEntity>(partitionKey, id);
@@ -149,6 +148,19 @@ namespace BingeBuddyNg.Services.Activity
 
             var entity = (ActivityTableEntity)result.Result;
             entity.Entity.Id = id;
+            return entity;
+        }
+
+        private async Task<ActivityTableEntity> GetActivityPerUserEntityAsync(string userId, DateTime timestamp)
+        {
+            var table = this.StorageAccessService.GetTableReference(ActivityPerUserTableName);
+            var rowKey = GetActivityPerUserRowKey(timestamp);
+
+            TableOperation retrieveOperation = TableOperation.Retrieve<ActivityTableEntity>(userId, rowKey);
+
+            var result = await table.ExecuteAsync(retrieveOperation);
+
+            var entity = (ActivityTableEntity)result.Result;
             return entity;
         }
 
@@ -173,14 +185,19 @@ namespace BingeBuddyNg.Services.Activity
 
         public async Task DeleteActivityAsync(string userId, string id)
         {
-            var table = this.StorageAccessService.GetTableReference(ActivityTableName);
+            var activityTable = this.StorageAccessService.GetTableReference(ActivityTableName);
             var activity = await this.GetActivityEntityAsync(id);
             if(string.Compare(activity.UserId,  userId, true) != 0)
             {
                 throw new UnauthorizedAccessException($"User {userId} is not permitted to delete an activity of user {activity.UserId}");
             }
 
-            await table.ExecuteAsync(TableOperation.Delete(activity));
+            await activityTable.ExecuteAsync(TableOperation.Delete(activity));
+
+            // Delete activity in per-user table as well
+            var perUserTable = this.StorageAccessService.GetTableReference(ActivityPerUserTableName);
+            var perUserActivity = await this.GetActivityPerUserEntityAsync(userId, activity.Entity.Timestamp);
+            await perUserTable.ExecuteAsync(TableOperation.Delete(perUserActivity));
         }
 
         private string GetPartitionKey(DateTime timestampUtc)
