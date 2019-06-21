@@ -27,7 +27,20 @@ export class DrinkDialogComponent implements OnInit {
     'https://i.pinimg.com/originals/8f/d3/2e/8fd32eb9d747fd662c9e30b951b551a9.gif',
     'https://media.giphy.com/media/3o7TKWtIqI2n2Iepwc/giphy.gif',
     'http://www.emugifs.net/wp-content/uploads/2018/05/the-simpsons-duff-beer-contest-2.gif',
-    'https://media.giphy.com/media/3vDFxcB9vZNNS/giphy.gif'];
+    'https://media.giphy.com/media/3vDFxcB9vZNNS/giphy.gif',
+    
+    'https://i.imgur.com/dcky1fQ.gif',
+  'https://cdn.dribbble.com/users/594253/screenshots/2112184/onempty_tumblr.gif',
+'https://media1.tenor.com/images/0860d3f017deea3a796f4464677376ba/tenor.gif',
+'https://i.makeagif.com/media/8-07-2015/RuoboK.gif',
+'http://49.media.tumblr.com/7b7901149eedbf4c953d976094cd25d2/tumblr_o5zpu4CVb41s3jua7o1_400.gif',
+'http://gif-finder.com/wp-content/uploads/2016/06/Hey-Pass-Me-A-Beer.gif',
+'https://66.media.tumblr.com/161c1cfd88a1a6cfba82ef821cd95459/tumblr_o74sn6XdWP1udh5n8o1_400.gif',
+'https://i1.wp.com/metro.co.uk/wp-content/uploads/2016/09/beer.gif?quality=90&strip=all&zoom=1&resize=644%2C362&ssl=1',
+'https://gifimage.net/wp-content/uploads/2018/11/thor-drinking-beer-gif-6.gif',
+'https://i.gifer.com/4ASi.gif',
+'https://media.giphy.com/media/KyEVbCZBEJIIA3qjDh/giphy.gif',
+'https://media.giphy.com/media/7aDpWVUmIWFI4/giphy.gif'];
   readonly wineGifs = ['https://media1.tenor.com/images/cf4393066940affd7a6cf7bca24d31c4/tenor.gif',
     'https://media.giphy.com/media/9U7YUWNqG5j56/giphy.gif',
     'https://media.tenor.com/images/9355518a227edcab65dd3fade726b029/tenor.gif',
