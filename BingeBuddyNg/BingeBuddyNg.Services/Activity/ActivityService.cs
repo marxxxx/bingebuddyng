@@ -104,44 +104,6 @@ namespace BingeBuddyNg.Services.Activity
             await AddToActivityAddedQueueAsync(savedActivity.Id);
         }
 
-        public async Task<List<ActivityAggregationDTO>> GetDrinkActivityAggregationAsync()
-        {
-            string userId = this.IdentityService.GetCurrentUserId();
-
-            var startTime = DateTime.UtcNow.AddDays(-30).Date;
-
-            var result = await this.ActivityRepository.GetActivitysForUserAsync(userId, startTime, ActivityType.Drink);
-
-            var groupedByDay = result.GroupBy(t => t.Timestamp.Date)
-                .OrderBy(t => t.Key)
-                .Select(t => new ActivityAggregationDTO()
-                {
-                    Count = t.Count(),
-                    CountBeer = t.Count(d => d.DrinkType == DrinkType.Beer),
-                    CountWine = t.Count(d => d.DrinkType == DrinkType.Wine),
-                    CountShots = t.Count(d => d.DrinkType == DrinkType.Shot),
-                    CountAnti = t.Count(d => d.DrinkType == DrinkType.Anti),
-                    CountAlc = t.Count(d => d.DrinkType != DrinkType.Anti),
-                    Day = t.Key
-                })
-                .ToList();
-
-            // now fill holes of last 30 days
-            for (int i = -30; i < 0; i++)
-            {
-                var date = DateTime.UtcNow.AddDays(i).Date;
-                var hasData = groupedByDay.Any(d => d.Day == date);
-                if (hasData == false)
-                {
-                    groupedByDay.Add(new ActivityAggregationDTO(date));
-                }
-            }
-
-            var sortedResult = groupedByDay.OrderBy(d => d.Day).ToList();
-
-            return sortedResult;
-        }
-
         private async Task AddToActivityAddedQueueAsync(string activityId)
         {
             var queueClient = this.StorageAccessService.GetQueueReference(Constants.QueueNames.ActivityAdded);

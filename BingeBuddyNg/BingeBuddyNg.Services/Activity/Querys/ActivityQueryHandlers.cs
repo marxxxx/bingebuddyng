@@ -1,4 +1,5 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
+﻿using BingeBuddyNg.Services.Drink;
+using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
 using MediatR;
@@ -11,7 +12,9 @@ using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services.Activity.Querys
 {
-    public class ActivityQueryHandlers : IRequestHandler<GetActivityFeedQuery, PagedQueryResult<ActivityStatsDTO>>
+    public class ActivityQueryHandlers 
+        : IRequestHandler<GetActivityFeedQuery, PagedQueryResult<ActivityStatsDTO>>,
+        IRequestHandler<GetDrinkActivityAggregationQuery, List<ActivityAggregationDTO>>
     {
         public ActivityQueryHandlers(IUserRepository userRepository, IActivityRepository activityRepository, IUserStatsRepository userStatsRepository)
         {
@@ -37,6 +40,42 @@ namespace BingeBuddyNg.Services.Activity.Querys
 
             var result = activities.ResultPage.Select(a => new ActivityStatsDTO(a, userStats.First(u => u.UserId == a.UserId))).ToList();
             return new PagedQueryResult<ActivityStatsDTO>(result, activities.ContinuationToken);
+        }
+
+        public async Task<List<ActivityAggregationDTO>> Handle(GetDrinkActivityAggregationQuery request, CancellationToken cancellationToken)
+        {
+            var startTime = DateTime.UtcNow.AddDays(-30).Date;
+
+            var result = await this.ActivityRepository.GetActivitysForUserAsync(request.UserId, startTime, ActivityType.Drink);
+
+            var groupedByDay = result.GroupBy(t => t.Timestamp.Date)
+                .OrderBy(t => t.Key)
+                .Select(t => new ActivityAggregationDTO()
+                {
+                    Count = t.Count(),
+                    CountBeer = t.Count(d => d.DrinkType == DrinkType.Beer),
+                    CountWine = t.Count(d => d.DrinkType == DrinkType.Wine),
+                    CountShots = t.Count(d => d.DrinkType == DrinkType.Shot),
+                    CountAnti = t.Count(d => d.DrinkType == DrinkType.Anti),
+                    CountAlc = t.Count(d => d.DrinkType != DrinkType.Anti),
+                    Day = t.Key
+                })
+                .ToList();
+
+            // now fill holes of last 30 days
+            for (int i = -30; i < 0; i++)
+            {
+                var date = DateTime.UtcNow.AddDays(i).Date;
+                var hasData = groupedByDay.Any(d => d.Day == date);
+                if (hasData == false)
+                {
+                    groupedByDay.Add(new ActivityAggregationDTO(date));
+                }
+            }
+
+            var sortedResult = groupedByDay.OrderBy(d => d.Day).ToList();
+
+            return sortedResult;
         }
     }
 }
