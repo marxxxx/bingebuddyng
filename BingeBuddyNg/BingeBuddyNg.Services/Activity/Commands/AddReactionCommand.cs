@@ -7,20 +7,22 @@ namespace BingeBuddyNg.Services.Activity.Commands
 {
     public class AddReactionCommand : IRequest
     {
-        public AddReactionCommand(ReactionType type, string activityId, string comment)
+        public AddReactionCommand(string userId, ReactionType type, string activityId, string comment)
         {
+            UserId = userId ?? throw new ArgumentNullException(nameof(userId));
             Type = type;
             ActivityId = activityId ?? throw new ArgumentNullException(nameof(activityId));
-            Comment = comment;
+            Comment = comment ?? throw new ArgumentNullException(nameof(comment));
         }
 
+        public string UserId { get; }
         public ReactionType Type { get; }
         public string ActivityId { get; }
         public string Comment { get; }
 
         public override string ToString()
         {
-            return $"{{{nameof(Type)}={Type}, {nameof(ActivityId)}={ActivityId}, {nameof(Comment)}={Comment}}}";
+            return $"{{{nameof(UserId)}={UserId}, {nameof(Type)}={Type}, {nameof(ActivityId)}={ActivityId}, {nameof(Comment)}={Comment}}}";
         }
     }
 }

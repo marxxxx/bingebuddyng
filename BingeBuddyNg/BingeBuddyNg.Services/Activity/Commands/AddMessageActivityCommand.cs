@@ -7,16 +7,18 @@ namespace BingeBuddyNg.Services.Activity.Commands
 {
     public class AddMessageActivityCommand :  IRequest
     {
-        public AddMessageActivityCommand(string message)
+        public AddMessageActivityCommand(string userId, string message)
         {
+            UserId = userId ?? throw new ArgumentNullException(nameof(userId));
             Message = message ?? throw new ArgumentNullException(nameof(message));
         }
 
+        public string UserId { get; }
         public string Message { get; }
 
         public override string ToString()
         {
-            return $"{{{nameof(Message)}={Message}}}";
+            return $"{{{nameof(UserId)}={UserId}, {nameof(Message)}={Message}}}";
         }
     }
 }

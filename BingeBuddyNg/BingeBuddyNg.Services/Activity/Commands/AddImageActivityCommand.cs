@@ -15,6 +15,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
             Location = location ?? throw new ArgumentNullException(nameof(location));
         }
 
+        public string UserId { get; }
         public Stream Stream { get; }
         public string FileName { get; }
         public  Location Location { get; }

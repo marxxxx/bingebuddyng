@@ -8,8 +8,9 @@ namespace BingeBuddyNg.Services.Activity.Commands
 {
     public class AddDrinkActivityCommand : IRequest
     {
-        public AddDrinkActivityCommand(string drinkId, DrinkType drinkType, string drinkName, double alcPrc, double volume)
+        public AddDrinkActivityCommand(string userId, string drinkId, DrinkType drinkType, string drinkName, double alcPrc, double volume)
         {
+            UserId = userId ?? throw new ArgumentNullException(nameof(userId));
             DrinkId = drinkId ?? throw new ArgumentNullException(nameof(drinkId));
             DrinkType = drinkType;
             DrinkName = drinkName ?? throw new ArgumentNullException(nameof(drinkName));
@@ -17,6 +18,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
             Volume = volume;
         }
 
+        public string UserId { get; }
         public string DrinkId { get; }
         public DrinkType DrinkType { get; }
         public string DrinkName { get; }
@@ -25,7 +27,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
         public override string ToString()
         {
-            return $"{{{nameof(DrinkId)}={DrinkId}, {nameof(DrinkType)}={DrinkType}, {nameof(DrinkName)}={DrinkName}, {nameof(AlcPrc)}={AlcPrc}, {nameof(Volume)}={Volume}}}";
+            return $"{{{nameof(UserId)}={UserId}, {nameof(DrinkId)}={DrinkId}, {nameof(DrinkType)}={DrinkType}, {nameof(DrinkName)}={DrinkName}, {nameof(AlcPrc)}={AlcPrc}, {nameof(Volume)}={Volume}}}";
         }
     }
 }
