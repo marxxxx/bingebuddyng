@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services.Activity.Querys
 {
-    public class ActivityQueryHandlers 
+    public class ActivityQueryHandler 
         : IRequestHandler<GetActivityFeedQuery, PagedQueryResult<ActivityStatsDTO>>,
         IRequestHandler<GetDrinkActivityAggregationQuery, List<ActivityAggregationDTO>>
     {
-        public ActivityQueryHandlers(IUserRepository userRepository, IActivityRepository activityRepository, IUserStatsRepository userStatsRepository)
+        public ActivityQueryHandler(IUserRepository userRepository, IActivityRepository activityRepository, IUserStatsRepository userStatsRepository)
         {
             UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
