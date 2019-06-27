@@ -15,6 +15,8 @@ using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.Venue;
 using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Statistics;
+using MediatR;
+using System.Reflection;
 
 namespace BingeBuddyNg.Api
 {
@@ -32,6 +34,8 @@ namespace BingeBuddyNg.Api
                 fourSquareApiClientKey, fourSquareApiClientSecret);
             services.AddSingleton(appConfiguration);
             services.AddLogging();
+
+            services.AddMediatR(typeof(Activity).Assembly);
 
             // Add Application Services
             services.AddSingleton<StorageAccessService>();

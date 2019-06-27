@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Services;
 using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Activity.Querys;
 using BingeBuddyNg.Services.Infrastructure;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,14 +24,17 @@ namespace BingeBuddyNg.Api.Controllers
         public IIdentityService IdentityService { get; }
         public IActivityService ActivityService { get; }
         public IActivityRepository ActivityRepository { get; }
+        public IMediator Mediator { get; }
 
         public ActivityController(
             IIdentityService identityService,
-            IActivityService activityService, IActivityRepository activityRepository)
+            IActivityService activityService, IActivityRepository activityRepository,
+            IMediator mediator)
         {
             this.IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.ActivityService = activityService ?? throw new ArgumentNullException(nameof(activityService));
             this.ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
         
         
@@ -45,12 +50,7 @@ namespace BingeBuddyNg.Api.Controllers
         public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeed(string continuationToken)
         {
             var userId = this.IdentityService.GetCurrentUserId();
-            TableContinuationToken tableContinuationToken = null;
-            if(string.IsNullOrEmpty(continuationToken) == false)
-            {
-                tableContinuationToken = JsonConvert.DeserializeObject<TableContinuationToken>(continuationToken);
-            }
-            var result = await this.ActivityService.GetActivityFeedAsync(userId, tableContinuationToken);
+           var result = await this.Mediator.Send(new GetActivityFeedQuery(userId, continuationToken));
             return result;
         }
 
