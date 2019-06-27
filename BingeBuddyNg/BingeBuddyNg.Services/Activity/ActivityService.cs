@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using BingeBuddyNg.Services.Drink;
+﻿using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Shared;
 using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services.Activity
 {
     public class ActivityService : IActivityService
     {
-        private const int MaxQueryLoopCount = 5;
         public IIdentityService IdentityService { get; }
         public IUserRepository UserRepository { get; }
         public IActivityRepository ActivityRepository { get; }
@@ -111,24 +108,6 @@ namespace BingeBuddyNg.Services.Activity
             await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
         }
 
-
-
-        public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeedAsync(string userId, TableContinuationToken continuationToken = null)
-        {
-            var callingUser = await this.UserRepository.FindUserAsync(userId);
-
-            // TODO: Use Constant for Page Size
-            var visibleUserIds = callingUser.GetVisibleFriendUserIds();
-            var activities = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(visibleUserIds, continuationToken));
-
-            var userIds = activities.ResultPage.Select(a => a.UserId).Distinct();
-            var userStats = await this.UserStatsRepository.GetStatisticsAsync(userIds);
-
-            var result = activities.ResultPage.Select(a => new ActivityStatsDTO(a, userStats.First(u => u.UserId == a.UserId))).ToList();
-            return new PagedQueryResult<ActivityStatsDTO>(result, activities.ContinuationToken);
-        }
-
-     
 
 
         public async Task AddReactionAsync(ReactionDTO reaction)
