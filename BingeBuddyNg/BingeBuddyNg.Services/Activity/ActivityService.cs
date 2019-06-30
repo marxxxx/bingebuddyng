@@ -1,93 +1,30 @@
-﻿using BingeBuddyNg.Services.Drink;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Statistics;
+﻿using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Shared;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services.Activity
 {
     public class ActivityService : IActivityService
     {
-        public IIdentityService IdentityService { get; }
         public IUserRepository UserRepository { get; }
         public IActivityRepository ActivityRepository { get; }
-        public IUserStatsRepository UserStatsRepository { get; }
         public StorageAccessService StorageAccessService { get; }
 
         private ILogger<ActivityService> logger;
 
-        public ActivityService(IIdentityService identityService,
-            IUserRepository userRepository,
+        public ActivityService(IUserRepository userRepository,
             IActivityRepository activityRepository,
-            IUserStatsRepository userStatsRepository,
             StorageAccessService storageAccessService,
             ILogger<ActivityService> logger)
         {
-            this.IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             this.ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
-            this.UserStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
             this.StorageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        }
-
-
-        public async Task AddMessageActivityAsync(AddMessageActivityDTO addedActivity)
-        {
-            var userId = this.IdentityService.GetCurrentUserId();
-            var user = await this.UserRepository.FindUserAsync(userId);
-
-            var activity = Activity.CreateMessageActivity(DateTime.UtcNow, addedActivity.Location, userId, user.Name, addedActivity.Message);
-            activity.Venue = addedActivity.Venue;
-
-            var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
-            await AddToActivityAddedQueueAsync(savedActivity.Id);
-        }
-
-
-
-        public async Task AddDrinkActivityAsync(AddDrinkActivityDTO addedActivity)
-        {
-            var userId = this.IdentityService.GetCurrentUserId();
-            var user = await this.UserRepository.FindUserAsync(userId);
-
-            int drinkCount = 0;
-            if(addedActivity.DrinkType != DrinkType.Anti)
-            {
-                // immediately update drink count
-                var drinkActivitys = await ActivityRepository.GetActivitysForUserAsync(userId, DateTime.UtcNow.Subtract(TimeSpan.FromHours(12)), ActivityType.Drink);
-                drinkCount = drinkActivitys.Where(a=>a.DrinkType != DrinkType.Anti).Count() + 1;
-            }
-
-            var activity = Activity.CreateDrinkActivity(DateTime.UtcNow, addedActivity.Location, userId, user.Name, 
-                addedActivity.DrinkType, addedActivity.DrinkId, addedActivity.DrinkName, addedActivity.AlcPrc, addedActivity.Volume);
-            activity.Venue = addedActivity.Venue;
-            activity.DrinkCount = drinkCount;
-
-            var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
-
-            await AddToActivityAddedQueueAsync(savedActivity.Id);
-        }
-
-        public async Task AddImageActivityAsync(Stream stream, string fileName, Location location)
-        {
-            var userId = this.IdentityService.GetCurrentUserId();
-            var user = await this.UserRepository.FindUserAsync(userId);
-
-            // store file in blob storage
-            string imageUrlOriginal = await StorageAccessService.SaveFileInBlobStorage("img", "activities", fileName, stream);
-
-            var activity = Activity.CreateImageActivity(DateTime.UtcNow, location, userId, user.Name, imageUrlOriginal);
-
-            var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
-
-            await AddToActivityAddedQueueAsync(savedActivity.Id);
         }
 
         public async Task AddVenueActivityAsync(AddVenueActivityDTO activity)
@@ -108,37 +45,6 @@ namespace BingeBuddyNg.Services.Activity
             await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
         }
 
-
-
-        public async Task AddReactionAsync(ReactionDTO reaction)
-        {
-            var userId = this.IdentityService.GetCurrentUserId();
-            var activity = await this.ActivityRepository.GetActivityAsync(reaction.ActivityId);
-
-            var reactingUser = await this.UserRepository.FindUserAsync(userId);
-
-            switch (reaction.Type)
-            {
-
-                case ReactionType.Cheers:
-                    activity.AddCheers(new Reaction(userId, reactingUser.Name, reactingUser.ProfileImageUrl));
-                    break;
-                case ReactionType.Like:
-                    activity.AddLike(new Reaction(userId, reactingUser.Name, reactingUser.ProfileImageUrl));
-                    break;
-                case ReactionType.Comment:
-                    activity.AddComment(new CommentReaction(userId, reactingUser.Name, reactingUser.ProfileImageUrl, reaction.Comment));
-                    break;
-            }
-
-            await this.ActivityRepository.UpdateActivityAsync(activity);
-            
-
-            // add to queue
-            var queueClient = this.StorageAccessService.GetQueueReference(Constants.QueueNames.ReactionAdded);
-            var message = new ReactionAddedMessage(reaction.ActivityId, reaction.Type, userId, reaction.Comment);
-            await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
-        }
 
     }
 }

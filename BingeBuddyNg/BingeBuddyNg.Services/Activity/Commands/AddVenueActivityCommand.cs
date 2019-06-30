@@ -8,20 +8,18 @@ namespace BingeBuddyNg.Services.Activity.Commands
 {
     public class AddVenueActivityCommand : IRequest
     {
-        public AddVenueActivityCommand(string userId, string message, VenueAction action)
+        public AddVenueActivityCommand(string userId, string message, VenueAction action, VenueModel venue)
         {
             UserId = userId ?? throw new ArgumentNullException(nameof(userId));
             Message = message ?? throw new ArgumentNullException(nameof(message));
             Action = action;
+            Venue = venue ?? throw new ArgumentNullException(nameof(venue));
         }
 
         public string UserId { get; }
         public string Message { get; }
         public VenueAction Action { get; }
+        public VenueModel Venue { get;  }
 
-        public override string ToString()
-        {
-            return $"{{{nameof(UserId)}={UserId}, {nameof(Message)}={Message}, {nameof(Action)}={Action}}}";
-        }
     }
 }

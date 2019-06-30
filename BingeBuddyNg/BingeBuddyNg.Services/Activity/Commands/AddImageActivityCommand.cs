@@ -8,11 +8,15 @@ namespace BingeBuddyNg.Services.Activity.Commands
 {
     public class AddImageActivityCommand : IRequest
     {
-        public AddImageActivityCommand(Stream stream, string fileName, Location location)
+        public AddImageActivityCommand(Stream stream, string fileName, double? lat, double? lng)
         {
             Stream = stream ?? throw new ArgumentNullException(nameof(stream));
             FileName = fileName ?? throw new ArgumentNullException(nameof(fileName));
-            Location = location ?? throw new ArgumentNullException(nameof(location));
+
+            if (lat.GetValueOrDefault() + lng.GetValueOrDefault() > 0)
+            {
+                Location = new Location(lat.Value, lng.Value);
+            }
         }
 
         public string UserId { get; }

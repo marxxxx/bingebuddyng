@@ -12,9 +12,10 @@ using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services.Activity.Querys
 {
-    public class ActivityQueryHandler 
-        : IRequestHandler<GetActivityFeedQuery, PagedQueryResult<ActivityStatsDTO>>,
-        IRequestHandler<GetDrinkActivityAggregationQuery, List<ActivityAggregationDTO>>
+    public class ActivityQueryHandler : 
+        IRequestHandler<GetActivityFeedQuery, PagedQueryResult<ActivityStatsDTO>>,
+        IRequestHandler<GetDrinkActivityAggregationQuery, List<ActivityAggregationDTO>>,
+        IRequestHandler<GetActivitysForMapQuery, List<Activity>>
     {
         public ActivityQueryHandler(IUserRepository userRepository, IActivityRepository activityRepository, IUserStatsRepository userStatsRepository)
         {
@@ -76,6 +77,12 @@ namespace BingeBuddyNg.Services.Activity.Querys
             var sortedResult = groupedByDay.OrderBy(d => d.Day).ToList();
 
             return sortedResult;
+        }
+
+        public async Task<List<Activity>> Handle(GetActivitysForMapQuery request, CancellationToken cancellationToken)
+        {
+            var result = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(ActivityFilterOptions.WithLocation, pageSize: 50));
+            return result.ResultPage;
         }
     }
 }

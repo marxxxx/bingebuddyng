@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BingeBuddyNg.Services;
-using BingeBuddyNg.Services.Activity;
+﻿using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Activity.Commands;
 using BingeBuddyNg.Services.Activity.Querys;
 using BingeBuddyNg.Services.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAzure.Storage.Table;
-using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Api.Controllers
 {
@@ -22,35 +18,30 @@ namespace BingeBuddyNg.Api.Controllers
     public class ActivityController : ControllerBase
     {
         public IIdentityService IdentityService { get; }
-        public IActivityService ActivityService { get; }
-        public IActivityRepository ActivityRepository { get; }
         public IMediator Mediator { get; }
 
         public ActivityController(
             IIdentityService identityService,
-            IActivityService activityService, IActivityRepository activityRepository,
             IMediator mediator)
         {
             this.IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
-            this.ActivityService = activityService ?? throw new ArgumentNullException(nameof(activityService));
-            this.ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
             this.Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
-        
-        
-        [HttpGet("{onlyWithLocation}")]
-        public async Task<ActionResult<List<Activity>>> Get(bool onlyWithLocation)
+
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Activity>>> GetActivitysForMap()
         {
-            var filterOptions = onlyWithLocation ? ActivityFilterOptions.WithLocation : ActivityFilterOptions.None;
-            var result = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(filterOptions, pageSize: 50));
-            return result.ResultPage;
+            var userId = this.IdentityService.GetCurrentUserId();
+            var result = await this.Mediator.Send(new GetActivitysForMapQuery(userId));
+            return result;
         }
 
         [HttpGet("[action]")]
         public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeed(string continuationToken)
         {
             var userId = this.IdentityService.GetCurrentUserId();
-           var result = await this.Mediator.Send(new GetActivityFeedQuery(userId, continuationToken));
+            var result = await this.Mediator.Send(new GetActivityFeedQuery(userId, continuationToken));
             return result;
         }
 
@@ -70,7 +61,8 @@ namespace BingeBuddyNg.Api.Controllers
                 return BadRequest();
             }
 
-            await this.ActivityService.AddMessageActivityAsync(request);
+            var userId = this.IdentityService.GetCurrentUserId();
+            await this.Mediator.Send(new AddMessageActivityCommand(userId, request.Message, request.Location, request.Venue));
             return Ok();
         }
 
@@ -78,12 +70,14 @@ namespace BingeBuddyNg.Api.Controllers
         [HttpPost("[action]")]
         public async Task<ActionResult> AddDrinkActivity([FromBody] AddDrinkActivityDTO request)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            await this.ActivityService.AddDrinkActivityAsync(request);
+            var userId = this.IdentityService.GetCurrentUserId();
+            var command = new AddDrinkActivityCommand(userId, request.DrinkId, request.DrinkType, request.DrinkName, request.AlcPrc, request.Volume, request.Location, request.Venue);
+            await this.Mediator.Send(command);
 
             return Ok();
         }
@@ -91,21 +85,14 @@ namespace BingeBuddyNg.Api.Controllers
         [HttpPost("[action]/{lat}/{lng}")]
         public async Task<ActionResult> AddImageActivity(IFormFile file, double? lat, double? lng)
         {
-            if(file == null)
+            if (file == null)
             {
                 return BadRequest();
             }
 
-            Location location = null;
-
-            if(lat.GetValueOrDefault() + lng.GetValueOrDefault() > 0)
-            {
-                location = new Location(lat.Value, lng.Value);
-            }
-
             using (var stream = file.OpenReadStream())
             {
-                await this.ActivityService.AddImageActivityAsync(stream, file.FileName, location);
+                await this.Mediator.Send(new AddImageActivityCommand(stream, file.FileName, lat, lng));
             }
 
             return Ok();
@@ -114,7 +101,8 @@ namespace BingeBuddyNg.Api.Controllers
         [HttpPost("[action]")]
         public async Task AddReaction([FromBody]ReactionDTO reaction)
         {
-            await this.ActivityService.AddReactionAsync(reaction);
+            string userId = this.IdentityService.GetCurrentUserId();
+            await this.Mediator.Send(new AddReactionCommand(userId, reaction.Type, reaction.ActivityId, reaction.Comment));
         }
 
 
@@ -122,7 +110,7 @@ namespace BingeBuddyNg.Api.Controllers
         public async Task DeleteActivity(string id)
         {
             string userId = this.IdentityService.GetCurrentUserId();
-            await this.ActivityRepository.DeleteActivityAsync(userId, id);
+            await this.Mediator.Send(new DeleteActivityCommand(userId, id));
         }
 
     }

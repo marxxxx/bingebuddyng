@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using BingeBuddyNg.Services.Venue;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,18 +8,17 @@ namespace BingeBuddyNg.Services.Activity.Commands
 {
     public class AddMessageActivityCommand :  IRequest
     {
-        public AddMessageActivityCommand(string userId, string message)
+        public AddMessageActivityCommand(string userId, string message, Location location, VenueModel venue)
         {
             UserId = userId ?? throw new ArgumentNullException(nameof(userId));
             Message = message ?? throw new ArgumentNullException(nameof(message));
+            Location = location;
+            Venue = venue;
         }
 
         public string UserId { get; }
         public string Message { get; }
-
-        public override string ToString()
-        {
-            return $"{{{nameof(UserId)}={UserId}, {nameof(Message)}={Message}}}";
-        }
+        public Location Location { get; }
+        public VenueModel Venue { get; }
     }
 }

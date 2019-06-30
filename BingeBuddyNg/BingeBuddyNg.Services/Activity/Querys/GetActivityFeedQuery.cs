@@ -8,7 +8,6 @@ namespace BingeBuddyNg.Services.Activity.Querys
 {
     public class GetActivityFeedQuery : IRequest<PagedQueryResult<ActivityStatsDTO>>
     {
-
         public GetActivityFeedQuery(string userId, string continuationToken = null)
         {
             UserId = userId ?? throw new ArgumentNullException(nameof(userId));
@@ -20,10 +19,5 @@ namespace BingeBuddyNg.Services.Activity.Querys
 
         public string UserId { get;}
         public TableContinuationToken ContinuationToken { get; }
-
-        public override string ToString()
-        {
-            return $"{{{nameof(UserId)}={UserId}, {nameof(ContinuationToken)}={ContinuationToken}}}";
-        }
     }
 }
