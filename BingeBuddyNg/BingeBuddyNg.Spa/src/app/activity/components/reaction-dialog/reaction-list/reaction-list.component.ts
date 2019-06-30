@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Reaction } from 'src/models/Reaction';
+import { ReactionDTO } from 'src/models/ReactionDTO';
 
 @Component({
   selector: 'app-reaction-list',
@@ -9,7 +9,7 @@ import { Reaction } from 'src/models/Reaction';
 export class ReactionListComponent implements OnInit {
 
   @Input()
-  reactions: Reaction[];
+  reactions: ReactionDTO[];
 
   constructor() { }
 

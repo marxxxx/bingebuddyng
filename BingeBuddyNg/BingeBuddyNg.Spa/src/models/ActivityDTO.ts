@@ -2,8 +2,8 @@ import { VenueModel } from 'src/models/VenueModel';
 import { DrinkType } from './DrinkType';
 import { Location } from './Location';
 import { ActivityType } from './ActivityType';
-import { Reaction } from './Reaction';
-import { CommentReaction } from './CommentReaction';
+import { ReactionDTO } from './ReactionDTO';
+import { CommentReactionDTO } from './CommentReactionDTO';
 import { UserInfo } from './UserInfo';
 export class ActivityDTO {
     id: string;
@@ -19,9 +19,9 @@ export class ActivityDTO {
     drinkCount: number;
     imageUrl: string;
     venue?: VenueModel;
-    likes: Reaction[];
-    cheers: Reaction[];
-    comments: CommentReaction[];
+    likes: ReactionDTO[];
+    cheers: ReactionDTO[];
+    comments: CommentReactionDTO[];
     registrationUser?: UserInfo;
     originalUserName?: string;
 
