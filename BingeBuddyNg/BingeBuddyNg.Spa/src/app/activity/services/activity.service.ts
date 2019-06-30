@@ -3,7 +3,7 @@ import { ActivityStatsDTO } from '../../../models/ActivityStatsDTO';
 import { AddDrinkActivityDTO } from '../../../models/AddDrinkActivityDTO';
 import { GetActivityFilterArgs } from '../../../models/GetActivityFilterArgs';
 import { ActivityAggregationDTO } from '../../../models/ActivityAggregationDTO';
-import { Activity } from '../../../models/Activity';
+import { ActivityDTO } from '../../../models/ActivityDTO';
 import { Observable } from 'rxjs';
 import { retry } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -28,10 +28,10 @@ export class ActivityService {
     return this.http.get<PagedQueryResult<ActivityStatsDTO>>(url);
   }
 
-  getActivitys(args: GetActivityFilterArgs): Observable<Activity[]> {
+  getActivitys(args: GetActivityFilterArgs): Observable<ActivityDTO[]> {
     const url = `${this.baseUrl}/${args.onlyWithLocation}`;
 
-    return this.http.get<Activity[]>(url);
+    return this.http.get<ActivityDTO[]>(url);
   }
 
   getActivityAggregation(): Observable<ActivityAggregationDTO[]> {

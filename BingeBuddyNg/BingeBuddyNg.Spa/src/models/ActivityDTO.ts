@@ -5,7 +5,7 @@ import { ActivityType } from './ActivityType';
 import { Reaction } from './Reaction';
 import { CommentReaction } from './CommentReaction';
 import { UserInfo } from './UserInfo';
-export class Activity {
+export class ActivityDTO {
     id: string;
     activityType: ActivityType;
     timestamp: Date;

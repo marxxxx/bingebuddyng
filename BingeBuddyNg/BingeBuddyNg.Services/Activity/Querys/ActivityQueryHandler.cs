@@ -12,10 +12,10 @@ using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services.Activity.Querys
 {
-    public class ActivityQueryHandler : 
+    public class ActivityQueryHandler :
         IRequestHandler<GetActivityFeedQuery, PagedQueryResult<ActivityStatsDTO>>,
         IRequestHandler<GetDrinkActivityAggregationQuery, List<ActivityAggregationDTO>>,
-        IRequestHandler<GetActivitysForMapQuery, List<Activity>>
+        IRequestHandler<GetActivitysForMapQuery, List<ActivityDTO>>
     {
         public ActivityQueryHandler(IUserRepository userRepository, IActivityRepository activityRepository, IUserStatsRepository userStatsRepository)
         {
@@ -39,7 +39,7 @@ namespace BingeBuddyNg.Services.Activity.Querys
             var userIds = activities.ResultPage.Select(a => a.UserId).Distinct();
             var userStats = await this.UserStatsRepository.GetStatisticsAsync(userIds);
 
-            var result = activities.ResultPage.Select(a => new ActivityStatsDTO(a, userStats.First(u => u.UserId == a.UserId))).ToList();
+            var result = activities.ResultPage.Select(a => new ActivityStatsDTO(ConvertActivityToDto(a), userStats.First(u => u.UserId == a.UserId))).ToList();
             return new PagedQueryResult<ActivityStatsDTO>(result, activities.ContinuationToken);
         }
 
@@ -79,10 +79,46 @@ namespace BingeBuddyNg.Services.Activity.Querys
             return sortedResult;
         }
 
-        public async Task<List<Activity>> Handle(GetActivitysForMapQuery request, CancellationToken cancellationToken)
+        public async Task<List<ActivityDTO>> Handle(GetActivitysForMapQuery request, CancellationToken cancellationToken)
         {
             var result = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(ActivityFilterOptions.WithLocation, pageSize: 50));
-            return result.ResultPage;
+            return result.ResultPage?.Select(a=>ConvertActivityToDto(a)).ToList();
         }
+
+
+        private ActivityDTO ConvertActivityToDto(Activity a)
+        {
+            return new ActivityDTO()
+            {
+                Id = a.Id,
+                ActivityType = a.ActivityType,
+                Timestamp = a.Timestamp,
+                Location = a.Location,
+                LocationAddress = a.LocationAddress,
+                UserId = a.UserId,
+                UserName = a.UserName,
+                Message = a.Message,
+                DrinkType = a.DrinkType,
+                DrinkId = a.DrinkId,
+                DrinkName = a.DrinkName,
+                DrinkAlcPrc = a.DrinkAlcPrc,
+                DrinkVolume = a.DrinkVolume,
+                DrinkCount = a.DrinkCount,
+                AlcLevel = a.AlcLevel,
+                ImageUrl = a.ImageUrl,
+                CountryLongName = a.CountryLongName,
+                CountryShortName = a.CountryShortName,
+                Venue = a.Venue,
+
+                RegistrationUser = a.RegistrationUser,
+
+                OriginalUserName = a.OriginalUserName,
+
+                Likes = a.Likes?.Select(l=>new ReactionDTO() { Timestamp = l.Timestamp, UserId = l.UserId, UserName = l.UserName }).ToList(),
+                Cheers = a.Cheers?.Select(c => new ReactionDTO() { Timestamp = c.Timestamp, UserId = c.UserId, UserName = c.UserName }).ToList(),
+                Comments = a.Comments?.Select(c => new CommentReactionDTO() { Timestamp = c.Timestamp, UserId = c.UserId, UserName = c.UserName, Comment = c.Comment }).ToList()
+            };
+        }
+
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BingeBuddyNg.Services.Activity.Querys
 {
-    public class GetActivitysForMapQuery : IRequest<List<Activity>>
+    public class GetActivitysForMapQuery : IRequest<List<ActivityDTO>>
     {
         public string UserId { get; }
 

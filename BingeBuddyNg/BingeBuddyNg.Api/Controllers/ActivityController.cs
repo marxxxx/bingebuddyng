@@ -30,7 +30,7 @@ namespace BingeBuddyNg.Api.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Activity>>> GetActivitysForMap()
+        public async Task<ActionResult<IEnumerable<ActivityDTO>>> GetActivitysForMap()
         {
             var userId = this.IdentityService.GetCurrentUserId();
             var result = await this.Mediator.Send(new GetActivitysForMapQuery(userId));
@@ -99,7 +99,7 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task AddReaction([FromBody]ReactionDTO reaction)
+        public async Task AddReaction([FromBody]AddReactionDTO reaction)
         {
             string userId = this.IdentityService.GetCurrentUserId();
             await this.Mediator.Send(new AddReactionCommand(userId, reaction.Type, reaction.ActivityId, reaction.Comment));

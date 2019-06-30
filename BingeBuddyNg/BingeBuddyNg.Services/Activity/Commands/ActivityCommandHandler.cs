@@ -82,13 +82,13 @@ namespace BingeBuddyNg.Services.Activity.Commands
             {
 
                 case ReactionType.Cheers:
-                    activity.AddCheers(new Reaction(request.UserId, reactingUser.Name, reactingUser.ProfileImageUrl));
+                    activity.AddCheers(new Reaction(request.UserId, reactingUser.Name));
                     break;
                 case ReactionType.Like:
-                    activity.AddLike(new Reaction(request.UserId, reactingUser.Name, reactingUser.ProfileImageUrl));
+                    activity.AddLike(new Reaction(request.UserId, reactingUser.Name));
                     break;
                 case ReactionType.Comment:
-                    activity.AddComment(new CommentReaction(request.UserId, reactingUser.Name, reactingUser.ProfileImageUrl, request.Comment));
+                    activity.AddComment(new CommentReaction(request.UserId, reactingUser.Name, request.Comment));
                     break;
             }
 

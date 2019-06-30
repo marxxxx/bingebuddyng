@@ -11,14 +11,14 @@ namespace BingeBuddyNg.Services.Activity
 
         }
 
-        public CommentReaction(string userId, string userName, string userProfileImageUrl, string comment) 
-            : base(userId, userName, userProfileImageUrl)
+        public CommentReaction(string userId, string userName, string comment) 
+            : base(userId, userName)
         {
             this.Comment = comment;
         }
 
-        public CommentReaction(DateTime timestamp, string userId, string userName, string userProfileImageUrl, string comment)
-            :this(userId, userName, userProfileImageUrl, comment)
+        public CommentReaction(DateTime timestamp, string userId, string userName, string comment)
+            :this(userId, userName, comment)
         {
             this.Timestamp = timestamp;
         }

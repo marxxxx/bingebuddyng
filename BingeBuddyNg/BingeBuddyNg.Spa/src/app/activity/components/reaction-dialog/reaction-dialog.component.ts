@@ -1,6 +1,6 @@
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, OnInit, Inject } from '@angular/core';
-import { Activity } from 'src/models/Activity';
+import { ActivityDTO } from 'src/models/ActivityDTO';
 
 @Component({
   selector: 'app-reaction-dialog',
@@ -11,7 +11,7 @@ export class ReactionDialogComponent implements OnInit {
 
   selectedTabIndex = 0;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: Activity) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: ActivityDTO) { }
 
   ngOnInit() {
     if (this.data.cheers.length > this.data.likes.length) {

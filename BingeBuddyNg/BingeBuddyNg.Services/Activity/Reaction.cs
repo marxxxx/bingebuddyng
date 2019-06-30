@@ -12,7 +12,7 @@ namespace BingeBuddyNg.Services.Activity
         {
         }
 
-        public Reaction(string userId, string userName, string userProfileImageUrl) 
+        public Reaction(string userId, string userName) 
             : this(DateTime.UtcNow, userId, userName)
         {
 
