@@ -41,7 +41,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
             var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
 
-            await AddToActivityAddedQueueAsync(savedActivity.Id);
+            await ActivityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
 
             return Unit.Value;
         }
@@ -54,7 +54,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
             activity.Venue = request.Venue;
 
             var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
-            await AddToActivityAddedQueueAsync(savedActivity.Id);
+            await ActivityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
 
             return Unit.Value;
         }
@@ -67,7 +67,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
             var savedActivity = await this.ActivityRepository.AddActivityAsync(activityEntity);
 
-            await AddToActivityAddedQueueAsync(savedActivity.Id);
+            await ActivityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
 
             return Unit.Value;
         }
@@ -122,7 +122,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
             var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
 
-            await AddToActivityAddedQueueAsync(savedActivity.Id);
+            await ActivityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
 
             return Unit.Value;
         }
@@ -133,11 +133,5 @@ namespace BingeBuddyNg.Services.Activity.Commands
             return Unit.Value;
         }
 
-        private async Task AddToActivityAddedQueueAsync(string activityId)
-        {
-            var queueClient = this.StorageAccessService.GetQueueReference(Constants.QueueNames.ActivityAdded);
-            var message = new ActivityAddedMessage(activityId);
-            await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
-        }
     }
 }

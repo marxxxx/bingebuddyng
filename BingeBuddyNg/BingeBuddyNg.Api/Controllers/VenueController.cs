@@ -5,8 +5,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Venue;
+using MediatR;
+using BingeBuddyNg.Services.Venue.Querys;
+using BingeBuddyNg.Services.Venue.Commands;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace BingeBuddyNg.Api.Controllers
 {
@@ -14,21 +16,19 @@ namespace BingeBuddyNg.Api.Controllers
     [Route("api/[controller]")]
     public class VenueController : Controller
     {
-        public IVenueService VenueService { get; }
-        public IIdentityService IdentityService { get; set; }
-        
+        public IMediator Mediator { get; }
+        public IIdentityService IdentityService { get; set; }        
 
-        public VenueController(IVenueService venueService, IIdentityService identityService)
+        public VenueController(IIdentityService identityService, IMediator mediator)
         {
-            VenueService = venueService ?? throw new ArgumentNullException(nameof(venueService));
+            Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
         }
-
 
         [HttpGet]
         public async Task<IEnumerable<VenueModel>> SearchVenues(float latitude, float longitude)
         {
-            var venues = await this.VenueService.SearchVenuesAsync(latitude, longitude);
+            var venues = await this.Mediator.Send(new SearchVenuesQuery(latitude, longitude));
             return venues;
         }
 
@@ -36,7 +36,7 @@ namespace BingeBuddyNg.Api.Controllers
         public async Task UpdateCurrentVenue([FromBody]VenueModel venue)
         {
             var userId = this.IdentityService.GetCurrentUserId();
-            await this.VenueService.UpdateVenueForUserAsync(userId, venue);
+            await this.Mediator.Send(new EnterVenueCommand(userId, venue));
         }
 
         [HttpPost("[action]")]
@@ -44,8 +44,7 @@ namespace BingeBuddyNg.Api.Controllers
         {
             var userId = this.IdentityService.GetCurrentUserId();
 
-            await this.VenueService.LeaveVenueForUserAsync(userId);
-            
+            await this.Mediator.Send(new LeaveVenueCommand(userId));
         }
     }
 }

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Shared;
 using Microsoft.WindowsAzure.Storage.Table;
+using Newtonsoft.Json;
 
 namespace BingeBuddyNg.Services.Activity
 {
@@ -198,6 +200,14 @@ namespace BingeBuddyNg.Services.Activity
             var perUserTable = this.StorageAccessService.GetTableReference(ActivityPerUserTableName);
             var perUserActivity = await this.GetActivityPerUserEntityAsync(userId, activity.Entity.Timestamp);
             await perUserTable.ExecuteAsync(TableOperation.Delete(perUserActivity));
+        }
+
+
+        public async Task AddToActivityAddedQueueAsync(string activityId)
+        {
+            var queueClient = this.StorageAccessService.GetQueueReference(Constants.QueueNames.ActivityAdded);
+            var message = new ActivityAddedMessage(activityId);
+            await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
         }
 
         private string GetPartitionKey(DateTime timestampUtc)
