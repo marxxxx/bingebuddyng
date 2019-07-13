@@ -1,16 +1,15 @@
 import { UserProfile } from './../models/UserProfile';
-import { UserDTO } from '../models/UserDTO';
-import { UserService } from './core/services/user.service';
+import { UserService } from './@core/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from './core/services/auth.service';
+import { AuthService } from './@core/services/auth.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { SwPush, SwUpdate } from '@angular/service-worker';
 import { PushInfo } from '../models/PushInfo';
-import { NotificationService } from './core/services/notification.service';
-import { Subscription, forkJoin, combineLatest, Observable, from } from 'rxjs';
+import { NotificationService } from './@core/services/notification.service';
+import { Subscription, combineLatest, from } from 'rxjs';
 import { InvitationService } from './invitation/services/invitation.service';
-import { SettingsService } from './core/services/settings.service';
+import { SettingsService } from './@core/services/settings.service';
 import { filter } from 'rxjs/operators';
 import { CreateOrUpdateUserDTO } from 'src/models/CreateOrUpdateUserDTO';
 

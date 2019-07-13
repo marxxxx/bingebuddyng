@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { DrinkEventService } from 'src/app/core/services/drinkevent.service';
+import { DrinkEventService } from 'src/app/@core/services/drinkevent.service';
 import { DrinkEvent } from 'src/models/DrinkEvent';
 import * as moment from 'moment';
 import { MatTooltip } from '@angular/material/tooltip';
-import { AuthService } from 'src/app/core/services/auth.service';
+import { AuthService } from 'src/app/@core/services/auth.service';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../../services/notification.service';

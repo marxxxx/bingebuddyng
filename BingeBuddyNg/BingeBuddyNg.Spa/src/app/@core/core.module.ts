@@ -6,7 +6,7 @@ import { CallbackComponent } from './components/callback/callback.component';
 import { DrinkEventCounterComponent } from './components/drink-event-counter/drink-event-counter.component';
 import { MeComponent } from './components/me/me.component';
 import { NavShellComponent } from './components/nav-shell/nav-shell.component';
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '../@shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SettingsComponent } from './components/settings/settings.component';

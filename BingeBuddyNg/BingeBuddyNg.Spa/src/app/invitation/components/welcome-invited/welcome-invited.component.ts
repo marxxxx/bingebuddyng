@@ -1,5 +1,5 @@
 import { TranslateService } from '@ngx-translate/core';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../../@core/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '../../services/invitation.service';
 import { Component, OnInit } from '@angular/core';

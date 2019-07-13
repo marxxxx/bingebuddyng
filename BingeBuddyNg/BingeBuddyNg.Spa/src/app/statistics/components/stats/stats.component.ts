@@ -1,4 +1,4 @@
-import { ShellInteractionService } from 'src/app/core/services/shell-interaction.service';
+import { ShellInteractionService } from 'src/app/@core/services/shell-interaction.service';
 import { StatisticsService } from './../../services/statistics.service';
 import { Subscription, forkJoin, combineLatest } from 'rxjs';
 import { ActivityService } from '../../../activity/services/activity.service';
@@ -6,7 +6,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ActivityAggregationDTO } from 'src/models/ActivityAggregationDTO';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
-import { AuthService } from 'src/app/core/services/auth.service';
+import { AuthService } from 'src/app/@core/services/auth.service';
 import { UserProfile } from 'src/models/UserProfile';
 import { UserStatisticHistoryDTO } from '../../services/UserStatisticHistoryDTO';
 import { filter, tap } from 'rxjs/operators';

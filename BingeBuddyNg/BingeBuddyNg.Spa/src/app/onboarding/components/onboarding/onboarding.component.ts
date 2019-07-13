@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SettingsService } from 'src/app/core/services/settings.service';
+import { SettingsService } from 'src/app/@core/services/settings.service';
 
 @Component({
   selector: 'app-onboarding',

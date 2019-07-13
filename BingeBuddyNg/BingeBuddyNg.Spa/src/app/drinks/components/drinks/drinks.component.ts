@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DrinkService } from 'src/app/drinks/services/drink.service';
 import { Drink } from 'src/models/Drink';
-import { ShellInteractionService } from 'src/app/core/services/shell-interaction.service';
-import { ConfirmationDialogArgs } from 'src/app/shared/components/confirmation-dialog/ConfirmationDialogArgs';
+import { ShellInteractionService } from 'src/app/@core/services/shell-interaction.service';
+import { ConfirmationDialogArgs } from 'src/app/@shared/components/confirmation-dialog/ConfirmationDialogArgs';
 import { filter } from 'rxjs/operators';
 import { DrinkActivityService } from 'src/app/activity/services/drink-activity.service';
 import { Router } from '@angular/router';

@@ -6,9 +6,9 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { ActivityService } from './../../services/activity.service';
 import { AddReactionDTO } from '../../../../models/AddReactionDTO';
 import { ReactionType } from '../../../../models/ReactionType';
-import { UserService } from 'src/app/core/services/user.service';
+import { UserService } from 'src/app/@core/services/user.service';
 import { Router } from '@angular/router';
-import { ShellInteractionService } from 'src/app/core/services/shell-interaction.service';
+import { ShellInteractionService } from 'src/app/@core/services/shell-interaction.service';
 import { filter } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 
@@ -94,7 +94,6 @@ export class ActivityComponent implements OnInit {
       console.error(e);
 
     });
-
   }
 
   onCheers(ev) {

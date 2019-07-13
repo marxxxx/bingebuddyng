@@ -12,8 +12,8 @@ import 'hammerjs';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CoreModule } from './core/core.module';
-import { SharedModule } from './shared/shared.module';
+import { CoreModule } from './@core/core.module';
+import { SharedModule } from './@shared/shared.module';
 import { ActivityModule } from './activity/activity.module';
 import { OnboardingModule } from './onboarding/onboarding.module';
 

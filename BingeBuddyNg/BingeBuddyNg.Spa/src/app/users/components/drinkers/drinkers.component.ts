@@ -2,14 +2,14 @@ import { Subscription, forkJoin, combineLatest } from 'rxjs';
 import { FriendRequestDTO } from '../../../../models/FriendRequestDTO';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../../@core/services/auth.service';
 import { UserInfoDTO } from '../../../../models/UserInfoDTO';
 import { UserDTO } from '../../../../models/UserDTO';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { UserService } from '../../../core/services/user.service';
-import { FriendRequestService } from '../../../core/services/friendrequest.service';
+import { UserService } from '../../../@core/services/user.service';
+import { FriendRequestService } from '../../../@core/services/friendrequest.service';
 import { ActivatedRoute } from '@angular/router';
-import { ShellInteractionService } from '../../../core/services/shell-interaction.service';
+import { ShellInteractionService } from '../../../@core/services/shell-interaction.service';
 import { filter } from 'rxjs/operators';
 
 @Component({

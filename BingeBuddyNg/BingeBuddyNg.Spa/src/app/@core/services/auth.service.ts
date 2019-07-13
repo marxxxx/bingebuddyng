@@ -1,5 +1,5 @@
 import { CreateOrUpdateUserDTO } from 'src/models/CreateOrUpdateUserDTO';
-import { UserService } from 'src/app/core/services/user.service';
+import { UserService } from 'src/app/@core/services/user.service';
 import { Injectable } from '@angular/core';
 import * as auth0 from 'auth0-js';
 import { Router } from '@angular/router';

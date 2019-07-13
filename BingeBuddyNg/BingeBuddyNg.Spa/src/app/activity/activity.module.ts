@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '../@shared/shared.module';
 import { DrinkDialogComponent } from './components/drink-dialog/drink-dialog.component';
 import { MessageDialogComponent } from './components/message-dialog/message-dialog.component';
 import { VenueDialogComponent } from './components/venue-dialog/venue-dialog.component';

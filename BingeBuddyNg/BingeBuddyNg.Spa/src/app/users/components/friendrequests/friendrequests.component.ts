@@ -1,7 +1,7 @@
-import { StateService } from '../../../core/services/state.service';
-import { AuthService } from '../../../core/services/auth.service';
+import { StateService } from '../../../@core/services/state.service';
+import { AuthService } from '../../../@core/services/auth.service';
 import { UserInfoDTO } from '../../../../models/UserInfoDTO';
-import { FriendRequestService } from '../../../core/services/friendrequest.service';
+import { FriendRequestService } from '../../../@core/services/friendrequest.service';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription, combineLatest } from 'rxjs';

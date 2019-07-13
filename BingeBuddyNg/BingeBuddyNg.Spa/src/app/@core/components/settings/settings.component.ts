@@ -1,7 +1,7 @@
 import { CreateOrUpdateUserDTO } from './../../../../models/CreateOrUpdateUserDTO';
 import { UserDTO } from '../../../../models/UserDTO';
 import { AuthService } from '../../services/auth.service';
-import { UserService } from 'src/app/core/services/user.service';
+import { UserService } from 'src/app/@core/services/user.service';
 import { SettingsService } from '../../services/settings.service';
 import { ShellInteractionService } from '../../services/shell-interaction.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';

@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { RankingComponent } from './components/ranking/ranking.component';
-import { AuthGuard } from '../core/services/auth.guard';
-import { SharedModule } from '../shared/shared.module';
+import { AuthGuard } from '../@core/services/auth.guard';
+import { SharedModule } from '../@shared/shared.module';
 import { RankingService } from './services/ranking.service';
 
 const routes: Routes = [ {

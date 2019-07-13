@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Drink } from 'src/models/Drink';
 import { DrinkService } from 'src/app/drinks/services/drink.service';
-import { ShellInteractionService } from 'src/app/core/services/shell-interaction.service';
+import { ShellInteractionService } from 'src/app/@core/services/shell-interaction.service';
 import { DrinkType } from 'src/models/DrinkType';
 
 @Component({

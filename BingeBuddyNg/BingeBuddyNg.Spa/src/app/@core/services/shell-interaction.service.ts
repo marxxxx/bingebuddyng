@@ -3,8 +3,8 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
-import { ConfirmationDialogArgs } from '../../shared/components/confirmation-dialog/ConfirmationDialogArgs';
+import { ConfirmationDialogComponent } from '../../@shared/components/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogArgs } from '../../@shared/components/confirmation-dialog/ConfirmationDialogArgs';
 import { Observable } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
