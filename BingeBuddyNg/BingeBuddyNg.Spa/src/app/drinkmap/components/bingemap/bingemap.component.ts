@@ -42,7 +42,7 @@ export class BingemapComponent implements OnInit {
 
   load() {
     this.isBusy = true;
-    this.activityService.getActivitys({ onlyWithLocation: true }).subscribe(d => {
+    this.activityService.getActivitysForMap().subscribe(d => {
       this.activitys = d;
       this.isBusy = false;
 

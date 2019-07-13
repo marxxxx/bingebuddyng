@@ -29,7 +29,7 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("[action]")]
         public async Task<ActionResult<IEnumerable<ActivityDTO>>> GetActivitysForMap()
         {
             var userId = this.IdentityService.GetCurrentUserId();
@@ -90,9 +90,11 @@ namespace BingeBuddyNg.Api.Controllers
                 return BadRequest();
             }
 
+            var userId = this.IdentityService.GetCurrentUserId();
+
             using (var stream = file.OpenReadStream())
             {
-                await this.Mediator.Send(new AddImageActivityCommand(stream, file.FileName, lat, lng));
+                await this.Mediator.Send(new AddImageActivityCommand(userId, stream, file.FileName, lat, lng));
             }
 
             return Ok();

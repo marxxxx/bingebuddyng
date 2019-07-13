@@ -10,9 +10,9 @@ namespace BingeBuddyNg.Services.Activity.Commands
         public AddReactionCommand(string userId, ReactionType type, string activityId, string comment)
         {
             UserId = userId ?? throw new ArgumentNullException(nameof(userId));
-            Type = type;
             ActivityId = activityId ?? throw new ArgumentNullException(nameof(activityId));
-            Comment = comment ?? throw new ArgumentNullException(nameof(comment));
+            Type = type;
+            Comment = comment;
         }
 
         public string UserId { get; }

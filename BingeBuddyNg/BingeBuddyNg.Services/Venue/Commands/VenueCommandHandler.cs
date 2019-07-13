@@ -17,6 +17,14 @@ namespace BingeBuddyNg.Services.Venue.Commands
         public ITranslationService TranslationService { get; }
         public IActivityRepository ActivityRepository { get; }
 
+        public VenueCommandHandler(IUserRepository userRepository, IVenueUserRepository venueUserRepository, ITranslationService translationService, IActivityRepository activityRepository)
+        {
+            UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            VenueUserRepository = venueUserRepository ?? throw new ArgumentNullException(nameof(venueUserRepository));
+            TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
+            ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+        }
+
         public async Task<Unit> Handle(EnterVenueCommand request, CancellationToken cancellationToken)
         {
             var user = await this.UserRepository.FindUserAsync(request.UserId);

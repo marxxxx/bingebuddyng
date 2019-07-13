@@ -75,7 +75,8 @@ export class ActivityComponent implements OnInit {
     this.dialog.open(ReactionDialogComponent, { width: '95%', data: this.activity.activity });
   }
 
-  onLike() {
+  onLike(ev) {
+    ev.stopPropagation();
 
     this.isBusyLiking = true;
     const reaction = this.createAddReactionDTO(ReactionType.Like);
@@ -96,8 +97,8 @@ export class ActivityComponent implements OnInit {
 
   }
 
-  onCheers() {
-
+  onCheers(ev) {
+    ev.stopPropagation();
     this.isBusyCheering = true;
     const reaction = this.createAddReactionDTO(ReactionType.Cheers);
     this.activityService.addReaction(reaction).subscribe(() => {

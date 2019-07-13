@@ -28,15 +28,35 @@ namespace BingeBuddyNg.Services.User.Querys
             // TODO: Should soon be improved!
             if (!string.IsNullOrEmpty(request.FilterText))
             {
-                userInfo = userInfo.Where(u => u.UserName.Contains(request.FilterText)).ToList();
+                string lowerFilter = request.FilterText.ToLower();
+                userInfo = userInfo.Where(u => u.UserName.ToLower().Contains(lowerFilter)).ToList();
             }
 
             return userInfo;
         }
 
-        public Task<UserDTO> Handle(GetUserQuery request, CancellationToken cancellationToken)
+        public async Task<UserDTO> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var user = await this.UserRepository.FindUserAsync(request.UserId);
+            if (user == null)
+            {
+                return null;
+            }
+
+            return new UserDTO()
+            {
+                Id = user.Id,
+                Name = user.Name,
+                PushInfo = user.PushInfo,
+                ProfileImageUrl = user.ProfileImageUrl,
+                Gender = user.Gender,
+                Language = user.Language,
+                LastOnline = user.LastOnline,
+                Weight = user.Weight,
+                CurrentVenue = user.CurrentVenue,
+                Friends = user.Friends,
+                MutedFriendUserIds = user.MutedFriendUserIds
+            };
         }
     }
 }

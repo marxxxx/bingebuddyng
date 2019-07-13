@@ -28,8 +28,8 @@ export class ActivityService {
     return this.http.get<PagedQueryResult<ActivityStatsDTO>>(url);
   }
 
-  getActivitys(args: GetActivityFilterArgs): Observable<ActivityDTO[]> {
-    const url = `${this.baseUrl}/${args.onlyWithLocation}`;
+  getActivitysForMap(): Observable<ActivityDTO[]> {
+    const url = `${this.baseUrl}/GetActivitysForMap`;
 
     return this.http.get<ActivityDTO[]>(url);
   }

@@ -18,6 +18,6 @@ namespace BingeBuddyNg.Services.User
         public VenueModel CurrentVenue { get; set; }
         public string Language { get; set; }
         public DateTime LastOnline { get; set; }
-        public List<string> MutedFriendUserIds;
+        public List<string> MutedFriendUserIds { get; set; }
     }
 }
