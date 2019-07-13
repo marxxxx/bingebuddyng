@@ -1,4 +1,4 @@
-export class UserStatistics {
+export class UserStatisticsDTO {
     userId: string;
     currentAlcoholization: number;
     currentNightDrinks: number;

@@ -1,4 +1,4 @@
-export class UserStatisticsDto {
+export class UserStatisticHistoryDTO {
     timestamp: any;
     alcLevel: number;
 }

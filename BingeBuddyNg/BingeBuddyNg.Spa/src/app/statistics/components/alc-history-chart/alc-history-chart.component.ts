@@ -1,5 +1,5 @@
 import { TranslateService } from '@ngx-translate/core';
-import { UserStatisticsDto } from './../../services/UserStatisticDto';
+import { UserStatisticHistoryDTO } from './../../services/UserStatisticHistoryDTO';
 import { Component, OnInit, Input } from '@angular/core';
 import * as moment from 'moment';
 
@@ -11,7 +11,7 @@ import * as moment from 'moment';
 export class AlcHistoryChartComponent implements OnInit {
 
   @Input()
-  userStatsHistory: UserStatisticsDto[];
+  userStatsHistory: UserStatisticHistoryDTO[];
 
   // lineChart
   public lineChartData: Array<any> = [

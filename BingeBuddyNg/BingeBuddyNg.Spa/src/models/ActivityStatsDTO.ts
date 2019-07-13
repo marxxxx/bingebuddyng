@@ -1,6 +1,6 @@
 import { ActivityDTO } from './ActivityDTO';
-import { UserStatistics } from './UserStatistics';
+import { UserStatisticsDTO } from './UserStatisticsDTO';
 export class ActivityStatsDTO {
     activity: ActivityDTO;
-    userStats: UserStatistics;
+    userStats: UserStatisticsDTO;
 }

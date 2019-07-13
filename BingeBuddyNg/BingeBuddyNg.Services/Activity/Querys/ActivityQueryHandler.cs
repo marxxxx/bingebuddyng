@@ -17,16 +17,17 @@ namespace BingeBuddyNg.Services.Activity.Querys
         IRequestHandler<GetDrinkActivityAggregationQuery, List<ActivityAggregationDTO>>,
         IRequestHandler<GetActivitysForMapQuery, List<ActivityDTO>>
     {
+
+        public IUserRepository UserRepository { get; }
+        public IActivityRepository ActivityRepository { get; }
+        public IUserStatsRepository UserStatsRepository { get; }
+
         public ActivityQueryHandler(IUserRepository userRepository, IActivityRepository activityRepository, IUserStatsRepository userStatsRepository)
         {
             UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
             UserStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
         }
-
-        public IUserRepository UserRepository { get; }
-        public IActivityRepository ActivityRepository { get; }
-        public IUserStatsRepository UserStatsRepository { get; }
 
         public async Task<PagedQueryResult<ActivityStatsDTO>> Handle(GetActivityFeedQuery request, CancellationToken cancellationToken)
         {
@@ -39,7 +40,7 @@ namespace BingeBuddyNg.Services.Activity.Querys
             var userIds = activities.ResultPage.Select(a => a.UserId).Distinct();
             var userStats = await this.UserStatsRepository.GetStatisticsAsync(userIds);
 
-            var result = activities.ResultPage.Select(a => new ActivityStatsDTO(ConvertActivityToDto(a), userStats.First(u => u.UserId == a.UserId))).ToList();
+            var result = activities.ResultPage.Select(a => new ActivityStatsDTO(Converter.ConvertActivityToDto(a), Statistics.Converter.ConvertUserStatisticsToDto(userStats.First(u => u.UserId == a.UserId)))).ToList();
             return new PagedQueryResult<ActivityStatsDTO>(result, activities.ContinuationToken);
         }
 
@@ -82,43 +83,11 @@ namespace BingeBuddyNg.Services.Activity.Querys
         public async Task<List<ActivityDTO>> Handle(GetActivitysForMapQuery request, CancellationToken cancellationToken)
         {
             var result = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(ActivityFilterOptions.WithLocation, pageSize: 50));
-            return result.ResultPage?.Select(a=>ConvertActivityToDto(a)).ToList();
+            return result.ResultPage?.Select(a=> Converter.ConvertActivityToDto(a)).ToList();
         }
 
 
-        private ActivityDTO ConvertActivityToDto(Activity a)
-        {
-            return new ActivityDTO()
-            {
-                Id = a.Id,
-                ActivityType = a.ActivityType,
-                Timestamp = a.Timestamp,
-                Location = a.Location,
-                LocationAddress = a.LocationAddress,
-                UserId = a.UserId,
-                UserName = a.UserName,
-                Message = a.Message,
-                DrinkType = a.DrinkType,
-                DrinkId = a.DrinkId,
-                DrinkName = a.DrinkName,
-                DrinkAlcPrc = a.DrinkAlcPrc,
-                DrinkVolume = a.DrinkVolume,
-                DrinkCount = a.DrinkCount,
-                AlcLevel = a.AlcLevel,
-                ImageUrl = a.ImageUrl,
-                CountryLongName = a.CountryLongName,
-                CountryShortName = a.CountryShortName,
-                Venue = a.Venue,
-
-                RegistrationUser = a.RegistrationUser,
-
-                OriginalUserName = a.OriginalUserName,
-
-                Likes = a.Likes?.Select(l=>new ReactionDTO() { Timestamp = l.Timestamp, UserId = l.UserId, UserName = l.UserName }).ToList(),
-                Cheers = a.Cheers?.Select(c => new ReactionDTO() { Timestamp = c.Timestamp, UserId = c.UserId, UserName = c.UserName }).ToList(),
-                Comments = a.Comments?.Select(c => new CommentReactionDTO() { Timestamp = c.Timestamp, UserId = c.UserId, UserName = c.UserName, Comment = c.Comment }).ToList()
-            };
-        }
+       
 
     }
 }

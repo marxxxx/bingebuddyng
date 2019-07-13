@@ -8,7 +8,7 @@ import { ActivityAggregationDTO } from 'src/models/ActivityAggregationDTO';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { UserProfile } from 'src/models/UserProfile';
-import { UserStatisticsDto } from '../../services/UserStatisticDto';
+import { UserStatisticHistoryDTO } from '../../services/UserStatisticHistoryDTO';
 import { filter, tap } from 'rxjs/operators';
 
 @Component({
@@ -17,7 +17,7 @@ import { filter, tap } from 'rxjs/operators';
   styleUrls: ['./stats.component.css']
 })
 export class StatsComponent implements OnInit, OnDestroy {
-  userStatsHistory: UserStatisticsDto[];
+  userStatsHistory: UserStatisticHistoryDTO[];
   isBusy = false;
   avgDrinksPerDay = 0;
   isLegendVisible = true;

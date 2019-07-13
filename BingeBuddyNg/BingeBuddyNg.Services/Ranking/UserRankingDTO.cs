@@ -10,14 +10,14 @@ namespace BingeBuddyNg.Services.Ranking
         {
         }
 
-        public UserRankingDTO(UserInfoDTO user, UserStatistics statistics)
+        public UserRankingDTO(UserInfoDTO user, UserStatisticsDTO statistics)
         {
             User = user ?? throw new ArgumentNullException(nameof(user));
             Statistics = statistics ?? throw new ArgumentNullException(nameof(statistics));
         }
 
         public UserInfoDTO User { get; set; }
-        public UserStatistics Statistics { get; set; }
+        public UserStatisticsDTO Statistics { get; set; }
 
         public override string ToString()
         {

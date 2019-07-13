@@ -24,10 +24,10 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
         [HttpGet("{userId}")]
-        public async Task<IEnumerable<UserStatisticDto>> GetStatisticHistoryForUser(string userId)
+        public async Task<IEnumerable<UserStatisticHistoryDTO>> GetStatisticHistoryForUser(string userId)
         {
             var history = await this.UserStatsHistoryRepository.GetStatisticHistoryForUserAsync(userId);
-            var result = history.Select(h => new UserStatisticDto(h.Timestamp, h.CurrentAlcLevel)).ToList();
+            var result = history.Select(h => new UserStatisticHistoryDTO(h.Timestamp, h.CurrentAlcLevel)).ToList();
             return result;
         }
     }

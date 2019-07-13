@@ -2,9 +2,9 @@
 
 namespace BingeBuddyNg.Api.Dto
 {
-    public class UserStatisticDto
+    public class UserStatisticHistoryDTO
     {
-        public UserStatisticDto(DateTime timestamp, double alcLevel)
+        public UserStatisticHistoryDTO(DateTime timestamp, double alcLevel)
         {
             Timestamp = timestamp;
             AlcLevel = alcLevel;

@@ -1,19 +1,18 @@
-﻿using System;
-using BingeBuddyNg.Services.Statistics;
-using BingeBuddyNg.Services.User;
+﻿using BingeBuddyNg.Services.Statistics;
+using System;
 
 namespace BingeBuddyNg.Services.Activity
 {
     public class ActivityStatsDTO
     {
-        public ActivityStatsDTO(ActivityDTO activity, UserStatistics userStats)
+        public ActivityStatsDTO(ActivityDTO activity, UserStatisticsDTO userStats)
         {
             Activity = activity ?? throw new ArgumentNullException(nameof(activity));
             UserStats = userStats ?? throw new ArgumentNullException(nameof(userStats));
         }
 
         public ActivityDTO Activity { get; set; }
-        public UserStatistics UserStats { get; set; }
+        public UserStatisticsDTO UserStats { get; set; }
 
         public override string ToString()
         {
