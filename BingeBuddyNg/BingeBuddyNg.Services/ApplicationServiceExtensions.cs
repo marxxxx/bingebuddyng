@@ -1,24 +1,17 @@
-﻿using BingeBuddyNg.Services;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BingeBuddyNg.Services.Activity;
+﻿using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.DrinkEvent;
 using BingeBuddyNg.Services.FriendsRequest;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Invitation;
-using BingeBuddyNg.Services.Ranking;
+using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.Venue;
-using BingeBuddyNg.Services.Drink;
-using BingeBuddyNg.Services.Statistics;
 using MediatR;
-using System.Reflection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace BingeBuddyNg.Api
+namespace BingeBuddyNg.Services
 {
     public static class ApplicationServiceExtensions
     {
@@ -35,7 +28,7 @@ namespace BingeBuddyNg.Api
             services.AddSingleton(appConfiguration);
             services.AddLogging();
 
-            services.AddMediatR(typeof(Activity).Assembly);
+            services.AddMediatR(typeof(ActivityDTO).Assembly);
 
             // Add Application Services
             services.AddSingleton<StorageAccessService>();
