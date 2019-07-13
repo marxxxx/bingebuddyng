@@ -1,3 +1,4 @@
+import { CreateOrUpdateUserDTO } from 'src/models/CreateOrUpdateUserDTO';
 import { ProfileImageDialogComponent } from './../profile-image-dialog/profile-image-dialog.component';
 import { ShellInteractionService } from '../../../core/services/shell-interaction.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -9,7 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { UserService } from '../../../core/services/user.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { User } from '../../../../models/User';
+import { UserDTO } from '../../../../models/UserDTO';
 import { filter } from 'rxjs/internal/operators/filter';
 import { FileUploader, FileUploaderOptions, FileItem } from 'ng2-file-upload';
 import { ProfileImageDialogArgs } from '../profile-image-dialog/ProfileImageDialogArgs';
@@ -22,7 +23,7 @@ import { ProfileImageDialogArgs } from '../profile-image-dialog/ProfileImageDial
 export class ProfileComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
-  user: User;
+  user: UserDTO;
   originalUserName: string;
   currentUserId: string;
   userId: string;
@@ -210,7 +211,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onUpdateUserName() {
     this.isBusyUpdatingUserName = true;
-    this.userService.saveUser(this.user).subscribe(() => {
+    const request = new CreateOrUpdateUserDTO(
+      this.user.id,
+      this.user.name,
+      this.user.profileImageUrl,
+      this.user.pushInfo,
+      this.user.language);
+
+    this.userService.createOrUpdateUser(request).subscribe(() => {
       this.originalUserName = this.user.name;
       this.isEditingUserName = false;
       this.isBusyUpdatingUserName = false;

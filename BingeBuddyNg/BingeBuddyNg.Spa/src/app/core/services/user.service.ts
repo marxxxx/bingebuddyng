@@ -1,9 +1,10 @@
-import { UserInfo } from '../../../models/UserInfo';
+import { UserInfoDTO } from '../../../models/UserInfoDTO';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
-import { User } from '../../../models/User';
+import { UserDTO } from '../../../models/UserDTO';
+import { CreateOrUpdateUserDTO } from 'src/models/CreateOrUpdateUserDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -16,20 +17,20 @@ export class UserService {
   constructor(private http: HttpClient) {
   }
 
-  getAllUsers(filterText: string): Observable<UserInfo[]> {
+  getAllUsers(filterText: string): Observable<UserInfoDTO[]> {
     let url = this.baseUrl;
     if (filterText) {
       url += encodeURI('?filterText=' + filterText);
     }
-    return this.http.get<UserInfo[]>(url);
+    return this.http.get<UserInfoDTO[]>(url);
   }
 
-  getUser(userId: string): Observable<User> {
-    return this.http.get<User>(`${this.baseUrl}/${userId}`);
+  getUser(userId: string): Observable<UserDTO> {
+    return this.http.get<UserDTO>(`${this.baseUrl}/${userId}`);
   }
 
   addFriend(friendUserId: string): Observable<{}> {
-    return this.http.put(`${this.baseUrl}/{friendUserId}/add`, {});
+    return this.http.put(`${this.baseUrl}/${friendUserId}/add`, {});
   }
 
 
@@ -37,11 +38,9 @@ export class UserService {
     return this.http.delete(`${this.baseUrl}/${friendUserId}`, {});
   }
 
-  saveUser(user: User): Observable<{}> {
+  createOrUpdateUser(user: CreateOrUpdateUserDTO): Observable<{}> {
     return this.http.post(this.baseUrl, user);
   }
-
-
 
   setFriendMuteState(friendUserId: string, muteState: boolean): Observable<any> {
     const url = `${this.baseUrl}/SetFriendMuteState?friendUserId=${friendUserId}&muteState=${muteState}`;

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.User.Commands;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
@@ -47,40 +49,51 @@ namespace BingeBuddyNg.Services.User
         }
 
 
-        public async Task<CreateOrUpdateUserResult> CreateOrUpdateUserAsync(User user)
+        public async Task<CreateOrUpdateUserResult> CreateOrUpdateUserAsync(CreateOrUpdateUserCommand request)
         {
             var table = StorageAccess.GetTableReference(TableName);
 
             TableOperation saveUserOperation = null;
             bool profilePicHasChanged = true;
             bool nameHasChanged = false;
-            var savedUser = await FindUserEntityAsync(user.Id);
+            var savedUser = await FindUserEntityAsync(request.UserId);
             bool isNewUser = false;
             string originalUserName = null;
             if (savedUser != null)
             {
                 originalUserName = savedUser.Entity.Name;
 
-                profilePicHasChanged = savedUser.Entity.ProfileImageUrl != user.ProfileImageUrl;
-                nameHasChanged = savedUser.Entity.Name != user.Name;
+                profilePicHasChanged = savedUser.Entity.ProfileImageUrl != request.ProfileImageUrl;
+                nameHasChanged = savedUser.Entity.Name != request.Name;
 
-                savedUser.Entity.Name = user.Name;
-                savedUser.Entity.ProfileImageUrl = user.ProfileImageUrl;
-                if (user.PushInfo != null && user.PushInfo.HasValue())
+                savedUser.Entity.Name = request.Name;
+                savedUser.Entity.ProfileImageUrl = request.ProfileImageUrl;
+                if (request.PushInfo != null && request.PushInfo.HasValue())
                 {
-                    savedUser.Entity.PushInfo = user.PushInfo;
+                    savedUser.Entity.PushInfo = request.PushInfo;
                 }
 
-                if(user.Language != null)
+                if(request.Language != null)
                 {
-                    savedUser.Entity.Language = user.Language;
+                    savedUser.Entity.Language = request.Language;
                 }
 
                 saveUserOperation = TableOperation.Replace(savedUser);
             }
             else
             {
-                saveUserOperation = TableOperation.Insert(new JsonTableEntity<User>(PartitionKeyValue, user.Id, user));
+                var user = new User()
+                {
+                    Id = request.UserId,
+                    Name = request.Name,
+                    Gender = Gender.Male,
+                    Language = request.Language,
+                    PushInfo = request.PushInfo,
+                    Weight = 80,
+                    LastOnline = DateTime.UtcNow,
+                    ProfileImageUrl = request.ProfileImageUrl
+                };
+                saveUserOperation = TableOperation.Insert(new JsonTableEntity<User>(PartitionKeyValue, request.UserId, user));
                 isNewUser = true;
             }
 

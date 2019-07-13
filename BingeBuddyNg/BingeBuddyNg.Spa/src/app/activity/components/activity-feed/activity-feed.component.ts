@@ -20,8 +20,8 @@ import { ShellInteractionService } from '../../../core/services/shell-interactio
 import { FileUploader, FileItem, FileUploaderOptions } from 'ng2-file-upload';
 import { NotificationService } from '../../../core/services/notification.service';
 import { trigger, style, transition, animate } from '@angular/animations';
-import { UserInfo } from '../../../../models/UserInfo';
-import { User } from '../../../../models/User';
+import { UserInfoDTO } from '../../../../models/UserInfoDTO';
+import { UserDTO } from '../../../../models/UserDTO';
 import { LocationService } from 'src/app/activity/services/location.service';
 import { VenueDialogMode } from '../venue-dialog/VenueDialogMode';
 import { VenueDialogResult } from '../venue-dialog/VenueDialogResult';
@@ -54,8 +54,8 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   isBusyUploading = false;
   currentProgress = 0;
   isReloadSpinnerActive = false;
-  currentUserInfo: UserInfo;
-  currentUser: User;
+  currentUserInfo: UserInfoDTO;
+  currentUser: UserDTO;
   DrinkType = DrinkType;
   isCommentOpen = false;
   drinks: Drink[];

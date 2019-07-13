@@ -1,6 +1,6 @@
 import { StateService } from '../../../core/services/state.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { UserInfo } from '../../../../models/UserInfo';
+import { UserInfoDTO } from '../../../../models/UserInfoDTO';
 import { FriendRequestService } from '../../../core/services/friendrequest.service';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -16,7 +16,7 @@ export class FriendrequestsComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
   private currentUserId: string;
-  pendingRequests: UserInfo[] = [];
+  pendingRequests: UserInfoDTO[] = [];
   isBusy = false;
 
   constructor(private route: ActivatedRoute, private friendRequest: FriendRequestService,
@@ -54,7 +54,7 @@ export class FriendrequestsComponent implements OnInit, OnDestroy {
     });
   }
 
-  onAccept(user: UserInfo) {
+  onAccept(user: UserInfoDTO) {
 
     this.removeUserFromList(user.userId);
     this.friendRequest.acceptFriendRequest(user.userId).subscribe(r => {
@@ -65,7 +65,7 @@ export class FriendrequestsComponent implements OnInit, OnDestroy {
 
   }
 
-  onDecline(user: UserInfo) {
+  onDecline(user: UserInfoDTO) {
     this.removeUserFromList(user.userId);
     this.friendRequest.declineFriendRequest(user.userId).subscribe(r => {
 

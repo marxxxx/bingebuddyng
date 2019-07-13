@@ -1,4 +1,4 @@
-export class UserInfo {
+export class UserInfoDTO {
     userId: string;
     userName: string;
 }

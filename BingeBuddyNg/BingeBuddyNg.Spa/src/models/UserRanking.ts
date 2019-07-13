@@ -1,7 +1,7 @@
 import { UserStatistics } from './UserStatistics';
-import { UserInfo } from './UserInfo';
+import { UserInfoDTO } from './UserInfoDTO';
 
 export class UserRanking {
-    user: UserInfo;
+    user: UserInfoDTO;
     statistics: UserStatistics;
 }

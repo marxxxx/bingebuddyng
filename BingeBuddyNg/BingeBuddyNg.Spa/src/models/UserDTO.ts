@@ -1,14 +1,14 @@
 import { VenueModel } from 'src/models/VenueModel';
-import { UserInfo } from './UserInfo';
+import { UserInfoDTO } from './UserInfoDTO';
 import { PushInfo } from './PushInfo';
 
-export class User {
+export class UserDTO {
     id: string;
     name: string;
     profileImageUrl: string;
     weight?: number;
     pushInfo?: PushInfo;
-    friends?: UserInfo[];
+    friends?: UserInfoDTO[];
     mutedFriendUserIds?: string[];
     currentVenue?: VenueModel;
     language?: string;

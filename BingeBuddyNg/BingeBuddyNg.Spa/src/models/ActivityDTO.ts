@@ -4,7 +4,7 @@ import { Location } from './Location';
 import { ActivityType } from './ActivityType';
 import { ReactionDTO } from './ReactionDTO';
 import { CommentReactionDTO } from './CommentReactionDTO';
-import { UserInfo } from './UserInfo';
+import { UserInfoDTO } from './UserInfoDTO';
 export class ActivityDTO {
     id: string;
     activityType: ActivityType;
@@ -22,11 +22,11 @@ export class ActivityDTO {
     likes: ReactionDTO[];
     cheers: ReactionDTO[];
     comments: CommentReactionDTO[];
-    registrationUser?: UserInfo;
+    registrationUser?: UserInfoDTO;
     originalUserName?: string;
 
-    getUserInfo(): UserInfo {
-        const userInfo: UserInfo = {
+    getUserInfo(): UserInfoDTO {
+        const userInfo: UserInfoDTO = {
             userId: this.userId,
             userName: this.userName
         };

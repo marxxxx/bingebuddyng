@@ -1,6 +1,6 @@
-import { UserInfo } from './UserInfo';
+import { UserInfoDTO } from './UserInfoDTO';
 import { Invitation } from './Invitation';
 export class InvitationInfo {
     invitation: Invitation;
-    invitingUser: UserInfo;
+    invitingUser: UserInfoDTO;
 }

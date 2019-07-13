@@ -1,5 +1,5 @@
 import { LocationService } from 'src/app/activity/services/location.service';
-import { UserInfo } from '../../../../models/UserInfo';
+import { UserInfoDTO } from '../../../../models/UserInfoDTO';
 import { ActivatedRoute } from '@angular/router';
 import { ActivityDTO } from '../../../../models/ActivityDTO';
 import { ActivityService } from '../../../activity/services/activity.service';
@@ -55,8 +55,8 @@ export class BingemapComponent implements OnInit {
     });
   }
 
-  getUserInfo(a: ActivityDTO): UserInfo {
-    const userInfo: UserInfo = {
+  getUserInfo(a: ActivityDTO): UserInfoDTO {
+    const userInfo: UserInfoDTO = {
         userId: a.userId,
         userName: a.userName
     };

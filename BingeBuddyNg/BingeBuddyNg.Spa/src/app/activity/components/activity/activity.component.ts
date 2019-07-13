@@ -1,5 +1,5 @@
 import { ReactionDialogComponent } from './../reaction-dialog/reaction-dialog.component';
-import { UserInfo } from '../../../../models/UserInfo';
+import { UserInfoDTO } from '../../../../models/UserInfoDTO';
 import { ActivityType } from '../../../../models/ActivityType';
 import { ActivityStatsDTO } from '../../../../models/ActivityStatsDTO';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
@@ -26,8 +26,8 @@ export class ActivityComponent implements OnInit {
   isBusyCommenting = false;
   isCommentVisible = false;
   comment: string;
-  get userInfo(): UserInfo {
-    let userInfo: UserInfo = null;
+  get userInfo(): UserInfoDTO {
+    let userInfo: UserInfoDTO = null;
     if (this.activity && this.activity.activity) {
       userInfo = {
         userId: this.activity.activity.userId,
@@ -43,7 +43,7 @@ export class ActivityComponent implements OnInit {
   activity: ActivityStatsDTO;
 
   @Input()
-  currentUser: UserInfo;
+  currentUser: UserInfoDTO;
 
   @Output()
   commentOpenChanged: EventEmitter<boolean> = new EventEmitter<boolean>();

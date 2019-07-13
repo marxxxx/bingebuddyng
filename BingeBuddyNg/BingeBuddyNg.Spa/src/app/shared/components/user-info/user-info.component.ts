@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
 import { Component, OnInit, Input } from '@angular/core';
-import { UserInfo } from '../../../../models/UserInfo';
+import { UserInfoDTO } from '../../../../models/UserInfoDTO';
 
 @Component({
   selector: 'app-user-info',
@@ -11,7 +11,7 @@ import { UserInfo } from '../../../../models/UserInfo';
 export class UserInfoComponent implements OnInit {
 
   @Input()
-  userInfo: UserInfo;
+  userInfo: UserInfoDTO;
 
   @Input()
   showName: boolean;
