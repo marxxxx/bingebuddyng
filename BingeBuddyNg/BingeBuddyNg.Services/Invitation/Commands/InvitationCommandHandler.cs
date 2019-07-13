@@ -1,17 +1,41 @@
-﻿using System;
-using System.Threading.Tasks;
-using BingeBuddyNg.Services.Activity;
+﻿using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Shared;
+using MediatR;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.Invitation
+namespace BingeBuddyNg.Services.Invitation.Commands
 {
-    public class InvitationService : IInvitationService
+    public class InvitationCommandHandler :
+        IRequestHandler<AcceptInvitationCommand>,
+        IRequestHandler<CreateInvitationCommand, string>
     {
-        private ILogger<InvitationService> logger;
+        private ILogger<InvitationCommandHandler> logger;
+
+        public InvitationCommandHandler(IInvitationRepository invitationRepository,
+            IUserRepository userRepository,
+            INotificationService notificationService,
+            IActivityRepository activityRepository,
+            ITranslationService translationService,
+            IUserStatsRepository userStatsRepository,
+            ILogger<InvitationCommandHandler> logger)
+        {
+            InvitationRepository = invitationRepository ?? throw new ArgumentNullException(nameof(invitationRepository));
+            UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            NotificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+            ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
+            UserStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
+
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
 
         public IInvitationRepository InvitationRepository { get; }
         public IUserRepository UserRepository { get; }
@@ -20,43 +44,13 @@ namespace BingeBuddyNg.Services.Invitation
         public ITranslationService TranslationService { get; }
         public IUserStatsRepository UserStatsRepository { get; }
 
-
-        public InvitationService(IInvitationRepository invitationRepository, IUserRepository userRepository,
-            IUserStatsRepository userStatsRepository,
-            INotificationService notificationService, 
-            IActivityRepository activityRepository,
-            ITranslationService translationService,
-            ILogger<InvitationService> logger)
+        public async Task<Unit> Handle(AcceptInvitationCommand request, CancellationToken cancellationToken)
         {
-            this.InvitationRepository = invitationRepository ?? throw new ArgumentNullException(nameof(invitationRepository));
-            this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            this.UserStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
-            this.NotificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
-            this.ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
-            this.TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        }
-
-        public async Task<InvitationInfo> GetInvitationInfoAsync(string invitationToken)
-        {
-            var invitation = await this.InvitationRepository.GetInvitationAsync(invitationToken);
-            var user = await this.UserRepository.FindUserAsync(invitation.InvitingUserId);
-            if(user == null)
+            var invitation = await this.InvitationRepository.AcceptInvitationAsync(request.AcceptingUserId, request.InvitationToken);
+            if (request.AcceptingUserId != invitation.InvitingUserId)
             {
-                throw new NotFoundException($"Inviting user {invitation.InvitingUserId} not found!");
-            }
-
-            var result = new InvitationInfo(invitation, user.ToUserInfo());
-            return result;
-        }
-
-        public async Task AcceptInvitationAsync(string acceptingUserId, string invitationToken)
-        {
-            var invitation = await this.InvitationRepository.AcceptInvitationAsync(acceptingUserId, invitationToken);
-            if (acceptingUserId != invitation.InvitingUserId)
-            {                
                 var invitingUser = await this.UserRepository.FindUserAsync(invitation.InvitingUserId);
-                var acceptingUser = await this.UserRepository.FindUserAsync(acceptingUserId);
+                var acceptingUser = await this.UserRepository.FindUserAsync(request.AcceptingUserId);
 
                 if (invitingUser != null && acceptingUser != null)
                 {
@@ -72,7 +66,7 @@ namespace BingeBuddyNg.Services.Invitation
 
                     await this.ActivityRepository.AddActivityAsync(notificationActivity);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     // log error
                     logger.LogError($"Error increasing score for user {invitingUser}: {ex}");
@@ -88,6 +82,14 @@ namespace BingeBuddyNg.Services.Invitation
                     this.NotificationService.SendMessage(new[] { invitingUser.PushInfo }, message);
                 }
             }
+
+            return Unit.Value;
+        }
+
+        public async Task<string> Handle(CreateInvitationCommand request, CancellationToken cancellationToken)
+        {
+            var invitationToken = await InvitationRepository.CreateInvitationAsync(request.UserId);
+            return invitationToken;
         }
     }
 }

@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { InvitationInfo } from 'src/models/InvitationInfo';
+import { InvitationDTO } from 'src/models/InvitationInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +13,9 @@ export class InvitationService {
 
   constructor(private http: HttpClient) { }
 
-  getInvitationInfo(invitationToken: string): Observable<InvitationInfo> {
+  getInvitationInfo(invitationToken: string): Observable<InvitationDTO> {
     const url = `${this.baseUrl}/${invitationToken}`;
-    return this.http.get<InvitationInfo>(url);
+    return this.http.get<InvitationDTO>(url);
   }
 
   createInvitation(): Observable<string> {

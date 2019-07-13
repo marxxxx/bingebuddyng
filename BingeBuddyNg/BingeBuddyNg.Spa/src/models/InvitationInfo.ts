@@ -1,6 +1,7 @@
 import { UserInfoDTO } from './UserInfoDTO';
-import { Invitation } from './Invitation';
-export class InvitationInfo {
-    invitation: Invitation;
+
+export class InvitationDTO {
+    invitationToken: string;
+    invitingUserId: string;
     invitingUser: UserInfoDTO;
 }

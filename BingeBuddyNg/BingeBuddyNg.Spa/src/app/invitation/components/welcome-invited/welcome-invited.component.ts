@@ -3,7 +3,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '../../services/invitation.service';
 import { Component, OnInit } from '@angular/core';
-import { InvitationInfo } from 'src/models/InvitationInfo';
+import { InvitationDTO } from 'src/models/InvitationInfo';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -14,7 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class WelcomeInvitedComponent implements OnInit {
 
   invitationToken: string;
-  invitationInfo: InvitationInfo;
+  invitationInfo: InvitationDTO;
   isBusy = false;
 
   constructor(private invitationService: InvitationService,
