@@ -3,15 +3,15 @@ import { ActivityStatsDTO } from '../../../models/ActivityStatsDTO';
 import { AddDrinkActivityDTO } from '../../../models/AddDrinkActivityDTO';
 import { GetActivityFilterArgs } from '../../../models/GetActivityFilterArgs';
 import { ActivityAggregationDTO } from '../../../models/ActivityAggregationDTO';
-import { Activity } from '../../../models/Activity';
+import { ActivityDTO } from '../../../models/ActivityDTO';
 import { Observable } from 'rxjs';
 import { retry } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { AddMessageActivityDTO } from '../../../models/AddMessageActivityDTO';
-import { ReactionDTO } from 'src/models/ReactionDTO';
 import { Location } from 'src/models/Location';
+import { AddReactionDTO } from 'src/models/AddReactionDTO';
 
 @Injectable()
 export class ActivityService {
@@ -28,10 +28,10 @@ export class ActivityService {
     return this.http.get<PagedQueryResult<ActivityStatsDTO>>(url);
   }
 
-  getActivitys(args: GetActivityFilterArgs): Observable<Activity[]> {
-    const url = `${this.baseUrl}/${args.onlyWithLocation}`;
+  getActivitysForMap(): Observable<ActivityDTO[]> {
+    const url = `${this.baseUrl}/GetActivitysForMap`;
 
-    return this.http.get<Activity[]>(url);
+    return this.http.get<ActivityDTO[]>(url);
   }
 
   getActivityAggregation(): Observable<ActivityAggregationDTO[]> {
@@ -49,7 +49,7 @@ export class ActivityService {
     return this.http.post(url, activity).pipe(retry(3));
   }
 
-  addReaction(reaction: ReactionDTO) {
+  addReaction(reaction: AddReactionDTO) {
     const url = `${this.baseUrl}/AddReaction`;
     return this.http.post(url, reaction);
   }

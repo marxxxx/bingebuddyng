@@ -1,4 +1,5 @@
-import { User } from '../../../../models/User';
+import { CreateOrUpdateUserDTO } from './../../../../models/CreateOrUpdateUserDTO';
+import { UserDTO } from '../../../../models/UserDTO';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { SettingsService } from '../../services/settings.service';
@@ -29,7 +30,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   ];
   public currentLanguage = this.settingsService.getLanguage();
   subscriptions: Subscription[] = [];
-  currentUser: User;
+  currentUser: UserDTO;
 
   constructor(
     private translateService: TranslateService,
@@ -37,7 +38,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private authService: AuthService,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ///////////////////////////////////////////////////////
   // functions
@@ -69,7 +70,16 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.settingsService.setLanguage(language.value);
       if (this.currentUser != null) {
         this.currentUser.language = language.value;
-        this.userService.saveUser(this.currentUser).subscribe(_ => console.log('user saved', this.currentUser));
+
+        const request = new CreateOrUpdateUserDTO(
+          this.currentUser.id,
+          this.currentUser.name,
+          this.currentUser.profileImageUrl,
+          this.currentUser.pushInfo,
+          this.currentUser.language
+        );
+
+        this.userService.createOrUpdateUser(request).subscribe(_ => console.log('user saved', this.currentUser));
       }
     } else {
       console.log('SettingsComponent: language unchanged');

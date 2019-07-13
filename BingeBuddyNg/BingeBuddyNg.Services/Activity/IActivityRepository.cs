@@ -12,7 +12,8 @@ namespace BingeBuddyNg.Services.Activity
         Task<Activity> GetActivityAsync(string id);
         Task<Activity> AddActivityAsync(Activity activity);
         Task DeleteActivityAsync(string userId, string id);
-
         Task UpdateActivityAsync(Activity activity);
+
+        Task AddToActivityAddedQueueAsync(string activityId);
     }
 }

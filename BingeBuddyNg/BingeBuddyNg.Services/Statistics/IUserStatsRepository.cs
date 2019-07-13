@@ -6,7 +6,6 @@ namespace BingeBuddyNg.Services.Statistics
     public interface IUserStatsRepository
     {
         Task<List<UserStatistics>> GetStatisticsAsync(IEnumerable<string> userId);
-        Task<UserStatistics> GetStatisticsAsync(string userId);
         Task<List<UserStatistics>> GetScoreStatisticsAsync();
         Task<List<UserStatistics>> GetRankingStatisticsAsync();
         Task SaveStatisticsForUserAsync(UserStatistics userStatistics);

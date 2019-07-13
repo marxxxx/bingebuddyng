@@ -1,4 +1,4 @@
-import { UserStatisticsDto } from './UserStatisticDto';
+import { UserStatisticHistoryDTO } from './UserStatisticHistoryDTO';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -11,8 +11,8 @@ export class StatisticsService {
 
   constructor(private http: HttpClient) { }
 
-  getStatisticsForUser(userId: string): Observable<UserStatisticsDto[]> {
+  getStatisticsForUser(userId: string): Observable<UserStatisticHistoryDTO[]> {
     const url = `${this.baseUrl}/${userId}`;
-    return this.http.get<UserStatisticsDto[]>(url);
+    return this.http.get<UserStatisticHistoryDTO[]>(url);
   }
 }

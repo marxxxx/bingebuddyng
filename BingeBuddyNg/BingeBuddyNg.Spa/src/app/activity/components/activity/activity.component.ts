@@ -1,15 +1,12 @@
 import { ReactionDialogComponent } from './../reaction-dialog/reaction-dialog.component';
-import { UserInfo } from '../../../../models/UserInfo';
+import { UserInfoDTO } from '../../../../models/UserInfoDTO';
 import { ActivityType } from '../../../../models/ActivityType';
 import { ActivityStatsDTO } from '../../../../models/ActivityStatsDTO';
-import { Component, OnInit, Input, ViewChildren, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { ActivityService } from './../../services/activity.service';
-import { ReactionDTO } from '../../../../models/ReactionDTO';
+import { AddReactionDTO } from '../../../../models/AddReactionDTO';
 import { ReactionType } from '../../../../models/ReactionType';
-import { Reaction } from '../../../../models/Reaction';
-import { CommentReaction } from '../../../../models/CommentReaction';
 import { UserService } from 'src/app/core/services/user.service';
-import { MatTooltip } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { ShellInteractionService } from 'src/app/core/services/shell-interaction.service';
 import { filter } from 'rxjs/operators';
@@ -29,8 +26,8 @@ export class ActivityComponent implements OnInit {
   isBusyCommenting = false;
   isCommentVisible = false;
   comment: string;
-  get userInfo(): UserInfo {
-    let userInfo: UserInfo = null;
+  get userInfo(): UserInfoDTO {
+    let userInfo: UserInfoDTO = null;
     if (this.activity && this.activity.activity) {
       userInfo = {
         userId: this.activity.activity.userId,
@@ -46,7 +43,7 @@ export class ActivityComponent implements OnInit {
   activity: ActivityStatsDTO;
 
   @Input()
-  currentUser: UserInfo;
+  currentUser: UserInfoDTO;
 
   @Output()
   commentOpenChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -75,17 +72,23 @@ export class ActivityComponent implements OnInit {
   }
 
   onShowReactions() {
-    this.dialog.open(ReactionDialogComponent, {width: '95%', data: this.activity.activity});
+    this.dialog.open(ReactionDialogComponent, { width: '95%', data: this.activity.activity });
   }
 
-  onLike() {
+  onLike(ev) {
+    ev.stopPropagation();
 
     this.isBusyLiking = true;
-    const reaction = this.createReactionDTO(ReactionType.Like);
+    const reaction = this.createAddReactionDTO(ReactionType.Like);
     this.activityService.addReaction(reaction).subscribe(() => {
       this.isBusyLiking = false;
-      const addedLike = this.createReaction(ReactionType.Like);
-      this.activity.activity.likes.push(addedLike);
+      const addedLike = this.createAddReactionDTO(ReactionType.Like);
+      this.activity.activity.likes.push({
+        type: ReactionType.Like,
+        timestamp: new Date(),
+        userId: this.userInfo.userId,
+        userName: this.userInfo.userName
+      });
     }, e => {
       this.isBusyLiking = false;
       console.error(e);
@@ -94,14 +97,19 @@ export class ActivityComponent implements OnInit {
 
   }
 
-  onCheers() {
-
+  onCheers(ev) {
+    ev.stopPropagation();
     this.isBusyCheering = true;
-    const reaction = this.createReactionDTO(ReactionType.Cheers);
+    const reaction = this.createAddReactionDTO(ReactionType.Cheers);
     this.activityService.addReaction(reaction).subscribe(() => {
       this.isBusyCheering = false;
-      const addedCheers = this.createReaction(ReactionType.Cheers);
-      this.activity.activity.cheers.push(addedCheers);
+      const addedCheers = this.createAddReactionDTO(ReactionType.Cheers);
+      this.activity.activity.cheers.push({
+        type: ReactionType.Cheers,
+        timestamp: new Date(),
+        userId: this.userInfo.userId,
+        userName: this.userInfo.userName
+      });
     }, e => {
       this.isBusyCheering = false;
       console.error(e);
@@ -110,11 +118,16 @@ export class ActivityComponent implements OnInit {
 
   onComment() {
     this.isBusyCommenting = true;
-    const reaction = this.createReactionDTO(ReactionType.Comment, this.comment);
+    const reaction = this.createAddReactionDTO(ReactionType.Comment, this.comment);
     this.activityService.addReaction(reaction).subscribe(() => {
       this.isBusyCommenting = false;
-      const addedComment = this.createCommentReaction(this.comment);
-      this.activity.activity.comments.push(addedComment);
+      this.activity.activity.comments.push({
+        type: ReactionType.Comment,
+        timestamp: new Date(),
+        userId: this.userInfo.userId,
+        userName: this.userInfo.userName,
+        comment: this.comment
+      });
       this.comment = null;
       this.setCommentVisible(false);
     }, e => {
@@ -155,24 +168,13 @@ export class ActivityComponent implements OnInit {
     this.commentOpenChanged.emit(this.isCommentVisible);
   }
 
-  createReactionDTO(type: ReactionType, comment?: string): ReactionDTO {
-    const reaction: ReactionDTO = { activityId: this.activity.activity.id, type: type, comment: comment };
+  createAddReactionDTO(type: ReactionType, comment?: string): AddReactionDTO {
+    const reaction: AddReactionDTO = { activityId: this.activity.activity.id, type: type, comment: comment };
     return reaction;
   }
 
-
-  createReaction(type: ReactionType): Reaction {
-    const reaction: Reaction = {
-      userId: this.currentUser.userId,
-      userName: this.currentUser.userName,
-      timestamp: new Date(),
-      type: type
-    };
-    return reaction;
-  }
-
-  createCommentReaction(comment: string): CommentReaction {
-    const reaction: CommentReaction = this.createReaction(ReactionType.Comment);
+  createAddCommentReaction(comment: string): AddReactionDTO {
+    const reaction: AddReactionDTO = this.createAddReactionDTO(ReactionType.Comment);
     reaction.comment = comment;
     return reaction;
   }

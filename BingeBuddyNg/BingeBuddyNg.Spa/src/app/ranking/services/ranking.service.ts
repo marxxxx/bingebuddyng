@@ -1,9 +1,9 @@
-import { VenueRanking } from '../../../models/VenueRanking';
+import { VenueRankingDTO } from '../../../models/VenueRankingDTO';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
-import { UserRanking } from 'src/models/UserRanking';
+import { UserRankingDTO } from 'src/models/UserRankingDTO';
 
 @Injectable()
 export class RankingService {
@@ -12,18 +12,18 @@ export class RankingService {
 
   constructor(private http: HttpClient) { }
 
-  getRanking(): Observable<UserRanking[]> {
+  getRanking(): Observable<UserRankingDTO[]> {
     const url = `${this.baseUrl}/GetDrinkRanking`;
-    return this.http.get<UserRanking[]>(url);
+    return this.http.get<UserRankingDTO[]>(url);
   }
 
-  getScores(): Observable<UserRanking[]> {
+  getScores(): Observable<UserRankingDTO[]> {
     const url = `${this.baseUrl}/GetScoreRanking`;
-    return this.http.get<UserRanking[]>(url);
+    return this.http.get<UserRankingDTO[]>(url);
   }
 
-  getVenueRanking(): Observable<VenueRanking[]> {
+  getVenueRanking(): Observable<VenueRankingDTO[]> {
     const url = `${this.baseUrl}/GetVenueRanking`;
-    return this.http.get<VenueRanking[]>(url);
+    return this.http.get<VenueRankingDTO[]>(url);
   }
 }

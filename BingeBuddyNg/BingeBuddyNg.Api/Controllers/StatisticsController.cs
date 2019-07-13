@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Api.Dto;
 using BingeBuddyNg.Services.Statistics;
+using BingeBuddyNg.Services.Statistics.Querys;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -14,20 +16,18 @@ namespace BingeBuddyNg.Api.Controllers
     {
         private ILogger<StatisticsController> logger;
 
-        public IUserStatsHistoryRepository UserStatsHistoryRepository { get; }
-
+        public IMediator Mediator { get; }
         
-        public StatisticsController(IUserStatsHistoryRepository userStatsHistoryRepository, ILogger<StatisticsController> logger)
+        public StatisticsController(IMediator mediator, ILogger<StatisticsController> logger)
         {
-            UserStatsHistoryRepository = userStatsHistoryRepository ?? throw new ArgumentNullException(nameof(userStatsHistoryRepository));
+            Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         [HttpGet("{userId}")]
-        public async Task<IEnumerable<UserStatisticDto>> GetStatisticHistoryForUser(string userId)
+        public async Task<IEnumerable<UserStatisticHistoryDTO>> GetStatisticHistoryForUser(string userId)
         {
-            var history = await this.UserStatsHistoryRepository.GetStatisticHistoryForUserAsync(userId);
-            var result = history.Select(h => new UserStatisticDto(h.Timestamp, h.CurrentAlcLevel)).ToList();
+            var result = await Mediator.Send(new GetStatisticHistoryForUserQuery(userId));
             return result;
         }
     }

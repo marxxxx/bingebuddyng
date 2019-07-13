@@ -1,5 +1,5 @@
 import { UserProfile } from './../models/UserProfile';
-import { User } from '../models/User';
+import { UserDTO } from '../models/UserDTO';
 import { UserService } from './core/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from './core/services/auth.service';
@@ -12,6 +12,7 @@ import { Subscription, forkJoin, combineLatest, Observable, from } from 'rxjs';
 import { InvitationService } from './invitation/services/invitation.service';
 import { SettingsService } from './core/services/settings.service';
 import { filter } from 'rxjs/operators';
+import { CreateOrUpdateUserDTO } from 'src/models/CreateOrUpdateUserDTO';
 
 @Component({
   selector: 'app-root',
@@ -142,18 +143,17 @@ export class AppComponent implements OnInit, OnDestroy {
 
   registerUser(pushInfo: PushInfo) {
     // register user
-    const user: User = {
-      id: this.userProfile.sub,
-      name: this.userProfile.nickname,
-      profileImageUrl: this.userProfile.picture,
-      pushInfo: pushInfo,
-      language: this.userLanguage
-    };
+    const user = new CreateOrUpdateUserDTO(
+      this.userProfile.sub,
+      this.userProfile.nickname,
+      this.userProfile.picture,
+      pushInfo,
+      this.userLanguage);
 
     console.log('registering user ...');
     console.log(user);
     this.userService
-      .saveUser(user)
+      .createOrUpdateUser(user)
       .subscribe(() => console.log('user registration completed'), e => console.error('error registering user info', e));
   }
 }

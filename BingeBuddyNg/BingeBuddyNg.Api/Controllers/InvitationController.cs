@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Invitation;
+using BingeBuddyNg.Services.Invitation.Commands;
+using BingeBuddyNg.Services.Invitation.Querys;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace BingeBuddyNg.Api.Controllers
 {
@@ -15,25 +16,20 @@ namespace BingeBuddyNg.Api.Controllers
     [Route("api/[controller]")]
     public class InvitationController : Controller
     {
-
         public IIdentityService IdentityService { get; }
-        public IInvitationRepository InvitationRepository { get; }
-        public IInvitationService InvitationService { get; set; }
+        public IMediator Mediator { get; }
         
-        public InvitationController(IIdentityService identityService, 
-            IInvitationService invitationService,
-            IInvitationRepository invitationRepository)
+        public InvitationController(IIdentityService identityService, IMediator mediator)
         {
             IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
-            InvitationService = invitationService ?? throw new ArgumentNullException(nameof(InvitationService));
-            InvitationRepository = invitationRepository ?? throw new ArgumentNullException(nameof(invitationRepository));
+            Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         [AllowAnonymous]
         [HttpGet("{invitationToken}")]
-        public async Task<InvitationInfo> GetInvitation(string invitationToken)
+        public async Task<InvitationDTO> GetInvitation(string invitationToken)
         {
-            var result = await InvitationService.GetInvitationInfoAsync(invitationToken);
+            var result = await Mediator.Send(new GetInvitationQuery(invitationToken));
             return result;
         }
 
@@ -41,7 +37,7 @@ namespace BingeBuddyNg.Api.Controllers
         public async Task<ActionResult> CreateInvitation()
         {
             var userId = IdentityService.GetCurrentUserId();
-            var invitationToken = await InvitationRepository.CreateInvitationAsync(userId);
+            var invitationToken = await Mediator.Send(new CreateInvitationCommand(userId));
             return Json(invitationToken);
         }
 
@@ -49,7 +45,7 @@ namespace BingeBuddyNg.Api.Controllers
         public async Task AcceptInvitation(string invitationToken)
         {
             var userId = IdentityService.GetCurrentUserId();
-            await InvitationService.AcceptInvitationAsync(userId, invitationToken);
+            await Mediator.Send(new AcceptInvitationCommand(userId, invitationToken));
         }
         
     }

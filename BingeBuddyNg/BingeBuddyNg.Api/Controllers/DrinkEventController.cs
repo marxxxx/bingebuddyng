@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Services.DrinkEvent;
 using BingeBuddyNg.Services.Infrastructure;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace BingeBuddyNg.Api.Controllers
 {
     [Authorize]

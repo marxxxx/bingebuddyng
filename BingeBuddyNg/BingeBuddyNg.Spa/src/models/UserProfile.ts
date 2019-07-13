@@ -1,4 +1,4 @@
-import { UserInfo } from './UserInfo';
+import { UserInfoDTO } from './UserInfoDTO';
 
 export class UserProfile {
     family_name: string;
@@ -9,7 +9,7 @@ export class UserProfile {
     sub: string;
     updated_at: any;
 
-    toUserInfo(): UserInfo {
+    toUserInfo(): UserInfoDTO {
         return { userId: this.sub, userName: this.nickname };
     }
 }

@@ -1,8 +1,8 @@
-import { UserRanking } from '../../../../models/UserRanking';
+import { UserRankingDTO } from '../../../../models/UserRankingDTO';
 import { RankingService } from '../../services/ranking.service';
 import { Component, OnInit } from '@angular/core';
 import { forkJoin } from 'rxjs';
-import { VenueRanking } from 'src/models/VenueRanking';
+import { VenueRankingDTO } from 'src/models/VenueRankingDTO';
 import { ShellInteractionService } from 'src/app/core/services/shell-interaction.service';
 
 @Component({
@@ -13,9 +13,9 @@ import { ShellInteractionService } from 'src/app/core/services/shell-interaction
 export class RankingComponent implements OnInit {
 
   isBusy = false;
-  ranking: UserRanking[];
-  score: UserRanking[];
-  venueRanking: VenueRanking[];
+  ranking: UserRankingDTO[];
+  score: UserRankingDTO[];
+  venueRanking: VenueRankingDTO[];
 
   constructor(private rankingService: RankingService,
     private shellInteractionService: ShellInteractionService) { }

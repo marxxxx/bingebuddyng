@@ -1,10 +1,10 @@
 import { Subscription, forkJoin, combineLatest } from 'rxjs';
-import { FriendRequestInfo } from '../../../../models/FriendRequestInfo';
+import { FriendRequestDTO } from '../../../../models/FriendRequestDTO';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../core/services/auth.service';
-import { UserInfo } from '../../../../models/UserInfo';
-import { User } from '../../../../models/User';
+import { UserInfoDTO } from '../../../../models/UserInfoDTO';
+import { UserDTO } from '../../../../models/UserDTO';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService } from '../../../core/services/user.service';
 import { FriendRequestService } from '../../../core/services/friendrequest.service';
@@ -22,9 +22,9 @@ export class DrinkersComponent implements OnInit, OnDestroy {
   isBusy = false;
   filterText = null;
   currentUserId: string;
-  currentUser: User;
-  users: UserInfo[];
-  pendingRequests: FriendRequestInfo[] = [];
+  currentUser: UserDTO;
+  users: UserInfoDTO[];
+  pendingRequests: FriendRequestDTO[] = [];
   subs: Subscription[] = [];
 
   constructor(
@@ -79,25 +79,25 @@ export class DrinkersComponent implements OnInit, OnDestroy {
     }
   }
 
-  isYourFriend(u: UserInfo): boolean {
+  isYourFriend(u: UserInfoDTO): boolean {
     return this.currentUser && this.currentUser.friends.findIndex(f => f.userId === u.userId) >= 0;
   }
 
-  isYou(u: UserInfo): boolean {
+  isYou(u: UserInfoDTO): boolean {
     return this.currentUser && this.currentUser.id === u.userId;
   }
 
-  hasPendingRequest(u: UserInfo): boolean {
+  hasPendingRequest(u: UserInfoDTO): boolean {
     return this.pendingRequests.findIndex(r => r.requestingUser.userId === u.userId ||
       r.friendUser.userId === u.userId) >= 0;
   }
-  onSendFriendRequest(u: UserInfo) {
+  onSendFriendRequest(u: UserInfoDTO) {
 
     (<any>u).isBusy = true;
 
     this.friendRequests.addFriendRequest(u.userId).subscribe(r => {
       (<any>u).isBusy = false;
-      const request: FriendRequestInfo = {
+      const request: FriendRequestDTO = {
         friendUser: u,
         requestingUser:
         {

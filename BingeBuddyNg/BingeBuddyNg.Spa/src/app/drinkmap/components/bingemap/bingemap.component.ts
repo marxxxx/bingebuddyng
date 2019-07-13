@@ -1,7 +1,7 @@
 import { LocationService } from 'src/app/activity/services/location.service';
-import { UserInfo } from '../../../../models/UserInfo';
+import { UserInfoDTO } from '../../../../models/UserInfoDTO';
 import { ActivatedRoute } from '@angular/router';
-import { Activity } from '../../../../models/Activity';
+import { ActivityDTO } from '../../../../models/ActivityDTO';
 import { ActivityService } from '../../../activity/services/activity.service';
 import { Location } from '../../../../models/Location';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -18,7 +18,7 @@ export class BingemapComponent implements OnInit {
   selectedActivityId: string;
   location: Location;
   isBusy = false;
-  activitys: Activity[] = [];
+  activitys: ActivityDTO[] = [];
 
   @ViewChild('AgmMap', { static: true }) agmMap: any;
 
@@ -42,7 +42,7 @@ export class BingemapComponent implements OnInit {
 
   load() {
     this.isBusy = true;
-    this.activityService.getActivitys({ onlyWithLocation: true }).subscribe(d => {
+    this.activityService.getActivitysForMap().subscribe(d => {
       this.activitys = d;
       this.isBusy = false;
 
@@ -55,8 +55,8 @@ export class BingemapComponent implements OnInit {
     });
   }
 
-  getUserInfo(a: Activity): UserInfo {
-    const userInfo: UserInfo = {
+  getUserInfo(a: ActivityDTO): UserInfoDTO {
+    const userInfo: UserInfoDTO = {
         userId: a.userId,
         userName: a.userName
     };

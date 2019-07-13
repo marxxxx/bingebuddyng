@@ -15,6 +15,8 @@ using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.Venue;
 using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Statistics;
+using MediatR;
+using System.Reflection;
 
 namespace BingeBuddyNg.Api
 {
@@ -33,6 +35,8 @@ namespace BingeBuddyNg.Api
             services.AddSingleton(appConfiguration);
             services.AddLogging();
 
+            services.AddMediatR(typeof(Activity).Assembly);
+
             // Add Application Services
             services.AddSingleton<StorageAccessService>();
             services.AddSingleton<IStorageAccessService, StorageAccessService>();
@@ -45,20 +49,13 @@ namespace BingeBuddyNg.Api
             services.AddScoped<IFriendRequestRepository, FriendRequestRepository>();
             services.AddScoped<IInvitationRepository, InvitationRepository>();
 
-            services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<INotificationService, NotificationService>();
-            services.AddScoped<IFriendRequestService, FriendRequestService>();
-            services.AddScoped<IUserRankingService, UserRankingService>();
-            services.AddScoped<IInvitationService, InvitationService>();
             services.AddScoped<IDrinkEventRepository, DrinkEventRepository>();
 
-            services.AddScoped<IVenueService, VenueService>();
             services.AddScoped<IVenueUserRepository, VenueUserRepository>();
-            services.AddScoped<IVenueRankingService, VenueRankingService>();
 
             services.AddScoped<IDrinkRepository, DrinkRepository>();
             services.AddScoped<IUserStatsHistoryRepository, UserStatsHistoryRepository>();
-            services.AddScoped<IUserService, UserService>();
         }
     }
 }

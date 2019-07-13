@@ -7,8 +7,6 @@ using BingeBuddyNg.Services.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace BingeBuddyNg.Api.Controllers
 {
     [Authorize]
@@ -24,7 +22,6 @@ namespace BingeBuddyNg.Api.Controllers
         public IDrinkRepository DrinkRepository { get; }
         public IIdentityService IdentityService { get; }
 
-        // GET: api/<controller>
         [HttpGet]
         public async Task<IEnumerable<Drink>> Get()
         {
@@ -39,18 +36,13 @@ namespace BingeBuddyNg.Api.Controllers
             return await this.DrinkRepository.GetDrinkAsync(userId, drinkId);
         }
 
-
-        // POST api/<controller>
         [HttpPost]
-        public async Task Post([FromBody]IEnumerable<Drink> drinks)
+        public async Task SaveDrink([FromBody]IEnumerable<Drink> drinks)
         {
             var userId = this.IdentityService.GetCurrentUserId();
             await this.DrinkRepository.SaveDrinksAsync(userId, drinks);
         }
 
-     
-
-        // DELETE api/<controller>/5
         [HttpDelete("{drinkId}")]
         public async Task Delete(string drinkId)
         {

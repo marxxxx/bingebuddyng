@@ -1,9 +1,13 @@
-﻿namespace BingeBuddyNg.Services.Activity
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace BingeBuddyNg.Services.Activity
 {
     public class ReactionDTO
     {
-        public ReactionType Type { get; set; }
-        public string ActivityId { get; set; }
-        public string Comment { get; set; }
+        public DateTime Timestamp { get; set; }
+        public string UserId { get; set; }
+        public string UserName { get; set; }
     }
 }

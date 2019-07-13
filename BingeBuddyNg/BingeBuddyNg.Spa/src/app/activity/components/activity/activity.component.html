@@ -87,7 +87,7 @@
     <div fxLayout fxLayoutAlign="space-between center" class="actions" (click)="onShowReactions()">
       <div fxLayout>
         <!-- Like -->
-        <button *ngIf="!isBusyLiking" [disabled]="!currentUser || isLikedByMe()" mat-icon-button (click)="onLike()">
+        <button *ngIf="!isBusyLiking" [disabled]="!currentUser || isLikedByMe()" mat-icon-button (click)="onLike($event)">
           <mat-icon>thumb_up</mat-icon>
         </button>
 
@@ -98,7 +98,7 @@
 
         <!-- Cheers -->
         <button *ngIf="!isBusyCheering" [disabled]="!currentUser || isCheeredByMe()"
-          mat-icon-button (click)="onCheers()">
+          mat-icon-button (click)="onCheers($event)">
           <img src="../../assets/img/beer.png" />
         </button>
 

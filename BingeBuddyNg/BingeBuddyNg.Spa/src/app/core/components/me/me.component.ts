@@ -1,4 +1,4 @@
-import { UserInfo } from '../../../../models/UserInfo';
+import { UserInfoDTO } from '../../../../models/UserInfoDTO';
 import { AuthService } from '../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -11,7 +11,7 @@ import { map, filter } from 'rxjs/operators';
 })
 export class MeComponent implements OnInit {
 
-  userInfo$: Observable<UserInfo>;
+  userInfo$: Observable<UserInfoDTO>;
 
   constructor(private authService: AuthService) { }
 

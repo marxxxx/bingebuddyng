@@ -38,15 +38,15 @@ namespace BingeBuddyNg.Services.FriendsRequest
         }
 
 
-        public async Task<List<FriendRequestInfo>> GetFriendRequestsAsync(string userId)
+        public async Task<List<FriendRequestDTO>> GetFriendRequestsAsync(string userId)
         {
             var whereClause = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId);
             
             var queryResult = await this.StorageAccesService.QueryTableAsync<FriendRequestEntity>(TableName, whereClause);
 
-            var result = queryResult.Select(r => new FriendRequestInfo(
-                new UserInfo(r.RequestingUserId, r.RequestingUserName),
-                new UserInfo(r.FriendUserId, r.FriendUserName))).ToList();
+            var result = queryResult.Select(r => new FriendRequestDTO(
+                new UserInfoDTO(r.RequestingUserId, r.RequestingUserName),
+                new UserInfoDTO(r.FriendUserId, r.FriendUserName))).ToList();
             return result;
         }
 

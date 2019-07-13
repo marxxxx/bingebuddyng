@@ -1,3 +1,4 @@
+import { CreateOrUpdateUserDTO } from 'src/models/CreateOrUpdateUserDTO';
 import { UserService } from 'src/app/core/services/user.service';
 import { Injectable } from '@angular/core';
 import * as auth0 from 'auth0-js';
@@ -5,7 +6,7 @@ import { Router } from '@angular/router';
 import { UserProfile } from '../../../models/UserProfile';
 import { BehaviorSubject, Observable, Subscription, of, timer } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { User } from 'src/models/User';
+import { UserDTO } from 'src/models/UserDTO';
 import { SettingsService } from './settings.service';
 
 
@@ -109,13 +110,12 @@ export class AuthService {
           // FIX SOON PLEASE!!
 
           // register user
-          const user: User = {
-            id: this.userProfile.sub,
-            name: this.userProfile.nickname,
-            profileImageUrl: this.userProfile.picture
-          };
+          const request = new CreateOrUpdateUserDTO(
+            this.userProfile.sub,
+            this.userProfile.nickname,
+            this.userProfile.picture);
 
-          this.userService.saveUser(user).subscribe(ru => cb(null, profile));
+          this.userService.createOrUpdateUser(request).subscribe(ru => cb(null, profile));
         });
       } else {
         cb(err, profile);
