@@ -1,7 +1,7 @@
 import { UserStatistics } from './UserStatistics';
 import { UserInfoDTO } from './UserInfoDTO';
 
-export class UserRanking {
+export class UserRankingDTO {
     user: UserInfoDTO;
     statistics: UserStatistics;
 }

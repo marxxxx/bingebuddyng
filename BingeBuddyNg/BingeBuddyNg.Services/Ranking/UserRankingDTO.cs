@@ -4,19 +4,19 @@ using System;
 
 namespace BingeBuddyNg.Services.Ranking
 {
-    public class UserRanking
+    public class UserRankingDTO
     {
-        public UserRanking()
+        public UserRankingDTO()
         {
         }
 
-        public UserRanking(UserInfo user, UserStatistics statistics)
+        public UserRankingDTO(UserInfoDTO user, UserStatistics statistics)
         {
             User = user ?? throw new ArgumentNullException(nameof(user));
             Statistics = statistics ?? throw new ArgumentNullException(nameof(statistics));
         }
 
-        public UserInfo User { get; set; }
+        public UserInfoDTO User { get; set; }
         public UserStatistics Statistics { get; set; }
 
         public override string ToString()

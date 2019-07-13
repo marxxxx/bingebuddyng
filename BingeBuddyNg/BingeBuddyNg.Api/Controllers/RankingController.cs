@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.Ranking;
+using BingeBuddyNg.Services.Ranking.Querys;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Ranking;
-using BingeBuddyNg.Services.User;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace BingeBuddyNg.Api.Controllers
 {
@@ -15,35 +15,33 @@ namespace BingeBuddyNg.Api.Controllers
     [Route("api/[controller]")]
     public class RankingController : Controller
     {
-        public IUserRankingService RankingService { get; }
         public IIdentityService IdentityService { get; set; }
-        public IVenueRankingService VenueRankingService { get; set; }
+        public IMediator Mediator { get; }
 
-        public RankingController(IIdentityService identityService, IUserRankingService rankingService, IVenueRankingService venueRankingService)
+        public RankingController(IIdentityService identityService, IMediator mediator)
         {
             this.IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
-            this.RankingService = rankingService ?? throw new ArgumentNullException(nameof(rankingService));
-            this.VenueRankingService = venueRankingService ?? throw new ArgumentNullException(nameof(venueRankingService));
+            this.Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         [HttpGet("[action]")]
-        public async Task<List<UserRanking>> GetDrinkRanking()
+        public async Task<List<UserRankingDTO>> GetDrinkRanking()
         {
-            var result = await this.RankingService.GetDrinksRankingAsync();
+            var result = await this.Mediator.Send(new GetDrinksRankingQuery());
             return result;
         }
 
         [HttpGet("[action]")]
-        public async Task<List<UserRanking>> GetScoreRanking()
+        public async Task<List<UserRankingDTO>> GetScoreRanking()
         {
-            var result = await this.RankingService.GetScoreRankingAsync();
+            var result = await this.Mediator.Send(new GetScoreRankingQuery());
             return result;
         }
 
         [HttpGet("[action]")]
-        public async Task<IEnumerable<VenueRanking>> GetVenueRanking()
+        public async Task<IEnumerable<VenueRankingDTO>> GetVenueRanking()
         {
-            var result = await this.VenueRankingService.GetVenueRankingAsync();
+            var result = await this.Mediator.Send(new GetVenueRankingQuery());
             return result;
         }
     }

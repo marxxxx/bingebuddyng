@@ -1,4 +1,4 @@
-export class VenueRanking {
+export class VenueRankingDTO {
     venueId: string;
     name: string;
     count: number;

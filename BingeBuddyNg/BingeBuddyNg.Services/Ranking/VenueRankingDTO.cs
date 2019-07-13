@@ -4,13 +4,13 @@ using System.Text;
 
 namespace BingeBuddyNg.Services.Ranking
 {
-    public class VenueRanking
+    public class VenueRankingDTO
     {
-        public VenueRanking()
+        public VenueRankingDTO()
         {
         }
 
-        public VenueRanking(string venueId, string name, int count)
+        public VenueRankingDTO(string venueId, string name, int count)
         {
             VenueId = venueId ?? throw new ArgumentNullException(nameof(venueId));
             Name = name ?? throw new ArgumentNullException(nameof(name));
