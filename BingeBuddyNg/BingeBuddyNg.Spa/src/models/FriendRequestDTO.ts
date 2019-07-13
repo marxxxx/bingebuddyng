@@ -1,5 +1,5 @@
 import { UserInfoDTO } from './UserInfoDTO';
-export class FriendRequestInfo {
+export class FriendRequestDTO {
     requestingUser: UserInfoDTO;
     friendUser: UserInfoDTO;
 }

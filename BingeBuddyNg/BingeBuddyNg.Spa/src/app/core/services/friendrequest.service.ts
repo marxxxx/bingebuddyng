@@ -1,4 +1,4 @@
-import { FriendRequestInfo } from '../../../models/FriendRequestInfo';
+import { FriendRequestDTO } from '../../../models/FriendRequestDTO';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
@@ -11,8 +11,8 @@ export class FriendRequestService {
 
     constructor(private http: HttpClient) { }
 
-    getPendingFriendRequests(): Observable<FriendRequestInfo[]> {
-        return this.http.get<FriendRequestInfo[]>(this.baseUrl);
+    getPendingFriendRequests(): Observable<FriendRequestDTO[]> {
+        return this.http.get<FriendRequestDTO[]>(this.baseUrl);
     }
 
     hasPendingFriendRequests(userId: string): Observable<boolean> {

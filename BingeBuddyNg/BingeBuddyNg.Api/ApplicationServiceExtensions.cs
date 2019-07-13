@@ -50,7 +50,6 @@ namespace BingeBuddyNg.Api
             services.AddScoped<IInvitationRepository, InvitationRepository>();
 
             services.AddScoped<INotificationService, NotificationService>();
-            services.AddScoped<IFriendRequestService, FriendRequestService>();
             services.AddScoped<IUserRankingService, UserRankingService>();
             services.AddScoped<IInvitationService, InvitationService>();
             services.AddScoped<IDrinkEventRepository, DrinkEventRepository>();

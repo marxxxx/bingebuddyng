@@ -1,6 +1,6 @@
 import { StateService } from '../../services/state.service';
 import { ShellIconInfo } from '../../../../models/ShellIconInfo';
-import { FriendRequestInfo } from '../../../../models/FriendRequestInfo';
+import { FriendRequestDTO } from '../../../../models/FriendRequestDTO';
 import { FriendRequestService } from '../../services/friendrequest.service';
 import { ShellInteractionService } from '../../services/shell-interaction.service';
 import { AuthService } from '../../services/auth.service';
@@ -21,7 +21,7 @@ export class NavShellComponent implements OnInit, OnDestroy {
 
     private subscriptions: Subscription[] = [];
     private currentUserId: string;
-    friendRequests: FriendRequestInfo[] = [];
+    friendRequests: FriendRequestDTO[] = [];
 
 
     @ViewChild(MatSidenav, { static: true })

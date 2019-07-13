@@ -3,20 +3,20 @@ using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Services.FriendsRequest
 {
-    public class FriendRequestInfo
+    public class FriendRequestDTO
     {
-        public FriendRequestInfo()
+        public FriendRequestDTO()
         {
         }
 
-        public FriendRequestInfo(UserInfo requestingUser, UserInfo friendUser)
+        public FriendRequestDTO(UserInfoDTO requestingUser, UserInfoDTO friendUser)
         {
             RequestingUser = requestingUser ?? throw new ArgumentNullException(nameof(requestingUser));
             FriendUser = friendUser ?? throw new ArgumentNullException(nameof(friendUser));
         }
 
-        public UserInfo RequestingUser { get; set; }
-        public UserInfo FriendUser { get; set; }
+        public UserInfoDTO RequestingUser { get; set; }
+        public UserInfoDTO FriendUser { get; set; }
 
         public override string ToString()
         {

@@ -1,5 +1,5 @@
 import { Subscription, forkJoin, combineLatest } from 'rxjs';
-import { FriendRequestInfo } from '../../../../models/FriendRequestInfo';
+import { FriendRequestDTO } from '../../../../models/FriendRequestDTO';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../core/services/auth.service';
@@ -24,7 +24,7 @@ export class DrinkersComponent implements OnInit, OnDestroy {
   currentUserId: string;
   currentUser: UserDTO;
   users: UserInfoDTO[];
-  pendingRequests: FriendRequestInfo[] = [];
+  pendingRequests: FriendRequestDTO[] = [];
   subs: Subscription[] = [];
 
   constructor(
@@ -97,7 +97,7 @@ export class DrinkersComponent implements OnInit, OnDestroy {
 
     this.friendRequests.addFriendRequest(u.userId).subscribe(r => {
       (<any>u).isBusy = false;
-      const request: FriendRequestInfo = {
+      const request: FriendRequestDTO = {
         friendUser: u,
         requestingUser:
         {
