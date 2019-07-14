@@ -12,6 +12,7 @@ import { InvitationService } from './invitation/services/invitation.service';
 import { SettingsService } from './@core/services/settings.service';
 import { filter } from 'rxjs/operators';
 import { CreateOrUpdateUserDTO } from 'src/models/CreateOrUpdateUserDTO';
+import { credentials } from 'src/environments/credentials';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,6 @@ import { CreateOrUpdateUserDTO } from 'src/models/CreateOrUpdateUserDTO';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  readonly vapidPublicKey = 'BP7M6mvrmwidRr7II8ewUIRSg8n7_mKAlWagRziRRluXnMc_d_rPUoVWGHb79YexnD0olGIFe_xackYqe1fmoxo';
   private pushInfo: PushInfo;
   private sub: Subscription;
   private userProfile: UserProfile;
@@ -58,7 +58,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.auth.currentUserProfile$.pipe(filter(userProfile => userProfile != null)),
       from(this.pushService
         .requestSubscription({
-          serverPublicKey: this.vapidPublicKey
+          serverPublicKey: credentials.vapidPublicKey
         }))
     ]).subscribe(r => {
       console.log('ngOnInit - got user and subscription', r);
