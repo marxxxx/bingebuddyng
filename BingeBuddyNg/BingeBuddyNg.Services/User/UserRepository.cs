@@ -17,10 +17,12 @@ namespace BingeBuddyNg.Services.User
         private const string PartitionKeyValue = "User";
 
         public StorageAccessService StorageAccess { get; }
+        public ICacheService CacheService { get; }
 
-        public UserRepository(StorageAccessService storageAccess)
+        public UserRepository(StorageAccessService storageAccess, ICacheService cacheService)
         {
             this.StorageAccess = storageAccess ?? throw new ArgumentNullException(nameof(storageAccess));
+            this.CacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
         }
                 
 
@@ -39,15 +41,22 @@ namespace BingeBuddyNg.Services.User
 
         private async Task<JsonTableEntity<User>> FindUserEntityAsync(string id)
         {
-            var table = StorageAccess.GetTableReference(TableName);
+            var result = await CacheService.GetOrCreateAsync<JsonTableEntity<User>>(GetUserCacheKey(id), async () =>
+            {
+                var table = StorageAccess.GetTableReference(TableName);
 
-            TableOperation retrieveOperation = TableOperation.Retrieve<JsonTableEntity<User>>(PartitionKeyValue, id);
+                TableOperation retrieveOperation = TableOperation.Retrieve<JsonTableEntity<User>>(PartitionKeyValue, id);
 
-            var result = await table.ExecuteAsync(retrieveOperation);
+                var userResult = await table.ExecuteAsync(retrieveOperation);
 
-            return result?.Result as JsonTableEntity<User>;
+                return userResult?.Result as JsonTableEntity<User>;
+            }, TimeSpan.FromMinutes(1));
+
+            return result;
         }
 
+        private string GetUserCacheKey(string userId) => $"User:{userId}";
+        
 
         public async Task<CreateOrUpdateUserResult> CreateOrUpdateUserAsync(CreateOrUpdateUserCommand request)
         {
@@ -79,6 +88,8 @@ namespace BingeBuddyNg.Services.User
                 }
 
                 saveUserOperation = TableOperation.Replace(savedUser);
+
+                CacheService.Remove(GetUserCacheKey(request.UserId));
             }
             else
             {
@@ -110,7 +121,9 @@ namespace BingeBuddyNg.Services.User
             
             TableOperation saveUserOperation = TableOperation.Replace(userEntity);
 
-            await table.ExecuteAsync(saveUserOperation);            
+            await table.ExecuteAsync(saveUserOperation);
+
+            CacheService.Remove(GetUserCacheKey(user.Id));
         }
 
         public async Task<List<User>> GetUsersAsync(IEnumerable<string> userIds = null)

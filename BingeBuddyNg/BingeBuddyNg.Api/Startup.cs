@@ -27,6 +27,8 @@ namespace BingeBuddyNg.Api
 
             services.AddCors();
 
+            services.AddMemoryCache();
+
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {

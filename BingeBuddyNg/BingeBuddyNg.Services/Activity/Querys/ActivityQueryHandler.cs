@@ -33,9 +33,8 @@ namespace BingeBuddyNg.Services.Activity.Querys
         {
             var callingUser = await this.UserRepository.FindUserAsync(request.UserId);
 
-            // TODO: Use Constant for Page Size
             var visibleUserIds = callingUser.GetVisibleFriendUserIds();
-            var activities = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(visibleUserIds, request.ContinuationToken));
+            var activities = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(request.UserId, visibleUserIds, request.ContinuationToken));
 
             var userIds = activities.ResultPage.Select(a => a.UserId).Distinct();
             var userStats = await this.UserStatsRepository.GetStatisticsAsync(userIds);
@@ -82,7 +81,7 @@ namespace BingeBuddyNg.Services.Activity.Querys
 
         public async Task<List<ActivityDTO>> Handle(GetActivitysForMapQuery request, CancellationToken cancellationToken)
         {
-            var result = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(ActivityFilterOptions.WithLocation, pageSize: 50));
+            var result = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(request.UserId, ActivityFilterOptions.WithLocation, pageSize: 50));
             return result.ResultPage?.Select(a=> Converter.ConvertActivityToDto(a)).ToList();
         }
 

@@ -16,14 +16,35 @@ namespace BingeBuddyNg.Services.Activity
         private static readonly DateTime MaxTimestamp = new DateTime(2100, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         public StorageAccessService StorageAccessService { get; }
+        public ICacheService CacheService { get; }
 
-        public ActivityRepository(StorageAccessService storageAccessService)
+        public ActivityRepository(StorageAccessService storageAccessService, ICacheService cacheService)
         {
             this.StorageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
+            this.CacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
+        }
+
+        public async Task<PagedQueryResult<Activity>> GetActivityFeedAsync(GetActivityFilterArgs args)
+        {
+            if (ShouldTryGetCachedActivityFeed(args))
+            {
+                return await CacheService.GetOrCreateAsync(GetActivityCacheKey(args.CallingUserId), () => InternalGetActivityFeedAsync(args), TimeSpan.FromMinutes(1));
+            }
+            else
+            {
+                return await InternalGetActivityFeedAsync(args);
+            }
         }
 
 
-        public async Task<PagedQueryResult<Activity>> GetActivityFeedAsync(GetActivityFilterArgs args)
+        private bool ShouldTryGetCachedActivityFeed(GetActivityFilterArgs args)
+        {
+            return args.FilterOptions == ActivityFilterOptions.None && args.ContinuationToken == null && !string.IsNullOrEmpty(args.CallingUserId);
+        }
+
+        private string GetActivityCacheKey(string userId) => $"Activity:{userId}";
+
+        private async Task<PagedQueryResult<Activity>> InternalGetActivityFeedAsync(GetActivityFilterArgs args)
         {
             string currentPartition = GetPartitionKey(DateTime.UtcNow);
             string previousPartition = GetPartitionKey(DateTime.UtcNow.AddDays(-(DateTime.UtcNow.Day + 1)));
@@ -54,10 +75,10 @@ namespace BingeBuddyNg.Services.Activity
             if (args.UserIds != null && args.UserIds.Any())
             {
                 string userWhereClause = null;
-                foreach(var userId in args.UserIds)
+                foreach (var userId in args.UserIds)
                 {
                     var userCondition = TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.UserId), QueryComparisons.Equal, userId);
-                    if(userWhereClause == null)
+                    if (userWhereClause == null)
                     {
                         userWhereClause = userCondition;
                     }
@@ -70,13 +91,14 @@ namespace BingeBuddyNg.Services.Activity
                 whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And, userWhereClause);
             }
 
-          
+
 
             var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityTableName, whereClause, args.PageSize, args.ContinuationToken);
 
             List<Activity> resultActivitys = ConvertActivities(result.ResultPage).ToList();
             return new PagedQueryResult<Activity>(resultActivitys, result.ContinuationToken);
         }
+
 
         private List<Activity> ConvertActivities(IEnumerable<ActivityTableEntity> result)
         {
@@ -108,8 +130,6 @@ namespace BingeBuddyNg.Services.Activity
             return activitys;
         }
 
-
-
         public async Task<Activity> AddActivityAsync(Activity activity)
         {
             var activityTable = this.StorageAccessService.GetTableReference(ActivityTableName);
@@ -129,6 +149,9 @@ namespace BingeBuddyNg.Services.Activity
             await perUserActivityTable.ExecuteAsync(perUserOperation);
 
             activity.Id = activityFeedRowKey;
+
+            CacheService.Remove(GetActivityCacheKey(activity.UserId));
+
             return activity;
         }
 
@@ -236,5 +259,6 @@ namespace BingeBuddyNg.Services.Activity
 
             return $"{partitionKey}|{ticks}|{userId}";
         }
+
     }
 }
