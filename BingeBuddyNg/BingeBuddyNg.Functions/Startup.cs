@@ -1,5 +1,4 @@
 ﻿using BingeBuddyNg.Functions;
-using BingeBuddyNg.Functions.Services;
 using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Calculation;
 using BingeBuddyNg.Services.DrinkEvent;
