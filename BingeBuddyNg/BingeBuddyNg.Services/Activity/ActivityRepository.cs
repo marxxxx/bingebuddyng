@@ -118,6 +118,7 @@ namespace BingeBuddyNg.Services.Activity
             var activityTable = this.StorageAccessService.GetTableReference(ActivityTableName);
 
             string activityFeedRowKey = GetActivityFeedRowKey(activity.Timestamp, activity.UserId);
+            activity.Id = activityFeedRowKey;
             var entity = new ActivityTableEntity(GetPartitionKey(activity.Timestamp), activityFeedRowKey, activity);
 
             TableOperation operation = TableOperation.Insert(entity);
@@ -130,8 +131,6 @@ namespace BingeBuddyNg.Services.Activity
 
             TableOperation perUserOperation = TableOperation.Insert(perUserEntity);
             await perUserActivityTable.ExecuteAsync(perUserOperation);
-
-            activity.Id = activityFeedRowKey;
 
             CacheService.Remove(GetActivityCacheKey(activity.UserId));
 
@@ -206,6 +205,8 @@ namespace BingeBuddyNg.Services.Activity
             var perUserTable = this.StorageAccessService.GetTableReference(ActivityPerUserTableName);
             var perUserActivity = await this.GetActivityPerUserEntityAsync(userId, activity.Entity.Timestamp);
             await perUserTable.ExecuteAsync(TableOperation.Delete(perUserActivity));
+
+            CacheService.Remove(GetActivityCacheKey(userId));
         }
 
 
