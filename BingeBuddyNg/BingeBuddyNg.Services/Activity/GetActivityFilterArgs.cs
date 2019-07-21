@@ -15,6 +15,7 @@ namespace BingeBuddyNg.Services.Activity
         public TableContinuationToken ContinuationToken { get; set; }
         public List<string> UserIds { get; set; }
         public ActivityType ActivityType { get; set; }
+        public string StartActivityId { get; set; }
 
         public GetActivityFilterArgs(int pageSize, TableContinuationToken continuationToken, ActivityFilterOptions filterOptions)
         {

@@ -13,27 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingeBuddyNg.Tests", "Binge
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingeBuddyNg.Shared", "BingeBuddyNg.Shared\BingeBuddyNg.Shared.csproj", "{D5B45C7E-9913-4B0D-9C24-30D87DB140F3}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BingeBuddyNg.Spa", "BingeBuddyNg.Spa\", "{A7BC8CBD-7493-4BB6-8C2B-2D253048F51A}"
-	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
-		Debug.AspNetCompiler.VirtualPath = "/localhost_57066"
-		Debug.AspNetCompiler.PhysicalPath = "BingeBuddyNg.Spa\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_57066\"
-		Debug.AspNetCompiler.Updateable = "false"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/localhost_57066"
-		Release.AspNetCompiler.PhysicalPath = "BingeBuddyNg.Spa\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_57066\"
-		Release.AspNetCompiler.Updateable = "false"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "57066"
-		SlnRelativePath = "BingeBuddyNg.Spa\"
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,8 +39,6 @@ Global
 		{D5B45C7E-9913-4B0D-9C24-30D87DB140F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5B45C7E-9913-4B0D-9C24-30D87DB140F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5B45C7E-9913-4B0D-9C24-30D87DB140F3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A7BC8CBD-7493-4BB6-8C2B-2D253048F51A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A7BC8CBD-7493-4BB6-8C2B-2D253048F51A}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

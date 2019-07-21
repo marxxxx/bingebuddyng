@@ -93,6 +93,10 @@ export class DrinkEventCounterComponent implements OnInit, OnDestroy {
   }
 
   updateRemainingTime() {
+    if(!this.currentDrinkEvent) {
+      this.stopCounter();
+      return;
+    }
     const remainingSeconds = moment(this.currentDrinkEvent.endUtc).diff(moment(), 'seconds');
     if (remainingSeconds < 0) {
       this.stopCounter();
@@ -100,8 +104,6 @@ export class DrinkEventCounterComponent implements OnInit, OnDestroy {
     } else {
       const duration = moment.duration(remainingSeconds, 'seconds');
       this.remainingTime = duration.minutes() + ':' + this.getTwoDigitNumber(duration.seconds());
-
-      console.log('DrinkEventCounter: remaining time', this.remainingTime);
     }
   }
 

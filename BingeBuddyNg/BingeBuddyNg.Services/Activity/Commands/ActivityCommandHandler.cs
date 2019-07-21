@@ -94,6 +94,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
             await this.ActivityRepository.UpdateActivityAsync(activity);
 
+            
 
             // add to queue
             var queueClient = this.StorageAccessService.GetQueueReference(Constants.QueueNames.ReactionAdded);

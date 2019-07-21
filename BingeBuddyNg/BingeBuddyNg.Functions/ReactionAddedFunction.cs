@@ -39,7 +39,7 @@ namespace BingeBuddyNg.Functions
             // notify involved users
             if (activity.UserId != reactingUser.Id)
             {
-                await NotifyOriginUserAsync(reactionAddedMessage.ReactionType, activity.UserId, reactingUser);
+                await NotifyOriginUserAsync(activity.Id, reactionAddedMessage.ReactionType, activity.UserId, reactingUser);
             }
 
             // now other ones (with likes and cheers)
@@ -62,7 +62,7 @@ namespace BingeBuddyNg.Functions
                             activity.UserName, false);
 
                         var notification = new NotificationMessage(Constants.NotificationIconUrl,
-                            Constants.NotificationIconUrl, Constants.ApplicationUrl, Constants.ApplicationName, message);
+                            Constants.NotificationIconUrl, GetActivityUrlWithHighlightedActivityId(activity.Id), Constants.ApplicationName, message);
                         NotificationService.SendMessage(new[] { userInfo.PushInfo }, notification);
                     }
                 }
@@ -76,6 +76,7 @@ namespace BingeBuddyNg.Functions
         }
 
         private async Task NotifyOriginUserAsync(
+            string activityId,
             ReactionType reactionType, string originUserId, User reactingUser)
         {
             var originUser = await UserRepository.FindUserAsync(originUserId);
@@ -84,9 +85,14 @@ namespace BingeBuddyNg.Functions
             {
                 string message = await GetReactionMessageAsync(originUser.Language, reactionType, reactingUser.Name, originUser.Name);
                 var notification = new NotificationMessage(Constants.NotificationIconUrl,
-                    Constants.NotificationIconUrl, Constants.ApplicationUrl, Constants.ApplicationName, message);
+                    Constants.NotificationIconUrl, GetActivityUrlWithHighlightedActivityId(activityId), Constants.ApplicationName, message);
                 NotificationService.SendMessage(new[] { originUser.PushInfo }, notification);
             }
+        }
+
+        private string GetActivityUrlWithHighlightedActivityId(string activityId)
+        {
+            return $"{Constants.ApplicationUrl}/activity-feed?activityId={activityId}";
         }
 
         private async Task<string> GetReactionMessageAsync(

@@ -1,12 +1,11 @@
 import { PagedQueryResult } from '../../../models/PagedQueryResult';
 import { ActivityStatsDTO } from '../../../models/ActivityStatsDTO';
 import { AddDrinkActivityDTO } from '../../../models/AddDrinkActivityDTO';
-import { GetActivityFilterArgs } from '../../../models/GetActivityFilterArgs';
 import { ActivityAggregationDTO } from '../../../models/ActivityAggregationDTO';
 import { ActivityDTO } from '../../../models/ActivityDTO';
 import { Observable } from 'rxjs';
 import { retry } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { AddMessageActivityDTO } from '../../../models/AddMessageActivityDTO';
@@ -20,12 +19,13 @@ export class ActivityService {
 
   constructor(private http: HttpClient) { }
 
-  getActivityFeed(continuationToken: string): Observable<PagedQueryResult<ActivityStatsDTO>> {
-    let url = `${this.baseUrl}/GetActivityFeed`;
-    if (continuationToken) {
-      url += `?continuationToken=${continuationToken}`;
-    }
-    return this.http.get<PagedQueryResult<ActivityStatsDTO>>(url);
+  getActivityFeed(activityId: string, continuationToken: string): Observable<PagedQueryResult<ActivityStatsDTO>> {
+    const url = `${this.baseUrl}/GetActivityFeed`;
+    const params = new HttpParams()
+      .set('activityId', activityId)
+      .set('continuationToken', continuationToken);
+
+    return this.http.get<PagedQueryResult<ActivityStatsDTO>>(url, { params: params });
   }
 
   getActivitysForMap(): Observable<ActivityDTO[]> {

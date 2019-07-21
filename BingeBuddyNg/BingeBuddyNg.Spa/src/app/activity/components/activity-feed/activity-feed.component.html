@@ -1,10 +1,10 @@
 <!-- Progress spinner -->
 <app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
 
-<div id="activity-container" [@listActivities]="isInitialLoad">
+<div id="activity-container">
   <!-- The actual activity feed-->
   <app-activity *ngFor="let a of activitys; trackBy: trackByActivity" [activity]="a" [currentUser]="currentUserInfo" (commentOpenChanged)="isCommentOpen = $event"
-  (deleted)="load()"></app-activity>
+  (deleted)="load()" [id]="a.activity.id" [isHighlighted]="a.activity.id === highlightedActivityId"></app-activity>
 
   <!-- Reload-spinner -->
   <mat-progress-spinner [ngClass]="{noactivityspinner: activitys && activitys.length < 5, activityspinner: activitys && activitys.length >= 5}"

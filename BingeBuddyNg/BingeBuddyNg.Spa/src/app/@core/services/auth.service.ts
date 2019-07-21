@@ -45,7 +45,7 @@ export class AuthService {
 
     console.log('handling authentication', returnUrl);
     const successRoute = (returnUrl != null && returnUrl !== '/callback') ? returnUrl :
-      this.settings.getIsOnboarded() ? '/activity-feed' : '/onboarding';
+      this.settings.getIsOnboarded() ? returnUrl : '/onboarding';
     returnUrl = returnUrl || '/';
 
     this.auth0.parseHash((err, authResult) => {
@@ -60,19 +60,19 @@ export class AuthService {
         this.checkAuthenticated();
 
         console.log('navigating to success route', successRoute);
-        this.router.navigate([successRoute]);
+        this.router.navigateByUrl(successRoute);
       } else if (err) {
         console.log('error parsing hash');
-        this.router.navigate([returnUrl]);
+        this.router.navigateByUrl(returnUrl);
         console.error(err);
       } else {
         if (this.checkAuthenticated()) {
           console.log('authenticated -> navigating to success route');
-          this.router.navigate([successRoute]);
+          this.router.navigateByUrl(successRoute);
         } else {
           console.log('not authenticated -> navigating to root');
           if (!returnUrl || returnUrl === '/' || returnUrl.indexOf('welcome-invited') > 0) {
-            this.router.navigate([successRoute]);
+            this.router.navigateByUrl(successRoute);
           } else {
             this.login();
           }

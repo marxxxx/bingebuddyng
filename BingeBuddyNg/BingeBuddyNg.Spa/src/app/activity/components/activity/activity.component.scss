@@ -5,9 +5,13 @@ mat-card {
     padding: 12px 12px 2px 12px ;
     border-top-left-radius: 30px;
     border-bottom-right-radius: 10px;
+
 }
 
 
+.highlighted {
+  border: rgb(179, 151, 60) solid 1px;
+}
 
 .stats {
     margin-left: auto;

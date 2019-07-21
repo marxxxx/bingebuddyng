@@ -2,7 +2,7 @@ import { ReactionDialogComponent } from './../reaction-dialog/reaction-dialog.co
 import { UserInfoDTO } from '../../../../models/UserInfoDTO';
 import { ActivityType } from '../../../../models/ActivityType';
 import { ActivityStatsDTO } from '../../../../models/ActivityStatsDTO';
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChildren } from '@angular/core';
 import { ActivityService } from './../../services/activity.service';
 import { AddReactionDTO } from '../../../../models/AddReactionDTO';
 import { ReactionType } from '../../../../models/ReactionType';
@@ -45,6 +45,9 @@ export class ActivityComponent implements OnInit {
   @Input()
   currentUser: UserInfoDTO;
 
+  @Input()
+  isHighlighted: boolean;
+
   @Output()
   commentOpenChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -86,8 +89,8 @@ export class ActivityComponent implements OnInit {
       this.activity.activity.likes.push({
         type: ReactionType.Like,
         timestamp: new Date(),
-        userId: this.userInfo.userId,
-        userName: this.userInfo.userName
+        userId: this.currentUser.userId,
+        userName: this.currentUser.userName
       });
     }, e => {
       this.isBusyLiking = false;
@@ -106,8 +109,8 @@ export class ActivityComponent implements OnInit {
       this.activity.activity.cheers.push({
         type: ReactionType.Cheers,
         timestamp: new Date(),
-        userId: this.userInfo.userId,
-        userName: this.userInfo.userName
+        userId: this.currentUser.userId,
+        userName: this.currentUser.userName
       });
     }, e => {
       this.isBusyCheering = false;
@@ -123,8 +126,8 @@ export class ActivityComponent implements OnInit {
       this.activity.activity.comments.push({
         type: ReactionType.Comment,
         timestamp: new Date(),
-        userId: this.userInfo.userId,
-        userName: this.userInfo.userName,
+        userId: this.currentUser.userId,
+        userName: this.currentUser.userName,
         comment: this.comment
       });
       this.comment = null;
