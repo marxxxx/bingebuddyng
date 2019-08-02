@@ -37,6 +37,12 @@ namespace BingeBuddyNg.Services.Activity
                 TableOperators.Or,
                 TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, previousPartition));
 
+            if(string.IsNullOrEmpty(args.StartActivityId) == false)
+            {
+                whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
+                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, args.StartActivityId));
+            }
+
             if ((args.FilterOptions & ActivityFilterOptions.WithLocation) == ActivityFilterOptions.WithLocation)
             {
                 whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
@@ -188,6 +194,9 @@ namespace BingeBuddyNg.Services.Activity
 
             TableOperation updateOperation = TableOperation.Replace(entity);
             await table.ExecuteAsync(updateOperation);
+
+            // invalidate cache
+            CacheService.Remove(GetActivityCacheKey(activity.UserId));
         }
 
         public async Task DeleteActivityAsync(string userId, string id)

@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card [ngClass]="{'highlighted': isHighlighted }">
   <mat-card-title fxLayout fxLayoutAlign="space-between center">
     <div fxLayout fxLayoutAlign="start center">
       <app-user-info

@@ -59,7 +59,8 @@ namespace BingeBuddyNg.Services.Activity.Querys
             var callingUser = await this.UserRepository.FindUserAsync(request.UserId);
 
             var visibleUserIds = callingUser.GetVisibleFriendUserIds();
-            var activities = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(request.UserId, visibleUserIds, request.ContinuationToken));
+            var args = new GetActivityFilterArgs(request.UserId, visibleUserIds, request.ContinuationToken) { StartActivityId = request.StartActivityId };
+            var activities = await this.ActivityRepository.GetActivityFeedAsync(args);
 
             var userIds = activities.ResultPage.Select(a => a.UserId).Distinct();
             var userStats = await this.UserStatsRepository.GetStatisticsAsync(userIds);

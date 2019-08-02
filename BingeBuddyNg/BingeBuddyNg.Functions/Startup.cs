@@ -28,8 +28,7 @@ namespace BingeBuddyNg.Functions
             string fourSquareApiClientSecret = Environment.GetEnvironmentVariable("FourSquareApiClientSecret", EnvironmentVariableTarget.Process);
 
             services.AddHttpClient();
-            services.AddMemoryCache();
-
+            
             var configuration = new AppConfiguration(storageConnectionString, googleApiKey, webPushPublicKey, webPushPrivateKey,
                 fourSquareApiClientKey, fourSquareApiClientSecret);
             services.AddSingleton(configuration);
@@ -46,7 +45,7 @@ namespace BingeBuddyNg.Functions
             services.AddTransient<IUserStatisticsService, UserStatisticsService>();
             services.AddTransient<IUserStatsHistoryRepository, UserStatsHistoryRepository>();
             services.AddTransient<IUtilityService, UtilityService>();
-            services.AddTransient<ICacheService, CacheService>();
+            services.AddTransient<ICacheService, NoCacheService>();
         }
     }
 }

@@ -38,10 +38,10 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeed(string continuationToken)
+        public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeed(string activityId, string continuationToken)
         {
             var userId = this.IdentityService.GetCurrentUserId();
-            var result = await this.Mediator.Send(new GetActivityFeedQuery(userId, continuationToken));
+            var result = await this.Mediator.Send(new GetActivityFeedQuery(userId, activityId, continuationToken));
             return result;
         }
 

@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { ActivityStatsDTO } from '../../../../models/ActivityStatsDTO';
 import { ActivityService } from '../../services/activity.service';
-import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, ViewChildren } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, ViewChildren, ElementRef } from '@angular/core';
 import { AuthService } from '../../../@core/services/auth.service';
 import { AddMessageActivityDTO } from '../../../../models/AddMessageActivityDTO';
 import { MatDialog } from '@angular/material/dialog';
@@ -28,19 +28,12 @@ import { VenueDialogResult } from '../venue-dialog/VenueDialogResult';
 import { TranslateService } from '@ngx-translate/core';
 import { Drink } from 'src/models/Drink';
 import { DrinkRetrieverService } from '../../services/drink-retriever.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-activity-feed',
   templateUrl: './activity-feed.component.html',
-  styleUrls: ['./activity-feed.component.scss'],
-  animations: [
-    trigger('listActivities', [
-      transition('true <=> false', [
-        style({ transform: 'translateY(-2%)', opacity: 0 }),
-        animate('300ms ease-out', style({ transform: 'translateY(0)', opacity: 1 }))
-      ])
-    ])
-  ]
+  styleUrls: ['./activity-feed.component.scss']
 })
 export class ActivityFeedComponent implements OnInit, OnDestroy {
   activitys: ActivityStatsDTO[] = [];
@@ -59,6 +52,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   DrinkType = DrinkType;
   isCommentOpen = false;
   drinks: Drink[];
+  highlightedActivityId: string;
 
   @ViewChild('#activity-container', { static: false })
   container: any;
@@ -78,37 +72,41 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     private changeRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
     private translateService: TranslateService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
     this.initFileUploader();
 
-
     this.isBusy = true;
+    this.route.queryParamMap.subscribe(p => {
+      this.highlightedActivityId = p.get('activityId');
+      this.load();
+
+    });
+
     this.subscriptions.push(this.notification.activityReceived$.subscribe(_ => this.load()));
     this.subscriptions.push(
       this.auth.currentUserProfile$
-      .pipe(filter(p => p != null))
-      .pipe(map(p => ({ userId: p.sub, userName: p.nickname })))
-      .subscribe(user => {
-        console.log('ActivityFeedComponent: got current user profile', user);
-        this.currentUserInfo = user;
-        this.isBusy = false;
+        .pipe(filter(p => p != null))
+        .pipe(map(p => ({ userId: p.sub, userName: p.nickname })))
+        .subscribe(user => {
+          console.log('ActivityFeedComponent: got current user profile', user);
+          this.currentUserInfo = user;
 
-        // load user to get venue info
-        this.load();
-        this.loadDrinks();
+          this.loadDrinks();
 
-        this.userService.getUser(user.userId).subscribe(
-          u => {
-            console.log('loaded user', u);
-            this.currentUser = u;
-            this.locationService.setCurrentVenue(u.currentVenue);
-          },
-          e => console.error('error loading user', user.userId, e)
-        );
-      })
+          // load user to get venue info
+          this.userService.getUser(user.userId).subscribe(
+            u => {
+              console.log('loaded user', u);
+              this.currentUser = u;
+              this.locationService.setCurrentVenue(u.currentVenue);
+            },
+            e => console.error('error loading user', user.userId, e)
+          );
+        })
     );
 
     this.subscriptions.push(
@@ -156,10 +154,10 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   }
 
   load(continuationToken: string = null) {
-    console.log('loading activities');
-    console.log(continuationToken);
+    console.log('loading activities', continuationToken);
+
     this.isBusy = true;
-    this.activityService.getActivityFeed(continuationToken).subscribe(
+    this.activityService.getActivityFeed(null, continuationToken).subscribe(
       d => {
         this.continuationToken = d.continuationToken;
 
@@ -171,6 +169,20 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
         this.isBusy = false;
 
         this.isInitialLoad = false;
+
+        if (this.highlightedActivityId) {
+
+          setTimeout(() => {
+            const activityElement = document.getElementById(this.highlightedActivityId);
+            // const ac = this.activitys.find(a => a.activity.id === activityId);
+            // console.log('activity found', ac);
+
+            if (activityElement) {
+              activityElement.scrollIntoView();
+            }
+          }, 1000);
+
+        }
 
         // adds reload-spinner after a second so it doesn't interfere with slide-in animation
         setTimeout(() => (this.isReloadSpinnerActive = true), 3000);

@@ -40,7 +40,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     console.log('ngOnInit');
     if (location.pathname.indexOf('invitation') < 0) {
-      this.auth.handleAuthentication(location.pathname);
+      this.auth.handleAuthentication(location.pathname + location.search);
       this.auth.scheduleRenewal();
     }
 
