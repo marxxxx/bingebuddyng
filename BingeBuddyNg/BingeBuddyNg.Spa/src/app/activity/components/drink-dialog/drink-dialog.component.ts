@@ -28,7 +28,7 @@ export class DrinkDialogComponent implements OnInit {
     'https://media.giphy.com/media/3o7TKWtIqI2n2Iepwc/giphy.gif',
     'http://www.emugifs.net/wp-content/uploads/2018/05/the-simpsons-duff-beer-contest-2.gif',
     'https://media.giphy.com/media/3vDFxcB9vZNNS/giphy.gif',
-    
+
     'https://i.imgur.com/dcky1fQ.gif',
   'https://cdn.dribbble.com/users/594253/screenshots/2112184/onempty_tumblr.gif',
 'https://media1.tenor.com/images/0860d3f017deea3a796f4464677376ba/tenor.gif',
@@ -81,6 +81,8 @@ export class DrinkDialogComponent implements OnInit {
 
   ngOnInit() {
     this.imageUrl = this.getRandomDrinkImageUrl();
+    const audio = new Audio('/assets/sound/bierflasche.wav');
+    audio.play();
     setTimeout(() => this.dialogRef.close(), 7000);
   }
 
