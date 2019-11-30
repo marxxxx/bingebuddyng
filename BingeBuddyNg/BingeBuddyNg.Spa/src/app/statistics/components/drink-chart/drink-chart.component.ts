@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { ActivityAggregationDTO } from '../../../../models/ActivityAggregationDTO';
 import * as moment from 'moment';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@ngneat/transloco';
 import { DefaultChartColors } from '../DefaultChartColors';
 
 @Component({
@@ -65,7 +65,7 @@ export class DrinkChartComponent implements OnInit, OnChanges {
   ];
 
 
-  constructor(private translateService: TranslateService) { }
+  constructor(private translateService: TranslocoService) { }
 
   ngOnInit() {
 
@@ -73,7 +73,7 @@ export class DrinkChartComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     if (this.activities) {
-      this.translateService.get(['Total', 'Beer', 'Wine', 'Shot', 'Anti', 'AlcoholicDrinks']).subscribe(trans => {
+      this.translateService.selectTranslate(['Total', 'Beer', 'Wine', 'Shot', 'Anti', 'AlcoholicDrinks']).subscribe(trans => {
 
         console.log(trans);
         this.activities.forEach(l => this.lineChartLabels.push(moment(l.day).format('DD.MM.YYYY')));

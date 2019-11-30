@@ -20,7 +20,7 @@
   <button mat-button class="venue-name">
     <mat-icon id="map-icon">map</mat-icon><span>{{locationService.currentVenue.name}}</span>
   </button>
-  <button mat-icon-button (click)="onResetVenue()" matTooltip="{{'Leave' | translate }}">
+  <button mat-icon-button (click)="onResetVenue()" matTooltip="{{'Leave' | transloco }}">
     <mat-icon>directions_run</mat-icon>
   </button>
 </mat-card>
@@ -36,18 +36,18 @@
     </eco-fab-speed-dial-trigger>
 
     <eco-fab-speed-dial-actions class="btn-act">
-        <button *ngFor="let d of drinks" mat-mini-fab (click)="onDrink(d)" matTooltip="{{d.name | translate}}" matTooltipPosition="left">
+        <button *ngFor="let d of drinks" mat-mini-fab (click)="onDrink(d)" matTooltip="{{d.name | transloco}}" matTooltipPosition="left">
             <app-drink-icon [drinkType]="d.drinkType"></app-drink-icon>
           </button>
-      <button class="btn-icon" mat-mini-fab (click)="onAddMessage()" matTooltip="{{'PostMessage' | translate}}"
+      <button class="btn-icon" mat-mini-fab (click)="onAddMessage()" matTooltip="{{'PostMessage' | transloco}}"
         matTooltipPosition="left">
         <mat-icon>message</mat-icon>
       </button>
-      <button mat-mini-fab matTooltip="{{'PostImage' | translate}}" (click)="fileUpload.click()" matTooltipPosition="left">
+      <button mat-mini-fab matTooltip="{{'PostImage' | transloco}}" (click)="fileUpload.click()" matTooltipPosition="left">
         <img id="btn-img" class="action-icon" src="../../assets/img/image.png">
       </button>
 
-      <button *ngIf="locationService.hasLocation() != null" class="btn-icon" mat-mini-fab matTooltip="{{'CheckInVenue' | translate}}"
+      <button *ngIf="locationService.hasLocation() != null" class="btn-icon" mat-mini-fab matTooltip="{{'CheckInVenue' | transloco}}"
         (click)="onCheckInVenue()" matTooltipPosition="left">
         <mat-icon>map</mat-icon>
       </button>

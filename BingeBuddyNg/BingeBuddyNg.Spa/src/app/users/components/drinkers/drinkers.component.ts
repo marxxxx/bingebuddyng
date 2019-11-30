@@ -1,6 +1,6 @@
 import { Subscription, forkJoin, combineLatest } from 'rxjs';
 import { FriendRequestDTO } from '../../../../models/FriendRequestDTO';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@ngneat/transloco';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../@core/services/auth.service';
 import { UserInfoDTO } from '../../../../models/UserInfoDTO';
@@ -31,7 +31,7 @@ export class DrinkersComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private userService: UserService,
     private auth: AuthService,
-    private translate: TranslateService,
+    private translate: TranslocoService,
     private friendRequests: FriendRequestService,
     private shellInteractionService: ShellInteractionService,
     private snackbar: MatSnackBar) { }
@@ -106,7 +106,7 @@ export class DrinkersComponent implements OnInit, OnDestroy {
         }
       };
       this.pendingRequests.push(request);
-      const message = this.translate.instant('SentFriendRequest');
+      const message = this.translate.translate('SentFriendRequest');
       this.snackbar.open(message, 'OK', { duration: 2000 });
     }, e => {
       (<any>u).isBusy = false;

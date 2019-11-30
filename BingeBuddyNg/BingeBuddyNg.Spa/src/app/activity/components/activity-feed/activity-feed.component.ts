@@ -25,7 +25,7 @@ import { UserDTO } from '../../../../models/UserDTO';
 import { LocationService } from 'src/app/activity/services/location.service';
 import { VenueDialogMode } from '../venue-dialog/VenueDialogMode';
 import { VenueDialogResult } from '../venue-dialog/VenueDialogResult';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@ngneat/transloco';
 import { Drink } from 'src/models/Drink';
 import { DrinkRetrieverService } from '../../services/drink-retriever.service';
 import { ActivatedRoute } from '@angular/router';
@@ -71,7 +71,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     private drinkService: DrinkRetrieverService,
     private changeRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
-    private translateService: TranslateService,
+    private translateService: TranslocoService,
     private dialog: MatDialog,
     private route: ActivatedRoute
   ) { }
@@ -114,7 +114,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
         console.log('location has changed');
 
         this.snackBar
-          .open(this.translateService.instant('NewVenue'), this.translateService.instant('YesCheckin'), { duration: 3000 })
+          .open(this.translateService.translate('NewVenue'), this.translateService.translate('YesCheckin'), { duration: 3000 })
           .onAction()
           .subscribe(() => {
             this.onCheckInVenue(VenueDialogMode.LocationChanged);

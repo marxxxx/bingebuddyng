@@ -18,11 +18,11 @@
   <input type="file" #fileUpload id="fileUpload" ng2FileSelect style="display:none;" [uploader]="uploader" />
 
   <p *ngIf="!isBusy && isYourFriend()" fxLayout>
-    <img src="../../assets/img/like.png">{{'YouAreFriends' | translate}}
+    <img src="../../assets/img/like.png">{{'YouAreFriends' | transloco}}
   </p>
 
   <p *ngIf="!isBusy && isYou()">
-    {{'ThisIsYou' | translate}}
+    {{'ThisIsYou' | transloco}}
   </p>
 </div>
 
@@ -30,19 +30,19 @@
 
 <div id="actions" fxLayout fxLayoutAlign="center space-between" *ngIf="!isYou() && !isBusy">
   <button *ngIf="!isYourFriend() && !hasPendingRequest" mat-raised-button color="primary" (click)="onAddFriend()">
-    <mat-icon>add</mat-icon>{{'AddFriend' | translate }}
+    <mat-icon>add</mat-icon>{{'AddFriend' | transloco }}
   </button>
   <p *ngIf="hasPendingRequest" fxLayout fxLayoutAlign="center center">
     <mat-icon>access_time</mat-icon>
-    <span>{{'PendingFriendRequest' | translate }}</span>
+    <span>{{'PendingFriendRequest' | transloco }}</span>
   </p>
   <button *ngIf="isYourFriend()" mat-raised-button color="accent" (click)="onRemoveFriend()">
-    <mat-icon>remove</mat-icon>{{'RemoveFriend' | translate }}
+    <mat-icon>remove</mat-icon>{{'RemoveFriend' | transloco }}
   </button>
 </div>
 
 <div id="friends" *ngIf="!isBusy && (isYou() || isYourFriend())">
-  <h3>{{'Friends' | translate }}</h3>
+  <h3>{{'Friends' | transloco }}</h3>
 
   <div *ngFor="let f of user?.friends" fxLayout fxLayoutAlign="space-between center">
     <app-user-info [userInfo]="f" [showName]="true" [matTooltip]="f.userName"></app-user-info>
@@ -56,7 +56,7 @@
 
 
   <div *ngIf="isYou() && (!user.friends || user.friends.length === 0)">
-    <p>{{'NoFriends' | translate }}</p>
-    <p>{{'FindFriendsAt' | translate }} <a [routerLink]="['/drinkers']">{{'Drinkers' | translate }}</a></p>
+    <p>{{'NoFriends' | transloco }}</p>
+    <p>{{'FindFriendsAt' | transloco }} <a [routerLink]="['/drinkers']">{{'Drinkers' | transloco }}</a></p>
   </div>
 </div>

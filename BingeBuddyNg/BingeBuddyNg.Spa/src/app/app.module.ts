@@ -16,6 +16,8 @@ import { CoreModule } from './@core/core.module';
 import { SharedModule } from './@shared/shared.module';
 import { ActivityModule } from './activity/activity.module';
 import { OnboardingModule } from './onboarding/onboarding.module';
+import { translocoLoader } from './transloco.loader';
+import { TranslocoModule, TRANSLOCO_CONFIG, TranslocoConfig } from '@ngneat/transloco';
 
 
 @NgModule({
@@ -37,9 +39,20 @@ import { OnboardingModule } from './onboarding/onboarding.module';
     OnboardingModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production
-    })
+    }),
+    TranslocoModule
   ],
-  providers: [],
+  providers: [{
+      provide: TRANSLOCO_CONFIG,
+      useValue: {
+        availableLangs: ['de', 'at', 'en', 'ru'],
+        defaultLang: 'de',
+        reRenderOnLangChange: true,
+        prodMode: environment.production,
+      } as TranslocoConfig
+    },
+    translocoLoader
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

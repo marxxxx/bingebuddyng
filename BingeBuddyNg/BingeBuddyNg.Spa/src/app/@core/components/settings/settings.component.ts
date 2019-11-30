@@ -3,11 +3,11 @@ import { UserDTO } from '../../../../models/UserDTO';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from 'src/app/@core/services/user.service';
 import { SettingsService } from '../../services/settings.service';
-import { ShellInteractionService } from '../../services/shell-interaction.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@ngneat/transloco';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 /**
  * User Settings Page.
@@ -33,7 +33,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   currentUser: UserDTO;
 
   constructor(
-    private translateService: TranslateService,
+    private translateService: TranslocoService,
     private settingsService: SettingsService,
     private userService: UserService,
     private authService: AuthService,
@@ -45,28 +45,28 @@ export class SettingsComponent implements OnInit, OnDestroy {
   ///////////////////////////////////////////////////////
   ngOnInit() {
     const sub = this.route.params.subscribe(r => {
-      this.currentLanguage = this.translateService.currentLang;
+      this.currentLanguage = this.translateService.getActiveLang();
 
-      const langChangeSubscription = this.translateService.onLangChange.subscribe(l => {
-        this.currentLanguage = l.lang;
+      const langChangeSubscription = this.translateService.langChanges$.subscribe(l => {
+        this.currentLanguage = l;
       });
       this.subscriptions.push(langChangeSubscription);
     });
     this.subscriptions.push(sub);
 
     this.subscriptions.push(
-      this.authService.currentUserProfile$.subscribe(p => {
-        if (p != null) {
+      this.authService.currentUserProfile$
+        .pipe(filter(p => p != null))
+        .subscribe(p => {
           this.userService.getUser(p.sub).subscribe(u => (this.currentUser = u));
-        }
-      })
+        })
     );
   }
 
   onLanguageChanged(language) {
     if (language) {
       console.log('SettingsComponent: language set to ' + language.value);
-      this.translateService.use(language.value);
+      this.translateService.setActiveLang(language.value);
       this.settingsService.setLanguage(language.value);
       if (this.currentUser != null) {
         this.currentUser.language = language.value;
@@ -79,7 +79,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
           this.currentUser.language
         );
 
-        this.userService.createOrUpdateUser(request).subscribe(_ => console.log('user saved', this.currentUser));
+        this.userService.createOrUpdateUser(request).subscribe(() => {
+          console.log('user saved', this.currentUser);
+        });
       }
     } else {
       console.log('SettingsComponent: language unchanged');

@@ -99,7 +99,7 @@ namespace BingeBuddyNg.Api
             app.UseCors(c =>
                 c.AllowAnyHeader()
                 .AllowAnyMethod()
-                .WithOrigins(frontendUrl)
+                .WithOrigins(frontendUrl, "http://localhost:4200")
                 .AllowCredentials());
 
             app.UseHttpsRedirection();

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { ActivityAggregationDTO } from '../../../../models/ActivityAggregationDTO';
 import { DefaultChartColors } from '../DefaultChartColors';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-drink-ratio-chart',
@@ -23,7 +23,7 @@ export class DrinkRatioChartComponent implements OnInit, OnChanges {
   };
   public chartColors = [{ backgroundColor: DefaultChartColors.map(c => c.borderColor) }];
 
-  constructor(private translateService: TranslateService) { }
+  constructor(private translateService: TranslocoService) { }
 
   ngOnInit() {
   }
@@ -31,7 +31,7 @@ export class DrinkRatioChartComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     if (this.activities) {
-      this.translateService.get(['DrinkRatio', 'Beer', 'Wine', 'Shot', 'Anti']).subscribe(trans => {
+      this.translateService.selectTranslate(['DrinkRatio', 'Beer', 'Wine', 'Shot', 'Anti']).subscribe(trans => {
 
         console.log(trans);
         this.chartData = [{

@@ -4,7 +4,7 @@ import { AppMaterialModule } from './app-material.module';
 import { ProgressSpinnerComponent } from './components/progress-spinner/progress-spinner.component';
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslocoModule } from '@ngneat/transloco';
 import { DrinkIconComponent } from './components/drink-icon/drink-icon.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
@@ -20,7 +20,7 @@ import { RouterModule } from '@angular/router';
     ReactiveFormsModule,
     AppMaterialModule,
     FlexLayoutModule,
-    TranslateModule.forChild(),
+    TranslocoModule,
     FileUploadModule,
     RouterModule
   ],
@@ -30,7 +30,7 @@ import { RouterModule } from '@angular/router';
     FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslocoModule,
     FileUploadModule,
     ProgressSpinnerComponent,
     UserInfoComponent,

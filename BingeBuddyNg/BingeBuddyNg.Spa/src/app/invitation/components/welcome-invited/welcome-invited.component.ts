@@ -1,4 +1,4 @@
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@ngneat/transloco';
 import { AuthService } from '../../../@core/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '../../services/invitation.service';
@@ -22,7 +22,7 @@ export class WelcomeInvitedComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private snackbar: MatSnackBar,
-    private translateService: TranslateService) { }
+    private translateService: TranslocoService) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(p => {

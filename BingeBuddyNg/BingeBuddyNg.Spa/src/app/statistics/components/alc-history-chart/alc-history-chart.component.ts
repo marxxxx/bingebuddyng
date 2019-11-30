@@ -1,4 +1,4 @@
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@ngneat/transloco';
 import { UserStatisticHistoryDTO } from './../../services/UserStatisticHistoryDTO';
 import { Component, OnInit, Input } from '@angular/core';
 import * as moment from 'moment';
@@ -56,7 +56,7 @@ export class AlcHistoryChartComponent implements OnInit {
   ];
 
 
-  constructor(private trans: TranslateService) { }
+  constructor(private trans: TranslocoService) { }
 
   ngOnInit() {
     this.userStatsHistory.forEach(l => this.lineChartLabels.push(moment(l.timestamp).format('HH:mm')));

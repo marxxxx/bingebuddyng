@@ -2,29 +2,29 @@
 <div fxLayout="column" fxFlex *ngIf="!isBusy">
 
   <mat-card fxFlex>
-    <mat-card-title>{{'AvgAlcDrinksPerDay' | translate}}</mat-card-title>
-    <mat-card-subtitle>{{'CalculatedOverLastMonth' | translate }}</mat-card-subtitle>
+    <mat-card-title>{{'AvgAlcDrinksPerDay' | transloco}}</mat-card-title>
+    <mat-card-subtitle>{{'CalculatedOverLastMonth' | transloco }}</mat-card-subtitle>
     <mat-card-content>
       <span class="figure">{{avgDrinksPerDay}}</span>
     </mat-card-content>
   </mat-card>
 
   <mat-card fxFlex>
-    <mat-card-title>{{'TodayAlcHistory' | translate}}</mat-card-title>
+    <mat-card-title>{{'TodayAlcHistory' | transloco}}</mat-card-title>
     <mat-card-content>
       <app-alc-history-chart [userStatsHistory]="userStatsHistory"></app-alc-history-chart>
     </mat-card-content>
   </mat-card>
 
   <mat-card fxFlex>
-    <mat-card-title>{{'MonthlyDrinkStatistic' | translate}}</mat-card-title>
+    <mat-card-title>{{'MonthlyDrinkStatistic' | transloco}}</mat-card-title>
     <mat-card-content>
       <app-drink-chart [activities]="activities" [isLegendVisible]="isLegendVisible"></app-drink-chart>
     </mat-card-content>
   </mat-card>
 
   <mat-card fxFlex>
-    <mat-card-title>{{'DrinkRatio' | translate}}</mat-card-title>
+    <mat-card-title>{{'DrinkRatio' | transloco}}</mat-card-title>
     <mat-card-content>
       <app-drink-ratio-chart [activities]="activities"></app-drink-ratio-chart>
     </mat-card-content>

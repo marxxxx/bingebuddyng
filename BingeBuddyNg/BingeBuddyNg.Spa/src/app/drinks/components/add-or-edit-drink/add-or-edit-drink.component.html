@@ -1,32 +1,32 @@
-<h3 *ngIf="isAdd">{{'AddNewDrink' | translate }}</h3>
-<h3 *ngIf="!isAdd">{{'EditDrink' | translate }}</h3>
+<h3 *ngIf="isAdd">{{'AddNewDrink' | transloco }}</h3>
+<h3 *ngIf="!isAdd">{{'EditDrink' | transloco }}</h3>
 
 <form [formGroup]="form" fxLayout="column">
 
     <mat-form-field>
-      <input matInput autofocus placeholder="{{'Name' | translate }}" type="text" formControlName="name" />
+      <input matInput autofocus placeholder="{{'Name' | transloco }}" type="text" formControlName="name" />
     </mat-form-field>
 
     <mat-form-field>
-      <label>{{ 'DrinkType' | translate }}</label>
+      <label>{{ 'DrinkType' | transloco }}</label>
       <mat-select formControlName="drinkType">
-       <mat-option *ngFor="let t of drinkTypes" [value]="t.type">{{t.name | translate}}</mat-option>
+       <mat-option *ngFor="let t of drinkTypes" [value]="t.type">{{t.name | transloco}}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput placeholder="{{ 'AlcPrc' | translate }}" type="text" formControlName="alcPrc" />
+      <input matInput placeholder="{{ 'AlcPrc' | transloco }}" type="text" formControlName="alcPrc" />
       <span matSuffix>%</span>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput placeholder="{{ 'Volume' | translate }}" type="text" formControlName="volume" />
+      <input matInput placeholder="{{ 'Volume' | transloco }}" type="text" formControlName="volume" />
       <span matSuffix>ml</span>
     </mat-form-field>
 
     <div class="actions" *ngIf="!isSaving" fxLayout fxLayoutAlign="center center">
-      <button [disabled]="form.invalid" mat-raised-button color="primary" type="submit" (click)="onSave()">{{'Save' | translate }}</button>
-      <button mat-button [routerLink]="['/drinks']" >{{'Cancel' | translate }}</button>
+      <button [disabled]="form.invalid" mat-raised-button color="primary" type="submit" (click)="onSave()">{{'Save' | transloco }}</button>
+      <button mat-button [routerLink]="['/drinks']" >{{'Cancel' | transloco }}</button>
     </div>
 
     <mat-progress-spinner diameter="48" mode="indeterminate" *ngIf="isSaving"></mat-progress-spinner>

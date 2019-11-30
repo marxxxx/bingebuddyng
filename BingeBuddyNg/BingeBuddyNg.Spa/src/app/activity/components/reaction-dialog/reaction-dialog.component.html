@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>
-  {{'Reactions' | translate}}
+  {{'Reactions' | transloco}}
 </h2>
 <mat-dialog-content>
   <mat-tab-group [selectedIndex]="selectedTabIndex">
@@ -12,7 +12,7 @@
       </ng-template>
       <app-reaction-list [reactions]="data.likes"></app-reaction-list>
       <span class="empty" *ngIf="!data.likes?.length">
-        {{'NobodyLikesThis' | translate}}
+        {{'NobodyLikesThis' | transloco}}
       </span>
     </mat-tab>
     <mat-tab>
@@ -24,11 +24,11 @@
       </ng-template>
       <app-reaction-list [reactions]="data.cheers"></app-reaction-list>
       <span class="empty" *ngIf="!data.cheers?.length">
-        {{'NobodyCheered' | translate}}
+        {{'NobodyCheered' | transloco}}
       </span>
     </mat-tab>
   </mat-tab-group>
 </mat-dialog-content>
 <mat-dialog-actions fxLayoutAlign="end center">
-  <button mat-raised-button color="primary" mat-dialog-close>{{'Close' | translate }}</button>
+  <button mat-raised-button color="primary" mat-dialog-close>{{'Close' | transloco }}</button>
 </mat-dialog-actions>

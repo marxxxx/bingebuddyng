@@ -1,7 +1,7 @@
 import { CreateOrUpdateUserDTO } from 'src/models/CreateOrUpdateUserDTO';
 import { ProfileImageDialogComponent } from './../profile-image-dialog/profile-image-dialog.component';
 import { ShellInteractionService } from '../../../@core/services/shell-interaction.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@ngneat/transloco';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FriendRequestService } from '../../../@core/services/friendrequest.service';
@@ -43,7 +43,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private friendRequests: FriendRequestService,
     private auth: AuthService,
-    private translate: TranslateService,
+    private translate: TranslocoService,
     private snackBar: MatSnackBar,
     private shellInteraction: ShellInteractionService,
     private dialog: MatDialog
@@ -151,7 +151,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.hasPendingRequest = true;
     this.friendRequests.addFriendRequest(this.userId).subscribe(
       r => {
-        const message = this.translate.instant('SentFriendRequest');
+        const message = this.translate.translate('SentFriendRequest');
         this.snackBar.open(message, 'OK', { duration: 2000 });
       },
       e => {
@@ -168,7 +168,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     this.userService.removeFriend(this.userId).subscribe(
       r => {
-        const message = this.translate.instant('RemovedFriend');
+        const message = this.translate.translate('RemovedFriend');
 
         this.snackBar.open(message, 'OK', { duration: 2000 });
       },

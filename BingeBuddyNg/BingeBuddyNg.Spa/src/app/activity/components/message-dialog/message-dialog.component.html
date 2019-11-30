@@ -1,12 +1,12 @@
 <h2 mat-dialog-title>
-  {{'PostAMessage' | translate}}
+  {{'PostAMessage' | transloco}}
 </h2>
 <mat-dialog-content>
   <mat-form-field>
-    <input type="text" matInput [(ngModel)]="message" placeholder="{{'YourMessage' | translate }}">
+    <input type="text" matInput [(ngModel)]="message" placeholder="{{'YourMessage' | transloco }}">
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions fxLayoutAlign="end center">
-  <button mat-button mat-dialog-close>{{'Cancel' | translate }}</button>
-  <button mat-raised-button [disabled]="!message" color="primary" [mat-dialog-close]="message">{{'Send' | translate }}</button>
+  <button mat-button mat-dialog-close>{{'Cancel' | transloco }}</button>
+  <button mat-raised-button [disabled]="!message" color="primary" [mat-dialog-close]="message">{{'Send' | transloco }}</button>
 </mat-dialog-actions>

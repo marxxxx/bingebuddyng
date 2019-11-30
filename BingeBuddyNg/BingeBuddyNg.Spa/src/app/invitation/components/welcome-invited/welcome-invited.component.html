@@ -1,12 +1,12 @@
 <app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
 <div fxLayout="column" fxLayoutAlign="center center">
-  <h1>{{'WelcomeMessage' | translate}}</h1>
-  <h3>{{'WelcomeSubTitle' | translate }}</h3>
+  <h1>{{'WelcomeMessage' | transloco}}</h1>
+  <h3>{{'WelcomeSubTitle' | transloco }}</h3>
 
   <div *ngIf="invitationInfo">
     <div style="text-align: center">
       <div fxFlexLayout fxLayoutAlign="center center" class="invite-info">
-        <span>{{'InvitedBy' | translate }}</span>
+        <span>{{'InvitedBy' | transloco }}</span>
         <app-user-info [userInfo]="invitationInfo.invitingUser" showName="true"></app-user-info>
         <span>!</span>
       </div>
@@ -16,6 +16,6 @@
   </div>
 
   <div id="started-text" class="pulsate">
-    {{'GetStartedInvited' | translate }}
+    {{'GetStartedInvited' | transloco }}
   </div>
 </div>
