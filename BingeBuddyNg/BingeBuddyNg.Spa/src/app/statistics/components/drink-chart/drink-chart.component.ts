@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { ActivityAggregationDTO } from '../../../../models/ActivityAggregationDTO';
-import * as moment from 'moment';
 import { TranslocoService } from '@ngneat/transloco';
 import { DefaultChartColors } from '../DefaultChartColors';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-drink-chart',
@@ -75,8 +75,10 @@ export class DrinkChartComponent implements OnInit, OnChanges {
     if (this.activities) {
       this.translateService.selectTranslate(['Total', 'Beer', 'Wine', 'Shot', 'Anti', 'AlcoholicDrinks']).subscribe(trans => {
 
+        const datePipe = new DatePipe('de');
+
         console.log(trans);
-        this.activities.forEach(l => this.lineChartLabels.push(moment(l.day).format('DD.MM.YYYY')));
+        this.activities.forEach(l => this.lineChartLabels.push(datePipe.transform(l.day, 'DD.MM.YYYY')));
 
         this.lineChartData = [{
           data: this.activities.map(x => x.count),

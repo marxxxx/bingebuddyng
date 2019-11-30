@@ -1,7 +1,7 @@
 import { TranslocoService } from '@ngneat/transloco';
 import { UserStatisticHistoryDTO } from './../../services/UserStatisticHistoryDTO';
 import { Component, OnInit, Input } from '@angular/core';
-import * as moment from 'moment';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-alc-history-chart',
@@ -59,7 +59,8 @@ export class AlcHistoryChartComponent implements OnInit {
   constructor(private trans: TranslocoService) { }
 
   ngOnInit() {
-    this.userStatsHistory.forEach(l => this.lineChartLabels.push(moment(l.timestamp).format('HH:mm')));
+    const datePipe = new DatePipe('de');
+    this.userStatsHistory.forEach(l => this.lineChartLabels.push(datePipe.transform(l.timestamp, 'HH:mm')));
     this.lineChartData = [{
       data: this.userStatsHistory.map(x => x.alcLevel),
       label: '‰'

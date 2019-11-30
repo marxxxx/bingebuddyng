@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
-import { TranslateLoader } from '@ngx-translate/core';
 import { TranslocoModule } from '@ngneat/transloco';
-import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthHttpInterceptor } from './services/auth.interceptor';
 import { CallbackComponent } from './components/callback/callback.component';
 import { DrinkEventCounterComponent } from './components/drink-event-counter/drink-event-counter.component';
