@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  BaseDataUrl: 'https://bingebuddy.azurefd.net/api'
+  BaseDataUrl: 'https://bingebuddyapi.azurewebsites.net/api'
 };
