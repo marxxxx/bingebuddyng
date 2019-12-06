@@ -3,6 +3,7 @@ import { ActivityAggregationDTO } from '../../../../models/ActivityAggregationDT
 import { TranslocoService } from '@ngneat/transloco';
 import { DefaultChartColors } from '../DefaultChartColors';
 import { DatePipe } from '@angular/common';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-drink-chart',
@@ -73,34 +74,34 @@ export class DrinkChartComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     if (this.activities) {
-      this.translateService.selectTranslate(['Total', 'Beer', 'Wine', 'Shot', 'Anti', 'AlcoholicDrinks']).subscribe(trans => {
+      this.translateService
+        .selectTranslate(['Total', 'Beer', 'Wine', 'Shot', 'Anti', 'AlcoholicDrinks'])
+        .subscribe(trans => {
 
-        const datePipe = new DatePipe('de');
+          console.log(trans);
+          this.activities.forEach(l => this.lineChartLabels.push(format(new Date(l.day), 'dd.MM.yyyy')));
 
-        console.log(trans);
-        this.activities.forEach(l => this.lineChartLabels.push(datePipe.transform(l.day, 'DD.MM.YYYY')));
-
-        this.lineChartData = [{
-          data: this.activities.map(x => x.count),
-          label: trans['Total']
-        }, {
-          data: this.activities.map(x => x.countBeer),
-          label: trans['Beer']
-        }, {
-          data: this.activities.map(x => x.countWine),
-          label: trans['Wine']
-        }, {
-          data: this.activities.map(x => x.countShots),
-          label: trans['Shot']
-        }, {
-          data: this.activities.map(x => x.countAnti),
-          label: trans['Anti']
-        }, {
-          data: this.activities.map(x => x.countAlc),
-          label: trans['AlcoholicDrinks']
-        }
-        ];
-      });
+          this.lineChartData = [{
+            data: this.activities.map(x => x.count),
+            label: trans['Total']
+          }, {
+            data: this.activities.map(x => x.countBeer),
+            label: trans['Beer']
+          }, {
+            data: this.activities.map(x => x.countWine),
+            label: trans['Wine']
+          }, {
+            data: this.activities.map(x => x.countShots),
+            label: trans['Shot']
+          }, {
+            data: this.activities.map(x => x.countAnti),
+            label: trans['Anti']
+          }, {
+            data: this.activities.map(x => x.countAlc),
+            label: trans['AlcoholicDrinks']
+          }
+          ];
+        });
 
     }
   }

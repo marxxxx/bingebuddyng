@@ -47,6 +47,7 @@ import { TranslocoModule, TRANSLOCO_CONFIG, TranslocoConfig } from '@ngneat/tran
       useValue: {
         availableLangs: ['de', 'at', 'en', 'ru'],
         defaultLang: 'de',
+        allowEmpty: true,
         reRenderOnLangChange: true,
         prodMode: environment.production,
       } as TranslocoConfig
