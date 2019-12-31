@@ -83,27 +83,26 @@ export class DrinkChartComponent implements OnInit, OnChanges {
 
           this.lineChartData = [{
             data: this.activities.map(x => x.count),
-            label: trans['Total']
+            label: trans[0]
           }, {
             data: this.activities.map(x => x.countBeer),
-            label: trans['Beer']
+            label: trans[1]
           }, {
             data: this.activities.map(x => x.countWine),
-            label: trans['Wine']
+            label: trans[2]
           }, {
             data: this.activities.map(x => x.countShots),
-            label: trans['Shot']
+            label: trans[3]
           }, {
             data: this.activities.map(x => x.countAnti),
-            label: trans['Anti']
+            label: trans[4]
           }, {
             data: this.activities.map(x => x.countAlc),
-            label: trans['AlcoholicDrinks']
+            label: trans[5]
           }
           ];
         });
 
     }
   }
-
 }

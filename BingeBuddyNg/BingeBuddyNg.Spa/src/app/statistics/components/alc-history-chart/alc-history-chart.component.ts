@@ -1,6 +1,6 @@
 import { TranslocoService } from '@ngneat/transloco';
 import { UserStatisticHistoryDTO } from './../../services/UserStatisticHistoryDTO';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { format } from 'date-fns';
 
 @Component({
@@ -8,7 +8,7 @@ import { format } from 'date-fns';
   templateUrl: './alc-history-chart.component.html',
   styleUrls: ['./alc-history-chart.component.css']
 })
-export class AlcHistoryChartComponent implements OnInit {
+export class AlcHistoryChartComponent implements OnInit, OnChanges {
 
   @Input()
   userStatsHistory: UserStatisticHistoryDTO[];
@@ -59,11 +59,16 @@ export class AlcHistoryChartComponent implements OnInit {
   constructor(private trans: TranslocoService) { }
 
   ngOnInit() {
-    this.userStatsHistory.forEach(l => this.lineChartLabels.push(format(new Date(l.timestamp), 'HH:mm')));
-    this.lineChartData = [{
-      data: this.userStatsHistory.map(x => x.alcLevel),
-      label: '‰'
-    }];
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.userStatsHistory) {
+      this.userStatsHistory.forEach(l => this.lineChartLabels.push(format(new Date(l.timestamp), 'HH:mm')));
+      this.lineChartData = [{
+        data: this.userStatsHistory.map(x => x.alcLevel),
+        label: '‰'
+      }];
+    }
   }
 
 }

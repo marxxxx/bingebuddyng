@@ -41,10 +41,10 @@ export class DrinkRatioChartComponent implements OnInit, OnChanges {
             this.calculateSum(this.activities.map(x => x.countShots)),
             this.calculateSum(this.activities.map(x => x.countAnti))
           ],
-          label: trans['DrinkRatio']
+          label: trans[0]
         }];
 
-        this.chartLabels = [trans['Beer'], trans['Wine'], trans['Shot'], trans['Anti']];
+        this.chartLabels = [trans[1], trans[2], trans[3], trans[4]];
       });
 
     }
