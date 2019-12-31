@@ -3,7 +3,7 @@ import { AuthService } from '../../../@core/services/auth.service';
 import { ShellInteractionService } from '../../../@core/services/shell-interaction.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { InvitationService } from 'src/app/invitation/services/invitation.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@ngneat/transloco';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -24,7 +24,7 @@ export class InviteFriendComponent implements OnInit, OnDestroy {
   constructor(private invitationService: InvitationService,
     private shellInteractionService: ShellInteractionService,
     private authService: AuthService,
-    private translateService: TranslateService,
+    private translateService: TranslocoService,
     private snackbar: MatSnackBar) { }
 
   ngOnInit() {
@@ -53,13 +53,13 @@ export class InviteFriendComponent implements OnInit, OnDestroy {
     el.select();
     document.execCommand('copy');
 
-    this.snackbar.open(this.translateService.instant('CopiedToClipboardNowSend'), 'OK');
+    this.snackbar.open(this.translateService.translate('CopiedToClipboardNowSend'), 'OK');
   }
 
   onShare() {
 
-    const title = this.translateService.instant('InvitationTitle');
-    const text = this.translateService.instant('InvitationText', { userName: this.currentUserProfile.nickname });
+    const title = this.translateService.translate('InvitationTitle');
+    const text = this.translateService.translate('InvitationText', { userName: this.currentUserProfile.nickname });
     const url = this.getInvitationLink();
 
     console.log('triggering share ui', title, text, url);

@@ -1,13 +1,13 @@
 <div fxLayout="column" fxLayoutAlign="center center">
   <h1>
-    {{'InviteFriend' | translate}}
+    {{'InviteFriend' | transloco}}
   </h1>
 
   <img src="../../../assets/img/friends.png">
 
-  <p *ngIf="!invitationToken">{{'InviteFriendDescription' | translate }}</p>
+  <p *ngIf="!invitationToken">{{'InviteFriendDescription' | transloco }}</p>
 
-  <div *ngIf="invitationToken" class="margin-top">{{'InviteShareInfo'| translate}}</div>
+  <div *ngIf="invitationToken" class="margin-top">{{'InviteShareInfo'| transloco}}</div>
 
   <div fxLayout *ngIf="invitationToken" class="margin-top" style="width: 100%">
     <textarea #invitationTokenArea fxFlex="90" readonly (click)="onCopyToClipboard(invitationTokenArea)">{{getInvitationLink()}}</textarea>
@@ -21,6 +21,6 @@
 
 
   <button *ngIf="!isBusy && !invitationToken" mat-raised-button color="primary" (click)="onInvite()">{{'InviteFriend' |
-    translate}}</button>
+    transloco}}</button>
   <mat-progress-spinner *ngIf="isBusy" mode="indeterminate" diameter="32"></mat-progress-spinner>
 </div>

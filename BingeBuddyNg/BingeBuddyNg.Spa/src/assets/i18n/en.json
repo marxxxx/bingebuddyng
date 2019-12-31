@@ -154,5 +154,7 @@
     "Onboarding_Label_Completed": "Done",
     "Onboarding_Done": "Congrats! You've made it so far!",
     "Onboarding_Done_Message":"Let me have a drink now",
-    "Onboarding_Next": "alright"
+    "Onboarding_Next": "alright",
+
+    "Total":"Total"
 }

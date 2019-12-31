@@ -23,7 +23,7 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="onDelete()"><mat-icon>delete</mat-icon>{{'Delete' | translate }}</button>
+        <button mat-menu-item (click)="onDelete()"><mat-icon>delete</mat-icon>{{'Delete' | transloco }}</button>
       </mat-menu>
     </div>
   </mat-card-title>
@@ -34,7 +34,7 @@
     </p>
     <!-- Rename -->
     <p class="notification" *ngIf="activity.activity.activityType === ActivityType.Rename">
-      <span>{{ 'RenameMessage' | translate:activity.activity }}</span>
+      <span>{{ 'RenameMessage' | transloco:activity.activity }}</span>
     </p>
     <!-- Venue -->
     <p class="venue" *ngIf="activity.activity.activityType === ActivityType.VenueEntered ||
@@ -51,7 +51,7 @@
     </p>
     <!-- Drink -->
     <span class="drink" *ngIf="activity.activity.activityType === ActivityType.Drink">
-      {{ 'IJustHadA' | translate: activity.activity }}
+      {{ 'IJustHadA' | transloco: activity.activity }}
     </span>
     <!-- Image-->
     <div class="image" *ngIf="isImageActivity()">
@@ -61,15 +61,15 @@
     <div class="image" *ngIf="isVideoActivity()">
       <video width="320" height="240" controls>
         <source [src]="activity.activity.imageUrl" type="video/mp4" />
-        {{ 'NoVideoSupport' | translate }}
+        {{ 'NoVideoSupport' | transloco }}
       </video>
     </div>
     <!-- Welcome User-->
     <div class="message" *ngIf="activity.activity.activityType === ActivityType.Registration">
-      <span>{{'WelcomeNewUserMessage' | translate: activity.activity}}</span>
+      <span>{{'WelcomeNewUserMessage' | transloco: activity.activity}}</span>
     </div>
     <div class="message" *ngIf="activity.activity.activityType === ActivityType.ProfileImageUpdate">
-      <span>{{'ProfileImageUpdateMessage' | translate:activity.activity }}</span>
+      <span>{{'ProfileImageUpdateMessage' | transloco:activity.activity }}</span>
     </div>
     <div class="metadata" fxLayout fxLayoutAlign="space-between center">
       <span class="timestamp">{{
@@ -127,7 +127,7 @@
       <mat-divider></mat-divider>
       <div fxLayout fxLayoutAlign="space-between center" *ngIf="isCommentVisible">
         <mat-form-field>
-          <input type="text" autofocus matInput placeholder="{{ 'Comment' | translate }}" [(ngModel)]="comment"
+          <input type="text" autofocus matInput placeholder="{{ 'Comment' | transloco }}" [(ngModel)]="comment"
             [disabled]="isBusyCommenting" (keydown.enter)="onComment()" />
         </mat-form-field>
         <button mat-icon-button [disabled]="!currentUser" *ngIf="!isBusyCommenting" (click)="onComment()">

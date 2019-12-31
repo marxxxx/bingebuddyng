@@ -1,11 +1,11 @@
 <app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
 
-<h2>{{'Drinkers' | translate }}</h2>
+<h2>{{'Drinkers' | transloco }}</h2>
 
 <!-- Search Input -->
 <div fxLayout fxLayoutAlign="space-between center">
   <mat-form-field fxFlex="90">
-    <input matInput placeholder="{{'Search' | translate }}" [(ngModel)]="filterText" (keydown)="onKeyDown($event)">
+    <input matInput placeholder="{{'Search' | transloco }}" [(ngModel)]="filterText" (keydown)="onKeyDown($event)">
   </mat-form-field>
   <button fxFlex="10" mat-icon-button (click)="load()">
     <mat-icon>search</mat-icon>

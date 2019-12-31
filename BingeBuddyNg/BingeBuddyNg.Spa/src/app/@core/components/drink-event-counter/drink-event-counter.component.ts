@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { DrinkEventService } from 'src/app/@core/services/drinkevent.service';
 import { DrinkEvent } from 'src/models/DrinkEvent';
-import * as moment from 'moment';
 import { MatTooltip } from '@angular/material/tooltip';
 import { AuthService } from 'src/app/@core/services/auth.service';
 import { filter } from 'rxjs/operators';
@@ -26,7 +25,7 @@ export class DrinkEventCounterComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private drinkEventService: DrinkEventService,
     private notificationService: NotificationService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.subscriptions.push(
@@ -93,26 +92,29 @@ export class DrinkEventCounterComponent implements OnInit, OnDestroy {
   }
 
   updateRemainingTime() {
-    if(!this.currentDrinkEvent) {
+    if (!this.currentDrinkEvent) {
       this.stopCounter();
       return;
     }
-    const remainingSeconds = moment(this.currentDrinkEvent.endUtc).diff(moment(), 'seconds');
+    const remainingSeconds = this.calculateDiffInSeconds(new Date(), this.currentDrinkEvent.endUtc);
     if (remainingSeconds < 0) {
       this.stopCounter();
       this.currentDrinkEvent = null;
     } else {
-      const duration = moment.duration(remainingSeconds, 'seconds');
-      this.remainingTime = duration.minutes() + ':' + this.getTwoDigitNumber(duration.seconds());
+      this.remainingTime = remainingSeconds / 60 + ':' + this.getTwoDigitNumber(remainingSeconds % 60);
     }
   }
 
   getTwoDigitNumber(num: number): string {
-    if(num > 10) {
+    if (num > 10) {
       return num.toString();
     } else {
       return '0' + num.toString();
     }
+  }
 
+  calculateDiffInSeconds(startDate: Date, endDate: Date): number {
+    const seconds = (endDate.getTime() - startDate.getTime()) / 1000;
+    return seconds;
   }
 }

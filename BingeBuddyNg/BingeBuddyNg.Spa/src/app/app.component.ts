@@ -3,7 +3,7 @@ import { UserService } from './@core/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from './@core/services/auth.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@ngneat/transloco';
 import { SwPush, SwUpdate } from '@angular/service-worker';
 import { PushInfo } from '../models/PushInfo';
 import { NotificationService } from './@core/services/notification.service';
@@ -27,7 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     public auth: AuthService,
-    private translate: TranslateService,
+    private translate: TranslocoService,
     private userService: UserService,
     private snackbar: MatSnackBar,
     private notification: NotificationService,
@@ -51,7 +51,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.userLanguage = this.settingsService.getLanguage();
 
     // the lang to use, if the lang isn't available, it will use the current loader to get them
-    this.translate.use(this.userLanguage);
+    this.translate.setActiveLang(this.userLanguage);
 
     console.log('ngOnInit - set user language');
     combineLatest([
@@ -76,7 +76,7 @@ export class AppComponent implements OnInit, OnDestroy {
     console.log('ngOnInit - before subscribing to updates');
     // subscribe to PWA updates
     this.updateService.available.subscribe(e => {
-      const message = this.translate.instant('UpdateAvailableMessage');
+      const message = this.translate.translate('UpdateAvailableMessage');
       this.snackbar
         .open(message, 'OK')
         .onAction()

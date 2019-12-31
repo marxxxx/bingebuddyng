@@ -135,7 +135,7 @@
     "Likes":"Likes",
     "Reactions": "Reactions",
     "Close": "Close",
-    
+
     "Onboarding_Navmenu_Entry": "Tutorial",
     "Onboarding_Heading": "What's this all about?",
     "Onboarding_Label_Activitys": "Activitys",
@@ -155,5 +155,7 @@
     "Onboarding_Label_Completed": "Done",
     "Onboarding_Done": "Congrats! You've made it so far!",
     "Onboarding_Done_Message":"Let me have a drink now",
-    "Onboarding_Next": "alright"
+    "Onboarding_Next": "alright",
+
+    "Total":"Total"
 }

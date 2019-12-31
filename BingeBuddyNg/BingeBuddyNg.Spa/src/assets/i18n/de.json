@@ -154,5 +154,7 @@
     "Onboarding_Label_Completed": "Fertig",
     "Onboarding_Done": "Gratuliere! Du hast die Einführung abgeschlossen!",
     "Onboarding_Done_Message":"Lass mich was trinken",
-    "Onboarding_Next": "Kapiert"
+    "Onboarding_Next": "Kapiert",
+
+    "Total":"Gesamt"
 }

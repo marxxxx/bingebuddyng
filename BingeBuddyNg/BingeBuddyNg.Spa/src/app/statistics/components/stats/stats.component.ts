@@ -38,10 +38,11 @@ export class StatsComponent implements OnInit, OnDestroy {
       .pipe(tap(r => this.userProfile = r[0]))
       .subscribe(() => this.load());
 
-    const mediaSubscription = this.media.media$.subscribe((change: MediaChange) => {
+    const mediaSubscription = this.media.asObservable()
+    .subscribe((change: MediaChange[]) => {
       console.log('media change');
       console.log(change);
-      if (change.mqAlias === 'xs') {
+      if (change[0].mqAlias === 'xs') {
         this.isLegendVisible = false;
       } else {
         this.isLegendVisible = true;

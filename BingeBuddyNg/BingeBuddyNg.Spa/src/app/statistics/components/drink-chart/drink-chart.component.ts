@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { ActivityAggregationDTO } from '../../../../models/ActivityAggregationDTO';
-import * as moment from 'moment';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@ngneat/transloco';
 import { DefaultChartColors } from '../DefaultChartColors';
+import { DatePipe } from '@angular/common';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-drink-chart',
@@ -65,7 +66,7 @@ export class DrinkChartComponent implements OnInit, OnChanges {
   ];
 
 
-  constructor(private translateService: TranslateService) { }
+  constructor(private translateService: TranslocoService) { }
 
   ngOnInit() {
 
@@ -73,34 +74,35 @@ export class DrinkChartComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     if (this.activities) {
-      this.translateService.get(['Total', 'Beer', 'Wine', 'Shot', 'Anti', 'AlcoholicDrinks']).subscribe(trans => {
+      this.translateService
+        .selectTranslate(['Total', 'Beer', 'Wine', 'Shot', 'Anti', 'AlcoholicDrinks'])
+        .subscribe(trans => {
 
-        console.log(trans);
-        this.activities.forEach(l => this.lineChartLabels.push(moment(l.day).format('DD.MM.YYYY')));
+          console.log(trans);
+          this.activities.forEach(l => this.lineChartLabels.push(format(new Date(l.day), 'dd.MM.yyyy')));
 
-        this.lineChartData = [{
-          data: this.activities.map(x => x.count),
-          label: trans['Total']
-        }, {
-          data: this.activities.map(x => x.countBeer),
-          label: trans['Beer']
-        }, {
-          data: this.activities.map(x => x.countWine),
-          label: trans['Wine']
-        }, {
-          data: this.activities.map(x => x.countShots),
-          label: trans['Shot']
-        }, {
-          data: this.activities.map(x => x.countAnti),
-          label: trans['Anti']
-        }, {
-          data: this.activities.map(x => x.countAlc),
-          label: trans['AlcoholicDrinks']
-        }
-        ];
-      });
+          this.lineChartData = [{
+            data: this.activities.map(x => x.count),
+            label: trans[0]
+          }, {
+            data: this.activities.map(x => x.countBeer),
+            label: trans[1]
+          }, {
+            data: this.activities.map(x => x.countWine),
+            label: trans[2]
+          }, {
+            data: this.activities.map(x => x.countShots),
+            label: trans[3]
+          }, {
+            data: this.activities.map(x => x.countAnti),
+            label: trans[4]
+          }, {
+            data: this.activities.map(x => x.countAlc),
+            label: trans[5]
+          }
+          ];
+        });
 
     }
   }
-
 }

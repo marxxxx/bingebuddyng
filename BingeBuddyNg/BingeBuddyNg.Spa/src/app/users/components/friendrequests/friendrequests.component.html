@@ -1,6 +1,6 @@
 <app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
 
-<h3>{{'PendingFriendRequests' | translate }}</h3>
+<h3>{{'PendingFriendRequests' | transloco }}</h3>
 <mat-card *ngFor="let r of pendingRequests">
 
   <mat-card-content fxLayout fxLayoutAlign="space-between center">
@@ -14,13 +14,13 @@
 </mat-card>
 
 <p *ngIf="pendingRequests.length == 0 && !isBusy" fxLayout fxLayoutAlign="start center">
-  <mat-icon>warning</mat-icon>{{'NoPendingFriendRequests' | translate}}
+  <mat-icon>warning</mat-icon>{{'NoPendingFriendRequests' | transloco}}
 </p>
 
 <p fxLayout fxLayoutAlign="start center" *ngIf="!isBusy">
-  <mat-icon>info</mat-icon>{{'FriendRequestHint' | translate }}
+  <mat-icon>info</mat-icon>{{'FriendRequestHint' | transloco }}
 </p>
 
 <button *ngIf="!isBusy" mat-raised-button color="primary" [routerLink]="['/activity-feed']">
-  {{'BackToActivity' | translate}}
+  {{'BackToActivity' | transloco}}
 </button>
