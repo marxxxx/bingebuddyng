@@ -11,6 +11,7 @@ using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Statistics;
+using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 
 namespace BingeBuddyNg.Functions
 {
@@ -24,12 +25,14 @@ namespace BingeBuddyNg.Functions
         public IDrinkEventRepository DrinkEventRepository { get; }
         public ITranslationService TranslationService { get; }
         public IUserStatisticsService UserStatisticsService { get; }
+        public IDurableClient DurableClient { get; }
 
 
         public ActivityAddedFunction(IUtilityService utilityService, IActivityRepository activityRepository,
             IUserRepository userRepository, IUserStatsRepository userStatsRepository, 
             INotificationService notificationService, IDrinkEventRepository drinkEventRepository, 
-            ITranslationService translationService, IUserStatisticsService userStatisticsService)
+            ITranslationService translationService, IUserStatisticsService userStatisticsService,
+            IDurableClient starter)
         {
             UtilityService = utilityService ?? throw new ArgumentNullException(nameof(utilityService));
             ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
@@ -39,12 +42,12 @@ namespace BingeBuddyNg.Functions
             DrinkEventRepository = drinkEventRepository ?? throw new ArgumentNullException(nameof(drinkEventRepository));
             TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
             UserStatisticsService = userStatisticsService ?? throw new ArgumentNullException(nameof(userStatisticsService));
+            DurableClient = starter ?? throw new ArgumentNullException(nameof(starter));
         }
 
         [FunctionName("ActivityAddedFunction")]
         public async Task Run(
             [QueueTrigger(Shared.Constants.QueueNames.ActivityAdded, Connection = "AzureWebJobsStorage")]string message,
-            [OrchestrationClient]DurableOrchestrationClient starter,
             ILogger log)
         {
 
@@ -63,7 +66,7 @@ namespace BingeBuddyNg.Functions
                     currentUser = await UserRepository.FindUserAsync(activity.UserId);
                     if (activity.ActivityType == ActivityType.Drink)
                     {
-                        await HandleMonitoringAsync(starter, currentUser);
+                        await HandleMonitoringAsync(this.DurableClient, currentUser);
                     }
                 }
                 catch (Exception ex)
@@ -130,7 +133,7 @@ namespace BingeBuddyNg.Functions
             
         }
 
-        private async Task HandleMonitoringAsync(DurableOrchestrationClient starter, User currentUser)
+        private async Task HandleMonitoringAsync(IDurableClient starter, User currentUser)
         {
             if (currentUser.MonitoringInstanceId != null)
             {
