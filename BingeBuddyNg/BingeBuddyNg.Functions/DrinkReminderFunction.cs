@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
+using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 
 namespace BingeBuddyNg.Functions
 {
@@ -24,7 +25,7 @@ namespace BingeBuddyNg.Functions
 
         [FunctionName(nameof(DrinkReminderFunction))]
         public async Task RunOrchestrator(
-            [OrchestrationTrigger] DurableOrchestrationContext context, ILogger log)
+            [OrchestrationTrigger] IDurableOrchestrationContext context, ILogger log)
         {
             log.LogInformation($"Running drink reminder function ...");
             
