@@ -10,9 +10,9 @@ namespace BingeBuddyNg.Services.Infrastructure
     public class UtilityService : IUtilityService
     {
         public IHttpClientFactory HttpClientFactory { get; }
-        public AppConfiguration Configuration { get; }
+        public GoogleApiConfiguration Configuration { get; }
 
-        public UtilityService(IHttpClientFactory httpClientFactory, AppConfiguration configuration)
+        public UtilityService(IHttpClientFactory httpClientFactory, GoogleApiConfiguration configuration)
         {
             this.HttpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
             this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -23,7 +23,7 @@ namespace BingeBuddyNg.Services.Infrastructure
         {
             string lat = location.Latitude.ToString().Replace(',', '.');
             string lon = location.Longitude.ToString().Replace(',', '.');
-            var url = $"https://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lon}&sensor=true&key={Configuration.GoogleAPIKey}";
+            var url = $"https://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lon}&sensor=true&key={Configuration.ApiKey}";
 
             var httpClient = this.HttpClientFactory.CreateClient();
             var result = await httpClient.GetStringAsync(url);

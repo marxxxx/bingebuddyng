@@ -17,15 +17,8 @@ namespace BingeBuddyNg.Services
     {
         public static void AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
-            string storageConnString = configuration.GetConnectionString("Storage");
-            string googleApiKey = configuration.GetValue<string>("Credentials:GoogleApiKey");
-            string webPushPrivateKey = configuration.GetValue<string>("Credentials:WebPushPrivateKey");
-            string webPushPublicKey = configuration.GetValue<string>("Credentials:WebPushPublicKey");
-            string fourSquareApiClientKey = configuration.GetValue<string>("Credentials:FourSquareApiClientKey");
-            string fourSquareApiClientSecret = configuration.GetValue<string>("Credentials:FourSquareApiClientSecret");
-            var appConfiguration = new AppConfiguration(storageConnString, googleApiKey, webPushPublicKey, webPushPrivateKey, 
-                fourSquareApiClientKey, fourSquareApiClientSecret);
-            services.AddSingleton(appConfiguration);
+            AddConfiguration(services, configuration);
+
             services.AddLogging();
 
             services.AddMediatR(typeof(ActivityDTO).Assembly);
@@ -50,7 +43,22 @@ namespace BingeBuddyNg.Services
 
             services.AddScoped<IDrinkRepository, DrinkRepository>();
             services.AddScoped<IUserStatsHistoryRepository, UserStatsHistoryRepository>();
-            
+
+        }
+
+        private static void AddConfiguration(IServiceCollection services, IConfiguration configuration)
+        {
+            string storageConnectionString = configuration.GetConnectionString("Storage");
+            string googleApiKey = configuration.GetValue<string>("Credentials:GoogleApiKey");
+            string webPushPrivateKey = configuration.GetValue<string>("Credentials:WebPushPrivateKey");
+            string webPushPublicKey = configuration.GetValue<string>("Credentials:WebPushPublicKey");
+            string fourSquareApiClientKey = configuration.GetValue<string>("Credentials:FourSquareApiClientKey");
+            string fourSquareApiClientSecret = configuration.GetValue<string>("Credentials:FourSquareApiClientSecret");
+
+            services.AddSingleton(new StorageConfiguration(storageConnectionString));
+            services.AddSingleton(new GoogleApiConfiguration(googleApiKey));
+            services.AddSingleton(new WebPushConfiguration(webPushPublicKey, webPushPrivateKey));
+            services.AddSingleton(new FourSquareConfiguration(fourSquareApiClientKey, fourSquareApiClientSecret));
         }
     }
 }

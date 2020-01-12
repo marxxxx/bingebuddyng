@@ -20,18 +20,10 @@ namespace BingeBuddyNg.Functions
         {
             var services = builder.Services;
 
-            string storageConnectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage", EnvironmentVariableTarget.Process);
-            string googleApiKey = Environment.GetEnvironmentVariable("GoogleApiKey", EnvironmentVariableTarget.Process);
-            string webPushPublicKey = Environment.GetEnvironmentVariable("WebPushPublicKey", EnvironmentVariableTarget.Process);
-            string webPushPrivateKey = Environment.GetEnvironmentVariable("WebPushPrivateKey", EnvironmentVariableTarget.Process);
-            string fourSquareApiClientKey = Environment.GetEnvironmentVariable("FourSquareApiClientKey", EnvironmentVariableTarget.Process);
-            string fourSquareApiClientSecret = Environment.GetEnvironmentVariable("FourSquareApiClientSecret", EnvironmentVariableTarget.Process);
-
             services.AddHttpClient();
+           
+            AddConfiguration(services);
             
-            var configuration = new AppConfiguration(storageConnectionString, googleApiKey, webPushPublicKey, webPushPrivateKey,
-                fourSquareApiClientKey, fourSquareApiClientSecret);
-            services.AddSingleton(configuration);
             services.AddSingleton<StorageAccessService>();
             services.AddSingleton<IStorageAccessService, StorageAccessService>();
             services.AddSingleton<ITranslationService, TranslationService>();
@@ -46,6 +38,22 @@ namespace BingeBuddyNg.Functions
             services.AddTransient<IUserStatsHistoryRepository, UserStatsHistoryRepository>();
             services.AddTransient<IUtilityService, UtilityService>();
             services.AddTransient<ICacheService, NoCacheService>();
+        }
+
+        
+        public void AddConfiguration(IServiceCollection services)
+        {
+            string storageConnectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage", EnvironmentVariableTarget.Process);
+            string googleApiKey = Environment.GetEnvironmentVariable("GoogleApiKey", EnvironmentVariableTarget.Process);
+            string webPushPublicKey = Environment.GetEnvironmentVariable("WebPushPublicKey", EnvironmentVariableTarget.Process);
+            string webPushPrivateKey = Environment.GetEnvironmentVariable("WebPushPrivateKey", EnvironmentVariableTarget.Process);
+            string fourSquareApiClientKey = Environment.GetEnvironmentVariable("FourSquareApiClientKey", EnvironmentVariableTarget.Process);
+            string fourSquareApiClientSecret = Environment.GetEnvironmentVariable("FourSquareApiClientSecret", EnvironmentVariableTarget.Process);
+
+            services.AddSingleton(new StorageConfiguration(storageConnectionString));
+            services.AddSingleton(new GoogleApiConfiguration(googleApiKey));
+            services.AddSingleton(new WebPushConfiguration(webPushPublicKey, webPushPrivateKey));
+            services.AddSingleton(new FourSquareConfiguration(fourSquareApiClientKey, fourSquareApiClientSecret));
         }
     }
 }

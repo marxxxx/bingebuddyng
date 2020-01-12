@@ -7,9 +7,9 @@ namespace BingeBuddyNg.Services.Infrastructure
 {
     public class NotificationService : INotificationService
     {
-        private AppConfiguration configuration;
+        private WebPushConfiguration configuration;
 
-        public NotificationService(AppConfiguration configuration)
+        public NotificationService(WebPushConfiguration configuration)
         {
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }

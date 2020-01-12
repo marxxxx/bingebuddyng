@@ -12,9 +12,9 @@ namespace BingeBuddyNg.Services.Infrastructure
 {
     public class StorageAccessService : IStorageAccessService
     {
-        private AppConfiguration config;
+        private StorageConfiguration config;
 
-        public StorageAccessService(AppConfiguration config)
+        public StorageAccessService(StorageConfiguration config)
         {
             this.config = config ?? throw new ArgumentNullException(nameof(config));
         }

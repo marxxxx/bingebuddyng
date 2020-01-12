@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,14 +16,14 @@ namespace BingeBuddyNg.Services.Venue.Querys
     {
         private const string BaseUrl = "https://api.foursquare.com/v2";
 
-        public VenueQueryHandler(IHttpClientFactory httpClientFactory, AppConfiguration configuration)
+        public IHttpClientFactory HttpClientFactory { get; }
+        public FourSquareConfiguration Configuration { get; }
+
+        public VenueQueryHandler(IHttpClientFactory httpClientFactory, FourSquareConfiguration configuration)
         {
             HttpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
             Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        }
-
-        public IHttpClientFactory HttpClientFactory { get; }
-        public AppConfiguration Configuration { get; }
+        }        
 
         public async Task<List<VenueModel>> Handle(SearchVenuesQuery request, CancellationToken cancellationToken)
         {
