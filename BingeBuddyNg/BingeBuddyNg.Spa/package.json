@@ -5,7 +5,8 @@
     "ng": "ng",
     "start": "ng serve --open",
     "build": "ng build --prod",
-    "test": "ng test --browsers=ChromeHeadless",
+    "test": "ng test --watch=false --browsers=ChromeHeadless",
+    "test:watch": "ng test --browsers=ChromeHeadless",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "bundle-report": "webpack-bundle-analyzer dist/BingeBuddyNg/stats-es2015.json"
