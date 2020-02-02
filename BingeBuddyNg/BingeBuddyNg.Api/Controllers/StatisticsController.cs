@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BingeBuddyNg.Api.Dto;
+﻿using BingeBuddyNg.Api.Dto;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.Statistics.Querys;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Api.Controllers
 {
@@ -28,6 +27,13 @@ namespace BingeBuddyNg.Api.Controllers
         public async Task<IEnumerable<UserStatisticHistoryDTO>> GetStatisticHistoryForUser(string userId)
         {
             var result = await Mediator.Send(new GetStatisticHistoryForUserQuery(userId));
+            return result;
+        }
+
+        [HttpGet("personalusageperweekday/{userId}")]
+        public async Task<IEnumerable<PersonalUsagePerWeekdayDTO>> GetPersonalUsagePerWeekday(string userId)
+        {
+            var result = await Mediator.Send(new GetPersonalUsagePerWeekdayQuery(userId));
             return result;
         }
     }

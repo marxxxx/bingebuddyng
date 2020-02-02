@@ -8,12 +8,12 @@ namespace BingeBuddyNg.Services.Statistics
     public class PersonalUsagePerWeekdayTableEntity : TableEntity
     {
         public string weekDay { get; set; }
-        public int ActivityCount { get; set; }
-        public double AvgCount { get; set; }
-        public int MaxCount { get; set; }
-        public int MinCount { get; set; }
-        public double MedialActivityCount { get; set; }
-        public double MedianMaxAlcLevel { get; set; }
-        public double Percentage { get; set; }
+        public string ActivityCount { get; set; }
+        public string AvgCount { get; set; }
+        public string MaxCount { get; set; }
+        public string MinCount { get; set; }
+        public string MedianActivityCount { get; set; }
+        public string MedianMaxAlcLevel { get; set; }
+        public string Percentage { get; set; }
     }
 }   

@@ -21,16 +21,18 @@ namespace BingeBuddyNg.Services.Statistics
 
         internal static PersonalUsagePerWeekdayDTO ToDto(this PersonalUsagePerWeekdayTableEntity entity)
         {
+            var numFormat = new System.Globalization.CultureInfo("en").NumberFormat;
+            
             return new PersonalUsagePerWeekdayDTO()
             {
-                WeekDay = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), entity.weekDay, true),
-                ActivityCount = entity.ActivityCount,
-                AvgCount = entity.AvgCount,
-                MaxCount = entity.MaxCount,
-                MinCount = entity.MinCount,
-                MedialActivityCount = entity.MedialActivityCount,
-                MedianMaxAlcLevel = entity.MedianMaxAlcLevel,
-                Percentage = entity.Percentage
+                WeekDay = entity.weekDay,
+                ActivityCount = int.Parse(entity.ActivityCount),
+                AvgCount = double.Parse(entity.AvgCount, numFormat),
+                MaxCount = int.Parse(entity.MaxCount),
+                MinCount = int.Parse(entity.MinCount),
+                MedianActivityCount = double.Parse(entity.MedianActivityCount, numFormat),
+                MedianMaxAlcLevel = double.Parse(entity.MedianMaxAlcLevel, numFormat),
+                Percentage = double.Parse(entity.Percentage, numFormat)
             };
         }
     }
