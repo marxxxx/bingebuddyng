@@ -96,12 +96,15 @@ export class DrinkEventCounterComponent implements OnInit, OnDestroy {
       this.stopCounter();
       return;
     }
-    const remainingSeconds = this.calculateDiffInSeconds(new Date(), this.currentDrinkEvent.endUtc);
+    const remainingSeconds = this.calculateDiffInSeconds(new Date(), new Date(this.currentDrinkEvent.endUtc));
+
     if (remainingSeconds < 0) {
       this.stopCounter();
       this.currentDrinkEvent = null;
     } else {
-      this.remainingTime = remainingSeconds / 60 + ':' + this.getTwoDigitNumber(remainingSeconds % 60);
+      this.remainingTime = this.getTwoDigitNumber(Math.floor(remainingSeconds / 60)) +
+        ':' +
+        this.getTwoDigitNumber(Math.round(remainingSeconds % 60));
     }
   }
 
@@ -115,6 +118,6 @@ export class DrinkEventCounterComponent implements OnInit, OnDestroy {
 
   calculateDiffInSeconds(startDate: Date, endDate: Date): number {
     const seconds = (endDate.getTime() - startDate.getTime()) / 1000;
-    return seconds;
+    return Math.round(seconds);
   }
 }
