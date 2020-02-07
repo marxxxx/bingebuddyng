@@ -2,21 +2,22 @@ import { ReactionDialogComponent } from './../reaction-dialog/reaction-dialog.co
 import { UserInfoDTO } from '../../../../models/UserInfoDTO';
 import { ActivityType } from '../../../../models/ActivityType';
 import { ActivityStatsDTO } from '../../../../models/ActivityStatsDTO';
-import { Component, OnInit, Input, EventEmitter, Output, ViewChildren } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChildren, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivityService } from './../../services/activity.service';
 import { AddReactionDTO } from '../../../../models/AddReactionDTO';
 import { ReactionType } from '../../../../models/ReactionType';
 import { UserService } from 'src/app/@core/services/user.service';
 import { Router } from '@angular/router';
 import { ShellInteractionService } from 'src/app/@core/services/shell-interaction.service';
-import { filter } from 'rxjs/operators';
+import { filter, finalize } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 
 
 @Component({
   selector: 'app-activity',
   templateUrl: './activity.component.html',
-  styleUrls: ['./activity.component.scss']
+  styleUrls: ['./activity.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActivityComponent implements OnInit {
 
@@ -57,6 +58,7 @@ export class ActivityComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private changeDetector: ChangeDetectorRef,
     private activityService: ActivityService,
     private dialog: MatDialog,
     private shellInteraction: ShellInteractionService,
@@ -83,59 +85,67 @@ export class ActivityComponent implements OnInit {
 
     this.isBusyLiking = true;
     const reaction = this.createAddReactionDTO(ReactionType.Like);
-    this.activityService.addReaction(reaction).subscribe(() => {
-      this.isBusyLiking = false;
-      const addedLike = this.createAddReactionDTO(ReactionType.Like);
-      this.activity.activity.likes.push({
-        type: ReactionType.Like,
-        timestamp: new Date(),
-        userId: this.currentUser.userId,
-        userName: this.currentUser.userName
+    this.activityService.addReaction(reaction)
+      .pipe(finalize(() => {
+        this.isBusyLiking = false;
+        this.changeDetector.detectChanges();
+      }))
+      .subscribe(() => {
+        this.activity.activity.likes.push({
+          type: ReactionType.Like,
+          timestamp: new Date(),
+          userId: this.currentUser.userId,
+          userName: this.currentUser.userName
+        });
+      }, e => {
+        console.error(e);
       });
-    }, e => {
-      this.isBusyLiking = false;
-      console.error(e);
-
-    });
   }
 
   onCheers(ev) {
     ev.stopPropagation();
     this.isBusyCheering = true;
     const reaction = this.createAddReactionDTO(ReactionType.Cheers);
-    this.activityService.addReaction(reaction).subscribe(() => {
-      this.isBusyCheering = false;
-      const addedCheers = this.createAddReactionDTO(ReactionType.Cheers);
-      this.activity.activity.cheers.push({
-        type: ReactionType.Cheers,
-        timestamp: new Date(),
-        userId: this.currentUser.userId,
-        userName: this.currentUser.userName
+    this.activityService.addReaction(reaction)
+      .pipe(finalize(() => {
+        this.isBusyCheering = false;
+        this.changeDetector.detectChanges();
+      }))
+      .subscribe(() => {
+        this.activity.activity.cheers.push({
+          type: ReactionType.Cheers,
+          timestamp: new Date(),
+          userId: this.currentUser.userId,
+          userName: this.currentUser.userName
+        });
+      }, e => {
+        console.error(e);
       });
-    }, e => {
-      this.isBusyCheering = false;
-      console.error(e);
-    });
   }
 
   onComment() {
     this.isBusyCommenting = true;
+    this.changeDetector.detectChanges();
     const reaction = this.createAddReactionDTO(ReactionType.Comment, this.comment);
-    this.activityService.addReaction(reaction).subscribe(() => {
-      this.isBusyCommenting = false;
-      this.activity.activity.comments.push({
-        type: ReactionType.Comment,
-        timestamp: new Date(),
-        userId: this.currentUser.userId,
-        userName: this.currentUser.userName,
-        comment: this.comment
+    this.activityService.addReaction(reaction)
+      .pipe(finalize(() => {
+        this.isBusyCommenting = false;
+        this.changeDetector.detectChanges();
+      }))
+      .subscribe(() => {
+        this.activity.activity.comments.push({
+          type: ReactionType.Comment,
+          timestamp: new Date(),
+          userId: this.currentUser.userId,
+          userName: this.currentUser.userName,
+          comment: this.comment
+        });
+        this.comment = null;
+        this.setCommentVisible(false);
+      }, e => {
+        this.setCommentVisible(false);
+        console.error(e);
       });
-      this.comment = null;
-      this.setCommentVisible(false);
-    }, e => {
-      this.setCommentVisible(false);
-      console.error(e);
-    });
   }
 
   onDelete() {
