@@ -9,7 +9,8 @@
     "test:watch": "ng test --browsers=ChromeHeadless",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "bundle-report": "webpack-bundle-analyzer dist/BingeBuddyNg/stats-es2015.json"
+    "bundle-report": "webpack-bundle-analyzer dist/BingeBuddyNg/stats-es2015.json",
+    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points"
   },
   "private": true,
   "dependencies": {
