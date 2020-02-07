@@ -2,7 +2,7 @@ import { ReactionDialogComponent } from './../reaction-dialog/reaction-dialog.co
 import { UserInfoDTO } from '../../../../models/UserInfoDTO';
 import { ActivityType } from '../../../../models/ActivityType';
 import { ActivityStatsDTO } from '../../../../models/ActivityStatsDTO';
-import { Component, OnInit, Input, EventEmitter, Output, ViewChildren, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivityService } from './../../services/activity.service';
 import { AddReactionDTO } from '../../../../models/AddReactionDTO';
 import { ReactionType } from '../../../../models/ReactionType';
@@ -10,7 +10,7 @@ import { UserService } from 'src/app/@core/services/user.service';
 import { Router } from '@angular/router';
 import { ShellInteractionService } from 'src/app/@core/services/shell-interaction.service';
 import { filter, finalize } from 'rxjs/operators';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
