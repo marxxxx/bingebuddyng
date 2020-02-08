@@ -1,6 +1,5 @@
 import { PersonalUsagePerWeekdayDTO } from './../../../../models/PersonalUsagePerWeekdayDTO';
 import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
-import { DefaultChartColors } from '../DefaultChartColors';
 
 @Component({
   selector: 'app-usage-per-weekday-chart',
@@ -12,7 +11,6 @@ export class UsagePerWeekdayChartComponent implements OnInit, OnChanges {
   @Input()
   data: PersonalUsagePerWeekdayDTO[];
 
-  // lineChart
   public lineChartData: Array<any> = [
     { data: [], label: '' }
   ];
@@ -77,8 +75,6 @@ export class UsagePerWeekdayChartComponent implements OnInit, OnChanges {
           pointHoverBackgroundColor: '#fff',
           pointHoverBorderColor: 'rgba(136, 181, 33,0.8)'
         }));
-
-    console.log(this.lineChartColors);
   }
 
   private isToday(w1: string, w2: string): boolean {
