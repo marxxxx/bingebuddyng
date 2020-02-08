@@ -156,5 +156,7 @@
     "Onboarding_Done_Message":"Let me have a drink now",
     "Onboarding_Next": "alright",
 
-    "Total":"Total"
+    "Total":"Total",
+
+    "UsagePerWeekDay": "Drunkenness per week day"
 }

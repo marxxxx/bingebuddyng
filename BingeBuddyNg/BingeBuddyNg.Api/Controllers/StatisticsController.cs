@@ -30,7 +30,7 @@ namespace BingeBuddyNg.Api.Controllers
             return result;
         }
 
-        [HttpGet("personalusageperweekday/{userId}")]
+        [HttpGet("{userId}/personalusageperweekday")]
         public async Task<IEnumerable<PersonalUsagePerWeekdayDTO>> GetPersonalUsagePerWeekday(string userId)
         {
             var result = await Mediator.Send(new GetPersonalUsagePerWeekdayQuery(userId));

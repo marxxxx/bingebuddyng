@@ -34,8 +34,8 @@ export class ActivityService {
     return this.http.get<ActivityDTO[]>(url);
   }
 
-  getActivityAggregation(): Observable<ActivityAggregationDTO[]> {
-    const url = `${this.baseUrl}/GetActivityAggregation`;
+  getActivityAggregation(userId: string): Observable<ActivityAggregationDTO[]> {
+    const url = `${this.baseUrl}/GetActivityAggregation/${userId}`;
     return this.http.get<ActivityAggregationDTO[]>(url);
   }
 

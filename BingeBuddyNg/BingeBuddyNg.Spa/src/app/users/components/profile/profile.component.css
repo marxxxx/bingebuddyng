@@ -8,7 +8,8 @@ img {
 }
 
 #actions {
-    margin-top: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 mat-icon {
@@ -17,4 +18,9 @@ mat-icon {
 
 .mute-buttons {
     width: 60px;
+}
+
+button[mat-raised-button] {
+  min-width: 80%;
+  width: 80%;
 }

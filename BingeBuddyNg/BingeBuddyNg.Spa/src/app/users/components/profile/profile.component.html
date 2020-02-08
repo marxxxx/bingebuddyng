@@ -3,18 +3,28 @@
 
 <div class="container" *ngIf="user" fxLayout="column" fxLayoutAlign="center center">
   <img *ngIf="!isBusyUpdatingProfilePic" [src]="getProfileImageUrl()" (click)="onProfileImageClick()">
-  <mat-progress-spinner *ngIf="isBusyUpdatingProfilePic" mode="indeterminate" color="primary" diameter="64"></mat-progress-spinner>
+  <mat-progress-spinner *ngIf="isBusyUpdatingProfilePic" mode="indeterminate" color="primary" diameter="64">
+  </mat-progress-spinner>
   <div fxLayout fxLayoutAlign="center center">
     <h3 *ngIf="!isEditingUserName && user">{{user.name}}</h3>
     <mat-form-field *ngIf="isEditingUserName">
-      <input type="text" matInput [(ngModel)]="user.name"  [disabled]="isBusyUpdatingUserName">
+      <input type="text" matInput [(ngModel)]="user.name" [disabled]="isBusyUpdatingUserName">
     </mat-form-field>
-    <button mat-icon-button *ngIf="isYou() && !isEditingUserName && !isBusyUpdatingUserName" (click)="isEditingUserName = true"><mat-icon>edit</mat-icon></button>
-    <button mat-icon-button *ngIf="isEditingUserName && !isBusyUpdatingUserName" (click)="isEditingUserName = false; user.name = originalUserName"><mat-icon>close</mat-icon></button>
-    <button mat-icon-button *ngIf="isEditingUserName && !isBusyUpdatingUserName" (click)="onUpdateUserName()"><mat-icon>save</mat-icon></button>
-    <mat-progress-spinner *ngIf="isBusyUpdatingUserName" mode="indeterminate" color="primary" diameter="48"></mat-progress-spinner>
+    <button mat-icon-button *ngIf="isYou() && !isEditingUserName && !isBusyUpdatingUserName"
+      (click)="isEditingUserName = true">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-icon-button *ngIf="isEditingUserName && !isBusyUpdatingUserName"
+      (click)="isEditingUserName = false; user.name = originalUserName">
+      <mat-icon>close</mat-icon>
+    </button>
+    <button mat-icon-button *ngIf="isEditingUserName && !isBusyUpdatingUserName" (click)="onUpdateUserName()">
+      <mat-icon>save</mat-icon>
+    </button>
+    <mat-progress-spinner *ngIf="isBusyUpdatingUserName" mode="indeterminate" color="primary" diameter="48">
+    </mat-progress-spinner>
   </div>
-  
+
   <input type="file" #fileUpload id="fileUpload" ng2FileSelect style="display:none;" [uploader]="uploader" />
 
   <p *ngIf="!isBusy && isYourFriend()" fxLayout>
@@ -25,8 +35,6 @@
     {{'ThisIsYou' | transloco}}
   </p>
 </div>
-
-
 
 <div id="actions" fxLayout fxLayoutAlign="center space-between" *ngIf="!isYou() && !isBusy">
   <button *ngIf="!isYourFriend() && !hasPendingRequest" mat-raised-button color="primary" (click)="onAddFriend()">
@@ -40,6 +48,14 @@
     <mat-icon>remove</mat-icon>{{'RemoveFriend' | transloco }}
   </button>
 </div>
+
+<div fxLayout fxLayoutAlign="center center" *ngIf="isYourFriend() || isYou()" >
+  <!-- Statistics -->
+  <button mat-raised-button [routerLink]="['/stats', userId]"><img
+      src="../../assets/img/statistics.png" /><span>{{ 'Statistics' | transloco }}</span></button>
+</div>
+
+
 
 <div id="friends" *ngIf="!isBusy && (isYou() || isYourFriend())">
   <h3>{{'Friends' | transloco }}</h3>
