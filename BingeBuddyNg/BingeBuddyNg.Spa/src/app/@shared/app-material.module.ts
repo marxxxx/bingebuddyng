@@ -22,7 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatStepperModule } from '@angular/material';
+import { MatStepperModule } from '@angular/material/stepper';
 
 
 

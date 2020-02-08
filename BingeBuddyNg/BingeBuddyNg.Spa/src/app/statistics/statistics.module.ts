@@ -9,9 +9,10 @@ import { ChartsModule } from 'ng2-charts';
 import { SharedModule } from '../@shared/shared.module';
 import { AlcHistoryChartComponent } from './components/alc-history-chart/alc-history-chart.component';
 import { StatisticsService } from './services/statistics.service';
+import { UsagePerWeekdayChartComponent } from './components/usage-per-weekday-chart/usage-per-weekday-chart.component';
 
 const routes: Routes = [{
-  path: '',
+  path: ':userId',
   component: StatsComponent,
   canActivate: [AuthGuard]
 }];
@@ -19,7 +20,12 @@ const routes: Routes = [{
 @NgModule({
   imports: [SharedModule, RouterModule.forChild(routes), ChartsModule],
   exports: [],
-  declarations: [StatsComponent, DrinkChartComponent, DrinkRatioChartComponent, AlcHistoryChartComponent],
+  declarations: [
+    StatsComponent,
+    DrinkChartComponent,
+    DrinkRatioChartComponent,
+    AlcHistoryChartComponent,
+    UsagePerWeekdayChartComponent],
   providers: [StatisticsService]
 })
-export class StatisticsModule {}
+export class StatisticsModule { }

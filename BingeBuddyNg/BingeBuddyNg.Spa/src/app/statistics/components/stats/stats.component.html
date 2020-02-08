@@ -24,6 +24,13 @@
   </mat-card>
 
   <mat-card fxFlex>
+    <mat-card-title>{{'UsagePerWeekDay' | transloco}}</mat-card-title>
+    <mat-card-content>
+      <app-usage-per-weekday-chart [data]="personalUsage"></app-usage-per-weekday-chart>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card fxFlex>
     <mat-card-title>{{'DrinkRatio' | transloco}}</mat-card-title>
     <mat-card-content>
       <app-drink-ratio-chart [activities]="activities"></app-drink-ratio-chart>

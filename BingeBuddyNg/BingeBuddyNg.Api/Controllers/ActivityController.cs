@@ -45,10 +45,9 @@ namespace BingeBuddyNg.Api.Controllers
             return result;
         }
 
-        [HttpGet("[action]")]
-        public async Task<ActionResult<List<ActivityAggregationDTO>>> GetActivityAggregation()
+        [HttpGet("[action]/{userId}")]
+        public async Task<ActionResult<List<ActivityAggregationDTO>>> GetActivityAggregation(string userId)
         {
-            string userId = this.IdentityService.GetCurrentUserId();
             var result = await this.Mediator.Send(new GetDrinkActivityAggregationQuery(userId));
             return result;
         }
