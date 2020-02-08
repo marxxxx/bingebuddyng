@@ -26,13 +26,13 @@ namespace BingeBuddyNg.Services.Statistics
             return new PersonalUsagePerWeekdayDTO()
             {
                 WeekDay = entity.weekDay,
-                ActivityCount = int.Parse(entity.ActivityCount),
-                AvgCount = double.Parse(entity.AvgCount, numFormat),
-                MaxCount = int.Parse(entity.MaxCount),
-                MinCount = int.Parse(entity.MinCount),
-                MedianActivityCount = double.Parse(entity.MedianActivityCount, numFormat),
-                MedianMaxAlcLevel = double.Parse(entity.MedianMaxAlcLevel, numFormat),
-                Percentage = double.Parse(entity.Percentage, numFormat)
+                ActivityCount = entity.ActivityCount != null ? int.Parse(entity.ActivityCount) : 0,
+                AvgCount = entity.AvgCount != null ? double.Parse(entity.AvgCount, numFormat) : 0,
+                MaxCount = entity.MaxCount != null ? int.Parse(entity.MaxCount) : 0,
+                MinCount = entity.MinCount != null ? int.Parse(entity.MinCount) : 0,
+                MedianActivityCount = entity.MedianActivityCount != null ? double.Parse(entity.MedianActivityCount, numFormat) : 0,
+                MedianMaxAlcLevel = entity.MedianMaxAlcLevel != null ? double.Parse(entity.MedianMaxAlcLevel, numFormat) : 0,
+                Percentage = entity.Percentage != null ? double.Parse(entity.Percentage, numFormat) : 0
             };
         }
     }

@@ -18,6 +18,17 @@ namespace BingeBuddyNg.Services.Statistics.Querys
 
         private const string PersonalUsagePerWeekdayReportPartitionKey = "personalusageperweekdayreport";
 
+        private static readonly Dictionary<int, string> orderedWeekdays = new Dictionary<int, string>()
+        {
+            {1, "Mon" },
+            {2, "Tue" },
+            {3, "Wed" },
+            {4, "Thu" },
+            {5, "Fri" },
+            {6, "Sat" },
+            {7, "Sun" }
+        };
+
         public AnalyticReportsQueryHandler(IStorageAccessService storageAccessService)
         {
             this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
@@ -52,9 +63,17 @@ namespace BingeBuddyNg.Services.Statistics.Querys
 
             var result = await this.storageAccessService.QueryTableAsync<PersonalUsagePerWeekdayTableEntity>(ReportsTableName, whereClause);
 
-            var dto = result.Select(r => r.ToDto());
+            // add missing weekdays
+            result.AddRange(orderedWeekdays
+                .Where(o => result.Any(r => r.weekDay == o.Value) == false)
+                .Select(o=>new PersonalUsagePerWeekdayTableEntity() { weekDay = o.Value }));
 
-            return dto;
+            var query = from r in result
+                        join w in orderedWeekdays on r.weekDay equals w.Value
+                        orderby w.Key
+                        select r.ToDto();
+
+            return query.ToList();
         }
     }
 }
