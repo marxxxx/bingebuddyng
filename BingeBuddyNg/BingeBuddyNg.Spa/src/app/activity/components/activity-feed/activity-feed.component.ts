@@ -53,6 +53,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   isCommentOpen = false;
   drinks: Drink[];
   highlightedActivityId: string;
+  pendingDrinkType: DrinkType;
 
   @ViewChild('#activity-container', { static: false })
   container: any;
@@ -83,7 +84,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     this.route.queryParamMap.subscribe(p => {
       this.highlightedActivityId = p.get('activityId');
       this.load();
-
     });
 
     this.subscriptions.push(this.notification.activityReceived$.subscribe(_ => this.load()));
@@ -100,7 +100,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
           // load user to get venue info
           this.userService.getUser(user.userId).subscribe(
             u => {
-              console.log('loaded user', u);
               this.currentUser = u;
               this.locationService.setCurrentVenue(u.currentVenue);
             },
@@ -111,8 +110,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
     this.subscriptions.push(
       this.locationService.locationChanged$.subscribe(() => {
-        console.log('location has changed');
-
         this.snackBar
           .open(this.translateService.translate('NewVenue'), this.translateService.translate('YesCheckin'), { duration: 3000 })
           .onAction()
@@ -154,8 +151,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   }
 
   load(continuationToken: string = null) {
-    console.log('loading activities', continuationToken);
-
     this.isBusy = true;
     this.activityService.getActivityFeed(null, continuationToken).subscribe(
       d => {
@@ -174,14 +169,10 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
           setTimeout(() => {
             const activityElement = document.getElementById(this.highlightedActivityId);
-            // const ac = this.activitys.find(a => a.activity.id === activityId);
-            // console.log('activity found', ac);
-
             if (activityElement) {
               activityElement.scrollIntoView();
             }
           }, 1000);
-
         }
 
         // adds reload-spinner after a second so it doesn't interfere with slide-in animation
@@ -195,18 +186,27 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   }
 
   onDrink(drink: Drink) {
+    this.pendingDrinkType = drink.drinkType;
     this.isBusyAdding = true;
 
-    this.drinkActivityService.drink(drink).subscribe(
-      r => {
-        this.isBusyAdding = false;
-        this.load();
-      },
-      e => {
-        this.isBusyAdding = false;
-        this.shellInteraction.showErrorMessage();
-      }
-    );
+    this.drinkActivityService.drink(drink, false)
+      .subscribe(
+        r => {
+          if (this.isBusyAdding) {
+            this.isBusyAdding = false;
+            this.load();
+          }
+        },
+        e => {
+          this.isBusyAdding = false;
+          this.shellInteraction.showErrorMessage();
+        }
+      );
+  }
+
+  onCancelDrinkAnimation() {
+    this.isBusyAdding = false;
+    this.load();
   }
 
   onAddMessage() {
@@ -309,7 +309,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   }
 
   onActionsOpenChange(open: boolean): void {
-    console.log('actions open change', open);
     if (open) {
       setTimeout(() => this.tooltips.forEach(t => t.show()), 500);
     } else {

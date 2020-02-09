@@ -2,6 +2,11 @@
 <app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
 
 <div id="activity-container">
+
+  <mat-card *ngIf="isBusyAdding" (click)="onCancelDrinkAnimation()">
+    <app-drink-animation [drinkType]="pendingDrinkType"></app-drink-animation>
+  </mat-card>
+
   <!-- The actual activity feed-->
   <app-activity *ngFor="let a of activitys; trackBy: trackByActivity" [activity]="a" [currentUser]="currentUserInfo" (commentOpenChanged)="isCommentOpen = $event"
   (deleted)="load()" [id]="a.activity.id" [isHighlighted]="a.activity.id === highlightedActivityId"></app-activity>

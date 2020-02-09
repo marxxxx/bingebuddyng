@@ -2,22 +2,21 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivityService } from './activity.service';
 import { LocationService } from './location.service';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, timer } from 'rxjs';
 import { AddDrinkActivityDTO } from 'src/models/AddDrinkActivityDTO';
 import { Drink } from 'src/models/Drink';
-import { DrinkDialogComponent } from '../components/drink-dialog/drink-dialog.component';
 import { DrinkType } from 'src/models/DrinkType';
 import { DrinkDialogArgs } from '../components/drink-dialog/DrinkDialogArgs';
+import { DrinkDialogComponent } from '../components/drink-dialog/drink-dialog.component';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class DrinkActivityService {
-
 
   constructor(private locationService: LocationService,
     private activityService: ActivityService,
     private dialog: MatDialog) { }
 
-  drink(drink: Drink): Observable<any> {
+  drink(drink: Drink, displayDialog: boolean = true): Observable<any> {
     const activity: AddDrinkActivityDTO = {
       drinkId: drink.id,
       drinkType: drink.drinkType,
@@ -28,8 +27,11 @@ export class DrinkActivityService {
       venue: this.locationService.getCurrentVenue()
     };
 
-    return forkJoin([this.displayDrinkDialog(drink.drinkType),
-      this.activityService.addDrinkActivity(activity)]);
+    const observable = displayDialog ?
+      forkJoin([this.displayDrinkDialog(drink.drinkType), this.activityService.addDrinkActivity(activity)]) :
+      forkJoin([this.activityService.addDrinkActivity(activity), timer(5000)]);
+
+    return observable;
   }
 
 

@@ -1,6 +1,6 @@
+import { DrinkDialogComponent } from './components/drink-dialog/drink-dialog.component';
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../@shared/shared.module';
-import { DrinkDialogComponent } from './components/drink-dialog/drink-dialog.component';
 import { MessageDialogComponent } from './components/message-dialog/message-dialog.component';
 import { VenueDialogComponent } from './components/venue-dialog/venue-dialog.component';
 import { ActivityService } from './services/activity.service';
@@ -13,6 +13,7 @@ import { RouterModule } from '@angular/router';
 import { DrinkRetrieverService } from './services/drink-retriever.service';
 import { ReactionDialogComponent } from './components/reaction-dialog/reaction-dialog.component';
 import { ReactionListComponent } from './components/reaction-dialog/reaction-list/reaction-list.component';
+import { DrinkAnimationComponent } from './components/drink-animation/drink-animation.component';
 
 @NgModule({
   imports: [SharedModule, InViewportModule, EcoFabSpeedDialModule, RouterModule],
@@ -21,17 +22,12 @@ import { ReactionListComponent } from './components/reaction-dialog/reaction-lis
     ActivityFeedComponent,
     ActivityComponent,
     NoFriendsComponent,
-    DrinkDialogComponent,
     MessageDialogComponent,
     VenueDialogComponent,
     ReactionDialogComponent,
-    ReactionListComponent
-  ],
-  entryComponents: [
-    DrinkDialogComponent,
-    MessageDialogComponent,
-    VenueDialogComponent,
-    ReactionDialogComponent
+    ReactionListComponent,
+    DrinkAnimationComponent,
+    DrinkDialogComponent
   ],
   providers: [ActivityService, DrinkRetrieverService]
 })
