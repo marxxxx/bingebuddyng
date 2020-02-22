@@ -29,6 +29,7 @@ import { DrinkAnimationComponent } from './components/drink-animation/drink-anim
     DrinkAnimationComponent,
     DrinkDialogComponent
   ],
+  entryComponents: [MessageDialogComponent, VenueDialogComponent, DrinkDialogComponent, ReactionDialogComponent],
   providers: [ActivityService, DrinkRetrieverService]
 })
 export class ActivityModule {}
