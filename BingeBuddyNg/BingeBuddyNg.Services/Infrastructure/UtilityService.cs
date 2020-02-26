@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Infrastructure.Generated;
 using Newtonsoft.Json;
 
 namespace BingeBuddyNg.Services.Infrastructure
@@ -19,7 +20,7 @@ namespace BingeBuddyNg.Services.Infrastructure
         }
                 
 
-        public async Task<AddressInfo> GetAddressFromLongLatAsync(Location location)
+        public async Task<AddressInfo> GetAddressFromLongLatAsync(Activity.Location location)
         {
             string lat = location.Latitude.ToString().Replace(',', '.');
             string lon = location.Longitude.ToString().Replace(',', '.');
@@ -28,7 +29,7 @@ namespace BingeBuddyNg.Services.Infrastructure
             var httpClient = this.HttpClientFactory.CreateClient();
             var result = await httpClient.GetStringAsync(url);
 
-            GoogleGeoCodeResponse response = JsonConvert.DeserializeObject<GoogleGeoCodeResponse>(result);
+            var response = JsonConvert.DeserializeObject<GoogleGeoCodeResponse>(result);
 
             AddressInfo addressInfo = new AddressInfo();
             addressInfo.AddressText = response.results[0].formatted_address;

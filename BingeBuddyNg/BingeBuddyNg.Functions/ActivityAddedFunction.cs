@@ -25,14 +25,13 @@ namespace BingeBuddyNg.Functions
         public IDrinkEventRepository DrinkEventRepository { get; }
         public ITranslationService TranslationService { get; }
         public IUserStatisticsService UserStatisticsService { get; }
-        public IDurableClient DurableClient { get; }
+        public IDurableClient DurableClient { get; private set; }
 
 
         public ActivityAddedFunction(IUtilityService utilityService, IActivityRepository activityRepository,
             IUserRepository userRepository, IUserStatsRepository userStatsRepository, 
             INotificationService notificationService, IDrinkEventRepository drinkEventRepository, 
-            ITranslationService translationService, IUserStatisticsService userStatisticsService,
-            IDurableClient starter)
+            ITranslationService translationService, IUserStatisticsService userStatisticsService)
         {
             UtilityService = utilityService ?? throw new ArgumentNullException(nameof(utilityService));
             ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
@@ -42,18 +41,19 @@ namespace BingeBuddyNg.Functions
             DrinkEventRepository = drinkEventRepository ?? throw new ArgumentNullException(nameof(drinkEventRepository));
             TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
             UserStatisticsService = userStatisticsService ?? throw new ArgumentNullException(nameof(userStatisticsService));
-            DurableClient = starter ?? throw new ArgumentNullException(nameof(starter));
+            
         }
 
         [FunctionName("ActivityAddedFunction")]
         public async Task Run(
             [QueueTrigger(Shared.Constants.QueueNames.ActivityAdded, Connection = "AzureWebJobsStorage")]string message,
+            [DurableClient]IDurableClient starter,
             ILogger log)
         {
+            this.DurableClient = starter ?? throw new ArgumentNullException(nameof(starter));
 
             var activityAddedMessage = JsonConvert.DeserializeObject<ActivityAddedMessage>(message);
             var activity = await ActivityRepository.GetActivityAsync(activityAddedMessage.ActivityId);
-
 
             log.LogInformation($"Handling added activity [{activity}] ...");
 
@@ -66,7 +66,7 @@ namespace BingeBuddyNg.Functions
                     currentUser = await UserRepository.FindUserAsync(activity.UserId);
                     if (activity.ActivityType == ActivityType.Drink)
                     {
-                        await HandleMonitoringAsync(this.DurableClient, currentUser);
+                        await HandleMonitoringAsync(currentUser);
                     }
                 }
                 catch (Exception ex)
@@ -133,15 +133,15 @@ namespace BingeBuddyNg.Functions
             
         }
 
-        private async Task HandleMonitoringAsync(IDurableClient starter, User currentUser)
+        private async Task HandleMonitoringAsync(User currentUser)
         {
             if (currentUser.MonitoringInstanceId != null)
             {
-                await starter.TerminateAsync(currentUser.MonitoringInstanceId, "Drank early enough.");
+                await this.DurableClient.TerminateAsync(currentUser.MonitoringInstanceId, "Drank early enough.");
             }
 
             // Start timer to remind user about entering his next drink.
-            var monitoringInstanceId = await starter.StartNewAsync(nameof(DrinkReminderFunction), currentUser);
+            var monitoringInstanceId = await this.DurableClient.StartNewAsync(nameof(DrinkReminderFunction), currentUser);
             await UserRepository.UpdateMonitoringInstanceAsync(currentUser.Id, monitoringInstanceId);
         }
 
