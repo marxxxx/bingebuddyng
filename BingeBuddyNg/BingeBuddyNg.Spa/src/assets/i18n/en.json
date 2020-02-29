@@ -137,7 +137,7 @@
 
     "Onboarding_Navmenu_Entry": "Tutorial",
     "Onboarding_Heading": "What's this all about?",
-    "Onboarding_Label_Activitys": "Activitys",
+    "Onboarding_Label_Activitys": "Activities",
     "Onboarding_Description_Activitys": "Enter drinks using the plus-symbol, upload pics and videos and show where you are currently drinking by entering a bar.",
     "Onboarding_Label_Navmenu": "Navigation",
     "Onboarding_Description_Navmenu": "Open the navigation menu to explore what you can do.",
@@ -158,5 +158,8 @@
 
     "Total":"Total",
 
-    "UsagePerWeekDay": "Drunkenness per week day"
+    "UsagePerWeekDay": "Drunkenness per week day",
+
+    "MedianMaxAlcLevel": "Median max. alcohol level",
+    "Probability": "Probability"
 }

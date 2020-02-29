@@ -158,5 +158,8 @@
 
     "Total":"Insgesaumt",
 
-    "UsagePerWeekDay": "Aun wöchan wochatog bist wia augsoffn"
+    "UsagePerWeekDay": "Aun wöchan wochatog bist wia augsoffn",
+
+    "MedianMaxAlcLevel": "Betrunkenheit",
+    "Probability": "Woascheinlichkeit"
 }

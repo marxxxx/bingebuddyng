@@ -17,16 +17,16 @@
   </mat-card>
 
   <mat-card fxFlex>
-    <mat-card-title>{{'MonthlyDrinkStatistic' | transloco}}</mat-card-title>
+    <mat-card-title>{{'UsagePerWeekDay' | transloco}}</mat-card-title>
     <mat-card-content>
-      <app-drink-chart [activities]="activities" [isLegendVisible]="isLegendVisible"></app-drink-chart>
+      <app-usage-per-weekday-chart [data]="personalUsage"></app-usage-per-weekday-chart>
     </mat-card-content>
   </mat-card>
 
   <mat-card fxFlex>
-    <mat-card-title>{{'UsagePerWeekDay' | transloco}}</mat-card-title>
+    <mat-card-title>{{'MonthlyDrinkStatistic' | transloco}}</mat-card-title>
     <mat-card-content>
-      <app-usage-per-weekday-chart [data]="personalUsage"></app-usage-per-weekday-chart>
+      <app-drink-chart [activities]="activities" [isLegendVisible]="isLegendVisible"></app-drink-chart>
     </mat-card-content>
   </mat-card>
 

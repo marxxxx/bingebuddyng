@@ -1,3 +1,4 @@
+import { TranslocoService } from '@ngneat/transloco';
 import { PersonalUsagePerWeekdayDTO } from './../../../../models/PersonalUsagePerWeekdayDTO';
 import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
 
@@ -12,6 +13,7 @@ export class UsagePerWeekdayChartComponent implements OnInit, OnChanges {
   data: PersonalUsagePerWeekdayDTO[];
 
   public lineChartData: Array<any> = [
+    { data: [], label: '' },
     { data: [], label: '' }
   ];
   public lineChartLabels: Array<any> = [];
@@ -20,8 +22,7 @@ export class UsagePerWeekdayChartComponent implements OnInit, OnChanges {
     scales: {
       xAxes: [{
         ticks: {
-          autoSkip: true,
-          maxTicksLimit: 10
+          autoSkip: false
         },
         scaleLabel: {
           display: true,
@@ -30,6 +31,16 @@ export class UsagePerWeekdayChartComponent implements OnInit, OnChanges {
       }],
       yAxes: [
         {
+          id: 'prob',
+          ticks: {
+            min: 0
+          },
+          scaleLabel: {
+            display: true,
+            labelString: '%'
+          }
+        }, {
+          id: 'alc',
           ticks: {
             min: 0
           },
@@ -45,7 +56,7 @@ export class UsagePerWeekdayChartComponent implements OnInit, OnChanges {
   ];
 
 
-  constructor() { }
+  constructor(private translocoService: TranslocoService) { }
 
   ngOnInit(): void {
   }
@@ -57,24 +68,33 @@ export class UsagePerWeekdayChartComponent implements OnInit, OnChanges {
   }
 
   loadChart(data: PersonalUsagePerWeekdayDTO[]): void {
+    /*
+        const today = new Date().toString().toLowerCase();
+        const weekDays = data.map(d => d.weekDay.toLowerCase());
+        const todaysWeekDay = weekDays.find(d => today.indexOf(d) >= 0);
+    */
 
-    const today = new Date().toString().toLowerCase();
-    const weekDays = data.map(d => d.weekDay.toLowerCase());
-    const todaysWeekDay = weekDays.find(d => today.indexOf(d) >= 0);
+    this.lineChartData[0].data = data.map(d => Math.round(d.probability * 10) / 10);
+    this.lineChartData[0].label = this.translocoService.translate('Probability');
+    this.lineChartData[0].yAxisID = 'prob';
 
-    this.lineChartData[0].data = data.map(d => d.medianMaxAlcLevel);
-    this.lineChartData[0].label = 'Median max. Alc Level';
+    this.lineChartData[1].data = data.map(d => d.medianMaxAlcLevel);
+    this.lineChartData[1].label = this.translocoService.translate('MedianMaxAlcLevel');
+    this.lineChartData[1].yAxisID = 'alc';
+
     this.lineChartLabels = data.map(d => d.weekDay);
-    this.lineChartColors =
-      data.map(d =>
-        ({
-          backgroundColor: this.isToday(d.weekDay, todaysWeekDay) ? 'rgba(220, 50, 33,0.2)' : 'rgba(136, 181, 33,0.2)',
-          borderColor: this.isToday(d.weekDay, todaysWeekDay) ? 'rgba(220, 50, 33,0.2)' : 'rgba(136, 181, 33,0.2)',
-          pointBackgroundColor: 'rgba(136, 181, 33,1)',
-          pointBorderColor: '#fff',
-          pointHoverBackgroundColor: '#fff',
-          pointHoverBorderColor: 'rgba(136, 181, 33,0.8)'
-        }));
+    // this.lineChartLabels = data.map(d => d.weekDay);
+
+    // this.lineChartColors =
+    //   data.map(d =>
+    //     ({
+    //       backgroundColor: this.isToday(d.weekDay, todaysWeekDay) ? 'rgba(220, 50, 33,0.2)' : 'rgba(136, 181, 33,0.2)',
+    //       borderColor: this.isToday(d.weekDay, todaysWeekDay) ? 'rgba(220, 50, 33,0.2)' : 'rgba(136, 181, 33,0.2)',
+    //       pointBackgroundColor: 'rgba(136, 181, 33,1)',
+    //       pointBorderColor: '#fff',
+    //       pointHoverBackgroundColor: '#fff',
+    //       pointHoverBorderColor: 'rgba(136, 181, 33,0.8)'
+    //     }));
   }
 
   private isToday(w1: string, w2: string): boolean {

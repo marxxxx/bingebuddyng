@@ -15,5 +15,6 @@ namespace BingeBuddyNg.Services.Statistics
         public string MedianActivityCount { get; set; }
         public string MedianMaxAlcLevel { get; set; }
         public string Percentage { get; set; }
+        public string Probability { get; set; }
     }
 }   

@@ -7,4 +7,5 @@ export class PersonalUsagePerWeekdayDTO {
     medianActivityCount: number;
     medianMaxAlcLevel: number;
     percentage: number;
+    probability: number;
 }

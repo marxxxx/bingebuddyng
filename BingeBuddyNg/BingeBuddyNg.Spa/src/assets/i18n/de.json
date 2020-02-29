@@ -158,5 +158,8 @@
 
     "Total":"Gesamt",
 
-    "UsagePerWeekDay": "Trunkenheit pro Wochentag"
+    "UsagePerWeekDay": "Trunkenheit pro Wochentag",
+
+    "MedianMaxAlcLevel": "Median max. Alkoholisierung",
+    "Probability": "Wahrscheinlichkeit"
 }

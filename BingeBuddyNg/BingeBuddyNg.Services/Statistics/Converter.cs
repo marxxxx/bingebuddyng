@@ -32,7 +32,8 @@ namespace BingeBuddyNg.Services.Statistics
                 MinCount = entity.MinCount != null ? int.Parse(entity.MinCount) : 0,
                 MedianActivityCount = entity.MedianActivityCount != null ? double.Parse(entity.MedianActivityCount, numFormat) : 0,
                 MedianMaxAlcLevel = entity.MedianMaxAlcLevel != null ? double.Parse(entity.MedianMaxAlcLevel, numFormat) : 0,
-                Percentage = entity.Percentage != null ? double.Parse(entity.Percentage, numFormat) : 0
+                Percentage = entity.Percentage != null ? double.Parse(entity.Percentage, numFormat) : 0,
+                Probability = entity.Probability != null ? double.Parse(entity.Probability, numFormat) : 0
             };
         }
     }
