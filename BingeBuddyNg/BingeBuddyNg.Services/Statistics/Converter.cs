@@ -26,15 +26,27 @@ namespace BingeBuddyNg.Services.Statistics
             return new PersonalUsagePerWeekdayDTO()
             {
                 WeekDay = entity.weekDay,
-                ActivityCount = entity.ActivityCount != null ? int.Parse(entity.ActivityCount) : 0,
-                AvgCount = entity.AvgCount != null ? double.Parse(entity.AvgCount, numFormat) : 0,
-                MaxCount = entity.MaxCount != null ? int.Parse(entity.MaxCount) : 0,
-                MinCount = entity.MinCount != null ? int.Parse(entity.MinCount) : 0,
-                MedianActivityCount = entity.MedianActivityCount != null ? double.Parse(entity.MedianActivityCount, numFormat) : 0,
-                MedianMaxAlcLevel = entity.MedianMaxAlcLevel != null ? double.Parse(entity.MedianMaxAlcLevel, numFormat) : 0,
-                Percentage = entity.Percentage != null ? double.Parse(entity.Percentage, numFormat) : 0,
-                Probability = entity.Probability != null ? double.Parse(entity.Probability, numFormat) : 0
+                ActivityCount = ParseInt(entity.ActivityCount),
+                AvgCount = ParseDouble(entity.AvgCount),
+                MaxCount = ParseInt(entity.MaxCount),
+                MinCount = ParseInt(entity.MinCount),
+                MedianActivityCount = ParseDouble(entity.MedianActivityCount),
+                MedianMaxAlcLevel = ParseDouble(entity.MedianMaxAlcLevel),
+                Percentage = ParseDouble(entity.Percentage),
+                Probability = ParseDouble(entity.Probability)
             };
+        }
+
+        private static int ParseInt(string value)
+        {
+            int.TryParse(value, out int result);
+            return result;
+        }
+
+        private static double ParseDouble(string value)
+        {
+            double.TryParse(value, out double result);            
+            return result;
         }
     }
 }
