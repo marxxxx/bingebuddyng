@@ -65,11 +65,11 @@ namespace BingeBuddyNg.Services.Statistics.Querys
 
             // add missing weekdays
             result.AddRange(orderedWeekdays
-                .Where(o => result.Any(r => r.weekDay == o.Value) == false)
-                .Select(o=>new PersonalUsagePerWeekdayTableEntity() { weekDay = o.Value }));
+                .Where(o => result.Any(r => r.WeekDay == o.Value) == false)
+                .Select(o=>new PersonalUsagePerWeekdayTableEntity() { WeekDay = o.Value }));
 
             var query = from r in result
-                        join w in orderedWeekdays on r.weekDay equals w.Value
+                        join w in orderedWeekdays on r.WeekDay equals w.Value
                         orderby w.Key
                         select r.ToDto();
 

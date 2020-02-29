@@ -4,6 +4,8 @@ namespace BingeBuddyNg.Services.Statistics
 {
     internal static class Converter
     {
+        private static readonly IFormatProvider numFormat = new System.Globalization.CultureInfo("en").NumberFormat;
+
         internal static UserStatisticsDTO ConvertUserStatisticsToDto(UserStatistics stats)
         {
             if (stats == null)
@@ -21,11 +23,11 @@ namespace BingeBuddyNg.Services.Statistics
 
         internal static PersonalUsagePerWeekdayDTO ToDto(this PersonalUsagePerWeekdayTableEntity entity)
         {
-            var numFormat = new System.Globalization.CultureInfo("en").NumberFormat;
+
             
             return new PersonalUsagePerWeekdayDTO()
             {
-                WeekDay = entity.weekDay,
+                WeekDay = entity.WeekDay,
                 ActivityCount = ParseInt(entity.ActivityCount),
                 AvgCount = ParseDouble(entity.AvgCount),
                 MaxCount = ParseInt(entity.MaxCount),
@@ -39,13 +41,13 @@ namespace BingeBuddyNg.Services.Statistics
 
         private static int ParseInt(string value)
         {
-            int.TryParse(value, out int result);
+            int.TryParse(value, System.Globalization.NumberStyles.Integer, numFormat, out int result);
             return result;
         }
 
         private static double ParseDouble(string value)
         {
-            double.TryParse(value, out double result);            
+            double.TryParse(value, System.Globalization.NumberStyles.Float, numFormat, out double result);            
             return result;
         }
     }

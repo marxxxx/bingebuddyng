@@ -22,8 +22,8 @@ namespace BingeBuddyNg.Tests
             storageAccessServiceMock.Setup(s => s.QueryTableAsync<PersonalUsagePerWeekdayTableEntity>(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new List<PersonalUsagePerWeekdayTableEntity>()
                 {
-                    new PersonalUsagePerWeekdayTableEntity() { weekDay = "Fri"},
-                    new PersonalUsagePerWeekdayTableEntity() { weekDay = "Sat"}
+                    new PersonalUsagePerWeekdayTableEntity() { WeekDay = "Fri"},
+                    new PersonalUsagePerWeekdayTableEntity() { WeekDay = "Sat"}
                 });
 
             var queryHandler = new AnalyticReportsQueryHandler(storageAccessServiceMock.Object);
