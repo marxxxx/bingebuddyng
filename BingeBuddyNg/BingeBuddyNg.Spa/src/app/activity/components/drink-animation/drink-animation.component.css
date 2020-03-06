@@ -1,4 +1,14 @@
 img {
+  margin-top: 10px;
   width: 90%;
   height: 90%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-progress-bar {
+  margin-left: 15px;
+  margin-right: 15px;
 }
