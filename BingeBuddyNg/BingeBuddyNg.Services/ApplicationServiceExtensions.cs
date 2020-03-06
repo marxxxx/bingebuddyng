@@ -3,6 +3,7 @@ using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.DrinkEvent;
 using BingeBuddyNg.Services.FriendsRequest;
 using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.Infrastructure.Messaging;
 using BingeBuddyNg.Services.Invitation;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
@@ -29,6 +30,7 @@ namespace BingeBuddyNg.Services
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddSingleton<ITranslationService, TranslationService>();
             services.AddSingleton<ICacheService, NoCacheService>();
+            services.AddSingleton<IMessagingService, MessagingService>();
 
             services.AddScoped<IActivityRepository, ActivityRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
@@ -54,11 +56,13 @@ namespace BingeBuddyNg.Services
             string webPushPublicKey = configuration.GetValue<string>("Credentials:WebPushPublicKey");
             string fourSquareApiClientKey = configuration.GetValue<string>("Credentials:FourSquareApiClientKey");
             string fourSquareApiClientSecret = configuration.GetValue<string>("Credentials:FourSquareApiClientSecret");
+            string eventHubConnectionString = configuration.GetConnectionString("EventHub");
 
             services.AddSingleton(new StorageConfiguration(storageConnectionString));
             services.AddSingleton(new GoogleApiConfiguration(googleApiKey));
             services.AddSingleton(new WebPushConfiguration(webPushPublicKey, webPushPrivateKey));
             services.AddSingleton(new FourSquareConfiguration(fourSquareApiClientKey, fourSquareApiClientSecret));
+            services.AddSingleton(new MessagingConfiguration(eventHubConnectionString));
         }
     }
 }
