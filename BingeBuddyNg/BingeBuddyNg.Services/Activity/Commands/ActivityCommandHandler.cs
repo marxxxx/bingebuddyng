@@ -1,5 +1,6 @@
 ﻿using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.Infrastructure.Messaging;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Shared;
 using MediatR;
@@ -19,64 +20,70 @@ namespace BingeBuddyNg.Services.Activity.Commands
             IRequestHandler<AddReactionCommand>,
             IRequestHandler<DeleteActivityCommand>
     {
-        public IUserRepository UserRepository { get; }
-        public IActivityRepository ActivityRepository { get; }
-        public IStorageAccessService StorageAccessService { get; }
+        private readonly IUserRepository userRepository;
+        private readonly IActivityRepository activityRepository;
+        private readonly IStorageAccessService storageAccessService;
+        private readonly IMessagingService messagingService;
 
-        public ActivityCommandHandler(IUserRepository userRepository, IActivityRepository activityRepository, IStorageAccessService storageAccessService)
+        public ActivityCommandHandler(
+            IUserRepository userRepository, 
+            IActivityRepository activityRepository, 
+            IStorageAccessService storageAccessService,
+            IMessagingService messagingService)
         {
-            UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
-            StorageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
+            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
+            this.messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
         }
 
         public async Task<Unit> Handle(AddImageActivityCommand request, CancellationToken cancellationToken)
         {
-            var user = await this.UserRepository.FindUserAsync(request.UserId);
+            var user = await this.userRepository.FindUserAsync(request.UserId);
 
             // store file in blob storage
-            string imageUrlOriginal = await StorageAccessService.SaveFileInBlobStorage("img", "activities", request.FileName, request.Stream);
+            string imageUrlOriginal = await storageAccessService.SaveFileInBlobStorage("img", "activities", request.FileName, request.Stream);
 
             var activity = Activity.CreateImageActivity(DateTime.UtcNow, request.Location, request.UserId, user.Name, imageUrlOriginal);
 
-            var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
+            var savedActivity = await this.activityRepository.AddActivityAsync(activity);
 
-            await ActivityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
+            await activityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
 
             return Unit.Value;
         }
 
         public async Task<Unit> Handle(AddMessageActivityCommand request, CancellationToken cancellationToken)
         {
-            var user = await this.UserRepository.FindUserAsync(request.UserId);
+            var user = await this.userRepository.FindUserAsync(request.UserId);
 
             var activity = Activity.CreateMessageActivity(DateTime.UtcNow, request.Location, request.UserId, user.Name, request.Message);
             activity.Venue = request.Venue;
 
-            var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
-            await ActivityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
+            var savedActivity = await this.activityRepository.AddActivityAsync(activity);
+            await activityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
 
             return Unit.Value;
         }
 
         public async Task<Unit> Handle(AddVenueActivityCommand request, CancellationToken cancellationToken)
         {
-            var user = await this.UserRepository.FindUserAsync(request.UserId);
+            var user = await this.userRepository.FindUserAsync(request.UserId);
             var activityEntity = Activity.CreateVenueActivity(DateTime.UtcNow, request.UserId, user.Name,
                 request.Message, request.Venue, request.Action);
 
-            var savedActivity = await this.ActivityRepository.AddActivityAsync(activityEntity);
+            var savedActivity = await this.activityRepository.AddActivityAsync(activityEntity);
 
-            await ActivityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
+            await activityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
 
             return Unit.Value;
         }
 
         public async Task<Unit> Handle(AddReactionCommand request, CancellationToken cancellationToken)
         {
-            var activity = await this.ActivityRepository.GetActivityAsync(request.ActivityId);
+            var activity = await this.activityRepository.GetActivityAsync(request.ActivityId);
 
-            var reactingUser = await this.UserRepository.FindUserAsync(request.UserId);
+            var reactingUser = await this.userRepository.FindUserAsync(request.UserId);
 
             switch (request.Type)
             {
@@ -92,12 +99,12 @@ namespace BingeBuddyNg.Services.Activity.Commands
                     break;
             }
 
-            await this.ActivityRepository.UpdateActivityAsync(activity);
+            await this.activityRepository.UpdateActivityAsync(activity);
 
             
 
             // add to queue
-            var queueClient = this.StorageAccessService.GetQueueReference(Constants.QueueNames.ReactionAdded);
+            var queueClient = this.storageAccessService.GetQueueReference(Constants.QueueNames.ReactionAdded);
             var message = new ReactionAddedMessage(request.ActivityId, request.Type, request.UserId, request.Comment);
             await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
 
@@ -106,13 +113,13 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
         public async Task<Unit> Handle(AddDrinkActivityCommand request, CancellationToken cancellationToken)
         {
-            var user = await this.UserRepository.FindUserAsync(request.UserId);
+            var user = await this.userRepository.FindUserAsync(request.UserId);
 
             int drinkCount = 0;
             if (request.DrinkType != DrinkType.Anti)
             {
                 // immediately update drink count
-                var drinkActivitys = await ActivityRepository.GetActivitysForUserAsync(request.UserId, DateTime.UtcNow.Subtract(TimeSpan.FromHours(12)), ActivityType.Drink);
+                var drinkActivitys = await activityRepository.GetActivitysForUserAsync(request.UserId, DateTime.UtcNow.Subtract(TimeSpan.FromHours(12)), ActivityType.Drink);
                 drinkCount = drinkActivitys.Where(a => a.DrinkType != DrinkType.Anti).Count() + 1;
             }
 
@@ -121,18 +128,27 @@ namespace BingeBuddyNg.Services.Activity.Commands
             activity.Venue = request.Venue;
             activity.DrinkCount = drinkCount;
 
-            var savedActivity = await this.ActivityRepository.AddActivityAsync(activity);
+            var savedActivity = await this.activityRepository.AddActivityAsync(activity);
 
-            await ActivityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
+            await activityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
+
+            try
+            {
+                await messagingService.SendMessageAsync(new DrinkEventMessage(request.UserId, request.DrinkId, activity.Timestamp));
+            }
+            catch(Exception ex)
+            {
+
+            }
+            
 
             return Unit.Value;
         }
 
         public async Task<Unit> Handle(DeleteActivityCommand request, CancellationToken cancellationToken)
         {
-            await ActivityRepository.DeleteActivityAsync(request.UserId, request.ActivityId);
+            await activityRepository.DeleteActivityAsync(request.UserId, request.ActivityId);
             return Unit.Value;
         }
-
     }
 }
