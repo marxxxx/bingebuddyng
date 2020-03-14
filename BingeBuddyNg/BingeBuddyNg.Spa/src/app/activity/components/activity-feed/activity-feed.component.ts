@@ -162,7 +162,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
           this.activitys = d.resultPage;
         }
         this.isBusy = false;
-
         this.isInitialLoad = false;
 
         if (this.highlightedActivityId) {
@@ -180,6 +179,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
       },
       e => {
         this.isBusy = false;
+        this.isInitialLoad = false;
         console.error(e);
       }
     );

@@ -55,7 +55,6 @@ export class ActivityComponent implements OnInit {
   @Output()
   deleted = new EventEmitter();
 
-
   constructor(
     private router: Router,
     private changeDetector: ChangeDetectorRef,

@@ -1,5 +1,5 @@
 <mat-card [ngClass]="{'highlighted': isHighlighted }">
-  <mat-card-title fxLayout fxLayoutAlign="space-between center">
+  <mat-card-title fxLayout fxLayoutAlign="space-between center" *ngIf="activity && currentUser">
     <div fxLayout fxLayoutAlign="start center">
       <app-user-info
         [userInfo]="activity.activity.activityType === ActivityType.Registration ? activity.activity.registrationUser : userInfo"
@@ -23,133 +23,141 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="onDelete()"><mat-icon>delete</mat-icon>{{'Delete' | transloco }}</button>
+        <button mat-menu-item (click)="onDelete()">
+          <mat-icon>delete</mat-icon>{{'Delete' | transloco }}
+        </button>
       </mat-menu>
     </div>
   </mat-card-title>
   <mat-card-content>
-    <!-- Notification-->
-    <p class="notification" *ngIf="activity.activity.activityType === ActivityType.Notification">
-      <span>{{ activity.activity.message }}</span>
-    </p>
-    <!-- Rename -->
-    <p class="notification" *ngIf="activity.activity.activityType === ActivityType.Rename">
-      <span>{{ 'RenameMessage' | transloco:activity.activity }}</span>
-    </p>
-    <!-- Venue -->
-    <p class="venue" *ngIf="activity.activity.activityType === ActivityType.VenueEntered ||
+    <div *ngIf="!activity || !currentUser" fxLayout fxLayoutAlign="center center">
+      <mat-progress-spinner diameter="32" mode="indeterminate" class="activity-content-spinner"></mat-progress-spinner>
+    </div>
+    <ng-container *ngIf="activity && currentUser">
+      <!-- Notification-->
+      <p class="notification" *ngIf="activity.activity.activityType === ActivityType.Notification">
+        <span>{{ activity.activity.message }}</span>
+      </p>
+      <!-- Rename -->
+      <p class="notification" *ngIf="activity.activity.activityType === ActivityType.Rename">
+        <span>{{ 'RenameMessage' | transloco:activity.activity }}</span>
+      </p>
+      <!-- Venue -->
+      <p class="venue" *ngIf="activity.activity.activityType === ActivityType.VenueEntered ||
     this.activity.activity.activityType === ActivityType.VenueLeft">
-      <span>{{ activity.activity.message }}</span>
-    </p>
-    <!-- Message -->
-    <p class="message" *ngIf="activity.activity.activityType === ActivityType.Message">
-      <span *ngIf="!isMessageLink(activity.activity.message)">{{
+        <span>{{ activity.activity.message }}</span>
+      </p>
+      <!-- Message -->
+      <p class="message" *ngIf="activity.activity.activityType === ActivityType.Message">
+        <span *ngIf="!isMessageLink(activity.activity.message)">{{
         activity.activity.message
       }}</span>
-      <a *ngIf="isMessageLink(activity.activity.message)"
-        [href]="activity.activity.message">{{ activity.activity.message }}</a>
-    </p>
-    <!-- Drink -->
-    <span class="drink" *ngIf="activity.activity.activityType === ActivityType.Drink">
-      {{ 'IJustHadA' | transloco: activity.activity }}
-    </span>
-    <!-- Image-->
-    <div class="image" *ngIf="isImageActivity()">
-      <img [src]="activity.activity.imageUrl" />
-    </div>
-    <!-- Video -->
-    <div class="image" *ngIf="isVideoActivity()">
-      <video width="320" height="240" controls>
-        <source [src]="activity.activity.imageUrl" type="video/mp4" />
-        {{ 'NoVideoSupport' | transloco }}
-      </video>
-    </div>
-    <!-- Welcome User-->
-    <div class="message" *ngIf="activity.activity.activityType === ActivityType.Registration">
-      <span>{{'WelcomeNewUserMessage' | transloco: activity.activity}}</span>
-    </div>
-    <div class="message" *ngIf="activity.activity.activityType === ActivityType.ProfileImageUpdate">
-      <span>{{'ProfileImageUpdateMessage' | transloco:activity.activity }}</span>
-    </div>
-    <div class="metadata" fxLayout fxLayoutAlign="space-between center">
-      <span class="timestamp">{{
+        <a *ngIf="isMessageLink(activity.activity.message)"
+          [href]="activity.activity.message">{{ activity.activity.message }}</a>
+      </p>
+      <!-- Drink -->
+      <span class="drink" *ngIf="activity.activity.activityType === ActivityType.Drink">
+        {{ 'IJustHadA' | transloco: activity.activity }}
+      </span>
+      <!-- Image-->
+      <div class="image" *ngIf="isImageActivity()">
+        <img [src]="activity.activity.imageUrl" />
+      </div>
+      <!-- Video -->
+      <div class="image" *ngIf="isVideoActivity()">
+        <video width="320" height="240" controls>
+          <source [src]="activity.activity.imageUrl" type="video/mp4" />
+          {{ 'NoVideoSupport' | transloco }}
+        </video>
+      </div>
+      <!-- Welcome User-->
+      <div class="message" *ngIf="activity.activity.activityType === ActivityType.Registration">
+        <span>{{'WelcomeNewUserMessage' | transloco: activity.activity}}</span>
+      </div>
+      <div class="message" *ngIf="activity.activity.activityType === ActivityType.ProfileImageUpdate">
+        <span>{{'ProfileImageUpdateMessage' | transloco:activity.activity }}</span>
+      </div>
+      <div class="metadata" fxLayout fxLayoutAlign="space-between center">
+        <span class="timestamp">{{
         activity.activity.timestamp | date: 'dd.MM.yyyy HH:mm'
       }}</span>
-      <span class="address" *ngIf="activity.activity.venue" (click)="onLocationClick()">
-        {{ activity.activity.venue.name }}</span>
-      <span class="address" *ngIf="!activity.activity.venue" (click)="onLocationClick()">
-        {{ activity.activity.locationAddress }}</span>
-    </div>
-
-    <mat-divider></mat-divider>
-
-    <!-- Action Area -->
-    <div fxLayout fxLayoutAlign="space-between center" class="actions" (click)="onShowReactions()">
-      <div fxLayout>
-        <!-- Like -->
-        <button *ngIf="!isBusyLiking" [disabled]="!currentUser || isLikedByMe()" mat-icon-button (click)="onLike($event)">
-          <mat-icon>thumb_up</mat-icon>
-        </button>
-
-        <span class="count"
-          *ngIf="activity.activity.likes && activity.activity.likes.length > 0">{{ activity.activity.likes.length }}</span>
-        <mat-progress-spinner *ngIf="isBusyLiking" color="primary" mode="indeterminate" diameter="32">
-        </mat-progress-spinner>
-
-        <!-- Cheers -->
-        <button *ngIf="!isBusyCheering" [disabled]="!currentUser || isCheeredByMe()"
-          mat-icon-button (click)="onCheers($event)">
-          <img src="../../assets/img/beer.png" />
-        </button>
-
-        <span class="count" *ngIf="
-            activity.activity.cheers && activity.activity.cheers.length > 0
-          ">{{ activity.activity.cheers.length }}</span>
-        <mat-progress-spinner *ngIf="isBusyCheering" color="primary" mode="indeterminate" diameter="32">
-        </mat-progress-spinner>
+        <span class="address" *ngIf="activity.activity.venue" (click)="onLocationClick()">
+          {{ activity.activity.venue.name }}</span>
+        <span class="address" *ngIf="!activity.activity.venue" (click)="onLocationClick()">
+          {{ activity.activity.locationAddress }}</span>
       </div>
 
-      <div>
-        <button mat-icon-button (click)="onCommentClicked($event)">
-          <img *ngIf="!isCommentVisible" id="btn-comm" src="../../assets/img/comment.png" />
-          <img *ngIf="isCommentVisible" id="btn-cls" src="../../assets/img/cancel.png" />
-        </button>
-        <span class="count" id="comm" *ngIf="
+      <mat-divider></mat-divider>
+
+      <!-- Action Area -->
+      <div fxLayout fxLayoutAlign="space-between center" class="actions" (click)="onShowReactions()">
+        <div fxLayout>
+          <!-- Like -->
+          <button *ngIf="!isBusyLiking" [disabled]="!currentUser || isLikedByMe()" mat-icon-button
+            (click)="onLike($event)">
+            <mat-icon>thumb_up</mat-icon>
+          </button>
+
+          <span class="count"
+            *ngIf="activity.activity.likes && activity.activity.likes.length > 0">{{ activity.activity.likes.length }}</span>
+          <mat-progress-spinner *ngIf="isBusyLiking" color="primary" mode="indeterminate" diameter="32">
+          </mat-progress-spinner>
+
+          <!-- Cheers -->
+          <button *ngIf="!isBusyCheering" [disabled]="!currentUser || isCheeredByMe()" mat-icon-button
+            (click)="onCheers($event)">
+            <img src="../../assets/img/beer.png" />
+          </button>
+
+          <span class="count" *ngIf="
+            activity.activity.cheers && activity.activity.cheers.length > 0
+          ">{{ activity.activity.cheers.length }}</span>
+          <mat-progress-spinner *ngIf="isBusyCheering" color="primary" mode="indeterminate" diameter="32">
+          </mat-progress-spinner>
+        </div>
+
+        <div>
+          <button mat-icon-button (click)="onCommentClicked($event)">
+            <img *ngIf="!isCommentVisible" id="btn-comm" src="../../assets/img/comment.png" />
+            <img *ngIf="isCommentVisible" id="btn-cls" src="../../assets/img/cancel.png" />
+          </button>
+          <span class="count" id="comm" *ngIf="
             activity.activity.comments &&
             activity.activity.comments.length > 0 &&
             !isCommentVisible
           ">{{ activity.activity.comments.length }}</span>
-      </div>
-    </div>
-
-    <!-- Comments -->
-    <div *ngIf="isCommentVisible" class="comments">
-      <mat-divider></mat-divider>
-      <div fxLayout fxLayoutAlign="space-between center" *ngIf="isCommentVisible">
-        <mat-form-field>
-          <input type="text" autofocus matInput placeholder="{{ 'Comment' | transloco }}" [(ngModel)]="comment"
-            [disabled]="isBusyCommenting" (keydown.enter)="onComment()" />
-        </mat-form-field>
-        <button mat-icon-button [disabled]="!currentUser" *ngIf="!isBusyCommenting" (click)="onComment()">
-          <img src="../../assets/img/send.png" />
-        </button>
-        <mat-progress-spinner *ngIf="isBusyCommenting" color="primary" mode="indeterminate" diameter="32">
-        </mat-progress-spinner>
+        </div>
       </div>
 
-      <mat-list>
-        <mat-list-item *ngFor="let c of activity.activity.comments">
-          <img matListAvatar [src]="userService.getProfileImageUrl(c.userId)" [routerLink]="['/profile', c.userId]" />
-          <h3 matLine>{{ c.userName }}</h3>
-          <p matLine fxLayout fxLayoutAlign="space-between center" fxLayout.lt-sm="column"
-            fxLayoutAlign.lt-sm="start start">
-            <span class="comment-text">{{ c.comment }}</span>
-            <span class="metadata">
-              {{ c.timestamp | date: 'dd.MM.yyyy HH:mm' }}
-            </span>
-          </p>
-        </mat-list-item>
-      </mat-list>
-    </div>
+      <!-- Comments -->
+      <div *ngIf="isCommentVisible" class="comments">
+        <mat-divider></mat-divider>
+        <div fxLayout fxLayoutAlign="space-between center" *ngIf="isCommentVisible">
+          <mat-form-field>
+            <input type="text" autofocus matInput placeholder="{{ 'Comment' | transloco }}" [(ngModel)]="comment"
+              [disabled]="isBusyCommenting" (keydown.enter)="onComment()" />
+          </mat-form-field>
+          <button mat-icon-button [disabled]="!currentUser" *ngIf="!isBusyCommenting" (click)="onComment()">
+            <img src="../../assets/img/send.png" />
+          </button>
+          <mat-progress-spinner *ngIf="isBusyCommenting" color="primary" mode="indeterminate" diameter="32">
+          </mat-progress-spinner>
+        </div>
+
+        <mat-list>
+          <mat-list-item *ngFor="let c of activity.activity.comments">
+            <img matListAvatar [src]="userService.getProfileImageUrl(c.userId)" [routerLink]="['/profile', c.userId]" />
+            <h3 matLine>{{ c.userName }}</h3>
+            <p matLine fxLayout fxLayoutAlign="space-between center" fxLayout.lt-sm="column"
+              fxLayoutAlign.lt-sm="start start">
+              <span class="comment-text">{{ c.comment }}</span>
+              <span class="metadata">
+                {{ c.timestamp | date: 'dd.MM.yyyy HH:mm' }}
+              </span>
+            </p>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </ng-container>
   </mat-card-content>
 </mat-card>
