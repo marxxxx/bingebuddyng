@@ -39,9 +39,9 @@ export class ActivityService {
     return this.http.get<ActivityAggregationDTO[]>(url);
   }
 
-  addMessageActivity(activity: AddMessageActivityDTO): Observable<any> {
+  addMessageActivity(activity: AddMessageActivityDTO): Observable<string> {
     const url = `${this.baseUrl}/AddMessageActivity`;
-    return this.http.post(url, activity);
+    return this.http.post<string>(url, activity);
   }
 
   addDrinkActivity(activity: AddDrinkActivityDTO): Observable<string> {

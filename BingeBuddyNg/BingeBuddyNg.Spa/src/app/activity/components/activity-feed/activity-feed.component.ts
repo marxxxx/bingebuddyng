@@ -240,6 +240,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
   onAddMessage() {
     this.pendingDrinkType = DrinkType.Unknown;
+
     this.dialog
       .open(MessageDialogComponent, { width: '80%' })
       .afterClosed()
@@ -252,8 +253,26 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
         };
 
         this.activityService.addMessageActivity(activity).subscribe(
-          r => {
+          activityId => {
             this.isBusyAdding = false;
+            const newActivity: ActivityStatsDTO = {
+              activity: {
+                id: activityId,
+                activityType: ActivityType.Message,
+                userId: this.currentUser.id,
+                userName: this.currentUser.name,
+                timestamp: new Date(),
+                message: activity.message,
+                venue: activity.venue,
+                cheers: [],
+                comments: [],
+                likes: []
+              },
+              userStats: null
+            };
+
+            this.activitys.splice(0, 0, newActivity);
+
           },
           e => {
             this.isBusyAdding = false;

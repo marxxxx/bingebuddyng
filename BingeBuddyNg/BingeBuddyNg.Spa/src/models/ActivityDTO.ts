@@ -14,8 +14,8 @@ export class ActivityDTO {
     message?: string;
     locationAddress?: string;
     location?: Location;
-    drinkType: DrinkType;
-    drinkName: string;
+    drinkType?: DrinkType;
+    drinkName?: string;
     drinkCount?: number;
     imageUrl?: string;
     venue?: VenueModel;
