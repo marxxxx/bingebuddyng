@@ -223,7 +223,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
             userStats: null
           };
 
-          this.activitys.splice(0, 0, activity);
+          this.onActivityReceived(activity);
         },
         e => {
           console.error(e);
@@ -271,8 +271,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
               userStats: null
             };
 
-            this.activitys.splice(0, 0, newActivity);
-
+            this.onActivityReceived(newActivity);
           },
           e => {
             this.isBusyAdding = false;
