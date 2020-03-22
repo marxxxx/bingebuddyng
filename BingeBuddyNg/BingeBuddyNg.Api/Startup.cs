@@ -55,10 +55,8 @@ namespace BingeBuddyNg.Api
                             new List<string>()
                         }
                     });
-               
             });
 
-            // 1. Add Authentication Services
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

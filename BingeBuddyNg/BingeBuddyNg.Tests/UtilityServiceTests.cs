@@ -1,5 +1,8 @@
+using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Infrastructure;
 using Moq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -23,6 +26,19 @@ namespace BingeBuddyNg.Tests
             Assert.NotNull(address.AddressText);
             Assert.NotNull(address.CountryLongName);
             Assert.NotNull(address.CountryShortName);
+        }
+
+        [Fact]
+        public async Task DeserializeInCamelCase()
+        {
+            var activity = new ActivityDTO();
+            var contractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            };
+
+            var str = JsonConvert.SerializeObject(activity, new JsonSerializerSettings() { ContractResolver = contractResolver } );
+            Assert.Contains(str, "id");
         }
     }
 }

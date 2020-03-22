@@ -22,13 +22,13 @@ namespace BingeBuddyNg.Services.Drink
             new Drink("4", DrinkType.Anti, "Anti", 0, 250)
             };
 
-        public StorageAccessService StorageAccessService { get; }
+        private readonly IStorageAccessService storageAccessService;
 
-        private ILogger<DrinkRepository> logger;
+        private readonly ILogger<DrinkRepository> logger;
 
-        public DrinkRepository(StorageAccessService storageAccessService, ILogger<DrinkRepository> logger)
+        public DrinkRepository(IStorageAccessService storageAccessService, ILogger<DrinkRepository> logger)
         {
-            this.StorageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
+            this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -37,7 +37,7 @@ namespace BingeBuddyNg.Services.Drink
             string whereClause =
                    TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId);
 
-            var drinks = await this.StorageAccessService.QueryTableAsync<DrinkTableEntity>(TableName, whereClause);
+            var drinks = await this.storageAccessService.QueryTableAsync<DrinkTableEntity>(TableName, whereClause);
 
             if (drinks.Count == 0)
             {
@@ -51,7 +51,7 @@ namespace BingeBuddyNg.Services.Drink
 
         public async Task<Drink> GetDrinkAsync(string userId, string drinkId)
         {
-            var drink = await this.StorageAccessService.GetTableEntityAsync<DrinkTableEntity>(TableName, userId, drinkId);
+            var drink = await this.storageAccessService.GetTableEntityAsync<DrinkTableEntity>(TableName, userId, drinkId);
             return drink.ToDrink();
         }
 
@@ -71,16 +71,16 @@ namespace BingeBuddyNg.Services.Drink
                 batch.Add(TableOperation.InsertOrReplace(entity));
             }
 
-            var table = StorageAccessService.GetTableReference(TableName);
+            var table = storageAccessService.GetTableReference(TableName);
 
             await table.ExecuteBatchAsync(batch);
         }
 
         public async Task DeleteDrinkAsync(string userId, string drinkId)
         {
-            var entity = await StorageAccessService.GetTableEntityAsync<DrinkTableEntity>(TableName, userId, drinkId);
+            var entity = await storageAccessService.GetTableEntityAsync<DrinkTableEntity>(TableName, userId, drinkId);
 
-            var table = StorageAccessService.GetTableReference(TableName);
+            var table = storageAccessService.GetTableReference(TableName);
             await table.ExecuteAsync(TableOperation.Delete(entity));
         }
 

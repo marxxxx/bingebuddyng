@@ -13,10 +13,10 @@ using System.Threading.Tasks;
 namespace BingeBuddyNg.Services.Activity.Commands
 {
     public class ActivityCommandHandler :   
-            IRequestHandler<AddDrinkActivityCommand>,
-            IRequestHandler<AddImageActivityCommand>,
-            IRequestHandler<AddMessageActivityCommand>,
-            IRequestHandler<AddVenueActivityCommand>,
+            IRequestHandler<AddDrinkActivityCommand, string>,
+            IRequestHandler<AddImageActivityCommand, string>,
+            IRequestHandler<AddMessageActivityCommand, string>,
+            IRequestHandler<AddVenueActivityCommand, string>,
             IRequestHandler<AddReactionCommand>,
             IRequestHandler<DeleteActivityCommand>
     {
@@ -37,7 +37,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
             this.messagingService = messagingService ?? throw new ArgumentNullException(nameof(messagingService));
         }
 
-        public async Task<Unit> Handle(AddImageActivityCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(AddImageActivityCommand request, CancellationToken cancellationToken)
         {
             var user = await this.userRepository.FindUserAsync(request.UserId);
 
@@ -50,10 +50,10 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
             await activityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
 
-            return Unit.Value;
+            return savedActivity.Id;
         }
 
-        public async Task<Unit> Handle(AddMessageActivityCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(AddMessageActivityCommand request, CancellationToken cancellationToken)
         {
             var user = await this.userRepository.FindUserAsync(request.UserId);
 
@@ -63,10 +63,10 @@ namespace BingeBuddyNg.Services.Activity.Commands
             var savedActivity = await this.activityRepository.AddActivityAsync(activity);
             await activityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
 
-            return Unit.Value;
+            return savedActivity.Id;
         }
 
-        public async Task<Unit> Handle(AddVenueActivityCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(AddVenueActivityCommand request, CancellationToken cancellationToken)
         {
             var user = await this.userRepository.FindUserAsync(request.UserId);
             var activityEntity = Activity.CreateVenueActivity(DateTime.UtcNow, request.UserId, user.Name,
@@ -76,7 +76,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
             await activityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
 
-            return Unit.Value;
+            return savedActivity.Id;
         }
 
         public async Task<Unit> Handle(AddReactionCommand request, CancellationToken cancellationToken)
@@ -101,8 +101,6 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
             await this.activityRepository.UpdateActivityAsync(activity);
 
-            
-
             // add to queue
             var queueClient = this.storageAccessService.GetQueueReference(Constants.QueueNames.ReactionAdded);
             var message = new ReactionAddedMessage(request.ActivityId, request.Type, request.UserId, request.Comment);
@@ -111,38 +109,21 @@ namespace BingeBuddyNg.Services.Activity.Commands
             return Unit.Value;
         }
 
-        public async Task<Unit> Handle(AddDrinkActivityCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(AddDrinkActivityCommand request, CancellationToken cancellationToken)
         {
             var user = await this.userRepository.FindUserAsync(request.UserId);
-
-            int drinkCount = 0;
-            if (request.DrinkType != DrinkType.Anti)
-            {
-                // immediately update drink count
-                var drinkActivitys = await activityRepository.GetActivitysForUserAsync(request.UserId, DateTime.UtcNow.Subtract(TimeSpan.FromHours(12)), ActivityType.Drink);
-                drinkCount = drinkActivitys.Where(a => a.DrinkType != DrinkType.Anti).Count() + 1;
-            }
 
             var activity = Activity.CreateDrinkActivity(DateTime.UtcNow, request.Location, request.UserId, user.Name,
                 request.DrinkType, request.DrinkId, request.DrinkName, request.AlcPrc, request.Volume);
             activity.Venue = request.Venue;
-            activity.DrinkCount = drinkCount;
 
             var savedActivity = await this.activityRepository.AddActivityAsync(activity);
 
             await activityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
 
-            try
-            {
-                await messagingService.SendMessageAsync(new DrinkEventMessage(request.UserId, request.DrinkId, activity.Timestamp));
-            }
-            catch(Exception ex)
-            {
+            await messagingService.SendMessageAsync(new DrinkEventMessage(request.UserId, request.DrinkId, activity.Timestamp));
 
-            }
-            
-
-            return Unit.Value;
+            return savedActivity.Id;
         }
 
         public async Task<Unit> Handle(DeleteActivityCommand request, CancellationToken cancellationToken)

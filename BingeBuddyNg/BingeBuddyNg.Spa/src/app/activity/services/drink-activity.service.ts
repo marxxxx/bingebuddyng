@@ -16,7 +16,7 @@ export class DrinkActivityService {
     private activityService: ActivityService,
     private dialog: MatDialog) { }
 
-  drink(drink: Drink, displayDialog: boolean = true): Observable<any> {
+  drink(drink: Drink, displayDialog: boolean = true): Observable<[any, string]> {
     const activity: AddDrinkActivityDTO = {
       drinkId: drink.id,
       drinkType: drink.drinkType,
@@ -29,7 +29,7 @@ export class DrinkActivityService {
 
     const observable = displayDialog ?
       forkJoin([this.displayDrinkDialog(drink.drinkType), this.activityService.addDrinkActivity(activity)]) :
-      forkJoin([this.activityService.addDrinkActivity(activity), timer(5000)]);
+      forkJoin([timer(5000), this.activityService.addDrinkActivity(activity)]);
 
     return observable;
   }

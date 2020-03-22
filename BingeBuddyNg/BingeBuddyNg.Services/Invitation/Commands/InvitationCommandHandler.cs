@@ -79,7 +79,7 @@ namespace BingeBuddyNg.Services.Invitation.Commands
 
                     var message = new NotificationMessage(Constants.Urls.ApplicationIconUrl, Constants.Urls.ApplicationIconUrl, Constants.Urls.ApplicationUrl,
                         "Binge Buddy", messageContent);
-                    this.NotificationService.SendMessage(new[] { invitingUser.PushInfo }, message);
+                    this.NotificationService.SendWebPushMessage(new[] { invitingUser.PushInfo }, message);
                 }
             }
 

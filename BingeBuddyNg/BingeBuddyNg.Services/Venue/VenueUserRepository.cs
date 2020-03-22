@@ -10,19 +10,19 @@ namespace BingeBuddyNg.Services.Venue
     {
         private const string TableName = "venueusers";
 
-        public StorageAccessService StorageAccessService { get; set; }
-        private ILogger<VenueUserRepository> logger;
+        private readonly IStorageAccessService storageAccessService;
+        private readonly ILogger<VenueUserRepository> logger;
 
-        public VenueUserRepository(StorageAccessService storageAccessService, ILogger<VenueUserRepository> logger)
+        public VenueUserRepository(IStorageAccessService storageAccessService, ILogger<VenueUserRepository> logger)
         {
-            StorageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
+            this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
 
         public async Task AddUserToVenueAsync(string venueId, string venueName, string userId, string userName)
         {
-            var table = StorageAccessService.GetTableReference(TableName);
+            var table = storageAccessService.GetTableReference(TableName);
             var entity = new VenueUsersTableEntity(venueId, venueName, userId, userName);
 
             await table.ExecuteAsync(TableOperation.Insert(entity));
@@ -30,9 +30,9 @@ namespace BingeBuddyNg.Services.Venue
 
         public async Task RemoveUserFromVenueAsync(string venueId, string userId)
         {
-            var table = StorageAccessService.GetTableReference(TableName);
+            var table = storageAccessService.GetTableReference(TableName);
 
-            var entity = await StorageAccessService.GetTableEntityAsync<VenueUsersTableEntity>(TableName, venueId, userId);
+            var entity = await storageAccessService.GetTableEntityAsync<VenueUsersTableEntity>(TableName, venueId, userId);
 
             await table.ExecuteAsync(TableOperation.Delete(entity));
         }

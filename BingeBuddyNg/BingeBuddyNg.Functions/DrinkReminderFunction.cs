@@ -50,7 +50,7 @@ namespace BingeBuddyNg.Functions
 
                     var reminderMessage = new NotificationMessage(subject, messageContent);
 
-                    NotificationService.SendMessage(new[] { user.PushInfo }, reminderMessage);
+                    NotificationService.SendWebPushMessage(new[] { user.PushInfo }, reminderMessage);
                 }
 
                 await UserRepository.UpdateMonitoringInstanceAsync(user.Id, null);

@@ -23,8 +23,20 @@ namespace BingeBuddyNg.Functions
              [Blob("img/{name}", FileAccess.Write, Connection = "AzureWebJobsStorage")]out byte[] resizedData,
             ILogger log)
         {
-            var img = Image.Load(strm);
-            
+            Image<SixLabors.ImageSharp.PixelFormats.Rgba32> img = null;
+
+            try
+            {
+                img = Image.Load(strm);
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, $"Error processing image [{name}]"); 
+                resizedData = null;
+                return;
+            }
+
+
             if (img.Width > ResizeMaxWidth || img.Height > ResizeMaxHeight)
             {
                 double ratio = img.Width / (double)img.Height;

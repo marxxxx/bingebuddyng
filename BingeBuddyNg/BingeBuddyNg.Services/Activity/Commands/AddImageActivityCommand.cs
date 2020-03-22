@@ -6,7 +6,7 @@ using System.Text;
 
 namespace BingeBuddyNg.Services.Activity.Commands
 {
-    public class AddImageActivityCommand : IRequest
+    public class AddImageActivityCommand : IRequest<string>
     {
         public AddImageActivityCommand(string userId, Stream stream, string fileName, double? lat, double? lng)
         {

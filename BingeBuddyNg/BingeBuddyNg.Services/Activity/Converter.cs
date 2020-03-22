@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 
 namespace BingeBuddyNg.Services.Activity
 {
-    internal static class Converter
+    public static class Converter
     {
-        internal static ActivityDTO ConvertActivityToDto(Activity a)
+        public static ActivityDTO ToDto(this Activity a)
         {
             return new ActivityDTO()
             {

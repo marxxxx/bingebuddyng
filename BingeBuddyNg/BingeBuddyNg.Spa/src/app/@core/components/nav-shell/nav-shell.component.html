@@ -8,31 +8,34 @@
         <mat-icon>close</mat-icon>
       </button>Menu</mat-toolbar>
     <mat-nav-list (click)="onNavListItemClicked()">
-      <a mat-list-item routerLink="/activity-feed"><img
-          src="../../assets/img/ActivityFeed.png" /><span>{{ 'Activity' | transloco }}</span></a>
-      <a mat-list-item routerLink="/bingemap"><img
-          src="../../assets/img/map.png" /><span>{{ 'BingeMap' | transloco }}</span></a>
-      <a mat-list-item routerLink="/users">
-        <mat-icon class="menu-item">people</mat-icon>{{ 'Drinkers' | transloco }}
-      </a>
-      <a mat-list-item routerLink="/ranking">
-        <mat-icon class="menu-item">cake</mat-icon>{{ 'Ranking' | transloco }}
-      </a>
-      <a mat-list-item routerLink="/drinks">
-        <img src="../../assets/img/beer.png" /><span>{{ 'Drinks' | transloco }}</span>
-      </a>
-      <a mat-list-item routerLink="/invitation/invite-friend">
-        <mat-icon class="menu-item">share</mat-icon>{{ 'InviteFriend' | transloco }}
-      </a>
-      <a mat-list-item routerLink="/settings">
-        <mat-icon class="menu-item">settings</mat-icon>{{ 'Settings' | transloco }}
-      </a>
-      <a mat-list-item routerLink="/onboarding">
-        <mat-icon class="menu-item">help</mat-icon>{{ 'Onboarding_Navmenu_Entry' | transloco }}
-      </a>
-      <mat-divider *ngIf="auth.isAuthenticated()"></mat-divider>
-      <a *ngIf="auth.isAuthenticated()" mat-list-item (click)="onLogout()"><img
-          src="../../assets/img/logout.png" /><span>{{ 'Logout' | transloco }}</span></a>
+      <ng-container *ngIf="auth.isLoggedIn$ | async">
+        <a mat-list-item routerLink="/activity-feed"><img
+            src="../../assets/img/ActivityFeed.png" /><span>{{ 'Activity' | transloco }}</span></a>
+        <a mat-list-item routerLink="/bingemap"><img
+            src="../../assets/img/map.png" /><span>{{ 'BingeMap' | transloco }}</span></a>
+        <a mat-list-item routerLink="/users">
+          <mat-icon class="menu-item">people</mat-icon>{{ 'Drinkers' | transloco }}
+        </a>
+        <a mat-list-item routerLink="/ranking">
+          <mat-icon class="menu-item">cake</mat-icon>{{ 'Ranking' | transloco }}
+        </a>
+        <a mat-list-item routerLink="/drinks">
+          <img src="../../assets/img/beer.png" /><span>{{ 'Drinks' | transloco }}</span>
+        </a>
+        <a mat-list-item routerLink="/invitation/invite-friend">
+          <mat-icon class="menu-item">share</mat-icon>{{ 'InviteFriend' | transloco }}
+        </a>
+        <a mat-list-item routerLink="/settings">
+          <mat-icon class="menu-item">settings</mat-icon>{{ 'Settings' | transloco }}
+        </a>
+        <a mat-list-item routerLink="/onboarding">
+          <mat-icon class="menu-item">help</mat-icon>{{ 'Onboarding_Navmenu_Entry' | transloco }}
+        </a>
+        <mat-divider></mat-divider>
+
+        <a mat-list-item (click)="onLogout()"><img
+            src="../../assets/img/logout.png" /><span>{{ 'Logout' | transloco }}</span></a>
+      </ng-container>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -50,7 +53,7 @@
           <mat-icon [matBadge]="friendRequests.length" matBadgeColor="warn">sentiment_satisfied_alt</mat-icon>
         </button>
 
-        <app-me></app-me>
+        <app-me *ngIf="auth.isLoggedIn$ | async"></app-me>
       </div>
     </mat-toolbar>
     <div class="content-container">

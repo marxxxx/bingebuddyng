@@ -12,11 +12,11 @@ namespace BingeBuddyNg.Services.Statistics
         private const string TableName = "userstats";
         private const string PartitionKeyValue = "UserStats";
 
-        public StorageAccessService StorageAccessService { get; }
+        private readonly IStorageAccessService storageAccessService;
 
-        public UserStatsRepository(StorageAccessService storageAccessService)
+        public UserStatsRepository(IStorageAccessService storageAccessService)
         {
-            StorageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
+            this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
         }
 
 
@@ -29,7 +29,7 @@ namespace BingeBuddyNg.Services.Statistics
 
         public async Task<UserStatistics> GetStatisticsAsync(string userId)
         {
-            var result = await StorageAccessService.GetTableEntityAsync<UserStatsTableEntity>(TableName, PartitionKeyValue, userId);
+            var result = await storageAccessService.GetTableEntityAsync<UserStatsTableEntity>(TableName, PartitionKeyValue, userId);
             if (result != null)
             {
                 return new UserStatistics(userId, result.CurrentAlcoholization, result.CurrentNightDrinks, result.Score, result.TotalDrinksLastMonth);
@@ -44,7 +44,7 @@ namespace BingeBuddyNg.Services.Statistics
         public async Task<List<UserStatistics>> GetRankingStatisticsAsync()
         {
             string whereClause = TableQuery.GenerateFilterConditionForInt(nameof(UserStatsTableEntity.TotalDrinksLastMonth), QueryComparisons.GreaterThan, 0);
-            var queryResult = await StorageAccessService.QueryTableAsync<UserStatsTableEntity>(TableName, whereClause);
+            var queryResult = await storageAccessService.QueryTableAsync<UserStatsTableEntity>(TableName, whereClause);
 
             var result = queryResult.OrderByDescending(r => r.TotalDrinksLastMonth)
                 .Select(r => new UserStatistics(r.RowKey, r.CurrentAlcoholization, r.CurrentNightDrinks, r.Score, r.TotalDrinksLastMonth))
@@ -57,7 +57,7 @@ namespace BingeBuddyNg.Services.Statistics
         {
             string whereClause = TableQuery.GenerateFilterConditionForInt(nameof(UserStatsTableEntity.Score), QueryComparisons.GreaterThan, 0);
 
-            var queryResult = await StorageAccessService.QueryTableAsync<UserStatsTableEntity>(TableName, whereClause);
+            var queryResult = await storageAccessService.QueryTableAsync<UserStatsTableEntity>(TableName, whereClause);
 
             var result = queryResult.Where(s=>s.Score.GetValueOrDefault() > 0)
                 .OrderByDescending(r => r.Score)
@@ -69,7 +69,7 @@ namespace BingeBuddyNg.Services.Statistics
 
         public Task SaveStatisticsForUserAsync(UserStatistics userStatistics)
         {
-            var table = StorageAccessService.GetTableReference(TableName);
+            var table = storageAccessService.GetTableReference(TableName);
 
             var entity = new UserStatsTableEntity(PartitionKeyValue, userStatistics.UserId,
                 userStatistics.CurrentAlcoholization, userStatistics.CurrentNightDrinks,
@@ -83,9 +83,9 @@ namespace BingeBuddyNg.Services.Statistics
 
         public async Task UpdateTotalDrinkCountLastMonthAsync(string userId, int count)
         {
-            var table = StorageAccessService.GetTableReference(TableName);
+            var table = storageAccessService.GetTableReference(TableName);
 
-            var result = await StorageAccessService.GetTableEntityAsync<UserStatsTableEntity>(TableName, PartitionKeyValue, userId);
+            var result = await storageAccessService.GetTableEntityAsync<UserStatsTableEntity>(TableName, PartitionKeyValue, userId);
             result.TotalDrinksLastMonth = count;
 
             TableOperation saveOperation = TableOperation.InsertOrReplace(result);
@@ -95,9 +95,9 @@ namespace BingeBuddyNg.Services.Statistics
 
         public async Task IncreaseScoreAsync(string userId, int additionalScore)
         {
-            var table = StorageAccessService.GetTableReference(TableName);
+            var table = storageAccessService.GetTableReference(TableName);
 
-            var result = await StorageAccessService.GetTableEntityAsync<UserStatsTableEntity>(TableName, PartitionKeyValue, userId);
+            var result = await storageAccessService.GetTableEntityAsync<UserStatsTableEntity>(TableName, PartitionKeyValue, userId);
             if(result.Score == null)
             {
                 result.Score = 0;

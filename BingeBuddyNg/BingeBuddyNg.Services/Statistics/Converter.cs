@@ -2,11 +2,11 @@
 
 namespace BingeBuddyNg.Services.Statistics
 {
-    internal static class Converter
+    public static class Converter
     {
         private static readonly IFormatProvider numFormat = new System.Globalization.CultureInfo("en").NumberFormat;
 
-        internal static UserStatisticsDTO ConvertUserStatisticsToDto(UserStatistics stats)
+        public static UserStatisticsDTO ToDto(this UserStatistics stats)
         {
             if (stats == null)
                 return null;
@@ -21,10 +21,8 @@ namespace BingeBuddyNg.Services.Statistics
             };
         }
 
-        internal static PersonalUsagePerWeekdayDTO ToDto(this PersonalUsagePerWeekdayTableEntity entity)
-        {
-
-            
+        public static PersonalUsagePerWeekdayDTO ToDto(this PersonalUsagePerWeekdayTableEntity entity)
+        {            
             return new PersonalUsagePerWeekdayDTO()
             {
                 WeekDay = entity.WeekDay,

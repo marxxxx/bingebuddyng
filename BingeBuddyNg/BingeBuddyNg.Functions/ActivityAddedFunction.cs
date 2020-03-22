@@ -1,47 +1,48 @@
+using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Drink;
+using BingeBuddyNg.Services.DrinkEvent;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.Statistics;
+using BingeBuddyNg.Services.User;
+using Microsoft.Azure.SignalR.Management;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Calculation;
-using BingeBuddyNg.Services.DrinkEvent;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
-using BingeBuddyNg.Services.Drink;
-using BingeBuddyNg.Services.Statistics;
-using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 
 namespace BingeBuddyNg.Functions
 {
     public class ActivityAddedFunction
     {
-        public IUtilityService UtilityService { get; }
-        public IActivityRepository ActivityRepository { get; }
-        public IUserRepository UserRepository { get; }        
-        public IUserStatsRepository UserStatsRepository { get; }
-        public INotificationService NotificationService { get; }
-        public IDrinkEventRepository DrinkEventRepository { get; }
-        public ITranslationService TranslationService { get; }
-        public IUserStatisticsService UserStatisticsService { get; }
-        public IDurableClient DurableClient { get; private set; }
-
+        private readonly IUtilityService utilityService;
+        private readonly IActivityRepository activityRepository;
+        private readonly IUserRepository userRepository;
+        private readonly IUserStatsRepository userStatsRepository;
+        private readonly INotificationService notificationService;
+        private readonly IDrinkEventRepository drinkEventRepository;
+        private readonly ITranslationService translationService;
+        private readonly IUserStatisticsService userStatisticsService;
+        
+        private ILogger logger;
+        private IDurableClient durableClient;
 
         public ActivityAddedFunction(IUtilityService utilityService, IActivityRepository activityRepository,
-            IUserRepository userRepository, IUserStatsRepository userStatsRepository, 
-            INotificationService notificationService, IDrinkEventRepository drinkEventRepository, 
+            IUserRepository userRepository, IUserStatsRepository userStatsRepository,
+            INotificationService notificationService, IDrinkEventRepository drinkEventRepository,
             ITranslationService translationService, IUserStatisticsService userStatisticsService)
         {
-            UtilityService = utilityService ?? throw new ArgumentNullException(nameof(utilityService));
-            ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
-            UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            UserStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
-            NotificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
-            DrinkEventRepository = drinkEventRepository ?? throw new ArgumentNullException(nameof(drinkEventRepository));
-            TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
-            UserStatisticsService = userStatisticsService ?? throw new ArgumentNullException(nameof(userStatisticsService));
-            
+            this.utilityService = utilityService ?? throw new ArgumentNullException(nameof(utilityService));
+            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.userStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
+            this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+            this.drinkEventRepository = drinkEventRepository ?? throw new ArgumentNullException(nameof(drinkEventRepository));
+            this.translationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
+            this.userStatisticsService = userStatisticsService ?? throw new ArgumentNullException(nameof(userStatisticsService));
         }
 
         [FunctionName("ActivityAddedFunction")]
@@ -50,10 +51,11 @@ namespace BingeBuddyNg.Functions
             [DurableClient]IDurableClient starter,
             ILogger log)
         {
-            this.DurableClient = starter ?? throw new ArgumentNullException(nameof(starter));
+            this.durableClient = starter ?? throw new ArgumentNullException(nameof(starter));
+            this.logger = log;
 
             var activityAddedMessage = JsonConvert.DeserializeObject<ActivityAddedMessage>(message);
-            var activity = await ActivityRepository.GetActivityAsync(activityAddedMessage.ActivityId);
+            var activity = await activityRepository.GetActivityAsync(activityAddedMessage.ActivityId);
 
             log.LogInformation($"Handling added activity [{activity}] ...");
 
@@ -63,7 +65,7 @@ namespace BingeBuddyNg.Functions
                 User currentUser = null;
                 try
                 {
-                    currentUser = await UserRepository.FindUserAsync(activity.UserId);
+                    currentUser = await userRepository.FindUserAsync(activity.UserId);
                     if (activity.ActivityType == ActivityType.Drink)
                     {
                         await HandleMonitoringAsync(currentUser);
@@ -78,8 +80,9 @@ namespace BingeBuddyNg.Functions
                 try
                 {
                     // Immediately update Stats for current user
-                    userStats = await UserStatisticsService.UpdateStatsForUserAsync(currentUser);
-                    await UserStatisticsService.UpdateRankingForUserAsync(currentUser.Id);
+                    userStats = await userStatisticsService.UpdateStatsForUserAsync(currentUser);
+                    activity.DrinkCount = userStats.CurrentNightDrinks;
+                    await userStatisticsService.UpdateRankingForUserAsync(currentUser.Id);
                 }
                 catch (Exception ex)
                 {
@@ -103,15 +106,19 @@ namespace BingeBuddyNg.Functions
 
                 if (shouldUpdate)
                 {
-                    await ActivityRepository.UpdateActivityAsync(activity);
+                    await activityRepository.UpdateActivityAsync(activity);
                 }
-
+                
+                var friendUserIds = currentUser.GetVisibleFriendUserIds(true);
+                // send Realtime-Notification via SignalR
+                var activityStats = new ActivityStatsDTO(activity.ToDto(), userStats?.ToDto());
+                await this.notificationService.SendSignalRMessageAsync(friendUserIds, Shared.Constants.SignalR.NotificationHubName, Shared.Constants.SignalR.ActivityReceivedMethodName, activityStats);
 
                 // remind only first and every 5th drink this night to avoid spamming
                 if (ShouldNotifyUsers(activity, userStats))
                 {
                     // get friends of this user who didn't mute themselves from him
-                    await HandleUserNotificationsAsync(log, activity, currentUser);
+                    await HandleUserNotificationsAsync(friendUserIds.Where(u=> u != currentUser.Id).ToList().AsReadOnly(), activity);
                 }
 
                 // check for drink events
@@ -128,53 +135,48 @@ namespace BingeBuddyNg.Functions
             {
                 log.LogError($"Processing failed: [{ex}]");
             }
-
-
-            
         }
 
         private async Task HandleMonitoringAsync(User currentUser)
         {
             if (currentUser.MonitoringInstanceId != null)
             {
-                await this.DurableClient.TerminateAsync(currentUser.MonitoringInstanceId, "Drank early enough.");
+                await this.durableClient.TerminateAsync(currentUser.MonitoringInstanceId, "Drank early enough.");
             }
 
             // Start timer to remind user about entering his next drink.
-            var monitoringInstanceId = await this.DurableClient.StartNewAsync(nameof(DrinkReminderFunction), currentUser);
-            await UserRepository.UpdateMonitoringInstanceAsync(currentUser.Id, monitoringInstanceId);
+            var monitoringInstanceId = await this.durableClient.StartNewAsync(nameof(DrinkReminderFunction), currentUser);
+            await userRepository.UpdateMonitoringInstanceAsync(currentUser.Id, monitoringInstanceId);
         }
 
         private async Task HandleLocationUpdateAsync(Activity activity)
         {
-            var address = await UtilityService.GetAddressFromLongLatAsync(activity.Location);
+            var address = await utilityService.GetAddressFromLongLatAsync(activity.Location);
             activity.LocationAddress = address.AddressText;
             activity.CountryLongName = address.CountryLongName;
             activity.CountryShortName = address.CountryShortName;
         }
 
-        private async Task HandleUserNotificationsAsync(ILogger log, Activity activity, User currentUser)
-        {
-            var friendUserIds = currentUser.GetVisibleFriendUserIds(false);
-
+        private async Task HandleUserNotificationsAsync(IReadOnlyList<string> friendUserIds, Activity activity)
+        {            
             foreach (var friendUserId in friendUserIds)
             {
                 try
                 {
-                    var friendUser = await UserRepository.FindUserAsync(friendUserId);
-                    if (friendUser != null && friendUser.PushInfo != null && 
+                    var friendUser = await userRepository.FindUserAsync(friendUserId);
+                    if (friendUser != null && friendUser.PushInfo != null &&
                         friendUser.LastOnline > DateTime.UtcNow.Subtract(TimeSpan.FromDays(30)))
                     {
-                        log.LogInformation($"Sending push to [{friendUser}] ...");
+                        this.logger.LogInformation($"Sending push to [{friendUser}] ...");
 
                         var notificationMessage = await GetNotificationMessageAsync(friendUser.Language, activity);
 
-                        NotificationService.SendMessage(new[] { friendUser.PushInfo }, notificationMessage);
+                        notificationService.SendWebPushMessage(new[] { friendUser.PushInfo }, notificationMessage);
                     }
                 }
                 catch (Exception ex)
                 {
-                    log.LogError($"Failed to send push notification to user [{friendUserId}]: [{ex}]");
+                    this.logger.LogError($"Failed to send push notification to user [{friendUserId}]: [{ex}]");
                 }
             }
         }
@@ -183,24 +185,24 @@ namespace BingeBuddyNg.Functions
         {
             if (activity.ActivityType == ActivityType.Drink || activity.DrinkType != DrinkType.Anti)
             {
-                var drinkEvent = await DrinkEventRepository.FindCurrentDrinkEventAsync();
+                var drinkEvent = await drinkEventRepository.FindCurrentDrinkEventAsync();
                 if (drinkEvent != null)
                 {
                     if (drinkEvent.AddScoringUserId(currentUser.Id))
                     {
-                        await DrinkEventRepository.UpdateDrinkEventAsync(drinkEvent);
+                        await drinkEventRepository.UpdateDrinkEventAsync(drinkEvent);
 
-                        await UserStatsRepository.IncreaseScoreAsync(currentUser.Id, Shared.Constants.Scores.StandardDrinkAction);
+                        await userStatsRepository.IncreaseScoreAsync(currentUser.Id, Shared.Constants.Scores.StandardDrinkAction);
 
-                        string message = await TranslationService.GetTranslationAsync(currentUser.Language, "DrinkEventActivityWinMessage", Shared.Constants.Scores.StandardDrinkAction);
+                        string message = await translationService.GetTranslationAsync(currentUser.Language, "DrinkEventActivityWinMessage", Shared.Constants.Scores.StandardDrinkAction);
 
                         var drinkEventNotificiationActivity = Activity.CreateNotificationActivity(DateTime.UtcNow, currentUser.Id, currentUser.Name, message);
-                        await ActivityRepository.AddActivityAsync(drinkEventNotificiationActivity);
+                        await activityRepository.AddActivityAsync(drinkEventNotificiationActivity);
 
                         if (currentUser.PushInfo != null)
                         {
-                            string notificationMessage = await TranslationService.GetTranslationAsync(currentUser.Language, "DrinkEventWinMessage", Shared.Constants.Scores.StandardDrinkAction);
-                            NotificationService.SendMessage(new[] { currentUser.PushInfo }, new NotificationMessage("Gratuliere!", notificationMessage));
+                            string notificationMessage = await translationService.GetTranslationAsync(currentUser.Language, "DrinkEventWinMessage", Shared.Constants.Scores.StandardDrinkAction);
+                            notificationService.SendWebPushMessage(new[] { currentUser.PushInfo }, new NotificationMessage("Gratuliere!", notificationMessage));
                         }
                     }
                 }
@@ -219,26 +221,26 @@ namespace BingeBuddyNg.Functions
             string locationSnippet = null;
             if (!string.IsNullOrEmpty(activity.LocationAddress))
             {
-                locationSnippet = await TranslationService.GetTranslationAsync(language, "DrinkLocationSnippet", activity.LocationAddress);
+                locationSnippet = await translationService.GetTranslationAsync(language, "DrinkLocationSnippet", activity.LocationAddress);
             }
 
             string activityString = null;
             switch (activity.ActivityType)
             {
                 case ActivityType.Drink:
-                    activityString = await TranslationService.GetTranslationAsync(language, "DrinkActivityMessage", activity.DrinkName, locationSnippet);
+                    activityString = await translationService.GetTranslationAsync(language, "DrinkActivityMessage", activity.DrinkName, locationSnippet);
                     break;
                 case ActivityType.Image:
-                    activityString = await TranslationService.GetTranslationAsync(language, "ImageActivityMessage");
+                    activityString = await translationService.GetTranslationAsync(language, "ImageActivityMessage");
                     break;
                 case ActivityType.Message:
-                    activityString = await TranslationService.GetTranslationAsync(language, "MessageActivityMessage", activity.Message);
+                    activityString = await translationService.GetTranslationAsync(language, "MessageActivityMessage", activity.Message);
                     break;
                 case ActivityType.VenueEntered:
-                    activityString = await TranslationService.GetTranslationAsync(language, "VenueEnterActivityMessage", activity.Venue.Name);
+                    activityString = await translationService.GetTranslationAsync(language, "VenueEnterActivityMessage", activity.Venue.Name);
                     break;
                 case ActivityType.VenueLeft:
-                    activityString = await TranslationService.GetTranslationAsync(language, "VenueLeaveActivityMessage", activity.Venue.Name);
+                    activityString = await translationService.GetTranslationAsync(language, "VenueLeaveActivityMessage", activity.Venue.Name);
                     break;
             }
 
