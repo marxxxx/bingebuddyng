@@ -10,17 +10,16 @@ namespace BingeBuddyNg.Services.Invitation
         private const string TableName = "invitations";
         private const string PartitionKeyValue = "Invitation";
 
-        public StorageAccessService StorageAccess { get; }
+        private readonly IStorageAccessService storageAccess;
 
-        public InvitationRepository(StorageAccessService storageAccess)
+        public InvitationRepository(IStorageAccessService storageAccess)
         {
-            this.StorageAccess = storageAccess ?? throw new ArgumentNullException(nameof(storageAccess));
+            this.storageAccess = storageAccess ?? throw new ArgumentNullException(nameof(storageAccess));
         }
-
 
         public async Task<string> CreateInvitationAsync(string userId)
         {
-            var table = StorageAccess.GetTableReference(TableName);
+            var table = storageAccess.GetTableReference(TableName);
 
             string invitationToken = Guid.NewGuid().ToString();
 
@@ -34,7 +33,7 @@ namespace BingeBuddyNg.Services.Invitation
 
         public async Task<Invitation> AcceptInvitationAsync(string userId, string token)
         {
-            var table = StorageAccess.GetTableReference(TableName);
+            var table = storageAccess.GetTableReference(TableName);
             var invitationEntity = await FindInvitationEntityAsync(token);
             
             TableOperation operation = TableOperation.Replace(invitationEntity);
@@ -60,8 +59,8 @@ namespace BingeBuddyNg.Services.Invitation
 
         private async Task<InvitationTableEntity> FindInvitationEntityAsync(string invitationToken)
         {
-            var table = StorageAccess.GetTableReference(TableName);
-            var invitationEntity = await StorageAccess.GetTableEntityAsync<InvitationTableEntity>(TableName, PartitionKeyValue, invitationToken);
+            var table = storageAccess.GetTableReference(TableName);
+            var invitationEntity = await storageAccess.GetTableEntityAsync<InvitationTableEntity>(TableName, PartitionKeyValue, invitationToken);
             return invitationEntity;
         }
     }

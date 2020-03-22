@@ -76,9 +76,9 @@ namespace BingeBuddyNg.Api.Controllers
 
             var userId = this.IdentityService.GetCurrentUserId();
             var command = new AddDrinkActivityCommand(userId, request.DrinkId, request.DrinkType, request.DrinkName, request.AlcPrc, request.Volume, request.Location, request.Venue);
-            await this.Mediator.Send(command);
+            var activityId = await this.Mediator.Send(command);
 
-            return Ok();
+            return new JsonResult(activityId);
         }
 
         [HttpPost("[action]/{lat}/{lng}")]

@@ -8,14 +8,14 @@ namespace BingeBuddyNg.Services.Infrastructure
 {
     public class TranslationService : ITranslationService
     {
-        public StorageAccessService StorageAccessService { get; }
-
-        private ILogger<TranslationService> logger;
         private ConcurrentDictionary<string, Task<JObject>> translation = new ConcurrentDictionary<string, Task<JObject>>();
 
-        public TranslationService(StorageAccessService storageAccessService, ILogger<TranslationService> logger)
+        private readonly IStorageAccessService storageAccessService;
+        private readonly ILogger<TranslationService> logger;
+
+        public TranslationService(IStorageAccessService storageAccessService, ILogger<TranslationService> logger)
         {
-            this.StorageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
+            this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -37,7 +37,7 @@ namespace BingeBuddyNg.Services.Infrastructure
 
         private async Task<JObject> GetTranslationFile(string language)
         {
-            var fileContent = await this.StorageAccessService.GetFileFromStorageAsync("$web", $"assets/i18n/{language}.json");
+            var fileContent = await this.storageAccessService.GetFileFromStorageAsync("$web", $"assets/i18n/{language}.json");
             JObject jObject = JObject.Parse(fileContent);
             return jObject;
         }        

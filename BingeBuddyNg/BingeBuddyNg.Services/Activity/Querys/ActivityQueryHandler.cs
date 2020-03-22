@@ -65,7 +65,7 @@ namespace BingeBuddyNg.Services.Activity.Querys
             var userIds = activities.ResultPage.Select(a => a.UserId).Distinct();
             var userStats = await this.UserStatsRepository.GetStatisticsAsync(userIds);
 
-            var result = activities.ResultPage.Select(a => new ActivityStatsDTO(Converter.ConvertActivityToDto(a), Statistics.Converter.ConvertUserStatisticsToDto(userStats.First(u => u.UserId == a.UserId)))).ToList();
+            var result = activities.ResultPage.Select(a => new ActivityStatsDTO(a.ToDto(), userStats.First(u => u.UserId == a.UserId).ToDto())).ToList();
             return new PagedQueryResult<ActivityStatsDTO>(result, activities.ContinuationToken);
         }
 
@@ -108,7 +108,7 @@ namespace BingeBuddyNg.Services.Activity.Querys
         public async Task<List<ActivityDTO>> Handle(GetActivitysForMapQuery request, CancellationToken cancellationToken)
         {
             var result = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(request.UserId, ActivityFilterOptions.WithLocation, pageSize: 50));
-            return result.ResultPage?.Select(a=> Converter.ConvertActivityToDto(a)).ToList();
+            return result.ResultPage?.Select(a=> a.ToDto()).ToList();
         }
 
 

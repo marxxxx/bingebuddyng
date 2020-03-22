@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace BingeBuddyNg.Services.Activity.Commands
 {
     public class ActivityCommandHandler :   
-            IRequestHandler<AddDrinkActivityCommand>,
+            IRequestHandler<AddDrinkActivityCommand, string>,
             IRequestHandler<AddImageActivityCommand>,
             IRequestHandler<AddMessageActivityCommand>,
             IRequestHandler<AddVenueActivityCommand>,
@@ -111,38 +111,30 @@ namespace BingeBuddyNg.Services.Activity.Commands
             return Unit.Value;
         }
 
-        public async Task<Unit> Handle(AddDrinkActivityCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(AddDrinkActivityCommand request, CancellationToken cancellationToken)
         {
             var user = await this.userRepository.FindUserAsync(request.UserId);
 
-            int drinkCount = 0;
-            if (request.DrinkType != DrinkType.Anti)
-            {
-                // immediately update drink count
-                var drinkActivitys = await activityRepository.GetActivitysForUserAsync(request.UserId, DateTime.UtcNow.Subtract(TimeSpan.FromHours(12)), ActivityType.Drink);
-                drinkCount = drinkActivitys.Where(a => a.DrinkType != DrinkType.Anti).Count() + 1;
-            }
+            //int drinkCount = 0;
+            //if (request.DrinkType != DrinkType.Anti)
+            //{
+            //    // immediately update drink count
+            //    var drinkActivitys = await activityRepository.GetActivitysForUserAsync(request.UserId, DateTime.UtcNow.Subtract(TimeSpan.FromHours(12)), ActivityType.Drink);
+            //    drinkCount = drinkActivitys.Where(a => a.DrinkType != DrinkType.Anti).Count() + 1;
+            //}
 
             var activity = Activity.CreateDrinkActivity(DateTime.UtcNow, request.Location, request.UserId, user.Name,
                 request.DrinkType, request.DrinkId, request.DrinkName, request.AlcPrc, request.Volume);
             activity.Venue = request.Venue;
-            activity.DrinkCount = drinkCount;
+            //activity.DrinkCount = drinkCount;
 
             var savedActivity = await this.activityRepository.AddActivityAsync(activity);
 
             await activityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
 
-            try
-            {
-                await messagingService.SendMessageAsync(new DrinkEventMessage(request.UserId, request.DrinkId, activity.Timestamp));
-            }
-            catch(Exception ex)
-            {
+            await messagingService.SendMessageAsync(new DrinkEventMessage(request.UserId, request.DrinkId, activity.Timestamp));
 
-            }
-            
-
-            return Unit.Value;
+            return savedActivity.Id;
         }
 
         public async Task<Unit> Handle(DeleteActivityCommand request, CancellationToken cancellationToken)

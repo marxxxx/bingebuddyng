@@ -44,9 +44,9 @@ export class ActivityService {
     return this.http.post(url, activity);
   }
 
-  addDrinkActivity(activity: AddDrinkActivityDTO): Observable<any> {
+  addDrinkActivity(activity: AddDrinkActivityDTO): Observable<string> {
     const url = `${this.baseUrl}/AddDrinkActivity`;
-    return this.http.post(url, activity).pipe(retry(3));
+    return this.http.post<string>(url, activity);
   }
 
   addReaction(reaction: AddReactionDTO) {

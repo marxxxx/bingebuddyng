@@ -33,7 +33,7 @@ namespace BingeBuddyNg.Services.Ranking.Querys
             var userIds = userStats.Select(u => u.UserId).Distinct();
             var users = await this.UserRepository.GetUsersAsync(userIds);
 
-            var result = userStats.Select(s => new UserRankingDTO(users.Select(u=>new UserInfoDTO(u.Id, u.Name)).First(u => u.UserId == s.UserId), Statistics.Converter.ConvertUserStatisticsToDto(s))).ToList();
+            var result = userStats.Select(s => new UserRankingDTO(users.Select(u=>new UserInfoDTO(u.Id, u.Name)).First(u => u.UserId == s.UserId), s.ToDto())).ToList();
             return result;
         }
 
@@ -43,7 +43,7 @@ namespace BingeBuddyNg.Services.Ranking.Querys
             var userIds = userStats.Select(u => u.UserId).Distinct();
             var users = await this.UserRepository.GetUsersAsync(userIds);
 
-            var result = userStats.Select(s => new UserRankingDTO(users.Select(u => new UserInfoDTO(u.Id, u.Name)).First(u => u.UserId == s.UserId), Statistics.Converter.ConvertUserStatisticsToDto(s)))
+            var result = userStats.Select(s => new UserRankingDTO(users.Select(u => new UserInfoDTO(u.Id, u.Name)).First(u => u.UserId == s.UserId), s.ToDto()))
                 .OrderByDescending(r => r.Statistics.Score)
                 .ToList();
 

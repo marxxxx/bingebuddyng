@@ -1,13 +1,10 @@
-﻿using System;
+﻿using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.User.Commands;
+using Microsoft.WindowsAzure.Storage.Table;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User.Commands;
-using Microsoft.WindowsAzure.Storage.Queue;
-using Microsoft.WindowsAzure.Storage.Table;
-using Newtonsoft.Json;
 
 namespace BingeBuddyNg.Services.User
 {
@@ -16,15 +13,14 @@ namespace BingeBuddyNg.Services.User
         private const string TableName = "users";
         private const string PartitionKeyValue = "User";
 
-        public StorageAccessService StorageAccess { get; }
-        public ICacheService CacheService { get; }
+        private readonly IStorageAccessService storageAccess;
+        private readonly ICacheService cacheService;
 
-        public UserRepository(StorageAccessService storageAccess, ICacheService cacheService)
+        public UserRepository(IStorageAccessService storageAccess, ICacheService cacheService)
         {
-            this.StorageAccess = storageAccess ?? throw new ArgumentNullException(nameof(storageAccess));
-            this.CacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
-        }
-                
+            this.storageAccess = storageAccess ?? throw new ArgumentNullException(nameof(storageAccess));
+            this.cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
+        }                
 
         public async Task<User> FindUserAsync(string id)
         {
@@ -41,9 +37,9 @@ namespace BingeBuddyNg.Services.User
 
         private async Task<JsonTableEntity<User>> FindUserEntityAsync(string id)
         {
-            var result = await CacheService.GetOrCreateAsync<JsonTableEntity<User>>(GetUserCacheKey(id), async () =>
+            var result = await cacheService.GetOrCreateAsync<JsonTableEntity<User>>(GetUserCacheKey(id), async () =>
             {
-                var table = StorageAccess.GetTableReference(TableName);
+                var table = storageAccess.GetTableReference(TableName);
 
                 TableOperation retrieveOperation = TableOperation.Retrieve<JsonTableEntity<User>>(PartitionKeyValue, id);
 
@@ -60,7 +56,7 @@ namespace BingeBuddyNg.Services.User
 
         public async Task<CreateOrUpdateUserResult> CreateOrUpdateUserAsync(CreateOrUpdateUserCommand request)
         {
-            var table = StorageAccess.GetTableReference(TableName);
+            var table = storageAccess.GetTableReference(TableName);
 
             TableOperation saveUserOperation = null;
             bool profilePicHasChanged = true;
@@ -89,7 +85,7 @@ namespace BingeBuddyNg.Services.User
 
                 saveUserOperation = TableOperation.Replace(savedUser);
 
-                CacheService.Remove(GetUserCacheKey(request.UserId));
+                cacheService.Remove(GetUserCacheKey(request.UserId));
             }
             else
             {
@@ -115,7 +111,7 @@ namespace BingeBuddyNg.Services.User
 
         public async Task UpdateUserAsync(User user)
         {
-            var table = StorageAccess.GetTableReference(TableName);
+            var table = storageAccess.GetTableReference(TableName);
             var userEntity = await FindUserEntityAsync(user.Id);
             userEntity.Entity = user;
             
@@ -123,14 +119,14 @@ namespace BingeBuddyNg.Services.User
 
             await table.ExecuteAsync(saveUserOperation);
 
-            CacheService.Remove(GetUserCacheKey(user.Id));
+            cacheService.Remove(GetUserCacheKey(user.Id));
         }
 
         public async Task<List<User>> GetUsersAsync(IEnumerable<string> userIds = null)
         {
             string whereClause = BuildWhereClause(userIds);
 
-            var result = await StorageAccess.QueryTableAsync<JsonTableEntity<User>>(TableName, whereClause);
+            var result = await storageAccess.QueryTableAsync<JsonTableEntity<User>>(TableName, whereClause);
 
             var users = result.OrderByDescending(u=>u.Timestamp).Select(r =>
             {

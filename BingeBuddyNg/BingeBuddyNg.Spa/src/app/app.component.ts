@@ -72,7 +72,6 @@ export class AppComponent implements OnInit, OnDestroy {
       this.handleInvitations();
     });
 
-
     console.log('ngOnInit - before subscribing to updates');
     // subscribe to PWA updates
     this.updateService.available.subscribe(e => {
@@ -87,12 +86,18 @@ export class AppComponent implements OnInit, OnDestroy {
 
     console.log('ngOnInit - before subscribing to messages');
 
-    this.pushService.messages.subscribe((m: any) => {
-      if (m.notification && m.notification.body) {
-        this.snackbar.open(m.notification.body, 'OK');
-        this.notification.raiseActivityReceived();
-      }
+    this.auth.currentUserProfile$.pipe(filter(p => p != null)).subscribe(c => {
+      this.notification.start().then(s => {
+        console.log('notification registered');
+      });
     });
+
+    // this.pushService.messages.subscribe((m: any) => {
+    //   if (m.notification && m.notification.body) {
+    //     this.snackbar.open(m.notification.body, 'OK');
+    //     this.notification.raiseActivityReceived();
+    //   }
+    // });
 
     console.log('ngOnInit - before subscribing to clicks');
     this.pushService.notificationClicks.subscribe(event => {
@@ -101,8 +106,6 @@ export class AppComponent implements OnInit, OnDestroy {
       console.log('[Service Worker] Notification click Received. event', event);
     });
   }
-
-
 
   ngOnDestroy() {
     if (this.sub) {

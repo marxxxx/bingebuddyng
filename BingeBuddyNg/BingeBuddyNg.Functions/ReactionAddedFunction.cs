@@ -63,7 +63,7 @@ namespace BingeBuddyNg.Functions
 
                         var notification = new NotificationMessage(Constants.NotificationIconUrl,
                             Constants.NotificationIconUrl, GetActivityUrlWithHighlightedActivityId(activity.Id), Constants.ApplicationName, message);
-                        NotificationService.SendMessage(new[] { userInfo.PushInfo }, notification);
+                        NotificationService.SendWebPushMessage(new[] { userInfo.PushInfo }, notification);
                     }
                 }
                 catch (Exception ex)
@@ -86,7 +86,7 @@ namespace BingeBuddyNg.Functions
                 string message = await GetReactionMessageAsync(originUser.Language, reactionType, reactingUser.Name, originUser.Name);
                 var notification = new NotificationMessage(Constants.NotificationIconUrl,
                     Constants.NotificationIconUrl, GetActivityUrlWithHighlightedActivityId(activityId), Constants.ApplicationName, message);
-                NotificationService.SendMessage(new[] { originUser.PushInfo }, notification);
+                NotificationService.SendWebPushMessage(new[] { originUser.PushInfo }, notification);
             }
         }
 

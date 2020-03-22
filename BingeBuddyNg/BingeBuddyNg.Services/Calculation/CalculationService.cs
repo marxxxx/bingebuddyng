@@ -10,6 +10,7 @@ namespace BingeBuddyNg.Services.Calculation
     public class CalculationService : ICalculationService
     {
         private const int DefaultWeight = 80;
+        private const int NightConsiderationTimespanInHours = 24;
 
         public IActivityRepository ActivityRepository { get; }
 
@@ -59,7 +60,7 @@ namespace BingeBuddyNg.Services.Calculation
 
         public async Task<DrinkCalculationResult> CalculateStatsForUserAsync(User.User user)
         {
-            DateTime startTimestamp = DateTime.UtcNow.Subtract(TimeSpan.FromHours(12));
+            DateTime startTimestamp = DateTime.UtcNow.Subtract(TimeSpan.FromHours(NightConsiderationTimespanInHours));
             var activity = await this.ActivityRepository.GetActivitysForUserAsync(user.Id, startTimestamp,
                 ActivityType.Drink);
 

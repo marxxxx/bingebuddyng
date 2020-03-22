@@ -46,9 +46,17 @@ namespace BingeBuddyNg.Services.Statistics
             var userStats = new UserStatistics(user.Id, stats.CurrentAlcLevel, stats.CurrentNightDrinks);
 
             await UserStatsRepository.SaveStatisticsForUserAsync(userStats);
-            if (userStats.CurrentAlcoholization > 0)
+
+            try
             {
-                await StatsHistoryRepository.SaveStatisticsHistoryAsync(new UserStatisticHistory(user.Id, DateTime.UtcNow, stats.CurrentAlcLevel));
+                if (userStats.CurrentAlcoholization > 0)
+                {
+                    await StatsHistoryRepository.SaveStatisticsHistoryAsync(new UserStatisticHistory(user.Id, DateTime.UtcNow, stats.CurrentAlcLevel));
+                }
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex, "Failed to save history entry for user [{user}].");
             }
             logger.LogDebug($"Successfully updated stats for user {user}: {userStats}");
             return userStats;

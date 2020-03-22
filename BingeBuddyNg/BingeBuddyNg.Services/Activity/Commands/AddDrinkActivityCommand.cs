@@ -7,7 +7,7 @@ using System.Text;
 
 namespace BingeBuddyNg.Services.Activity.Commands
 {
-    public class AddDrinkActivityCommand : IRequest
+    public class AddDrinkActivityCommand : IRequest<string>
     {
         public AddDrinkActivityCommand(string userId, string drinkId, DrinkType drinkType, string drinkName, double alcPrc, double volume, Location location, VenueModel venue)
         {
@@ -29,6 +29,5 @@ namespace BingeBuddyNg.Services.Activity.Commands
         public double Volume { get; }
         public Location Location { get; }
         public VenueModel Venue { get; }
-
     }
 }

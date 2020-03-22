@@ -12,16 +12,16 @@ namespace BingeBuddyNg.Services.FriendsRequest
     {
         private const string TableName = "friendrequests";
 
-        public StorageAccessService StorageAccesService { get; }
+        private readonly IStorageAccessService storageAccessService;
 
-        public FriendRequestRepository(StorageAccessService storageAccessService)
+        public FriendRequestRepository(IStorageAccessService storageAccessService)
         {
-            this.StorageAccesService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
+            this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
         }
 
         public async Task AddFriendRequestAsync(UserInfo friend, UserInfo requestingUser)
         {
-            var table = StorageAccesService.GetTableReference(TableName);
+            var table = storageAccessService.GetTableReference(TableName);
             
             var requestingEntity = new FriendRequestEntity(friend.UserId, requestingUser.UserId, requestingUser, friend);
             var friendEntity = new FriendRequestEntity(requestingUser.UserId, friend.UserId, requestingUser, friend);
@@ -33,8 +33,8 @@ namespace BingeBuddyNg.Services.FriendsRequest
 
         public async Task DeleteFriendRequestAsync(string userId, string requestingUserId)
         {
-            await this.StorageAccesService.DeleteTableEntityAsync(TableName, userId, requestingUserId);
-            await this.StorageAccesService.DeleteTableEntityAsync(TableName, requestingUserId, userId);
+            await this.storageAccessService.DeleteTableEntityAsync(TableName, userId, requestingUserId);
+            await this.storageAccessService.DeleteTableEntityAsync(TableName, requestingUserId, userId);
         }
 
 
@@ -42,7 +42,7 @@ namespace BingeBuddyNg.Services.FriendsRequest
         {
             var whereClause = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId);
             
-            var queryResult = await this.StorageAccesService.QueryTableAsync<FriendRequestEntity>(TableName, whereClause);
+            var queryResult = await this.storageAccessService.QueryTableAsync<FriendRequestEntity>(TableName, whereClause);
 
             var result = queryResult.Select(r => new FriendRequestDTO(
                 new UserInfoDTO(r.RequestingUserId, r.RequestingUserName),
@@ -64,7 +64,7 @@ namespace BingeBuddyNg.Services.FriendsRequest
                 TableOperators.And,
                 TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, requestingUserId));
 
-            var queryResult = await this.StorageAccesService.QueryTableAsync<FriendRequestEntity>(TableName, whereClause);
+            var queryResult = await this.storageAccessService.QueryTableAsync<FriendRequestEntity>(TableName, whereClause);
 
             return queryResult.Any();
         }

@@ -30,5 +30,12 @@ namespace BingeBuddyNg.Shared
             public const int FriendInvitation = 50;
             public const int StandardDrinkAction = 30;
         }
+
+        public static class SignalR
+        {
+            public const string NotificationHubName = "notification";
+
+            public const string ActivityReceivedMethodName = "activity-received";
+        }
     }
 }

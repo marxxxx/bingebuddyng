@@ -9,6 +9,7 @@ using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.Venue;
 using MediatR;
+using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,45 +25,75 @@ namespace BingeBuddyNg.Services
 
             services.AddMediatR(typeof(ActivityDTO).Assembly);
 
-            // Add Application Services
-            services.AddSingleton<StorageAccessService>();
-            services.AddSingleton<IStorageAccessService, StorageAccessService>();
+            // add infrastructure services
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddSingleton<ITranslationService, TranslationService>();
             services.AddSingleton<ICacheService, NoCacheService>();
             services.AddSingleton<IMessagingService, MessagingService>();
 
+            services.AddNotification(configuration);
+            services.AddAzureSignalRIntegration(configuration);
+            services.AddUtility(configuration);
+            services.AddStorage(configuration);
+            
+            // add domain services
             services.AddScoped<IActivityRepository, ActivityRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserStatsRepository, UserStatsRepository>();
             services.AddScoped<IFriendRequestRepository, FriendRequestRepository>();
             services.AddScoped<IInvitationRepository, InvitationRepository>();
 
-            services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IDrinkEventRepository, DrinkEventRepository>();
 
             services.AddScoped<IVenueUserRepository, VenueUserRepository>();
 
             services.AddScoped<IDrinkRepository, DrinkRepository>();
             services.AddScoped<IUserStatsHistoryRepository, UserStatsHistoryRepository>();
-
         }
 
         private static void AddConfiguration(IServiceCollection services, IConfiguration configuration)
         {
-            string storageConnectionString = configuration.GetConnectionString("Storage");
-            string googleApiKey = configuration.GetValue<string>("Credentials:GoogleApiKey");
-            string webPushPrivateKey = configuration.GetValue<string>("Credentials:WebPushPrivateKey");
-            string webPushPublicKey = configuration.GetValue<string>("Credentials:WebPushPublicKey");
+            string eventHubConnectionString = configuration.GetConnectionString("EventHub");
             string fourSquareApiClientKey = configuration.GetValue<string>("Credentials:FourSquareApiClientKey");
             string fourSquareApiClientSecret = configuration.GetValue<string>("Credentials:FourSquareApiClientSecret");
-            string eventHubConnectionString = configuration.GetConnectionString("EventHub");
 
-            services.AddSingleton(new StorageConfiguration(storageConnectionString));
-            services.AddSingleton(new GoogleApiConfiguration(googleApiKey));
-            services.AddSingleton(new WebPushConfiguration(webPushPublicKey, webPushPrivateKey));
             services.AddSingleton(new FourSquareConfiguration(fourSquareApiClientKey, fourSquareApiClientSecret));
             services.AddSingleton(new MessagingConfiguration(eventHubConnectionString));
+        }
+
+        public static void AddNotification(this IServiceCollection services, IConfiguration configuration)
+        {
+            string webPushPrivateKey = configuration.GetValue<string>("Credentials:WebPushPrivateKey");
+            string webPushPublicKey = configuration.GetValue<string>("Credentials:WebPushPublicKey");
+            services.AddSingleton(new WebPushConfiguration(webPushPublicKey, webPushPrivateKey));
+
+            services.AddTransient<INotificationService, NotificationService>();
+        }
+
+
+        public static void AddAzureSignalRIntegration(this IServiceCollection services, IConfiguration configuration)
+        {
+            string connectionString = configuration.GetConnectionString("SignalR");
+            var serviceManager = new ServiceManagerBuilder()
+                .WithOptions(o => o.ConnectionString = connectionString)
+                .Build();
+            services.AddSingleton(serviceManager);
+        }
+
+        public static void AddUtility(this IServiceCollection services, IConfiguration configuration)
+        {
+            string googleApiKey = configuration.GetValue<string>("Credentials:GoogleApiKey");
+            services.AddSingleton(new GoogleApiConfiguration(googleApiKey));
+
+            services.AddTransient<IUtilityService, UtilityService>();
+        }
+
+        public static void AddStorage(this IServiceCollection services, IConfiguration configuration)
+        {
+            string storageConnectionString = configuration.GetConnectionString("Storage");
+            services.AddSingleton(new StorageConfiguration(storageConnectionString));
+
+            services.AddSingleton<IStorageAccessService, StorageAccessService>();
         }
     }
 }

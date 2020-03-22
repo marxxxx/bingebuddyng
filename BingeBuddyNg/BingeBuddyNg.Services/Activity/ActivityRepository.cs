@@ -15,15 +15,14 @@ namespace BingeBuddyNg.Services.Activity
         private const string ActivityPerUserTableName = "activityperuser";
         private static readonly DateTime MaxTimestamp = new DateTime(2100, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        public StorageAccessService StorageAccessService { get; }
-        public ICacheService CacheService { get; }
+        private readonly IStorageAccessService storageAccessService;
+        private readonly ICacheService sacheService;
 
-        public ActivityRepository(StorageAccessService storageAccessService, ICacheService cacheService)
+        public ActivityRepository(IStorageAccessService storageAccessService, ICacheService cacheService)
         {
-            this.StorageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
-            this.CacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
+            this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
+            this.sacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
         }
-
         
         public string GetActivityCacheKey(string userId) => $"Activity:{userId}";
 
@@ -82,7 +81,7 @@ namespace BingeBuddyNg.Services.Activity
 
 
 
-            var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityTableName, whereClause, args.PageSize, args.ContinuationToken);
+            var result = await storageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityTableName, whereClause, args.PageSize, args.ContinuationToken);
 
             List<Activity> resultActivitys = ConvertActivities(result.ResultPage).ToList();
             return new PagedQueryResult<Activity>(resultActivitys, result.ContinuationToken);
@@ -113,7 +112,7 @@ namespace BingeBuddyNg.Services.Activity
                 TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.ActivityType), QueryComparisons.Equal, activityType.ToString()));
 
 
-            var result = await StorageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityPerUserTableName, whereClause);
+            var result = await storageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityPerUserTableName, whereClause);
 
             var activitys = ConvertActivities(result).ToList();
             return activitys;
@@ -121,7 +120,7 @@ namespace BingeBuddyNg.Services.Activity
 
         public async Task<Activity> AddActivityAsync(Activity activity)
         {
-            var activityTable = this.StorageAccessService.GetTableReference(ActivityTableName);
+            var activityTable = this.storageAccessService.GetTableReference(ActivityTableName);
 
             string activityFeedRowKey = GetActivityFeedRowKey(activity.Timestamp, activity.UserId);
             activity.Id = activityFeedRowKey;
@@ -130,7 +129,7 @@ namespace BingeBuddyNg.Services.Activity
             TableOperation operation = TableOperation.Insert(entity);
             await activityTable.ExecuteAsync(operation);
 
-            var perUserActivityTable = this.StorageAccessService.GetTableReference(ActivityPerUserTableName);
+            var perUserActivityTable = this.storageAccessService.GetTableReference(ActivityPerUserTableName);
 
             string activityPerUserRowKey = GetActivityPerUserRowKey(activity.Timestamp);
             var perUserEntity = new ActivityTableEntity(activity.UserId, activityPerUserRowKey, activity);
@@ -138,7 +137,7 @@ namespace BingeBuddyNg.Services.Activity
             TableOperation perUserOperation = TableOperation.Insert(perUserEntity);
             await perUserActivityTable.ExecuteAsync(perUserOperation);
 
-            CacheService.Remove(GetActivityCacheKey(activity.UserId));
+            sacheService.Remove(GetActivityCacheKey(activity.UserId));
 
             return activity;
         }
@@ -153,7 +152,7 @@ namespace BingeBuddyNg.Services.Activity
         private async Task<ActivityTableEntity> GetActivityEntityAsync(string id)
         {
             string partitionKey = GetPartitionKey(id);
-            var table = this.StorageAccessService.GetTableReference(ActivityTableName);
+            var table = this.storageAccessService.GetTableReference(ActivityTableName);
 
             TableOperation retrieveOperation = TableOperation.Retrieve<ActivityTableEntity>(partitionKey, id);
 
@@ -166,7 +165,7 @@ namespace BingeBuddyNg.Services.Activity
 
         private async Task<ActivityTableEntity> GetActivityPerUserEntityAsync(string userId, DateTime timestamp)
         {
-            var table = this.StorageAccessService.GetTableReference(ActivityPerUserTableName);
+            var table = this.storageAccessService.GetTableReference(ActivityPerUserTableName);
             var rowKey = GetActivityPerUserRowKey(timestamp);
 
             TableOperation retrieveOperation = TableOperation.Retrieve<ActivityTableEntity>(userId, rowKey);
@@ -179,7 +178,7 @@ namespace BingeBuddyNg.Services.Activity
 
         public async Task UpdateActivityAsync(Activity activity)
         {
-            var table = this.StorageAccessService.GetTableReference(ActivityTableName);
+            var table = this.storageAccessService.GetTableReference(ActivityTableName);
 
             ActivityTableEntity entity = await GetActivityEntityAsync(activity.Id);
             
@@ -196,12 +195,12 @@ namespace BingeBuddyNg.Services.Activity
             await table.ExecuteAsync(updateOperation);
 
             // invalidate cache
-            CacheService.Remove(GetActivityCacheKey(activity.UserId));
+            sacheService.Remove(GetActivityCacheKey(activity.UserId));
         }
 
         public async Task DeleteActivityAsync(string userId, string id)
         {
-            var activityTable = this.StorageAccessService.GetTableReference(ActivityTableName);
+            var activityTable = this.storageAccessService.GetTableReference(ActivityTableName);
             var activity = await this.GetActivityEntityAsync(id);
             if(string.Compare(activity.UserId,  userId, true) != 0)
             {
@@ -211,17 +210,17 @@ namespace BingeBuddyNg.Services.Activity
             await activityTable.ExecuteAsync(TableOperation.Delete(activity));
 
             // Delete activity in per-user table as well
-            var perUserTable = this.StorageAccessService.GetTableReference(ActivityPerUserTableName);
+            var perUserTable = this.storageAccessService.GetTableReference(ActivityPerUserTableName);
             var perUserActivity = await this.GetActivityPerUserEntityAsync(userId, activity.Entity.Timestamp);
             await perUserTable.ExecuteAsync(TableOperation.Delete(perUserActivity));
 
-            CacheService.Remove(GetActivityCacheKey(userId));
+            sacheService.Remove(GetActivityCacheKey(userId));
         }
 
 
         public async Task AddToActivityAddedQueueAsync(string activityId)
         {
-            var queueClient = this.StorageAccessService.GetQueueReference(Constants.QueueNames.ActivityAdded);
+            var queueClient = this.storageAccessService.GetQueueReference(Constants.QueueNames.ActivityAdded);
             var message = new ActivityAddedMessage(activityId);
             await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
         }

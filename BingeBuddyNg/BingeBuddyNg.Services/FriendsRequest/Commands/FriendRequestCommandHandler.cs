@@ -39,7 +39,7 @@ namespace BingeBuddyNg.Services.FriendsRequest.Commands
                 var subject = await TranslationService.GetTranslationAsync(requestingUser.Language, "FriendsRequest");
                 var message = await TranslationService.GetTranslationAsync(requestingUser.Language, "AcceptedFriendsRequest", acceptingUser.Name);
 
-                NotificationService.SendMessage(new[] { requestingUser.PushInfo }, new NotificationMessage(Constants.Urls.ApplicationIconUrl,
+                NotificationService.SendWebPushMessage(new[] { requestingUser.PushInfo }, new NotificationMessage(Constants.Urls.ApplicationIconUrl,
                     Constants.Urls.ApplicationIconUrl, Constants.Urls.FriendRequestApplicationUrl, subject, message));
             }
 
@@ -62,7 +62,7 @@ namespace BingeBuddyNg.Services.FriendsRequest.Commands
                     var subject = await TranslationService.GetTranslationAsync(friendUser.Language, "FriendsRequest");
                     var message = await TranslationService.GetTranslationAsync(friendUser.Language, "SentFriendsRequest", requestingUser.Name);
 
-                    NotificationService.SendMessage(new[] { friendUser.PushInfo }, new NotificationMessage(Constants.Urls.ApplicationIconUrl,
+                    NotificationService.SendWebPushMessage(new[] { friendUser.PushInfo }, new NotificationMessage(Constants.Urls.ApplicationIconUrl,
                         Constants.Urls.ApplicationIconUrl, Constants.Urls.FriendRequestApplicationUrl, subject, message));
                 }
             }

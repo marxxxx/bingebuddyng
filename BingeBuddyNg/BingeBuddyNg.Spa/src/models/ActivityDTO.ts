@@ -11,26 +11,17 @@ export class ActivityDTO {
     timestamp: Date;
     userId: string;
     userName: string;
-    message: string;
-    locationAddress: string;
-    location: Location;
+    message?: string;
+    locationAddress?: string;
+    location?: Location;
     drinkType: DrinkType;
     drinkName: string;
-    drinkCount: number;
-    imageUrl: string;
+    drinkCount?: number;
+    imageUrl?: string;
     venue?: VenueModel;
     likes: ReactionDTO[];
     cheers: ReactionDTO[];
     comments: CommentReactionDTO[];
     registrationUser?: UserInfoDTO;
     originalUserName?: string;
-
-    getUserInfo(): UserInfoDTO {
-        const userInfo: UserInfoDTO = {
-            userId: this.userId,
-            userName: this.userName
-        };
-
-        return userInfo;
-    }
 }

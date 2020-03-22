@@ -54,7 +54,7 @@ namespace BingeBuddyNg.Functions
                         var subject = await TranslationService.GetTranslationAsync(u.Language, "DrinkEvent");
                         var messageContent = await TranslationService.GetTranslationAsync(u.Language, "DrinkEventNotificationMessage", Shared.Constants.Scores.StandardDrinkAction);
                         var message = new NotificationMessage(subject, messageContent);
-                        NotificationService.SendMessage(new[] { u.PushInfo }, message);
+                        NotificationService.SendWebPushMessage(new[] { u.PushInfo }, message);
                     }
                 }
             }

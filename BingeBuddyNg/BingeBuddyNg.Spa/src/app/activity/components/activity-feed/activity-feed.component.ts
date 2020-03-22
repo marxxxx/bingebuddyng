@@ -29,6 +29,7 @@ import { TranslocoService } from '@ngneat/transloco';
 import { Drink } from 'src/models/Drink';
 import { DrinkRetrieverService } from '../../services/drink-retriever.service';
 import { ActivatedRoute } from '@angular/router';
+import { ActivityType } from 'src/models/ActivityType';
 
 @Component({
   selector: 'app-activity-feed',
@@ -86,7 +87,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
       this.load();
     });
 
-    this.subscriptions.push(this.notification.activityReceived$.subscribe(_ => this.load()));
+    this.subscriptions.push(this.notification.activityReceived$.subscribe(as => this.onActivityReceived(as)));
     this.subscriptions.push(
       this.auth.currentUserProfile$
         .pipe(filter(p => p != null))
@@ -120,24 +121,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     );
   }
 
-  loadDrinks() {
-    this.drinkService.getDrinks().subscribe(
-      d => {
-        this.drinks = d;
-        console.log('successfully got drinks', this.drinks);
-      },
-      e => {
-        console.error('failed to get drinks', e);
-      }
-    );
-  }
 
-  onAppear(ev) {
-    if (ev.visible && this.continuationToken && this.continuationToken !== 'null') {
-      console.log('loading next page');
-      this.load(this.continuationToken);
-    }
-  }
   ngOnDestroy() {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
@@ -185,21 +169,48 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     );
   }
 
+
+  loadDrinks() {
+    this.drinkService.getDrinks().subscribe(
+      d => {
+        this.drinks = d;
+        console.log('successfully got drinks', this.drinks);
+      },
+      e => {
+        console.error('failed to get drinks', e);
+      }
+    );
+  }
+
+  onAppear(ev) {
+    if (ev.visible && this.continuationToken && this.continuationToken !== 'null') {
+      console.log('loading next page');
+      this.load(this.continuationToken);
+    }
+  }
+
+  onActivityReceived(as: ActivityStatsDTO): void {
+    const foundIndex = this.activitys.findIndex(a => a.activity.id === as.activity.id);
+    if (foundIndex >= 0) {
+      this.activitys.splice(foundIndex, 1, as);
+    } else {
+      this.activitys.splice(0, 0, as);
+    }
+  }
+
   onDrink(drink: Drink) {
     this.pendingDrinkType = drink.drinkType;
     this.isBusyAdding = true;
 
     this.drinkActivityService.drink(drink, false)
       .subscribe(
-        r => {
-          if (this.isBusyAdding) {
-            this.isBusyAdding = false;
-            this.load();
-          }
+        ([_, activityId]) => {
+          console.log('received activity id', activityId);
         },
         e => {
-          this.isBusyAdding = false;
+          console.error(e);
           this.shellInteraction.showErrorMessage();
+          this.isBusyAdding = false;
         }
       );
   }
