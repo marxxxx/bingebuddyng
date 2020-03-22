@@ -17,38 +17,38 @@ namespace BingeBuddyNg.Api.Controllers
     [ApiController]
     public class ActivityController : ControllerBase
     {
-        public IIdentityService IdentityService { get; }
-        public IMediator Mediator { get; }
+        private readonly IIdentityService identityService;
+        private readonly IMediator mediator;
 
         public ActivityController(
             IIdentityService identityService,
             IMediator mediator)
         {
-            this.IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
-            this.Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
 
         [HttpGet("[action]")]
         public async Task<ActionResult<IEnumerable<ActivityDTO>>> GetActivitysForMap()
         {
-            var userId = this.IdentityService.GetCurrentUserId();
-            var result = await this.Mediator.Send(new GetActivitysForMapQuery(userId));
+            var userId = this.identityService.GetCurrentUserId();
+            var result = await this.mediator.Send(new GetActivitysForMapQuery(userId));
             return result;
         }
 
         [HttpGet("[action]")]
         public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeed(string activityId, string continuationToken)
         {
-            var userId = this.IdentityService.GetCurrentUserId();
-            var result = await this.Mediator.Send(new GetActivityFeedQuery(userId, activityId, continuationToken));
+            var userId = this.identityService.GetCurrentUserId();
+            var result = await this.mediator.Send(new GetActivityFeedQuery(userId, activityId, continuationToken));
             return result;
         }
 
         [HttpGet("[action]/{userId}")]
         public async Task<ActionResult<List<ActivityAggregationDTO>>> GetActivityAggregation(string userId)
         {
-            var result = await this.Mediator.Send(new GetDrinkActivityAggregationQuery(userId));
+            var result = await this.mediator.Send(new GetDrinkActivityAggregationQuery(userId));
             return result;
         }
 
@@ -60,9 +60,9 @@ namespace BingeBuddyNg.Api.Controllers
                 return BadRequest();
             }
 
-            var userId = this.IdentityService.GetCurrentUserId();
-            await this.Mediator.Send(new AddMessageActivityCommand(userId, request.Message, request.Location, request.Venue));
-            return Ok();
+            var userId = this.identityService.GetCurrentUserId();
+            var activityId = await this.mediator.Send(new AddMessageActivityCommand(userId, request.Message, request.Location, request.Venue));
+            return new JsonResult(activityId);
         }
 
 
@@ -74,9 +74,9 @@ namespace BingeBuddyNg.Api.Controllers
                 return BadRequest();
             }
 
-            var userId = this.IdentityService.GetCurrentUserId();
+            var userId = this.identityService.GetCurrentUserId();
             var command = new AddDrinkActivityCommand(userId, request.DrinkId, request.DrinkType, request.DrinkName, request.AlcPrc, request.Volume, request.Location, request.Venue);
-            var activityId = await this.Mediator.Send(command);
+            var activityId = await this.mediator.Send(command);
 
             return new JsonResult(activityId);
         }
@@ -89,29 +89,30 @@ namespace BingeBuddyNg.Api.Controllers
                 return BadRequest();
             }
 
-            var userId = this.IdentityService.GetCurrentUserId();
+            var userId = this.identityService.GetCurrentUserId();
 
+            string activityId = null;
             using (var stream = file.OpenReadStream())
             {
-                await this.Mediator.Send(new AddImageActivityCommand(userId, stream, file.FileName, lat, lng));
+                activityId = await this.mediator.Send(new AddImageActivityCommand(userId, stream, file.FileName, lat, lng));
             }
 
-            return Ok();
+            return new JsonResult(activityId);
         }
 
         [HttpPost("[action]")]
         public async Task AddReaction([FromBody]AddReactionDTO reaction)
         {
-            string userId = this.IdentityService.GetCurrentUserId();
-            await this.Mediator.Send(new AddReactionCommand(userId, reaction.Type, reaction.ActivityId, reaction.Comment));
+            string userId = this.identityService.GetCurrentUserId();
+            await this.mediator.Send(new AddReactionCommand(userId, reaction.Type, reaction.ActivityId, reaction.Comment));
         }
 
 
         [HttpDelete("{id}")]
         public async Task DeleteActivity(string id)
         {
-            string userId = this.IdentityService.GetCurrentUserId();
-            await this.Mediator.Send(new DeleteActivityCommand(userId, id));
+            string userId = this.identityService.GetCurrentUserId();
+            await this.mediator.Send(new DeleteActivityCommand(userId, id));
         }
 
     }

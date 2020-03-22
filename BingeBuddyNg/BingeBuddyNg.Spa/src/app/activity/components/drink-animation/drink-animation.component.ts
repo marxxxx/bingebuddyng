@@ -41,6 +41,8 @@ export class DrinkAnimationComponent implements OnInit {
         gifs = antiGifs;
         break;
       }
+      default:
+        return null;
     }
 
     return this.getRandomLink(gifs);

@@ -1,12 +1,10 @@
 ﻿using BingeBuddyNg.Services.Venue;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BingeBuddyNg.Services.Activity.Commands
 {
-    public class AddVenueActivityCommand : IRequest
+    public class AddVenueActivityCommand : IRequest<string>
     {
         public AddVenueActivityCommand(string userId, string message, VenueAction action, VenueModel venue)
         {
@@ -20,6 +18,5 @@ namespace BingeBuddyNg.Services.Activity.Commands
         public string Message { get; }
         public VenueAction Action { get; }
         public VenueModel Venue { get;  }
-
     }
 }
