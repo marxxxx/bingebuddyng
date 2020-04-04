@@ -1,3 +1,14 @@
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, ViewChildren } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltip } from '@angular/material/tooltip';
+
+import { Subscription } from 'rxjs';
+import { map, filter, finalize } from 'rxjs/operators';
+import { TranslocoService } from '@ngneat/transloco';
+
 import { DrinkActivityService } from '../../services/drink-activity.service';
 import { ConfirmationDialogComponent } from '../../../@shared/components/confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationDialogArgs } from '../../../@shared/components/confirmation-dialog/ConfirmationDialogArgs';
@@ -6,29 +17,21 @@ import { VenueDialogArgs } from '../venue-dialog/VenueDialogArgs';
 import { VenueDialogComponent } from '../venue-dialog/venue-dialog.component';
 import { MessageDialogComponent } from '../message-dialog/message-dialog.component';
 import { DrinkType } from '../../../../models/DrinkType';
-import { Subscription } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
 import { ActivityStatsDTO } from '../../../../models/ActivityStatsDTO';
 import { ActivityService } from '../../services/activity.service';
-import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, ViewChildren, ElementRef } from '@angular/core';
 import { AuthService } from '../../../@core/services/auth.service';
 import { AddMessageActivityDTO } from '../../../../models/AddMessageActivityDTO';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTooltip } from '@angular/material/tooltip';
+
 import { ShellInteractionService } from '../../../@core/services/shell-interaction.service';
 import { FileUploader, FileItem, FileUploaderOptions } from 'ng2-file-upload';
 import { NotificationService } from '../../../@core/services/notification.service';
-import { trigger, style, transition, animate } from '@angular/animations';
 import { UserInfoDTO } from '../../../../models/UserInfoDTO';
 import { UserDTO } from '../../../../models/UserDTO';
 import { LocationService } from 'src/app/activity/services/location.service';
 import { VenueDialogMode } from '../venue-dialog/VenueDialogMode';
 import { VenueDialogResult } from '../venue-dialog/VenueDialogResult';
-import { TranslocoService } from '@ngneat/transloco';
 import { Drink } from 'src/models/Drink';
 import { DrinkRetrieverService } from '../../services/drink-retriever.service';
-import { ActivatedRoute } from '@angular/router';
 import { ActivityType } from 'src/models/ActivityType';
 
 @Component({
@@ -155,6 +158,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
             if (activityElement) {
               activityElement.scrollIntoView();
             }
+            this.highlightedActivityId = null;
           }, 1000);
         }
 
@@ -203,6 +207,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     this.isBusyAdding = true;
 
     this.drinkActivityService.drink(drink, false)
+      .pipe(finalize(() => this.isBusyAdding = false))
       .subscribe(
         ([_, activityId]) => {
           console.log('received activity id', activityId);
@@ -228,7 +233,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
         e => {
           console.error(e);
           this.shellInteraction.showErrorMessage();
-          this.isBusyAdding = false;
         }
       );
   }

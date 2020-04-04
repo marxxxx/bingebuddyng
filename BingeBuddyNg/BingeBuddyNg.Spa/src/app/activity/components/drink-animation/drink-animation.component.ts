@@ -42,7 +42,7 @@ export class DrinkAnimationComponent implements OnInit {
         break;
       }
       default:
-        return null;
+        return '/assets/img/funny_beers.gif';
     }
 
     return this.getRandomLink(gifs);

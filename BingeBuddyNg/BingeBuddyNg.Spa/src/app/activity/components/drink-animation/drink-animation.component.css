@@ -7,8 +7,3 @@ img {
 .full-width {
   width: 100%;
 }
-
-mat-progress-bar {
-  margin-left: 15px;
-  margin-right: 15px;
-}
