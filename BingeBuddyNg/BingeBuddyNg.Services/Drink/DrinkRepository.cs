@@ -4,7 +4,6 @@ using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services.Drink
@@ -13,8 +12,7 @@ namespace BingeBuddyNg.Services.Drink
     {
         private const string TableName = "drinks";
 
-
-        public static readonly IEnumerable<Drink> DefaultDrinks = new List<Drink>()
+        private static readonly IEnumerable<Drink> defaultDrinks = new List<Drink>()
             {
             new Drink("1", DrinkType.Beer, "Beer", 5, 500 ),
             new Drink("2", DrinkType.Wine, "Wine", 9, 125),
@@ -41,7 +39,7 @@ namespace BingeBuddyNg.Services.Drink
 
             if (drinks.Count == 0)
             {
-                return DefaultDrinks;
+                return defaultDrinks;
             }
             else
             {
@@ -57,12 +55,10 @@ namespace BingeBuddyNg.Services.Drink
 
         public async Task SaveDrinksAsync(string userId, IEnumerable<Drink> drinks)
         {
-
             foreach (var d in drinks.Where(d => string.IsNullOrEmpty(d.Id)))
             {
                 d.Id = Guid.NewGuid().ToString();
             }
-
 
             TableBatchOperation batch = new TableBatchOperation();
             foreach (var drink in drinks)
@@ -83,6 +79,5 @@ namespace BingeBuddyNg.Services.Drink
             var table = storageAccessService.GetTableReference(TableName);
             await table.ExecuteAsync(TableOperation.Delete(entity));
         }
-
     }
 }

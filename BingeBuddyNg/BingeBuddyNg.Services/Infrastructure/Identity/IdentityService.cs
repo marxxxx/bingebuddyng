@@ -7,16 +7,16 @@ namespace BingeBuddyNg.Services.Infrastructure
     {
         private const string NameIdentifier = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
 
-        public IHttpContextAccessor HttpContextAccessor { get; }
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         public IdentityService(IHttpContextAccessor httpContextAccessor)
         {
-            this.HttpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            this.httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
 
         public string GetCurrentUserId()
         {
-            var subClaim = this.HttpContextAccessor.HttpContext.User.FindFirst(NameIdentifier);
+            var subClaim = this.httpContextAccessor.HttpContext.User.FindFirst(NameIdentifier);
             return subClaim?.Value;
         }
     }
