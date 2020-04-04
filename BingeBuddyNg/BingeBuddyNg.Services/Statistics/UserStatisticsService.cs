@@ -1,7 +1,6 @@
 ﻿using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Calculation;
 using BingeBuddyNg.Services.Drink;
-using BingeBuddyNg.Services.Statistics;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -11,21 +10,24 @@ namespace BingeBuddyNg.Services.Statistics
 {
     public class UserStatisticsService : IUserStatisticsService
     {
-        public IActivityRepository ActivityRepository { get; }
-        public IUserStatsRepository UserStatsRepository { get; }
+        private readonly IActivityRepository activityRepository;
 
-        public ICalculationService CalculationService { get; }
-        public IUserStatsHistoryRepository StatsHistoryRepository { get; }
-        private ILogger<UserStatisticsService> logger;
+        private readonly IUserStatsRepository userStatsRepository;
 
-        public UserStatisticsService(IActivityRepository activityRepository, IUserStatsRepository userStatsRepository, 
+        private readonly ICalculationService calculationService;
+
+        private readonly IUserStatsHistoryRepository statsHistoryRepository;
+
+        private readonly ILogger<UserStatisticsService> logger;
+
+        public UserStatisticsService(IActivityRepository activityRepository, IUserStatsRepository userStatsRepository,
             IUserStatsHistoryRepository statsHistoryRepository,
             ICalculationService calculationService, ILogger<UserStatisticsService> logger)
         {
-            this.ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
-            this.UserStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
-            this.StatsHistoryRepository = statsHistoryRepository ?? throw new ArgumentNullException(nameof(statsHistoryRepository));
-            this.CalculationService = calculationService ?? throw new ArgumentNullException(nameof(calculationService));
+            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.userStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
+            this.statsHistoryRepository = statsHistoryRepository ?? throw new ArgumentNullException(nameof(statsHistoryRepository));
+            this.calculationService = calculationService ?? throw new ArgumentNullException(nameof(calculationService));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -33,28 +35,28 @@ namespace BingeBuddyNg.Services.Statistics
         {
             DateTime startTimestamp = DateTime.UtcNow.Subtract(TimeSpan.FromDays(30));
 
-            var drinkActivityLastMonth = await ActivityRepository.GetActivitysForUserAsync(userId, startTimestamp, ActivityType.Drink);
+            var drinkActivityLastMonth = await activityRepository.GetActivitysForUserAsync(userId, startTimestamp, ActivityType.Drink);
 
             // filter non-alcoholic drinks and calculate count
             var alcoholicDrinkCount = drinkActivityLastMonth.Count(d => d.DrinkType != DrinkType.Anti);
 
-            await UserStatsRepository.UpdateTotalDrinkCountLastMonthAsync(userId, alcoholicDrinkCount);
+            await userStatsRepository.UpdateTotalDrinkCountLastMonthAsync(userId, alcoholicDrinkCount);
         }
         public async Task<UserStatistics> UpdateStatsForUserAsync(User.User user)
         {
-            var stats = await CalculationService.CalculateStatsForUserAsync(user);
+            var stats = await calculationService.CalculateStatsForUserAsync(user);
             var userStats = new UserStatistics(user.Id, stats.CurrentAlcLevel, stats.CurrentNightDrinks);
 
-            await UserStatsRepository.SaveStatisticsForUserAsync(userStats);
+            await userStatsRepository.SaveStatisticsForUserAsync(userStats);
 
             try
             {
                 if (userStats.CurrentAlcoholization > 0)
                 {
-                    await StatsHistoryRepository.SaveStatisticsHistoryAsync(new UserStatisticHistory(user.Id, DateTime.UtcNow, stats.CurrentAlcLevel));
+                    await statsHistoryRepository.SaveStatisticsHistoryAsync(new UserStatisticHistory(user.Id, DateTime.UtcNow, stats.CurrentAlcLevel));
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.LogError(ex, "Failed to save history entry for user [{user}].");
             }

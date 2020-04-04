@@ -12,13 +12,12 @@ namespace BingeBuddyNg.Services.Calculation
         private const int DefaultWeight = 80;
         private const int NightConsiderationTimespanInHours = 24;
 
-        public IActivityRepository ActivityRepository { get; }
+        private readonly IActivityRepository activityRepository;
 
         public CalculationService(IActivityRepository activityRepository)
         {
-            ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
         }
-
 
         private DrinkCalculationResult CalculateStats(UserDrinkActivity userDrinkActivity)
         {
@@ -61,7 +60,7 @@ namespace BingeBuddyNg.Services.Calculation
         public async Task<DrinkCalculationResult> CalculateStatsForUserAsync(User.User user)
         {
             DateTime startTimestamp = DateTime.UtcNow.Subtract(TimeSpan.FromHours(NightConsiderationTimespanInHours));
-            var activity = await this.ActivityRepository.GetActivitysForUserAsync(user.Id, startTimestamp,
+            var activity = await this.activityRepository.GetActivitysForUserAsync(user.Id, startTimestamp,
                 ActivityType.Drink);
 
             var drinkActivity = activity.Where(a=>a.Timestamp >= startTimestamp).Select(a => new DrinkActivityItem(a.Timestamp, a.DrinkAlcPrc.GetValueOrDefault(),

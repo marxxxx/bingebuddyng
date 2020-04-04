@@ -105,7 +105,7 @@ namespace BingeBuddyNg.Api.Controllers
             await this.mediator.Send(new AddReactionCommand(userId, reaction.Type, activityId, reaction.Comment));
         }
 
-        [HttpDelete("{activityId}/delete")]
+        [HttpDelete("{activityId}")]
         public async Task DeleteActivity(string activityId)
         {
             string userId = this.identityService.GetCurrentUserId();

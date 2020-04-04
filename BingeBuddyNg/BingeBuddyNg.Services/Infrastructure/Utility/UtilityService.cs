@@ -10,23 +10,22 @@ namespace BingeBuddyNg.Services.Infrastructure
 {
     public class UtilityService : IUtilityService
     {
-        public IHttpClientFactory HttpClientFactory { get; }
-        public GoogleApiConfiguration Configuration { get; }
+        private readonly IHttpClientFactory httpClientFactory;
+        private readonly GoogleApiConfiguration configuration;
 
         public UtilityService(IHttpClientFactory httpClientFactory, GoogleApiConfiguration configuration)
         {
-            this.HttpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
-            this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
-                
 
         public async Task<AddressInfo> GetAddressFromLongLatAsync(Activity.Location location)
         {
             string lat = location.Latitude.ToString().Replace(',', '.');
             string lon = location.Longitude.ToString().Replace(',', '.');
-            var url = $"https://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lon}&sensor=true&key={Configuration.ApiKey}";
+            var url = $"https://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lon}&sensor=true&key={configuration.ApiKey}";
 
-            var httpClient = this.HttpClientFactory.CreateClient();
+            var httpClient = this.httpClientFactory.CreateClient();
             var result = await httpClient.GetStringAsync(url);
 
             var response = JsonConvert.DeserializeObject<GoogleGeoCodeResponse>(result);
