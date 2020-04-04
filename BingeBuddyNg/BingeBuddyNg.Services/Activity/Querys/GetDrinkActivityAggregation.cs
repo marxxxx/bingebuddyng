@@ -1,7 +1,4 @@
 ﻿using BingeBuddyNg.Services.Drink;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Statistics;
-using BingeBuddyNg.Services.User;
 using MediatR;
 using System;
 using System.Collections.Generic;
