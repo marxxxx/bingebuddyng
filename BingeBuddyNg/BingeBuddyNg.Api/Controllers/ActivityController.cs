@@ -28,8 +28,7 @@ namespace BingeBuddyNg.Api.Controllers
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-
-        [HttpGet("[action]")]
+        [HttpGet("map")]
         public async Task<ActionResult<IEnumerable<ActivityDTO>>> GetActivitysForMap()
         {
             var userId = this.identityService.GetCurrentUserId();
@@ -37,7 +36,7 @@ namespace BingeBuddyNg.Api.Controllers
             return result;
         }
 
-        [HttpGet("[action]")]
+        [HttpGet("feed")]
         public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeed(string activityId, string continuationToken)
         {
             var userId = this.identityService.GetCurrentUserId();
@@ -45,14 +44,14 @@ namespace BingeBuddyNg.Api.Controllers
             return result;
         }
 
-        [HttpGet("[action]/{userId}")]
+        [HttpGet("aggregate/{userId}")]
         public async Task<ActionResult<List<ActivityAggregationDTO>>> GetActivityAggregation(string userId)
         {
             var result = await this.mediator.Send(new GetDrinkActivityAggregationQuery(userId));
             return result;
         }
 
-        [HttpPost("[action]")]
+        [HttpPost("message")]
         public async Task<ActionResult> AddMessageActivity([FromBody] AddMessageActivityDTO request)
         {
             if (!ModelState.IsValid)
@@ -65,8 +64,7 @@ namespace BingeBuddyNg.Api.Controllers
             return new JsonResult(activityId);
         }
 
-
-        [HttpPost("[action]")]
+        [HttpPost("drink")]
         public async Task<ActionResult> AddDrinkActivity([FromBody] AddDrinkActivityDTO request)
         {
             if (!ModelState.IsValid)
@@ -81,7 +79,7 @@ namespace BingeBuddyNg.Api.Controllers
             return new JsonResult(activityId);
         }
 
-        [HttpPost("[action]/{lat}/{lng}")]
+        [HttpPost("image/{lat}/{lng}")]
         public async Task<ActionResult> AddImageActivity(IFormFile file, double? lat, double? lng)
         {
             if (file == null)
@@ -100,20 +98,18 @@ namespace BingeBuddyNg.Api.Controllers
             return new JsonResult(activityId);
         }
 
-        [HttpPost("[action]")]
-        public async Task AddReaction([FromBody]AddReactionDTO reaction)
+        [HttpPost("{activityId}/reaction")]
+        public async Task AddReaction(string activityId, [FromBody]AddReactionDTO reaction)
         {
             string userId = this.identityService.GetCurrentUserId();
-            await this.mediator.Send(new AddReactionCommand(userId, reaction.Type, reaction.ActivityId, reaction.Comment));
+            await this.mediator.Send(new AddReactionCommand(userId, reaction.Type, activityId, reaction.Comment));
         }
 
-
-        [HttpDelete("{id}")]
-        public async Task DeleteActivity(string id)
+        [HttpDelete("{activityId}/delete")]
+        public async Task DeleteActivity(string activityId)
         {
             string userId = this.identityService.GetCurrentUserId();
-            await this.mediator.Send(new DeleteActivityCommand(userId, id));
+            await this.mediator.Send(new DeleteActivityCommand(userId, activityId));
         }
-
     }
 }

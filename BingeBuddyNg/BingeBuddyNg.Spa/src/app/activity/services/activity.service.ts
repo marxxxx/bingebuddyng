@@ -20,7 +20,7 @@ export class ActivityService {
   constructor(private http: HttpClient) { }
 
   getActivityFeed(activityId: string, continuationToken: string): Observable<PagedQueryResult<ActivityStatsDTO>> {
-    const url = `${this.baseUrl}/GetActivityFeed`;
+    const url = `${this.baseUrl}/feed`;
     const params = new HttpParams()
       .set('activityId', activityId)
       .set('continuationToken', continuationToken);
@@ -29,38 +29,38 @@ export class ActivityService {
   }
 
   getActivitysForMap(): Observable<ActivityDTO[]> {
-    const url = `${this.baseUrl}/GetActivitysForMap`;
+    const url = `${this.baseUrl}/map`;
 
     return this.http.get<ActivityDTO[]>(url);
   }
 
   getActivityAggregation(userId: string): Observable<ActivityAggregationDTO[]> {
-    const url = `${this.baseUrl}/GetActivityAggregation/${userId}`;
+    const url = `${this.baseUrl}/aggregate/${userId}`;
     return this.http.get<ActivityAggregationDTO[]>(url);
   }
 
   addMessageActivity(activity: AddMessageActivityDTO): Observable<string> {
-    const url = `${this.baseUrl}/AddMessageActivity`;
+    const url = `${this.baseUrl}/message`;
     return this.http.post<string>(url, activity);
   }
 
   addDrinkActivity(activity: AddDrinkActivityDTO): Observable<string> {
-    const url = `${this.baseUrl}/AddDrinkActivity`;
+    const url = `${this.baseUrl}/drink`;
     return this.http.post<string>(url, activity);
   }
 
-  addReaction(reaction: AddReactionDTO) {
-    const url = `${this.baseUrl}/AddReaction`;
+  addReaction(activityId: string, reaction: AddReactionDTO) {
+    const url = `${this.baseUrl}/${activityId}/reaction`;
     return this.http.post(url, reaction);
   }
 
-  deleteActivity(id: string): Observable<any> {
-    const url = `${this.baseUrl}/${id}`;
+  deleteActivity(activityId: string): Observable<any> {
+    const url = `${this.baseUrl}/${activityId}`;
     return this.http.delete(url);
   }
 
   getAddImageActivityUrl(loc: Location): string {
-    let url = `${this.baseUrl}/AddImageActivity/`;
+    let url = `${this.baseUrl}/image/`;
     if (loc) {
       url += `${loc.latitude}/${loc.longitude}`;
     } else {

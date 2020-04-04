@@ -9,17 +9,15 @@ import { UserStatisticHistoryDTO } from './UserStatisticHistoryDTO';
 @Injectable()
 export class StatisticsService {
 
-  readonly baseUrl = environment.BaseDataUrl + '/statistics';
-
   constructor(private http: HttpClient) { }
 
   getStatisticsForUser(userId: string): Observable<UserStatisticHistoryDTO[]> {
-    const url = `${this.baseUrl}/${userId}`;
+    const url = `${environment.BaseDataUrl}/User/${userId}/statistics/history`;
     return this.http.get<UserStatisticHistoryDTO[]>(url);
   }
 
   getPersonalUsagePerWeekDay(userId: string): Observable<PersonalUsagePerWeekdayDTO[]> {
-    const url = `${this.baseUrl}/${userId}/personalusageperweekday`;
+    const url = `${environment.BaseDataUrl}/User/${userId}/personalusageperweekday`;
     return this.http.get<PersonalUsagePerWeekdayDTO[]>(url);
   }
 }
