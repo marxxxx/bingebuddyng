@@ -32,7 +32,7 @@ namespace BingeBuddyNg.Api.Controllers
         public async Task<ActionResult<IEnumerable<ActivityDTO>>> GetActivitysForMap()
         {
             var userId = this.identityService.GetCurrentUserId();
-            var result = await this.mediator.Send(new GetActivitysForMapQuery(userId));
+            var result = await this.mediator.Send(new GetActivitysForMap.Query(userId));
             return result;
         }
 
@@ -40,14 +40,14 @@ namespace BingeBuddyNg.Api.Controllers
         public async Task<PagedQueryResult<ActivityStatsDTO>> GetActivityFeed(string activityId, string continuationToken)
         {
             var userId = this.identityService.GetCurrentUserId();
-            var result = await this.mediator.Send(new GetActivityFeedQuery(userId, activityId, continuationToken));
+            var result = await this.mediator.Send(new GetActivityFeed.Query(userId, activityId, continuationToken));
             return result;
         }
 
         [HttpGet("aggregate/{userId}")]
         public async Task<ActionResult<List<ActivityAggregationDTO>>> GetActivityAggregation(string userId)
         {
-            var result = await this.mediator.Send(new GetDrinkActivityAggregationQuery(userId));
+            var result = await this.mediator.Send(new GetDrinkActivityAggregation.Query(userId));
             return result;
         }
 
