@@ -80,7 +80,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   getOptions(): FileUploaderOptions {
     const options = {
-      url: this.userService.getUpdateProfilePicUrl(),
+      url: this.userService.getUpdateProfileImageUrl(),
       authTokenHeader: 'Authorization',
       authToken: 'Bearer ' + this.auth.getAccessToken()
     };

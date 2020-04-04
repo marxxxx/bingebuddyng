@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BingeBuddyNg.Services.Activity;
+﻿using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.User.Commands;
@@ -11,10 +7,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.WindowsAzure.Storage.Queue;
-using Newtonsoft.Json;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Api.Controllers
 {
@@ -22,20 +17,20 @@ namespace BingeBuddyNg.Api.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        public IIdentityService IdentityService { get; }
-        public IMediator Mediator { get; }
+        private readonly IIdentityService identityService;
+        private readonly IMediator mediator;
 
-        public UserController(IIdentityService identityService, 
+        public UserController(IIdentityService identityService,
             IMediator mediator)
         {
-            this.IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
-            this.Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         [HttpGet]
-        public async Task<List<UserInfoDTO>> GetAllUsers(string filterText=null)
+        public async Task<List<UserInfoDTO>> GetAllUsers(string filterText = null)
         {
-            var result = await Mediator.Send(new GetAllUsersQuery(filterText));
+            var result = await mediator.Send(new GetAllUsersQuery(filterText));
 
             return result;
         }
@@ -43,8 +38,8 @@ namespace BingeBuddyNg.Api.Controllers
         [HttpGet("{userId}")]
         public async Task<ActionResult<UserDTO>> GetUser(string userId)
         {
-            var user = await Mediator.Send(new GetUserQuery(userId));
-            if(user == null)
+            var user = await mediator.Send(new GetUserQuery(userId));
+            if (user == null)
             {
                 return NotFound($"User {userId} not found.");
             }
@@ -52,40 +47,37 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> UpdateUserProfile([FromBody]CreateOrUpdateUserDTO user)
+        public async Task<ActionResult> CreateOrUpdateUser([FromBody]CreateOrUpdateUserDTO user)
         {
-            var userId = this.IdentityService.GetCurrentUserId();
-            if(user.UserId != userId)
+            var userId = this.identityService.GetCurrentUserId();
+            if (user.UserId != userId)
             {
                 return Unauthorized();
             }
-            await this.Mediator.Send(new CreateOrUpdateUserCommand(user.UserId, user.Name, user.ProfileImageUrl, user.PushInfo, user.Language));
+            await this.mediator.Send(new CreateOrUpdateUserCommand(user.UserId, user.Name, user.ProfileImageUrl, user.PushInfo, user.Language));
             return Ok();
         }
 
-
-        [HttpPost("[action]")]
-        public async Task UpdateUserProfilePic(IFormFile file)
+        [HttpPost("profile-image")]
+        public async Task UpdateUserProfileImage(IFormFile file)
         {
-            var currentUserId = this.IdentityService.GetCurrentUserId();
-           
-            await this.Mediator.Send(new UpdateUserProfileImageCommand(currentUserId, file));
+            var currentUserId = this.identityService.GetCurrentUserId();
+
+            await this.mediator.Send(new UpdateUserProfileImageCommand(currentUserId, file));
         }
 
-
-        [HttpDelete("{friendUserId}")]
+        [HttpDelete("{friendUserId}/removefriend")]
         public async Task RemoveFriend(string friendUserId)
         {
-            var userId = IdentityService.GetCurrentUserId();
-            await Mediator.Send(new RemoveFriendCommand(userId, friendUserId));
+            var userId = identityService.GetCurrentUserId();
+            await mediator.Send(new RemoveFriendCommand(userId, friendUserId));
         }
 
-        [HttpPut("[action]")]
-        public async Task SetFriendMuteState(string friendUserId, bool muteState)
+        [HttpPut("{friendUserId}/mute")]
+        public async Task SetFriendMuteState(string friendUserId, bool state)
         {
-            var userId = IdentityService.GetCurrentUserId();
-            await Mediator.Send(new SetFriendMuteStateCommand(userId, friendUserId, muteState));            
+            var userId = identityService.GetCurrentUserId();
+            await mediator.Send(new SetFriendMuteStateCommand(userId, friendUserId, state));
         }
-
     }
 }

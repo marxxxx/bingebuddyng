@@ -15,51 +15,51 @@ namespace BingeBuddyNg.Api.Controllers
     [Route("api/[controller]")]
     public class FriendRequestController : Controller
     {
-        public IIdentityService IdentityService { get; set; }
-        public IMediator Mediator { get; }
+        private readonly IIdentityService identityService;
+        private readonly IMediator mediator;
 
         public FriendRequestController(IIdentityService identityService, IMediator mediator)
         {
-            this.IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
-            this.Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        [HttpGet]
+        [HttpGet("pending")]
         public async Task<List<FriendRequestDTO>> GetPendingFriendRequests()
         {
-            var userId = IdentityService.GetCurrentUserId();
+            var userId = identityService.GetCurrentUserId();
 
-            var result = await Mediator.Send(new GetPendingFriendsRequestsQuery(userId));
+            var result = await mediator.Send(new GetPendingFriendsRequestsQuery(userId));
             return result;
         }
 
-        [HttpGet("[action]/{friendUserId}")]
+        [HttpGet("hasPending/{friendUserId}")]
         public async Task<bool> HasPendingFriendRequest(string friendUserId)
         {
-            var userId = IdentityService.GetCurrentUserId();
-            var result = await Mediator.Send(new HasPendingFriendsRequestQuery(friendUserId, userId));
+            var userId = identityService.GetCurrentUserId();
+            var result = await mediator.Send(new HasPendingFriendsRequestQuery(friendUserId, userId));
             return result;
         }
 
         [HttpPost("request/{friendUserId}")]
         public async Task AddFriendRequest(string friendUserId)
         {
-            var userId = IdentityService.GetCurrentUserId();
-            await Mediator.Send(new AddFriendRequestCommand(userId, friendUserId));
+            var userId = identityService.GetCurrentUserId();
+            await mediator.Send(new AddFriendRequestCommand(userId, friendUserId));
         }
 
         [HttpPut("accept/{requestingUserId}")]
         public async Task AcceptFriendRequest(string requestingUserId)
         {
-            var userId = IdentityService.GetCurrentUserId();
-            await Mediator.Send(new AcceptFriendRequestCommand(userId, requestingUserId));
+            var userId = identityService.GetCurrentUserId();
+            await mediator.Send(new AcceptFriendRequestCommand(userId, requestingUserId));
         }
 
         [HttpPut("decline/{requestingUserId}")]
         public async Task DeclineFriendRequest(string requestingUserId)
         {
-            var userId = IdentityService.GetCurrentUserId();
-            await Mediator.Send(new DeclineFriendRequestCommand(userId, requestingUserId));
+            var userId = identityService.GetCurrentUserId();
+            await mediator.Send(new DeclineFriendRequestCommand(userId, requestingUserId));
         }
     }
 }

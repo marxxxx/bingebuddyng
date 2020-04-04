@@ -23,7 +23,7 @@ export class InvitationService {
   }
 
   acceptInvitation(invitationToken: string): Observable<string> {
-    const url = `${this.baseUrl}/${invitationToken}`;
+    const url = `${this.baseUrl}/${invitationToken}/accept`;
     return this.http.put<string>(url, {});
   }
 }

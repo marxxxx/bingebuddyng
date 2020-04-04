@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BingeBuddyNg.Services.Drink;
+﻿using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Api.Controllers
 {
@@ -13,41 +12,41 @@ namespace BingeBuddyNg.Api.Controllers
     [Route("api/[controller]")]
     public class DrinkController : Controller
     {
+        private readonly IDrinkRepository drinkRepository;
+        private readonly IIdentityService identityService;
+
         public DrinkController(IDrinkRepository drinkRepository, IIdentityService identityService)
         {
-            DrinkRepository = drinkRepository ?? throw new ArgumentNullException(nameof(drinkRepository));
-            IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
+            this.drinkRepository = drinkRepository ?? throw new ArgumentNullException(nameof(drinkRepository));
+            this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
         }
-
-        public IDrinkRepository DrinkRepository { get; }
-        public IIdentityService IdentityService { get; }
 
         [HttpGet]
         public async Task<IEnumerable<Drink>> Get()
         {
-            var userId = this.IdentityService.GetCurrentUserId();
-            return await this.DrinkRepository.GetDrinksAsync(userId);
+            var userId = this.identityService.GetCurrentUserId();
+            return await this.drinkRepository.GetDrinksAsync(userId);
         }
 
         [HttpGet("{drinkId}")]
         public async Task<Drink> GetById(string drinkId)
         {
-            var userId = this.IdentityService.GetCurrentUserId();
-            return await this.DrinkRepository.GetDrinkAsync(userId, drinkId);
+            var userId = this.identityService.GetCurrentUserId();
+            return await this.drinkRepository.GetDrinkAsync(userId, drinkId);
         }
 
         [HttpPost]
         public async Task SaveDrink([FromBody]IEnumerable<Drink> drinks)
         {
-            var userId = this.IdentityService.GetCurrentUserId();
-            await this.DrinkRepository.SaveDrinksAsync(userId, drinks);
+            var userId = this.identityService.GetCurrentUserId();
+            await this.drinkRepository.SaveDrinksAsync(userId, drinks);
         }
 
         [HttpDelete("{drinkId}")]
         public async Task Delete(string drinkId)
         {
-            var userId = this.IdentityService.GetCurrentUserId();
-            await this.DrinkRepository.DeleteDrinkAsync(userId, drinkId);
+            var userId = this.identityService.GetCurrentUserId();
+            await this.drinkRepository.DeleteDrinkAsync(userId, drinkId);
         }
     }
 }

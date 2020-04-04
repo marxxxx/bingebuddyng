@@ -33,9 +33,8 @@ export class UserService {
     return this.http.put(`${this.baseUrl}/${friendUserId}/add`, {});
   }
 
-
   removeFriend(friendUserId: string): Observable<{}> {
-    return this.http.delete(`${this.baseUrl}/${friendUserId}`, {});
+    return this.http.delete(`${this.baseUrl}/${friendUserId}/removefriend`, {});
   }
 
   createOrUpdateUser(user: CreateOrUpdateUserDTO): Observable<{}> {
@@ -43,7 +42,7 @@ export class UserService {
   }
 
   setFriendMuteState(friendUserId: string, muteState: boolean): Observable<any> {
-    const url = `${this.baseUrl}/SetFriendMuteState?friendUserId=${friendUserId}&muteState=${muteState}`;
+    const url = `${this.baseUrl}/${friendUserId}/mute?state=${muteState}`;
     return this.http.put(url, {});
   }
 
@@ -51,7 +50,7 @@ export class UserService {
     return `https://bingebuddystorage.blob.core.windows.net/profileimg/${userId}?t=${this.timestamp}`;
   }
 
-  getUpdateProfilePicUrl(): string {
-    return `${this.baseUrl}/UpdateUserProfilePic`;
+  getUpdateProfileImageUrl(): string {
+    return `${this.baseUrl}/profile-image`;
   }
 }

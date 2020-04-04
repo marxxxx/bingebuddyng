@@ -15,33 +15,33 @@ namespace BingeBuddyNg.Api.Controllers
     [Route("api/[controller]")]
     public class RankingController : Controller
     {
-        public IIdentityService IdentityService { get; set; }
-        public IMediator Mediator { get; }
+        private readonly IIdentityService identityService;
+        private readonly IMediator mediator;
 
         public RankingController(IIdentityService identityService, IMediator mediator)
         {
-            this.IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
-            this.Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        [HttpGet("[action]")]
+        [HttpGet("drinks")]
         public async Task<List<UserRankingDTO>> GetDrinkRanking()
         {
-            var result = await this.Mediator.Send(new GetDrinksRankingQuery());
+            var result = await this.mediator.Send(new GetDrinksRankingQuery());
             return result;
         }
 
-        [HttpGet("[action]")]
+        [HttpGet("score")]
         public async Task<List<UserRankingDTO>> GetScoreRanking()
         {
-            var result = await this.Mediator.Send(new GetScoreRankingQuery());
+            var result = await this.mediator.Send(new GetScoreRankingQuery());
             return result;
         }
 
-        [HttpGet("[action]")]
+        [HttpGet("venue")]
         public async Task<IEnumerable<VenueRankingDTO>> GetVenueRanking()
         {
-            var result = await this.Mediator.Send(new GetVenueRankingQuery());
+            var result = await this.mediator.Send(new GetVenueRankingQuery());
             return result;
         }
     }

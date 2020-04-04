@@ -16,35 +16,35 @@ namespace BingeBuddyNg.Api.Controllers
     [Route("api/[controller]")]
     public class VenueController : Controller
     {
-        public IMediator Mediator { get; }
-        public IIdentityService IdentityService { get; set; }        
+        private readonly IMediator mediator;
+        private readonly IIdentityService identityService;
 
         public VenueController(IIdentityService identityService, IMediator mediator)
         {
-            Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            IdentityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
         }
 
         [HttpGet]
         public async Task<IEnumerable<VenueModel>> SearchVenues(float latitude, float longitude)
         {
-            var venues = await this.Mediator.Send(new SearchVenuesQuery(latitude, longitude));
+            var venues = await this.mediator.Send(new SearchVenuesQuery(latitude, longitude));
             return venues;
         }
 
-        [HttpPost("[action]")]
+        [HttpPost("update-current")]
         public async Task UpdateCurrentVenue([FromBody]VenueModel venue)
         {
-            var userId = this.IdentityService.GetCurrentUserId();
-            await this.Mediator.Send(new EnterVenueCommand(userId, venue));
+            var userId = this.identityService.GetCurrentUserId();
+            await this.mediator.Send(new EnterVenueCommand(userId, venue));
         }
 
-        [HttpPost("[action]")]
+        [HttpPost("reset-current")]
         public async Task ResetCurrentVenue()
         {
-            var userId = this.IdentityService.GetCurrentUserId();
+            var userId = this.identityService.GetCurrentUserId();
 
-            await this.Mediator.Send(new LeaveVenueCommand(userId));
+            await this.mediator.Send(new LeaveVenueCommand(userId));
         }
     }
 }

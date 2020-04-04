@@ -12,18 +12,18 @@ export class VenueService {
 
   constructor(private http: HttpClient) { }
 
-  getVenues(location: Location): Observable<VenueModel[]> {
+  searchVenues(location: Location): Observable<VenueModel[]> {
     const url = `${this.baseUrl}?latitude=${location.latitude}&longitude=${location.longitude}`;
     return this.http.get<VenueModel[]>(url);
   }
 
   updateCurrentVenue(venue: VenueModel): Observable<{}> {
-    const url = `${this.baseUrl}/UpdateCurrentVenue`;
+    const url = `${this.baseUrl}/update-current`;
     return this.http.post(url, venue);
   }
 
   resetCurrentVenue(): Observable<{}> {
-    const url = `${this.baseUrl}/ResetCurrentVenue`;
+    const url = `${this.baseUrl}/reset-current`;
     return this.http.post(url, {});
   }
 }

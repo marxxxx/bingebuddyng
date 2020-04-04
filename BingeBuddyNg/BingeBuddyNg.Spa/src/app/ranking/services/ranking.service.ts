@@ -13,17 +13,17 @@ export class RankingService {
   constructor(private http: HttpClient) { }
 
   getRanking(): Observable<UserRankingDTO[]> {
-    const url = `${this.baseUrl}/GetDrinkRanking`;
+    const url = `${this.baseUrl}/drinks`;
     return this.http.get<UserRankingDTO[]>(url);
   }
 
   getScores(): Observable<UserRankingDTO[]> {
-    const url = `${this.baseUrl}/GetScoreRanking`;
+    const url = `${this.baseUrl}/score`;
     return this.http.get<UserRankingDTO[]>(url);
   }
 
   getVenueRanking(): Observable<VenueRankingDTO[]> {
-    const url = `${this.baseUrl}/GetVenueRanking`;
+    const url = `${this.baseUrl}/venue`;
     return this.http.get<VenueRankingDTO[]>(url);
   }
 }

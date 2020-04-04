@@ -1,16 +1,18 @@
+import { Component, OnInit, Input, EventEmitter, Output, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { filter, finalize } from 'rxjs/operators';
+
 import { ReactionDialogComponent } from './../reaction-dialog/reaction-dialog.component';
 import { UserInfoDTO } from '../../../../models/UserInfoDTO';
 import { ActivityType } from '../../../../models/ActivityType';
 import { ActivityStatsDTO } from '../../../../models/ActivityStatsDTO';
-import { Component, OnInit, Input, EventEmitter, Output, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+
 import { ActivityService } from './../../services/activity.service';
 import { AddReactionDTO } from '../../../../models/AddReactionDTO';
 import { ReactionType } from '../../../../models/ReactionType';
 import { UserService } from 'src/app/@core/services/user.service';
-import { Router } from '@angular/router';
 import { ShellInteractionService } from 'src/app/@core/services/shell-interaction.service';
-import { filter, finalize } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -38,7 +40,6 @@ export class ActivityComponent implements OnInit {
 
     return userInfo;
   }
-
 
   @Input()
   activity: ActivityStatsDTO;
@@ -84,7 +85,7 @@ export class ActivityComponent implements OnInit {
 
     this.isBusyLiking = true;
     const reaction = this.createAddReactionDTO(ReactionType.Like);
-    this.activityService.addReaction(reaction)
+    this.activityService.addReaction(this.activity.activity.id, reaction)
       .pipe(finalize(() => {
         this.isBusyLiking = false;
         this.changeDetector.detectChanges();
@@ -105,7 +106,7 @@ export class ActivityComponent implements OnInit {
     ev.stopPropagation();
     this.isBusyCheering = true;
     const reaction = this.createAddReactionDTO(ReactionType.Cheers);
-    this.activityService.addReaction(reaction)
+    this.activityService.addReaction(this.activity.activity.id, reaction)
       .pipe(finalize(() => {
         this.isBusyCheering = false;
         this.changeDetector.detectChanges();
@@ -126,7 +127,7 @@ export class ActivityComponent implements OnInit {
     this.isBusyCommenting = true;
     this.changeDetector.detectChanges();
     const reaction = this.createAddReactionDTO(ReactionType.Comment, this.comment);
-    this.activityService.addReaction(reaction)
+    this.activityService.addReaction(this.activity.activity.id, reaction)
       .pipe(finalize(() => {
         this.isBusyCommenting = false;
         this.changeDetector.detectChanges();
@@ -180,7 +181,7 @@ export class ActivityComponent implements OnInit {
   }
 
   createAddReactionDTO(type: ReactionType, comment?: string): AddReactionDTO {
-    const reaction: AddReactionDTO = { activityId: this.activity.activity.id, type: type, comment: comment };
+    const reaction: AddReactionDTO = { type: type, comment: comment };
     return reaction;
   }
 
