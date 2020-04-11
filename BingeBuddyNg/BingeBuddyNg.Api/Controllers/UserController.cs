@@ -79,5 +79,12 @@ namespace BingeBuddyNg.Api.Controllers
             var userId = identityService.GetCurrentUserId();
             await mediator.Send(new SetFriendMuteStateCommand(userId, friendUserId, state));
         }
+
+        [HttpDelete("myself")]
+        public async Task DeleteMyself()
+        {
+            var userId = identityService.GetCurrentUserId();
+            await mediator.Send(new DeleteUserCommand(userId));
+        }
     }
 }

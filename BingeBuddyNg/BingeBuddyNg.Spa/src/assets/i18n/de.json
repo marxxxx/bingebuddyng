@@ -161,5 +161,12 @@
     "UsagePerWeekDay": "Trunkenheit pro Wochentag",
 
     "MedianMaxAlcLevel": "Median max. Alkoholisierung",
-    "Probability": "Wahrscheinlichkeit"
+    "Probability": "Wahrscheinlichkeit",
+
+    "UserProfile": {
+      "Edit": "Bearbeiten",
+      "DeleteProfile": "Profil löschen",
+      "ProfileDeletionRequested": "Dein Profil wurde zur Löschung markiert. Du kannst jederzeit zurückkehren, musst deine Trinkerkarriere jedoch von 0 starten.",
+      "ReallyDeleteProfile": "Möchtest du dein Profil wirklich komplett löschen? Dies kann nicht rückgängig gemacht werden!"
+    }
 }

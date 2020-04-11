@@ -4,7 +4,6 @@ import { AddDrinkActivityDTO } from '../../../models/AddDrinkActivityDTO';
 import { ActivityAggregationDTO } from '../../../models/ActivityAggregationDTO';
 import { ActivityDTO } from '../../../models/ActivityDTO';
 import { Observable } from 'rxjs';
-import { retry } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';

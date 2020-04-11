@@ -38,7 +38,7 @@ export class ShellInteractionService {
     this.snackbar.open(translatedMessage, 'OK');
   }
 
-  showConfirmationDialog(args: ConfirmationDialogArgs): Observable<any> {
+  showConfirmationDialog(args: ConfirmationDialogArgs): Observable<boolean> {
     return this.dialog.open(ConfirmationDialogComponent, {data: args}).afterClosed();
   }
 }

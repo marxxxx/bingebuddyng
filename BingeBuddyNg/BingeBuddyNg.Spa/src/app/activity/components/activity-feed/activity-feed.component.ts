@@ -59,9 +59,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   highlightedActivityId: string;
   pendingDrinkType: DrinkType;
 
-  @ViewChild('#activity-container', { static: false })
-  container: any;
-
   @ViewChildren(MatTooltip)
   tooltips: MatTooltip[];
 
@@ -74,7 +71,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     public locationService: LocationService,
     private drinkActivityService: DrinkActivityService,
     private drinkService: DrinkRetrieverService,
-    private changeRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
     private translateService: TranslocoService,
     private dialog: MatDialog,
@@ -356,7 +352,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     this.isBusyAdding = false;
     this.isBusyUploading = true;
     this.currentProgress = progress;
-    this.changeRef.detectChanges();
   }
 
   onActionsOpenChange(open: boolean): void {
