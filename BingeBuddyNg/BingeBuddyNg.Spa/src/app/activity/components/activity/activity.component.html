@@ -3,10 +3,10 @@
     <div fxLayout fxLayoutAlign="start center">
       <app-user-info
         [userInfo]="activity.activity.activityType === ActivityType.Registration ? activity.activity.registrationUser : userInfo"
-        [showName]="true"></app-user-info>
+        [showName]="true" [currentAlcoholization]="activity.userStats.currentAlcoholization"></app-user-info>
     </div>
     <mat-chip-list class="stats" *ngIf="
-    activity.userStats && (activity.activity.drinkCount +
+          activity.userStats && (activity.activity.drinkCount +
           activity.userStats.currentAlcoholization > 0)">
       <mat-chip class="chip" *ngIf="activity.activity.drinkCount > 0">{{ activity.activity.drinkCount }}
         <mat-icon fxHide fxShow.gt-xs>local_drink</mat-icon>

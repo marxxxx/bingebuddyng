@@ -16,6 +16,9 @@ export class UserInfoComponent implements OnInit {
   @Input()
   showName: boolean;
 
+  @Input()
+  currentAlcoholization: number;
+
   constructor(private userService: UserService) { }
 
   ngOnInit() {
@@ -26,5 +29,13 @@ export class UserInfoComponent implements OnInit {
       return null;
     }
     return this.userService.getProfileImageUrl(this.userInfo.userId);
+  }
+
+  getFilter(): string {
+    return `blur(${this.currentAlcoholization}px)`;
+  }
+
+  getTransform(): string {
+    return `rotate(${this.currentAlcoholization * 30}deg)`;
   }
 }
