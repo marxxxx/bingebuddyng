@@ -1,5 +1,3 @@
-import { UserInfoDTO } from './UserInfoDTO';
-
 export class UserProfile {
     family_name: string;
     given_name: string;
@@ -8,8 +6,4 @@ export class UserProfile {
     picture: string;
     sub: string;
     updated_at: any;
-
-    toUserInfo(): UserInfoDTO {
-        return { userId: this.sub, userName: this.nickname };
-    }
 }

@@ -46,7 +46,7 @@ export class NavShellComponent implements OnInit, OnDestroy {
     const loggedInSubScription = this.auth.currentUserProfile$
       .pipe(filter(profile => profile != null))
       .subscribe(profile => {
-        this.currentUserId = profile.toUserInfo().userId;
+        this.currentUserId = profile.sub;
         this.updateUserAndFriendRequests(profile);
       });
 
@@ -65,7 +65,7 @@ export class NavShellComponent implements OnInit, OnDestroy {
   }
 
 
-  private updatePendingFriendRequests(currentUserId: any) {
+  private updatePendingFriendRequests(currentUserId: string) {
     this.friendRequestService.getPendingFriendRequests().subscribe(r => {
       this.friendRequests = r.filter(f => f.requestingUser.userId !== currentUserId);
     });
