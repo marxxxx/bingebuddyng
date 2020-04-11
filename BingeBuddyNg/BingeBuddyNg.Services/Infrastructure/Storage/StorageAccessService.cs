@@ -52,8 +52,18 @@ namespace BingeBuddyNg.Services.Infrastructure
 
         public async Task<List<T>> QueryTableAsync<T>(string tableName, string whereClause = null) where T : ITableEntity, new()
         {
-            var result = await QueryTableAsync<T>(tableName, whereClause,  100);
-            return result.ResultPage;
+            List<T> resultList = new List<T>();
+            TableContinuationToken continuationToken = null;
+
+            do
+            {
+                var result = await QueryTableAsync<T>(tableName, whereClause, 250, continuationToken);
+
+                resultList.AddRange(result.ResultPage);
+                continuationToken = result.ContinuationToken?.ToContinuationToken();
+            } while (continuationToken != null);
+
+            return resultList;
         }
 
         public async Task<PagedQueryResult<T>> QueryTableAsync<T>(string tableName, string whereClause, int pageSize, 

@@ -22,7 +22,7 @@ namespace BingeBuddyNg.Services.Infrastructure
 
         Task<List<T>> QueryTableAsync<T>(string tableName, string whereClause = null) where T : ITableEntity, new();
 
-        Task<PagedQueryResult<T>> QueryTableAsync<T>(string tableName, string whereClause, int pageSize, TableContinuationToken continuationToken = null) where T : ITableEntity, new();
+        Task<PagedQueryResult<T>> QueryTableAsync<T>(string tableName, string whereClause = null, int pageSize = 100, TableContinuationToken continuationToken = null) where T : ITableEntity, new();
 
         Task<string> SaveFileInBlobStorage(string containerName, string fullPath, Stream file);
 
