@@ -1,9 +1,7 @@
-<mat-progress-bar *ngIf="isBusy" mode="indeterminate" color="primary"></mat-progress-bar>
+<app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
 
 <h2>{{'Ranking' | transloco }}</h2>
 <p>{{'RankingInfo' | transloco }}</p>
-
-
 
 <mat-tab-group>
   <mat-tab label="{{'AlcoholicDrinkCount' | transloco }}">
@@ -21,7 +19,6 @@
     </div>
   </mat-tab>
 
-
   <mat-tab label="{{'VenueRanking' | transloco }}">
     <div *ngIf="venueRanking">
       <div *ngFor="let r of venueRanking; let i=index" fxLayout fxLayoutAlign="space-between center">
@@ -37,7 +34,6 @@
     </div>
   </mat-tab>
 
-
   <mat-tab label="{{'HardnessScore' | transloco }}">
     <div *ngIf="score">
       <div *ngFor="let r of score; let i=index" fxLayout fxLayoutAlign="space-between center">
@@ -52,6 +48,4 @@
       </div>
     </div>
   </mat-tab>
-
-
 </mat-tab-group>

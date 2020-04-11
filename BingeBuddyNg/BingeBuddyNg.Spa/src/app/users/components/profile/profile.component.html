@@ -18,10 +18,6 @@
     <mat-form-field *ngIf="isEditingUserName">
       <input type="text" matInput [(ngModel)]="user.name" [disabled]="isBusyUpdatingUserName">
     </mat-form-field>
-    <!-- <button mat-icon-button *ngIf="isYou() && !isEditingUserName && !isBusyUpdatingUserName"
-      (click)="isEditingUserName = true">
-      <mat-icon>edit</mat-icon>
-    </button> -->
     <button mat-icon-button *ngIf="isEditingUserName && !isBusyUpdatingUserName"
       (click)="isEditingUserName = false; user.name = originalUserName">
       <mat-icon>close</mat-icon>
