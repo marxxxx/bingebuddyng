@@ -10,7 +10,7 @@ namespace BingeBuddyNg.Services.Calculation
     public class CalculationService : ICalculationService
     {
         private const int DefaultWeight = 80;
-        private const int NightConsiderationTimespanInHours = 24;
+        private const int NightConsiderationTimespanInHours = 14;
 
         private readonly IActivityRepository activityRepository;
 
