@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services.Invitation.Commands
 {
@@ -13,5 +13,21 @@ namespace BingeBuddyNg.Services.Invitation.Commands
         }
 
         public string UserId { get; }
+    }
+
+    public class CreateInvitationCommandHandler : IRequestHandler<CreateInvitationCommand, string>
+    {
+        private readonly IInvitationRepository invitationRepository;
+
+        public CreateInvitationCommandHandler(IInvitationRepository invitationRepository)
+        {
+            this.invitationRepository = invitationRepository ?? throw new ArgumentNullException(nameof(invitationRepository));
+        }        
+
+        public async Task<string> Handle(CreateInvitationCommand request, CancellationToken cancellationToken)
+        {
+            var invitationToken = await invitationRepository.CreateInvitationAsync(request.UserId);
+            return invitationToken;
+        }
     }
 }

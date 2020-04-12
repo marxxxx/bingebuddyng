@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.User;
+using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services.Invitation.Querys
 {
@@ -13,5 +15,31 @@ namespace BingeBuddyNg.Services.Invitation.Querys
         }
 
         public string InvitationToken { get; }
+    }
+
+    public class GetInvitationQueryHandler :
+        IRequestHandler<GetInvitationQuery, InvitationDTO>
+    {
+        private readonly IInvitationRepository invitationRepository;
+        private readonly IUserRepository userRepository;
+
+        public GetInvitationQueryHandler(IInvitationRepository invitationRepository, IUserRepository userRepository)
+        {
+            this.invitationRepository = invitationRepository ?? throw new ArgumentNullException(nameof(invitationRepository));
+            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+        }
+
+        public async Task<InvitationDTO> Handle(GetInvitationQuery request, CancellationToken cancellationToken)
+        {
+            var invitation = await this.invitationRepository.GetInvitationAsync(request.InvitationToken);
+            var user = await this.userRepository.FindUserAsync(invitation.InvitingUserId);
+            if (user == null)
+            {
+                throw new NotFoundException($"Inviting user {invitation.InvitingUserId} not found!");
+            }
+
+            var result = new InvitationDTO(invitation.InvitationToken, invitation.InvitingUserId, new UserInfoDTO(user.Id, user.Name));
+            return result;
+        }
     }
 }
