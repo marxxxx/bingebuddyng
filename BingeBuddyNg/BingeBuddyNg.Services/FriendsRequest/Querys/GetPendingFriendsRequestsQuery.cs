@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services.FriendsRequest.Querys
 {
@@ -17,6 +18,22 @@ namespace BingeBuddyNg.Services.FriendsRequest.Querys
         public override string ToString()
         {
             return $"{{{nameof(UserId)}={UserId}}}";
+        }
+    }
+
+    public class GetPendingFriendsRequestsQueryHandler : IRequestHandler<GetPendingFriendsRequestsQuery, List<FriendRequestDTO>>
+    {
+        private readonly IFriendRequestRepository friendRequestRepository;
+
+        public GetPendingFriendsRequestsQueryHandler(IFriendRequestRepository friendRequestRepository)
+        {
+            this.friendRequestRepository = friendRequestRepository ?? throw new ArgumentNullException(nameof(friendRequestRepository));
+        }
+
+        public async Task<List<FriendRequestDTO>> Handle(GetPendingFriendsRequestsQuery request, CancellationToken cancellationToken)
+        {
+            var result = await friendRequestRepository.GetFriendRequestsAsync(request.UserId);
+            return result;
         }
     }
 }

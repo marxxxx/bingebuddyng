@@ -20,18 +20,11 @@ namespace BingeBuddyNg.Services.FriendsRequest
         {
         }
 
-        //public FriendRequestEntity(string userId, string requestingUserId)
-        //    : base(userId, requestingUserId)
-        //{
-        //    this.UserId = userId;
-        //    this.RequestingUserId = requestingUserId;
-        //}
-
         public FriendRequestEntity(
             string partitionKey, string rowKey,
             UserInfo requestingUser,
             UserInfo friend)
-            :base(partitionKey, rowKey)
+            : base(partitionKey, rowKey)
         {
             if (requestingUser == null)
                 throw new ArgumentNullException(nameof(requestingUser));
@@ -39,7 +32,7 @@ namespace BingeBuddyNg.Services.FriendsRequest
                 throw new ArgumentNullException(nameof(friend));
 
             RequestTimestamp = DateTime.UtcNow;
-            
+
             RequestingUserId = requestingUser.UserId;
             RequestingUserName = requestingUser.UserName;
 
