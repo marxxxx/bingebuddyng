@@ -1,8 +1,6 @@
 ﻿using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Venue;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BingeBuddyNg.Services.User
 {

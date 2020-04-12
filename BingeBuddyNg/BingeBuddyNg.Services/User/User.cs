@@ -1,8 +1,7 @@
-﻿using System;
+﻿using BingeBuddyNg.Services.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Venue;
 
 namespace BingeBuddyNg.Services.User
 {

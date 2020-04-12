@@ -43,7 +43,15 @@ namespace BingeBuddyNg.Services.Drink
             }
             else
             {
-                return drinks.Select(d => d.ToDrink());
+                var resultDrinks = drinks.Select(d => d.ToDrink()).ToList();
+                foreach(var drink in defaultDrinks)
+                {
+                    if(resultDrinks.Any(d=>d.DrinkType == drink.DrinkType) == false)
+                    {
+                        resultDrinks.Add(drink);
+                    }
+                }
+                return resultDrinks;
             }
         }
 

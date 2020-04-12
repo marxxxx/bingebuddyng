@@ -31,7 +31,6 @@ namespace BingeBuddyNg.Services.DrinkEvent
 
             return isAdded;
 
-        }
-        
+        }        
     }
 }

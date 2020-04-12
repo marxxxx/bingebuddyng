@@ -12,7 +12,6 @@ namespace BingeBuddyNg.Tests
 {
     public class UtilityServiceTests
     {
-        [Fact]
         public async Task Get_Location_From_Lat_Long_Returns_Complete_Result()
         {
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
@@ -28,7 +27,6 @@ namespace BingeBuddyNg.Tests
             Assert.NotNull(address.CountryShortName);
         }
 
-        [Fact]
         public async Task DeserializeInCamelCase()
         {
             var activity = new ActivityDTO();
