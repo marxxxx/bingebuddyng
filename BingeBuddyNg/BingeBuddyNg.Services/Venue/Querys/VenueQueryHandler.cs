@@ -16,23 +16,23 @@ namespace BingeBuddyNg.Services.Venue.Querys
     {
         private const string BaseUrl = "https://api.foursquare.com/v2";
 
-        public IHttpClientFactory HttpClientFactory { get; }
-        public FourSquareConfiguration Configuration { get; }
+        private readonly IHttpClientFactory httpClientFactory;
+        private readonly FourSquareConfiguration configuration;
 
         public VenueQueryHandler(IHttpClientFactory httpClientFactory, FourSquareConfiguration configuration)
         {
-            HttpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
-            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }        
 
         public async Task<List<VenueModel>> Handle(SearchVenuesQuery request, CancellationToken cancellationToken)
         {
-            var client = this.HttpClientFactory.CreateClient();
+            var client = this.httpClientFactory.CreateClient();
 
             // force english format
             var englishCulture = CultureInfo.GetCultureInfo("en");
             string lalong = $"{request.Latitude.ToString(englishCulture)},{request.Longitude.ToString(englishCulture)}";
-            string url = $"{BaseUrl}/venues/search?v=20190112&client_id={this.Configuration.FourSquareApiClientKey}&client_secret={this.Configuration.FourSquareApiClientSecret}&ll={lalong}";
+            string url = $"{BaseUrl}/venues/search?v=20190112&client_id={this.configuration.FourSquareApiClientKey}&client_secret={this.configuration.FourSquareApiClientSecret}&ll={lalong}";
 
             var response = await client.GetStringAsync(url);
 

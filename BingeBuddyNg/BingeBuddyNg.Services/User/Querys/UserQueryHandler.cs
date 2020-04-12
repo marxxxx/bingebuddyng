@@ -12,16 +12,16 @@ namespace BingeBuddyNg.Services.User.Querys
         IRequestHandler<GetAllUsersQuery, List<UserInfoDTO>>,
         IRequestHandler<GetUserQuery, UserDTO>
     {
+        private readonly IUserRepository userRepository;
+
         public UserQueryHandler(IUserRepository userRepository)
         {
-            UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-        }
-
-        public IUserRepository UserRepository { get; }
+            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+        }        
 
         public async Task<List<UserInfoDTO>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
         {
-            var users = await this.UserRepository.GetUsersAsync();
+            var users = await this.userRepository.GetUsersAsync();
 
             var userInfo = users.Select(u => new UserInfoDTO() { UserId = u.Id, UserName = u.Name }).ToList();
 
@@ -37,7 +37,7 @@ namespace BingeBuddyNg.Services.User.Querys
 
         public async Task<UserDTO> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
-            var user = await this.UserRepository.FindUserAsync(request.UserId);
+            var user = await this.userRepository.FindUserAsync(request.UserId);
             if (user == null)
             {
                 return null;

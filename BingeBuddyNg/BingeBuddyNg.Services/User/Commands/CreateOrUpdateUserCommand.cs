@@ -1,8 +1,6 @@
 ﻿using BingeBuddyNg.Services.Infrastructure;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BingeBuddyNg.Services.User.Commands
 {
