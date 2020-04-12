@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services.User.Commands
 {
@@ -15,5 +15,21 @@ namespace BingeBuddyNg.Services.User.Commands
 
         public string UserId { get; }
         public string FriendUserId { get; }
+    }
+
+    public class RemoveFriendCommandHandler : IRequestHandler<RemoveFriendCommand>
+    {
+        private readonly IUserRepository userRepository;
+
+        public RemoveFriendCommandHandler(IUserRepository userRepository)
+        {
+            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+        }
+
+        public async Task<Unit> Handle(RemoveFriendCommand request, CancellationToken cancellationToken)
+        {
+            await this.userRepository.RemoveFriendAsync(request.UserId, request.FriendUserId);
+            return Unit.Value;
+        }
     }
 }
