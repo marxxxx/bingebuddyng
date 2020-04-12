@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BingeBuddyNg.Services.User
+﻿namespace BingeBuddyNg.Services.User
 {
     public class CreateOrUpdateUserResult
     {
-        public bool IsNewUser {get;}
+        public bool IsNewUser { get; }
         public bool NameHasChanged { get; }
         public bool ProfilePicHasChanged { get; }
         public string OriginalUserName { get; set; }
@@ -18,6 +14,5 @@ namespace BingeBuddyNg.Services.User
             this.NameHasChanged = nameHasChanged;
             this.OriginalUserName = originalUserName;
         }
-    
     }
 }
