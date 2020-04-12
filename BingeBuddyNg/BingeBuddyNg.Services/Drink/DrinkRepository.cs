@@ -74,7 +74,7 @@ namespace BingeBuddyNg.Services.Drink
 
         public async Task CreateDefaultDrinksForUserAsync(string userId)
         {
-            var defaultDrinksForUser = defaultDrinks.Select(d => new Drink(null, d.DrinkType, d.Name, d.AlcPrc, d.Volume));
+            var defaultDrinksForUser = defaultDrinks.Select(d => new Drink(Guid.NewGuid().ToString(), d.DrinkType, d.Name, d.AlcPrc, d.Volume));
             await SaveDrinksAsync(userId, defaultDrinksForUser);
         }
 

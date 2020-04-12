@@ -115,7 +115,7 @@ export class AuthService {
             this.userProfile.nickname,
             this.userProfile.picture);
 
-          this.userService.createOrUpdateUser(request).subscribe(ru => cb(null, profile));
+          this.userService.createOrUpdateUser(request).subscribe(ru => cb(null, profile), ce => cb(ce, profile));
         });
       } else {
         cb(err, profile);
