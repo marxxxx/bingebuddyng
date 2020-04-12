@@ -9,7 +9,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
 {
     public class AddMessageActivityCommand :  IRequest<string>
     {
-        public AddMessageActivityCommand(string userId, string message, Location location, VenueModel venue)
+        public AddMessageActivityCommand(string userId, string message, Location location, Venue.Venue venue)
         {
             UserId = userId ?? throw new ArgumentNullException(nameof(userId));
             Message = message ?? throw new ArgumentNullException(nameof(message));
@@ -20,7 +20,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
         public string UserId { get; }
         public string Message { get; }
         public Location Location { get; }
-        public VenueModel Venue { get; }
+        public Venue.Venue Venue { get; }
     }
 
     public class AddMessageActivityCommandHandler :

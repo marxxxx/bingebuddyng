@@ -28,7 +28,7 @@ namespace BingeBuddyNg.Services.Activity
         public string ImageUrl { get; set; }
         public string CountryLongName { get; set; }
         public string CountryShortName { get; set; }
-        public VenueModel Venue { get; set; }
+        public Venue.Venue Venue { get; set; }
 
         public UserInfo RegistrationUser { get; set; }
 

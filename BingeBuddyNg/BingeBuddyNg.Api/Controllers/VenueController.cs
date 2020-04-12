@@ -26,14 +26,14 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<VenueModel>> SearchVenues(float latitude, float longitude)
+        public async Task<IEnumerable<Venue>> SearchVenues(float latitude, float longitude)
         {
             var venues = await this.mediator.Send(new SearchVenuesQuery(latitude, longitude));
             return venues;
         }
 
         [HttpPost("update-current")]
-        public async Task UpdateCurrentVenue([FromBody]VenueModel venue)
+        public async Task UpdateCurrentVenue([FromBody]Venue venue)
         {
             var userId = this.identityService.GetCurrentUserId();
             await this.mediator.Send(new EnterVenueCommand(userId, venue));

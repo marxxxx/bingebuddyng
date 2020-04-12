@@ -15,7 +15,7 @@ namespace BingeBuddyNg.Services.User
         public string ProfileImageUrl { get; set; }
         public PushInfo PushInfo { get; set; }
         public List<UserInfo> Friends { get; set; }
-        public VenueModel CurrentVenue { get; set; }
+        public Venue.Venue CurrentVenue { get; set; }
         public string Language { get; set; }
         public DateTime LastOnline { get; set; }
         public List<string> MutedFriendUserIds { get; set; }

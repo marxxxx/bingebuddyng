@@ -11,7 +11,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
 {
     public class AddDrinkActivityCommand : IRequest<string>
     {
-        public AddDrinkActivityCommand(string userId, string drinkId, DrinkType drinkType, string drinkName, double alcPrc, double volume, Location location, VenueModel venue)
+        public AddDrinkActivityCommand(string userId, string drinkId, DrinkType drinkType, string drinkName, double alcPrc, double volume, Location location, Venue.Venue venue)
         {
             UserId = userId ?? throw new ArgumentNullException(nameof(userId));
             DrinkId = drinkId ?? throw new ArgumentNullException(nameof(drinkId));
@@ -30,7 +30,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
         public double AlcPrc { get; }
         public double Volume { get; }
         public Location Location { get; }
-        public VenueModel Venue { get; }
+        public Venue.Venue Venue { get; }
     }
 
     public class AddDrinkActivityCommandHandler :
