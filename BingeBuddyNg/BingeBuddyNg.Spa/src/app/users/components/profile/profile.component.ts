@@ -14,6 +14,7 @@ import { UserDTO } from '../../../../models/UserDTO';
 import { filter } from 'rxjs/internal/operators/filter';
 import { FileUploader, FileUploaderOptions, FileItem } from 'ng2-file-upload';
 import { ProfileImageDialogArgs } from '../profile-image-dialog/ProfileImageDialogArgs';
+import { ConfirmationDialogArgs } from 'src/app/@shared/components/confirmation-dialog/ConfirmationDialogArgs';
 
 @Component({
   selector: 'app-profile',
@@ -241,5 +242,24 @@ export class ProfileComponent implements OnInit, OnDestroy {
         height: '90%'
       });
     }
+  }
+
+  onDeleteMyself() {
+    const args: ConfirmationDialogArgs = {
+      icon: 'delete',
+      title: 'UserProfile.DeleteProfile',
+      message: 'UserProfile.ReallyDeleteProfile',
+      cancelButtonCaption: 'Cancel',
+      confirmButtonCaption: 'Delete'
+    };
+    this.shellInteraction.showConfirmationDialog(args)
+      .pipe(filter(isConfirmed => isConfirmed))
+      .subscribe(() => {
+        this.userService.deleteMyself().subscribe(() => {
+          this.shellInteraction.showMessage('UserProfile.ProfileDeletionRequested');
+        }, e => {
+          this.shellInteraction.showErrorMessage();
+        });
+      });
   }
 }

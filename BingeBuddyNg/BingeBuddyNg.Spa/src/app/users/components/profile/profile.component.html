@@ -1,6 +1,14 @@
 <app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
 
+<!-- Context menu-->
+<button *ngIf="!isBusy" mat-icon-button class="context-menu" [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
 
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="isEditingUserName=true" [disabled]="isEditingUserName"><mat-icon>edit</mat-icon>{{'UserProfile.Edit' | transloco }}</button>
+  <button mat-menu-item (click)="onDeleteMyself()"><mat-icon>delete</mat-icon>{{'UserProfile.DeleteProfile' | transloco }}</button>
+</mat-menu>
+
+<!-- Header-->
 <div class="container" *ngIf="user" fxLayout="column" fxLayoutAlign="center center">
   <img *ngIf="!isBusyUpdatingProfilePic" [src]="getProfileImageUrl()" (click)="onProfileImageClick()">
   <mat-progress-spinner *ngIf="isBusyUpdatingProfilePic" mode="indeterminate" color="primary" diameter="64">
@@ -10,10 +18,6 @@
     <mat-form-field *ngIf="isEditingUserName">
       <input type="text" matInput [(ngModel)]="user.name" [disabled]="isBusyUpdatingUserName">
     </mat-form-field>
-    <button mat-icon-button *ngIf="isYou() && !isEditingUserName && !isBusyUpdatingUserName"
-      (click)="isEditingUserName = true">
-      <mat-icon>edit</mat-icon>
-    </button>
     <button mat-icon-button *ngIf="isEditingUserName && !isBusyUpdatingUserName"
       (click)="isEditingUserName = false; user.name = originalUserName">
       <mat-icon>close</mat-icon>
@@ -49,16 +53,14 @@
   </button>
 </div>
 
-<div fxLayout fxLayoutAlign="center center" *ngIf="isYourFriend() || isYou()" >
+<div fxLayout fxLayoutAlign="center center" *ngIf="isYourFriend() || isYou()">
   <!-- Statistics -->
   <button mat-raised-button [routerLink]="['/stats', userId]"><img
       src="../../assets/img/statistics.png" /><span>{{ 'Statistics' | transloco }}</span></button>
 </div>
 
-
-
 <div id="friends" *ngIf="!isBusy && (isYou() || isYourFriend())">
-  <h3>{{'Friends' | transloco }}</h3>
+  <h3 class="center">{{'Friends' | transloco }}</h3>
 
   <div *ngFor="let f of user?.friends" fxLayout fxLayoutAlign="space-between center">
     <app-user-info [userInfo]="f" [showName]="true" [matTooltip]="f.userName"></app-user-info>
@@ -71,8 +73,11 @@
   </div>
 
 
-  <div *ngIf="isYou() && (!user.friends || user.friends.length === 0)">
+  <div *ngIf="isYou() && (!user.friends || user.friends.length === 0)" fxLayout="column" fxLayoutAlign="center center">
     <p>{{'NoFriends' | transloco }}</p>
-    <p>{{'FindFriendsAt' | transloco }} <a [routerLink]="['/drinkers']">{{'Drinkers' | transloco }}</a></p>
+    <p>{{'FindFriendsAt' | transloco }}</p>
+    <button mat-raised-button [routerLink]="['/users']">
+      <mat-icon color="primary">people</mat-icon>{{'Drinkers' | transloco }}
+    </button>
   </div>
 </div>

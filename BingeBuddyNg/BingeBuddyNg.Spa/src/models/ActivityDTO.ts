@@ -17,6 +17,7 @@ export class ActivityDTO {
     drinkType?: DrinkType;
     drinkName?: string;
     drinkCount?: number;
+    alcLevel?: number;
     imageUrl?: string;
     venue?: VenueModel;
     likes: ReactionDTO[];

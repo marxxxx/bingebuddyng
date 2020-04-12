@@ -17,7 +17,7 @@ export class StatisticsService {
   }
 
   getPersonalUsagePerWeekDay(userId: string): Observable<PersonalUsagePerWeekdayDTO[]> {
-    const url = `${environment.BaseDataUrl}/User/${userId}/personalusageperweekday`;
+    const url = `${environment.BaseDataUrl}/User/${userId}/statistics/personalusageperweekday`;
     return this.http.get<PersonalUsagePerWeekdayDTO[]>(url);
   }
 }

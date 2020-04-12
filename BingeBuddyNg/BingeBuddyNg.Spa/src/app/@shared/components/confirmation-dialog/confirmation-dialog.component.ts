@@ -13,8 +13,6 @@ export class ConfirmationDialogComponent implements OnInit {
   // construction
   //////////////////////////////////////////////////////////////////////////////
   constructor(@Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogArgs) {
-    console.log('confirmation dialog created');
-    console.log(data);
   }
 
   //////////////////////////////////////////////////////////////////////////////

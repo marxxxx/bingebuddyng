@@ -16,12 +16,13 @@ namespace BingeBuddyNg.Shared
             public const string ActivityAdded = "activity-added";
             public const string ReactionAdded = "reaction-added";
             public const string UserRenamed = "user-renamed";
+            public const string DeleteUser = "delete-user";
         }
 
         public static class Urls
         {
             public const string ApplicationIconUrl = "https://bingebuddystorage.z6.web.core.windows.net/favicon.ico";
-            public const string FriendRequestApplicationUrl = "https://bingebuddy.azureedge.net/friendrequests";
+            public const string FriendRequestApplicationUrl = "https://bingebuddy.azureedge.net/users/friendrequests";
             public const string ApplicationUrl = "https://bingebuddy.azureedge.net";
         }
 

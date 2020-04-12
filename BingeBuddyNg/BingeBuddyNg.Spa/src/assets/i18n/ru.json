@@ -136,31 +136,41 @@
     "Reactions": "Реакции",
     "Close": "близко",
 
-    "Onboarding_Navmenu_Entry": "Руководство",
-    "Onboarding_Heading": "О чем это все?",
-    "Onboarding_Label_Activitys": "мероприятия",
-    "Onboarding_Description_Activitys": "Введите напитки, используя символ «плюс», загрузите фотографии и видео и покажите, где вы в настоящее время пьете, войдя в бар.",
-    "Onboarding_Label_Navmenu": "навигация",
-    "Onboarding_Description_Navmenu": "Откройте меню навигации, чтобы узнать, что вы можете сделать.",
-    "Onboarding_Label_Drinkers": "Пьющие",
-    "Onboarding_Description_Drinkers": "Найдите друзей в представлении пьющих.",
-    "Onboarding_Label_Stats": "Статистика",
-    "Onboarding_Description_Stats": "Получить богатую статистику о ваших привычках питья.",
-    "Onboarding_Label_Map": "Карта питья",
-    "Onboarding_Description_Map": "Узнайте, где ваши друзья в настоящее время пьют.",
-    "Onboarding_Label_Profile": "Твой профиль",
-    "Onboarding_Description_Profile": "Измените свое имя и загрузите изображение профиля.",
-    "Onboarding_Label_Drinks": "Любимые напитки",
-    "Onboarding_Description_Drinks": "Создайте свои любимые напитки для использования в приложении.",
-    "Onboarding_Label_Completed": "Выполнено",
-    "Onboarding_Done": "Поздравляем! Вы сделали это до сих пор!",
-    "Onboarding_Done_Message":"Позволь мне выпить сейчас",
-    "Onboarding_Next": "хорошо",
+    "Onboarding": {
+      "AcceptConditions":"Я согласен с тем, что мои данные будут сохранены и файлы cookie будут использованы.",
+      "Navmenu_Entry": "Руководство",
+      "Heading": "О чем это все?",
+      "Label_Activitys": "мероприятия",
+      "Description_Activitys": "Введите напитки, используя символ «плюс», загрузите фотографии и видео и покажите, где вы в настоящее время пьете, войдя в бар.",
+      "Label_Navmenu": "навигация",
+      "Description_Navmenu": "Откройте меню навигации, чтобы узнать, что вы можете сделать.",
+      "Label_Drinkers": "Пьющие",
+      "Description_Drinkers": "Найдите друзей в представлении пьющих.",
+      "Label_Stats": "Статистика",
+      "Description_Stats": "Получить богатую статистику о ваших привычках питья.",
+      "Label_Map": "Карта питья",
+      "Description_Map": "Узнайте, где ваши друзья в настоящее время пьют.",
+      "Label_Profile": "Твой профиль",
+      "Description_Profile": "Измените свое имя и загрузите изображение профиля.",
+      "Label_Drinks": "Любимые напитки",
+      "Description_Drinks": "Создайте свои любимые напитки для использования в приложении.",
+      "Label_Completed": "Выполнено",
+      "Done": "Поздравляем! Вы сделали это до сих пор!",
+      "Done_Message":"Позволь мне выпить сейчас",
+      "Next": "хорошо"
+    },
 
     "Total":"Общее количество",
 
     "UsagePerWeekDay": "Пьянство за будний день",
 
     "MedianMaxAlcLevel": "пьянство",
-    "Probability": "вероятность"
+    "Probability": "вероятность",
+
+    "UserProfile": {
+      "Edit": "редактировать",
+      "DeleteProfile": "удалить профиль",
+      "ProfileDeletionRequested": "Ваш профиль был помечен для удаления. Вы всегда можете вернуться, но вы должны начать свою карьеру с 0.",
+      "ReallyDeleteProfile": "Вы уверены, что хотите полностью удалить свой профиль? Это не может быть отменено!"
+    }
 }

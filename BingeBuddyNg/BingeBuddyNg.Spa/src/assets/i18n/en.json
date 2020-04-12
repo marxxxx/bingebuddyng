@@ -135,31 +135,41 @@
     "Reactions": "Reactions",
     "Close": "Close",
 
-    "Onboarding_Navmenu_Entry": "Tutorial",
-    "Onboarding_Heading": "What's this all about?",
-    "Onboarding_Label_Activitys": "Activities",
-    "Onboarding_Description_Activitys": "Enter drinks using the plus-symbol, upload pics and videos and show where you are currently drinking by entering a bar.",
-    "Onboarding_Label_Navmenu": "Navigation",
-    "Onboarding_Description_Navmenu": "Open the navigation menu to explore what you can do.",
-    "Onboarding_Label_Drinkers": "Drinkers",
-    "Onboarding_Description_Drinkers": "Find friends in the drinkers view.",
-    "Onboarding_Label_Stats": "Statistics",
-    "Onboarding_Description_Stats": "Get rich statistics about your drinking habits.",
-    "Onboarding_Label_Map": "Drinker map",
-    "Onboarding_Description_Map": "Find out where your friends are currently drinking.",
-    "Onboarding_Label_Profile": "Your profile",
-    "Onboarding_Description_Profile": "Change your name and upload a profile image.",
-    "Onboarding_Label_Drinks": "Favorite drinks",
-    "Onboarding_Description_Drinks": "Create your favorite drinks for use within the application.",
-    "Onboarding_Label_Completed": "Done",
-    "Onboarding_Done": "Congrats! You've made it so far!",
-    "Onboarding_Done_Message":"Let me have a drink now",
-    "Onboarding_Next": "alright",
+    "Onboarding": {
+      "AcceptConditions": "I accept that my data will be saved and cookies are used.",
+      "Navmenu_Entry": "Tutorial",
+      "Heading": "What's this all about?",
+      "Label_Activitys": "Activities",
+      "Description_Activitys": "Enter drinks using the plus-symbol, upload pics and videos and show where you are currently drinking by entering a bar.",
+      "Label_Navmenu": "Navigation",
+      "Description_Navmenu": "Open the navigation menu to explore what you can do.",
+      "Label_Drinkers": "Drinkers",
+      "Description_Drinkers": "Find friends in the drinkers view.",
+      "Label_Stats": "Statistics",
+      "Description_Stats": "Get rich statistics about your drinking habits.",
+      "Label_Map": "Drinker map",
+      "Description_Map": "Find out where your friends are currently drinking.",
+      "Label_Profile": "Your profile",
+      "Description_Profile": "Change your name and upload a profile image.",
+      "Label_Drinks": "Favorite drinks",
+      "Description_Drinks": "Create your favorite drinks for use within the application.",
+      "Label_Completed": "Done",
+      "Done": "Congrats! You've made it so far!",
+      "Done_Message":"Let me have a drink now",
+      "Next": "alright"
+    },
 
     "Total":"Total",
 
     "UsagePerWeekDay": "Drunkenness per week day",
 
     "MedianMaxAlcLevel": "Median max. alcohol level",
-    "Probability": "Probability"
+    "Probability": "Probability",
+
+    "UserProfile": {
+      "Edit": "edit",
+      "DeleteProfile": "delete profile",
+      "ProfileDeletionRequested": "Your profile has been marked for deletion. You can come back anytime but you will have to start your drinking carreer from scratch.",
+      "ReallyDeleteProfile": "Do you really want to delete your profile? This can not be undone!"
+    }
 }

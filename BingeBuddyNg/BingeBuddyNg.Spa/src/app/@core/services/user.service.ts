@@ -46,6 +46,11 @@ export class UserService {
     return this.http.put(url, {});
   }
 
+  deleteMyself(): Observable<any> {
+    const url = `${this.baseUrl}/myself`;
+    return this.http.delete(url);
+  }
+
   getProfileImageUrl(userId: string): string {
     return `https://bingebuddystorage.blob.core.windows.net/profileimg/${userId}?t=${this.timestamp}`;
   }

@@ -21,7 +21,10 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/manifest.json"
+              "src/manifest.json",
+              "src/custom-service-worker.js",
+              "src/google88a7afe04db086b7.html",
+              "src/.well-known"
             ],
             "styles": [
               {
@@ -30,7 +33,7 @@
               "src/styles.scss"
             ],
             "scripts": [
-              
+
             ]
           },
           "configurations": {
@@ -38,7 +41,7 @@
               "budgets": [
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
+                  "maximumWarning": "70kb"
                 }
               ],
               "fileReplacements": [

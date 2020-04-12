@@ -1,4 +1,4 @@
-<h3>{{'Onboarding_Heading' | transloco }}</h3>
+<h3>{{'Onboarding.Heading' | transloco }}</h3>
 <mat-vertical-stepper>
   <mat-step *ngFor="let s of steps" [label]="s.label | transloco">
     <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="5px">
@@ -7,20 +7,25 @@
       <img fxFlex="50" [src]="s.image">
       <button class="right" mat-raised-button matStepperNext color="primary">
         <mat-icon>done</mat-icon>
-        <span>{{'Onboarding_Next' | transloco }}</span>
+        <span>{{'Onboarding.Next' | transloco }}</span>
       </button>
     </div>
   </mat-step>
-  <mat-step [label]="'Onboarding_Label_Completed' | transloco">
+  <mat-step [label]="'Onboarding.Label_Completed' | transloco">
     <div fxLayout="column" fxLayoutAlign="center center">
       <mat-icon class="yellow">done</mat-icon>
-      <p>{{'Onboarding_Done' | transloco }}</p>
-      <button mat-raised-button [routerLink]="['/activity-feed']"
-        color="primary">{{'Onboarding_Done_Message' | transloco }}</button>
+      <p>{{'Onboarding.Done' | transloco }}</p>
+      <p (click)="acceptConditions = true">
+        <mat-checkbox *ngIf="!isAlreadyOnboarded" color="primary" [(ngModel)]="acceptConditions"></mat-checkbox>
+        {{'Onboarding.AcceptConditions'  | transloco }}
+      </p>
+
+      <button mat-raised-button [disabled]="!acceptConditions && !isAlreadyOnboarded" (click)="onOnboardingFinished()"
+        color="primary">{{'Onboarding.Done_Message' | transloco }}</button>
     </div>
   </mat-step>
 
   <ng-template matStepperIcon="done">
-      <mat-icon>done_all</mat-icon>
-    </ng-template>
+    <mat-icon>done_all</mat-icon>
+  </ng-template>
 </mat-vertical-stepper>

@@ -59,9 +59,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   highlightedActivityId: string;
   pendingDrinkType: DrinkType;
 
-  @ViewChild('#activity-container', { static: false })
-  container: any;
-
   @ViewChildren(MatTooltip)
   tooltips: MatTooltip[];
 

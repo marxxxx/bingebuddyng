@@ -24,3 +24,12 @@ button[mat-raised-button] {
   min-width: 80%;
   width: 80%;
 }
+
+.center {
+  text-align: center;
+}
+
+.context-menu {
+  position: absolute;
+  right: 10px;
+}

@@ -1,6 +1,6 @@
 <ng-container *ngIf="userInfo">
   <div fxLayout fxLayoutAlign="start center" [routerLink]="['/users/profile', userInfo.userId]">
-    <img [src]="getProfileImageUrl()" class="avatar" />
+    <img [src]="getProfileImageUrl()" class="avatar" [ngStyle]="{filter: getFilter(), transform: getTransform()}" />
     <p *ngIf="showName">{{ userInfo.userName }}</p>
   </div>
 </ng-container>
