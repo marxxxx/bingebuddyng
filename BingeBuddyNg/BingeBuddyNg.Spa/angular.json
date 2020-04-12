@@ -22,7 +22,9 @@
               "src/favicon.ico",
               "src/assets",
               "src/manifest.json",
-              "src/custom-service-worker.js"
+              "src/custom-service-worker.js",
+              "src/google88a7afe04db086b7.html",
+              "src/.well-known"
             ],
             "styles": [
               {

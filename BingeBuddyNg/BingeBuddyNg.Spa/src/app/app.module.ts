@@ -37,7 +37,7 @@ import { TranslocoModule, TRANSLOCO_CONFIG, TranslocoConfig } from '@ngneat/tran
     SharedModule,
     ActivityModule,
     OnboardingModule,
-    ServiceWorkerModule.register('custom-ngsw-worker.js', {
+    ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production
     }),
     TranslocoModule

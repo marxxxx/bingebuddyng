@@ -110,9 +110,5 @@ namespace BingeBuddyNg.Services.Activity.Querys
             var result = await this.ActivityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(request.UserId, ActivityFilterOptions.WithLocation, pageSize: 50));
             return result.ResultPage?.Select(a=> a.ToDto()).ToList();
         }
-
-
-       
-
     }
 }

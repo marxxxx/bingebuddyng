@@ -54,8 +54,8 @@ namespace BingeBuddyNg.Services
         private static void AddConfiguration(IServiceCollection services, IConfiguration configuration)
         {
             string eventHubConnectionString = configuration.GetConnectionString("EventHub");
-            string fourSquareApiClientKey = configuration.GetValue<string>("Credentials:FourSquareApiClientKey");
-            string fourSquareApiClientSecret = configuration.GetValue<string>("Credentials:FourSquareApiClientSecret");
+            string fourSquareApiClientKey = configuration.GetValue<string>("FourSquareApiClientKey");
+            string fourSquareApiClientSecret = configuration.GetValue<string>("FourSquareApiClientSecret");
 
             services.AddSingleton(new FourSquareConfiguration(fourSquareApiClientKey, fourSquareApiClientSecret));
             services.AddSingleton(new MessagingConfiguration(eventHubConnectionString));
@@ -63,8 +63,8 @@ namespace BingeBuddyNg.Services
 
         public static void AddNotification(this IServiceCollection services, IConfiguration configuration)
         {
-            string webPushPrivateKey = configuration.GetValue<string>("Credentials:WebPushPrivateKey");
-            string webPushPublicKey = configuration.GetValue<string>("Credentials:WebPushPublicKey");
+            string webPushPrivateKey = configuration.GetValue<string>("WebPushPrivateKey");
+            string webPushPublicKey = configuration.GetValue<string>("WebPushPublicKey");
             services.AddSingleton(new WebPushConfiguration(webPushPublicKey, webPushPrivateKey));
 
             services.AddTransient<INotificationService, NotificationService>();
@@ -82,7 +82,7 @@ namespace BingeBuddyNg.Services
 
         public static void AddUtility(this IServiceCollection services, IConfiguration configuration)
         {
-            string googleApiKey = configuration.GetValue<string>("Credentials:GoogleApiKey");
+            string googleApiKey = configuration.GetValue<string>("GoogleApiKey");
             services.AddSingleton(new GoogleApiConfiguration(googleApiKey));
 
             services.AddTransient<IUtilityService, UtilityService>();

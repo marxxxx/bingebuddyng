@@ -15,13 +15,17 @@
     <div fxLayout="column" fxLayoutAlign="center center">
       <mat-icon class="yellow">done</mat-icon>
       <p>{{'Onboarding.Done' | transloco }}</p>
-      <mat-checkbox *ngIf="!isAlreadyOnboarded" color="primary" [(ngModel)]="acceptConditions">{{'Onboarding.AcceptConditions'  | transloco }}</mat-checkbox>
+      <p (click)="acceptConditions = true">
+        <mat-checkbox *ngIf="!isAlreadyOnboarded" color="primary" [(ngModel)]="acceptConditions"></mat-checkbox>
+        {{'Onboarding.AcceptConditions'  | transloco }}
+      </p>
+
       <button mat-raised-button [disabled]="!acceptConditions && !isAlreadyOnboarded" (click)="onOnboardingFinished()"
         color="primary">{{'Onboarding.Done_Message' | transloco }}</button>
     </div>
   </mat-step>
 
   <ng-template matStepperIcon="done">
-      <mat-icon>done_all</mat-icon>
-    </ng-template>
+    <mat-icon>done_all</mat-icon>
+  </ng-template>
 </mat-vertical-stepper>
