@@ -1,16 +1,17 @@
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { SwPush, SwUpdate } from '@angular/service-worker';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslocoService } from '@ngneat/transloco';
+import { Subscription, combineLatest, from } from 'rxjs';
+import { filter } from 'rxjs/operators';
+
 import { UserProfile } from './../models/UserProfile';
 import { UserService } from './@core/services/user.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from './@core/services/auth.service';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { TranslocoService } from '@ngneat/transloco';
-import { SwPush, SwUpdate } from '@angular/service-worker';
 import { PushInfo } from '../models/PushInfo';
 import { NotificationService } from './@core/services/notification.service';
-import { Subscription, combineLatest, from } from 'rxjs';
 import { InvitationService } from './invitation/services/invitation.service';
 import { SettingsService } from './@core/services/settings.service';
-import { filter } from 'rxjs/operators';
 import { CreateOrUpdateUserDTO } from 'src/models/CreateOrUpdateUserDTO';
 import { credentials } from 'src/environments/credentials';
 

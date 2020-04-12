@@ -1,18 +1,20 @@
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { FileUploader, FileUploaderOptions, FileItem } from 'ng2-file-upload';
+import { Subscription, combineLatest } from 'rxjs';
+import { filter } from 'rxjs/internal/operators/filter';
+import { TranslocoService } from '@ngneat/transloco';
+
 import { CreateOrUpdateUserDTO } from 'src/models/CreateOrUpdateUserDTO';
 import { ProfileImageDialogComponent } from './../profile-image-dialog/profile-image-dialog.component';
 import { ShellInteractionService } from '../../../@core/services/shell-interaction.service';
-import { TranslocoService } from '@ngneat/transloco';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { FriendRequestService } from '../../../@core/services/friendrequest.service';
-import { Subscription, combineLatest } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+
 import { UserService } from '../../../@core/services/user.service';
 import { AuthService } from '../../../@core/services/auth.service';
 import { UserDTO } from '../../../../models/UserDTO';
-import { filter } from 'rxjs/internal/operators/filter';
-import { FileUploader, FileUploaderOptions, FileItem } from 'ng2-file-upload';
 import { ProfileImageDialogArgs } from '../profile-image-dialog/ProfileImageDialogArgs';
 import { ConfirmationDialogArgs } from 'src/app/@shared/components/confirmation-dialog/ConfirmationDialogArgs';
 
