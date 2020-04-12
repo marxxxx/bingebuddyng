@@ -1,8 +1,10 @@
-﻿using MediatR;
+﻿using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.User;
+using MediatR;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services.Activity.Commands
 {
@@ -28,6 +30,40 @@ namespace BingeBuddyNg.Services.Activity.Commands
         public override string ToString()
         {
             return $"{{{nameof(Stream)}={Stream}, {nameof(FileName)}={FileName}, {nameof(Location)}={Location}}}";
+        }
+    }
+
+    public class AddImageActivityCommandHandler :
+           IRequestHandler<AddImageActivityCommand, string>
+    {
+        private readonly IUserRepository userRepository;
+        private readonly IActivityRepository activityRepository;
+        private readonly IStorageAccessService storageAccessService;
+
+        public AddImageActivityCommandHandler(
+            IUserRepository userRepository,
+            IActivityRepository activityRepository,
+            IStorageAccessService storageAccessService)
+        {
+            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
+        }
+
+        public async Task<string> Handle(AddImageActivityCommand request, CancellationToken cancellationToken)
+        {
+            var user = await this.userRepository.FindUserAsync(request.UserId);
+
+            // store file in blob storage
+            string imageUrlOriginal = await storageAccessService.SaveFileInBlobStorage("img", "activities", request.FileName, request.Stream);
+
+            var activity = Activity.CreateImageActivity(DateTime.UtcNow, request.Location, request.UserId, user.Name, imageUrlOriginal);
+
+            var savedActivity = await this.activityRepository.AddActivityAsync(activity);
+
+            await activityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
+
+            return savedActivity.Id;
         }
     }
 }
