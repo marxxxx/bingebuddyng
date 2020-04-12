@@ -256,7 +256,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
       .pipe(filter(isConfirmed => isConfirmed))
       .subscribe(() => {
         this.userService.deleteMyself().subscribe(() => {
-          this.shellInteraction.showMessage('UserProfile.ProfileDeletionRequested');
+          this.shellInteraction.showMessage('UserProfile.ProfileDeletionRequested')
+            .subscribe(() => {
+              this.auth.logout();
+            });
         }, e => {
           this.shellInteraction.showErrorMessage();
         });

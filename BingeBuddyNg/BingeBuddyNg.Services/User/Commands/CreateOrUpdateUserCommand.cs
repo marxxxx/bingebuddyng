@@ -1,4 +1,5 @@
 ﻿using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Infrastructure;
 using MediatR;
 using System;
@@ -30,13 +31,20 @@ namespace BingeBuddyNg.Services.User.Commands
     public class CreateOrUpdateUserCommandHandler : IRequestHandler<CreateOrUpdateUserCommand>
     {
         private readonly IUserRepository userRepository;
+        private readonly IDrinkRepository drinkRepository;
         private readonly IActivityRepository activityRepository;
         private readonly IHttpClientFactory httpClientFactory;
         private readonly IStorageAccessService storageAccessService;
 
-        public CreateOrUpdateUserCommandHandler(IUserRepository userRepository, IActivityRepository activityRepository, IHttpClientFactory httpClientFactory, IStorageAccessService storageAccessService)
+        public CreateOrUpdateUserCommandHandler(
+            IUserRepository userRepository, 
+            IDrinkRepository drinkRepository,
+            IActivityRepository activityRepository, 
+            IHttpClientFactory httpClientFactory, 
+            IStorageAccessService storageAccessService)
         {
             this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.drinkRepository = drinkRepository ?? throw new ArgumentNullException(nameof(drinkRepository));
             this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
             this.httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
             this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
@@ -47,6 +55,7 @@ namespace BingeBuddyNg.Services.User.Commands
             var result = await this.userRepository.CreateOrUpdateUserAsync(request);
             if (result.IsNewUser)
             {
+                await this.drinkRepository.CreateDefaultDrinksForUserAsync(request.UserId);
 
                 if (!string.IsNullOrEmpty(request.ProfileImageUrl))
                 {
@@ -60,7 +69,6 @@ namespace BingeBuddyNg.Services.User.Commands
                 await activityRepository.AddActivityAsync(Activity.Activity.CreateRegistrationActivity(
                     User.BingeBuddyUserId, User.BingeBuddyUserName, new UserInfo(request.UserId, request.Name)));
             }
-
 
             if (result.NameHasChanged)
             {

@@ -43,15 +43,7 @@ namespace BingeBuddyNg.Services.Drink
             }
             else
             {
-                var resultDrinks = drinks.Select(d => d.ToDrink()).ToList();
-                foreach(var drink in defaultDrinks)
-                {
-                    if(resultDrinks.Any(d=>d.DrinkType == drink.DrinkType) == false)
-                    {
-                        resultDrinks.Add(drink);
-                    }
-                }
-                return resultDrinks;
+                return drinks.Select(d => d.ToDrink()).ToList();
             }
         }
 
@@ -78,6 +70,12 @@ namespace BingeBuddyNg.Services.Drink
             var table = storageAccessService.GetTableReference(TableName);
 
             await table.ExecuteBatchAsync(batch);
+        }
+
+        public async Task CreateDefaultDrinksForUserAsync(string userId)
+        {
+            var defaultDrinksForUser = defaultDrinks.Select(d => new Drink(null, d.DrinkType, d.Name, d.AlcPrc, d.Volume));
+            await SaveDrinksAsync(userId, defaultDrinksForUser);
         }
 
         public async Task DeleteDrinkAsync(string userId, string drinkId)

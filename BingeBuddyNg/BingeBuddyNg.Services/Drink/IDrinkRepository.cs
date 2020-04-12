@@ -9,6 +9,8 @@ namespace BingeBuddyNg.Services.Drink
 
         Task<Drink> GetDrinkAsync(string userId, string drinkId);
 
+        Task CreateDefaultDrinksForUserAsync(string userId);
+
         Task SaveDrinksAsync(string userId, IEnumerable<Drink> drinks);
 
         Task DeleteDrinkAsync(string userId, string drinkId);
