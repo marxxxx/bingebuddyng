@@ -6,7 +6,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ActivityAggregationDTO } from 'src/models/ActivityAggregationDTO';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
-import { AuthService } from 'src/app/@core/services/auth.service';
+import { AuthService } from 'src/app/@core/services/auth/auth.service';
 import { UserProfile } from 'src/models/UserProfile';
 import { UserStatisticHistoryDTO } from '../../services/UserStatisticHistoryDTO';
 import { filter, tap, finalize } from 'rxjs/operators';

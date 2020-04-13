@@ -13,7 +13,7 @@ import { ShellInteractionService } from '../../../@core/services/shell-interacti
 import { FriendRequestService } from '../../../@core/services/friendrequest.service';
 
 import { UserService } from '../../../@core/services/user.service';
-import { AuthService } from '../../../@core/services/auth.service';
+import { AuthService } from '../../../@core/services/auth/auth.service';
 import { UserDTO } from '../../../../models/UserDTO';
 import { ProfileImageDialogArgs } from '../profile-image-dialog/ProfileImageDialogArgs';
 import { ConfirmationDialogArgs } from 'src/app/@shared/components/confirmation-dialog/ConfirmationDialogArgs';
@@ -40,7 +40,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   @ViewChild('fileUpload', { static: false })
   fileUpload: ElementRef;
 
-
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
@@ -54,14 +53,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initFileUploader();
-    console.log('on init called');
-    const sub = combineLatest([this.route.paramMap, this.auth.currentUserProfile$.pipe(filter(p => p != null))]).subscribe(result => {
-      console.log('got information for profile page', result);
-      this.userId = decodeURIComponent(result[0].get('userId'));
-      this.currentUserId = this.auth.currentUserProfile$.value.sub;
+    const sub = combineLatest([this.route.paramMap, this.auth.currentUserProfile$.pipe(filter(p => p != null))])
+      .subscribe(([paramMap, profile]) => {
+        console.log('got information for profile page', profile);
+        this.userId = decodeURIComponent(paramMap.get('userId'));
+        this.currentUserId = profile.sub;
 
-      this.load();
-    });
+        this.load();
+      });
 
     this.subscriptions.push(sub);
   }

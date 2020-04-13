@@ -19,7 +19,7 @@ import { MessageDialogComponent } from '../message-dialog/message-dialog.compone
 import { DrinkType } from '../../../../models/DrinkType';
 import { ActivityStatsDTO } from '../../../../models/ActivityStatsDTO';
 import { ActivityService } from '../../services/activity.service';
-import { AuthService } from '../../../@core/services/auth.service';
+import { AuthService } from '../../../@core/services/auth/auth.service';
 import { AddMessageActivityDTO } from '../../../../models/AddMessageActivityDTO';
 
 import { ShellInteractionService } from '../../../@core/services/shell-interaction.service';

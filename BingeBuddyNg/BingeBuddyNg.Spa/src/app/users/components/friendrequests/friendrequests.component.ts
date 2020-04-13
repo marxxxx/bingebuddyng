@@ -4,7 +4,7 @@ import { Subscription, combineLatest } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 import { StateService } from '../../../@core/services/state.service';
-import { AuthService } from '../../../@core/services/auth.service';
+import { AuthService } from '../../../@core/services/auth/auth.service';
 import { UserInfoDTO } from '../../../../models/UserInfoDTO';
 import { FriendRequestService } from '../../../@core/services/friendrequest.service';
 

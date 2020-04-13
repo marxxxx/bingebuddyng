@@ -40,12 +40,13 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+      <button *ngIf="auth.isLoggedIn$ | async" type="button" aria-label="Toggle sidenav" mat-icon-button
+        (click)="drawer.toggle()">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
 
       <span>{{'ApplicationName' | transloco}}</span>
-      <div class="right" fxLayout fxLayoutAlign="space-between center">
+      <div *ngIf="auth.isLoggedIn$ | async" class="right" fxLayout fxLayoutAlign="space-between center">
         <!-- Drink Event counter-->
         <app-drink-event-counter></app-drink-event-counter>
         <!-- Friendsrequests -->
@@ -53,7 +54,7 @@
           <mat-icon [matBadge]="friendRequests.length" matBadgeColor="warn">sentiment_satisfied_alt</mat-icon>
         </button>
 
-        <app-me *ngIf="auth.isLoggedIn$ | async"></app-me>
+        <app-me></app-me>
       </div>
     </mat-toolbar>
     <div class="content-container">
