@@ -22,7 +22,7 @@ import { credentials } from 'src/environments/credentials';
 })
 export class AppComponent implements OnInit, OnDestroy {
   private pushInfo: PushInfo;
-  private sub: Subscription;
+  private sub: Subscription = new Subscription();
   private userProfile: UserProfile;
   private userLanguage: string;
 
@@ -50,33 +50,28 @@ export class AppComponent implements OnInit, OnDestroy {
 
     console.log('ngOnInit - passed invitation check');
 
-    combineLatest([
+    this.sub.add(combineLatest([
       this.auth.currentUserProfile$.pipe(filter(userProfile => userProfile != null)),
       from(this.pushService
         .requestSubscription({
           serverPublicKey: credentials.vapidPublicKey
         }))
-    ]).subscribe(r => {
-      console.log('ngOnInit - got user and subscription', r);
+    ]).subscribe(([profile, pushSubscription]) => {
+      console.log('ngOnInit - got user and subscription', profile, pushSubscription);
 
-      this.userProfile = r[0];
-      const sub = r[1];
-      console.log('Subscription received', sub);
+      this.userProfile = profile;
+      console.log('Subscription received', pushSubscription);
 
-      this.pushInfo = this.getPushInfo(sub);
+      this.pushInfo = this.getPushInfo(pushSubscription);
       this.registerUser(this.pushInfo);
-    });
+
+    }));
 
     this.handleInvitations();
 
-    this.notification.start().then(s => {
-      console.log('notification registered');
-    });
-
-
     console.log('ngOnInit - before subscribing to updates');
     // subscribe to PWA updates
-    this.updateService.available.subscribe(e => {
+    this.sub.add(this.updateService.available.subscribe(e => {
       const message = this.translate.translate('UpdateAvailableMessage');
       this.snackbar
         .open(message, 'OK')
@@ -84,15 +79,21 @@ export class AppComponent implements OnInit, OnDestroy {
         .subscribe(r => {
           location.reload();
         });
-    });
+    }));
+
+    // we need to be logged in before subscribing to the signalR endpoint
+    // because this will need an authenticated user in to manage personalized connections
+    this.sub.add(this.auth.isLoggedIn$.pipe(filter(isLoggedIn => isLoggedIn))
+      .subscribe(() => {
+        this.notification.start().then(s => {
+          console.log('notification registered');
+        });
+      }));
   }
 
 
   ngOnDestroy() {
-    if (this.sub) {
-      this.sub.unsubscribe();
-      this.sub = null;
-    }
+    this.sub.unsubscribe();
   }
 
 
