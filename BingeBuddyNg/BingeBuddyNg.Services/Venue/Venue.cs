@@ -4,13 +4,13 @@ using BingeBuddyNg.Services.Activity;
 
 namespace BingeBuddyNg.Services.Venue
 {
-    public class VenueModel
+    public class Venue
     {
-        public VenueModel()
+        public Venue()
         {
         }
 
-        public VenueModel(string id, Location location, string name, int distance)
+        public Venue(string id, Location location, string name, int distance)
         {
             this.Id = id ?? throw new ArgumentNullException(nameof(id));
             Location = location ?? throw new ArgumentNullException(nameof(location));
@@ -25,7 +25,7 @@ namespace BingeBuddyNg.Services.Venue
 
         public override bool Equals(object obj)
         {
-            var model = obj as VenueModel;
+            var model = obj as Venue;
             return model != null &&
                    Id == model.Id;
         }

@@ -1,5 +1,5 @@
 import { TranslocoService } from '@ngneat/transloco';
-import { AuthService } from '../../../@core/services/auth.service';
+import { AuthService } from '../../../@core/services/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '../../services/invitation.service';
 import { Component, OnInit } from '@angular/core';
@@ -20,9 +20,7 @@ export class WelcomeInvitedComponent implements OnInit {
   constructor(private invitationService: InvitationService,
     private auth: AuthService,
     private route: ActivatedRoute,
-    private router: Router,
-    private snackbar: MatSnackBar,
-    private translateService: TranslocoService) { }
+    private router: Router) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(p => {

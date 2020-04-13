@@ -1,7 +1,7 @@
 
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { AuthService } from './auth.service';
+import { AuthService } from './auth/auth.service';
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpHandler, HttpEvent, HttpRequest, HttpHeaders, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 

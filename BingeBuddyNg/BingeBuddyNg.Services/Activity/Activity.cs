@@ -27,7 +27,7 @@ namespace BingeBuddyNg.Services.Activity
         public string ImageUrl { get; set; }
         public string CountryLongName { get; set; }
         public string CountryShortName { get; set; }
-        public VenueModel Venue { get; set; }
+        public Venue.Venue Venue { get; set; }
 
         public UserInfo RegistrationUser { get; set; }
 
@@ -133,7 +133,7 @@ namespace BingeBuddyNg.Services.Activity
 
 
         public static Activity CreateVenueActivity(DateTime activityTimestamp,
-           string userId, string userName, string message, VenueModel venue, VenueAction action)
+           string userId, string userName, string message, Venue.Venue venue, VenueAction action)
         {
             if (action == VenueAction.Unknown)
             {

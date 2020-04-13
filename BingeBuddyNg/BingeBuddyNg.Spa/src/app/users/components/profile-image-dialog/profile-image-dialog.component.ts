@@ -1,5 +1,6 @@
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, OnInit, Inject } from '@angular/core';
+
 import { ProfileImageDialogArgs } from './ProfileImageDialogArgs';
 
 @Component({

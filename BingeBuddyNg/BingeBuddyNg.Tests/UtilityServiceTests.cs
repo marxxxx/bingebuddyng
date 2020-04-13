@@ -3,7 +3,6 @@ using BingeBuddyNg.Services.Infrastructure;
 using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
@@ -12,7 +11,6 @@ namespace BingeBuddyNg.Tests
 {
     public class UtilityServiceTests
     {
-        [Fact]
         public async Task Get_Location_From_Lat_Long_Returns_Complete_Result()
         {
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
@@ -28,8 +26,7 @@ namespace BingeBuddyNg.Tests
             Assert.NotNull(address.CountryShortName);
         }
 
-        [Fact]
-        public async Task DeserializeInCamelCase()
+        public void DeserializeInCamelCase()
         {
             var activity = new ActivityDTO();
             var contractResolver = new DefaultContractResolver

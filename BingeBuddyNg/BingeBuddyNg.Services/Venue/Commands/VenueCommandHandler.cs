@@ -12,32 +12,32 @@ namespace BingeBuddyNg.Services.Venue.Commands
         IRequestHandler<EnterVenueCommand>,
         IRequestHandler<LeaveVenueCommand>
     {
-        public IUserRepository UserRepository { get; }
-        public IVenueUserRepository VenueUserRepository { get; }
-        public ITranslationService TranslationService { get; }
-        public IActivityRepository ActivityRepository { get; }
+        private readonly IUserRepository userRepository;
+        private readonly IVenueUserRepository venueUserRepository;
+        private readonly ITranslationService translationService;
+        private readonly IActivityRepository activityRepository;
 
         public VenueCommandHandler(IUserRepository userRepository, IVenueUserRepository venueUserRepository, ITranslationService translationService, IActivityRepository activityRepository)
         {
-            UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            VenueUserRepository = venueUserRepository ?? throw new ArgumentNullException(nameof(venueUserRepository));
-            TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
-            ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.venueUserRepository = venueUserRepository ?? throw new ArgumentNullException(nameof(venueUserRepository));
+            this.translationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
+            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
         }
 
         public async Task<Unit> Handle(EnterVenueCommand request, CancellationToken cancellationToken)
         {
-            var user = await this.UserRepository.FindUserAsync(request.UserId);
+            var user = await this.userRepository.FindUserAsync(request.UserId);
             if (user.CurrentVenue != request.Venue)
             {
                 user.CurrentVenue = request.Venue;
 
-                var message = await TranslationService.GetTranslationAsync(user.Language, "PersonalVenueEnterActivityMessage", request.Venue.Name);
+                var message = await translationService.GetTranslationAsync(user.Language, "PersonalVenueEnterActivityMessage", request.Venue.Name);
 
                 var tasks = new[]
                 {
-                    this.UserRepository.UpdateUserAsync(user),
-                    this.VenueUserRepository.AddUserToVenueAsync(request.Venue.Id, request.Venue.Name, request.UserId, user.Name),
+                    this.userRepository.UpdateUserAsync(user),
+                    this.venueUserRepository.AddUserToVenueAsync(request.Venue.Id, request.Venue.Name, request.UserId, user.Name),
                     this.AddVenueActivityAsync(new AddVenueActivityDTO(user.Id, message, request.Venue, VenueAction.Enter))
                 };
 
@@ -49,18 +49,18 @@ namespace BingeBuddyNg.Services.Venue.Commands
 
         public async Task<Unit> Handle(LeaveVenueCommand request, CancellationToken cancellationToken)
         {
-            var user = await this.UserRepository.FindUserAsync(request.UserId);
+            var user = await this.userRepository.FindUserAsync(request.UserId);
             var currentVenue = user.CurrentVenue;
 
             if (currentVenue != null)
             {
                 user.CurrentVenue = null;
-                var message = await TranslationService.GetTranslationAsync(user.Language, "PersonalVenueLeaveActivityMessage", currentVenue.Name);
+                var message = await translationService.GetTranslationAsync(user.Language, "PersonalVenueLeaveActivityMessage", currentVenue.Name);
 
                 var tasks = new[]
                 {
-                    this.UserRepository.UpdateUserAsync(user),
-                    this.VenueUserRepository.RemoveUserFromVenueAsync(currentVenue.Id, request.UserId),
+                    this.userRepository.UpdateUserAsync(user),
+                    this.venueUserRepository.RemoveUserFromVenueAsync(currentVenue.Id, request.UserId),
                     this.AddVenueActivityAsync(new AddVenueActivityDTO(user.Id, message, currentVenue, VenueAction.Leave))
                 };
 
@@ -72,13 +72,13 @@ namespace BingeBuddyNg.Services.Venue.Commands
 
         private async Task AddVenueActivityAsync(AddVenueActivityDTO activity)
         {
-            var user = await this.UserRepository.FindUserAsync(activity.UserId);
+            var user = await this.userRepository.FindUserAsync(activity.UserId);
             var activityEntity = Activity.Activity.CreateVenueActivity(DateTime.UtcNow, activity.UserId, user.Name,
                 activity.Message, activity.Venue, activity.Action);
 
-            var savedActivity = await this.ActivityRepository.AddActivityAsync(activityEntity);
+            var savedActivity = await this.activityRepository.AddActivityAsync(activityEntity);
 
-            await ActivityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
+            await activityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
         }
 
     }

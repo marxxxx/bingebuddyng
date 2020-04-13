@@ -1,9 +1,6 @@
-﻿using System;
+﻿using BingeBuddyNg.Services.User;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Services.Calculation
 {
@@ -11,9 +8,10 @@ namespace BingeBuddyNg.Services.Calculation
     {
         public UserDrinkActivity(string userId, Gender gender, int weight, IEnumerable<DrinkActivityItem> drinks)
         {
-            UserId = userId;
-            Weight = weight;
-            Drinks = drinks != null ? drinks.ToList() : new List<DrinkActivityItem>();
+            this.UserId = userId;
+            this.Gender = gender;
+            this.Weight = weight;
+            this.Drinks = drinks != null ? drinks.ToList() : new List<DrinkActivityItem>();
         }
 
         public string UserId { get;set; }

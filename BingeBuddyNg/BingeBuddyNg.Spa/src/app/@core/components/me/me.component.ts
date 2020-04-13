@@ -1,5 +1,5 @@
 import { UserInfoDTO } from '../../../../models/UserInfoDTO';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';

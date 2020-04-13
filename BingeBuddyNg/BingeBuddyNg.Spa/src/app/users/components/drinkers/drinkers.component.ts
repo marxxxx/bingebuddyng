@@ -2,7 +2,7 @@ import { Subscription, forkJoin, combineLatest } from 'rxjs';
 import { FriendRequestDTO } from '../../../../models/FriendRequestDTO';
 import { TranslocoService } from '@ngneat/transloco';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from '../../../@core/services/auth.service';
+import { AuthService } from '../../../@core/services/auth/auth.service';
 import { UserInfoDTO } from '../../../../models/UserInfoDTO';
 import { UserDTO } from '../../../../models/UserDTO';
 import { Component, OnInit, OnDestroy } from '@angular/core';

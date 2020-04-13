@@ -33,9 +33,10 @@ export class ShellInteractionService {
     this.snackbar.open(message, 'OK');
   }
 
-  showMessage(message: string) {
+  showMessage(message: string): Observable<any> {
     const translatedMessage = this.translate.translate(message);
-    this.snackbar.open(translatedMessage, 'OK');
+    const snackBarRef = this.snackbar.open(translatedMessage, 'OK');
+    return snackBarRef.onAction();
   }
 
   showConfirmationDialog(args: ConfirmationDialogArgs): Observable<boolean> {

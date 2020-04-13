@@ -1,11 +1,12 @@
-import { StateService } from '../../../@core/services/state.service';
-import { AuthService } from '../../../@core/services/auth.service';
-import { UserInfoDTO } from '../../../../models/UserInfoDTO';
-import { FriendRequestService } from '../../../@core/services/friendrequest.service';
-import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription, combineLatest } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+
+import { StateService } from '../../../@core/services/state.service';
+import { AuthService } from '../../../@core/services/auth/auth.service';
+import { UserInfoDTO } from '../../../../models/UserInfoDTO';
+import { FriendRequestService } from '../../../@core/services/friendrequest.service';
 
 @Component({
   selector: 'app-friendrequests',

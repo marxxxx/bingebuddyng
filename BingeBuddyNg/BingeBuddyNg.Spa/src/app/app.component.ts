@@ -1,16 +1,17 @@
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { SwPush, SwUpdate } from '@angular/service-worker';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslocoService } from '@ngneat/transloco';
+import { Subscription, combineLatest, from } from 'rxjs';
+import { filter } from 'rxjs/operators';
+
 import { UserProfile } from './../models/UserProfile';
 import { UserService } from './@core/services/user.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from './@core/services/auth.service';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { TranslocoService } from '@ngneat/transloco';
-import { SwPush, SwUpdate } from '@angular/service-worker';
+import { AuthService } from './@core/services/auth/auth.service';
 import { PushInfo } from '../models/PushInfo';
 import { NotificationService } from './@core/services/notification.service';
-import { Subscription, combineLatest, from } from 'rxjs';
 import { InvitationService } from './invitation/services/invitation.service';
 import { SettingsService } from './@core/services/settings.service';
-import { filter } from 'rxjs/operators';
 import { CreateOrUpdateUserDTO } from 'src/models/CreateOrUpdateUserDTO';
 import { credentials } from 'src/environments/credentials';
 
@@ -38,7 +39,10 @@ export class AppComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    console.log('ngOnInit');
+    // this language will be used as a fallback when a translation isn't found in the current language
+    this.initLanguage();
+
+    // checking invitation
     if (location.pathname.indexOf('invitation') < 0) {
       this.auth.handleAuthentication(location.pathname + location.search);
       this.auth.scheduleRenewal();
@@ -46,14 +50,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
     console.log('ngOnInit - passed invitation check');
 
-    // this language will be used as a fallback when a translation isn't found in the current language
-    this.translate.setDefaultLang(this.settingsService.DefaultLanguage);
-    this.userLanguage = this.settingsService.getLanguage();
-
-    // the lang to use, if the lang isn't available, it will use the current loader to get them
-    this.translate.setActiveLang(this.userLanguage);
-
-    console.log('ngOnInit - set user language');
     combineLatest([
       this.auth.currentUserProfile$.pipe(filter(userProfile => userProfile != null)),
       from(this.pushService
@@ -69,8 +65,14 @@ export class AppComponent implements OnInit, OnDestroy {
 
       this.pushInfo = this.getPushInfo(sub);
       this.registerUser(this.pushInfo);
-      this.handleInvitations();
     });
+
+    this.handleInvitations();
+
+    this.notification.start().then(s => {
+      console.log('notification registered');
+    });
+
 
     console.log('ngOnInit - before subscribing to updates');
     // subscribe to PWA updates
@@ -80,32 +82,11 @@ export class AppComponent implements OnInit, OnDestroy {
         .open(message, 'OK')
         .onAction()
         .subscribe(r => {
-          location.reload(true);
+          location.reload();
         });
     });
-
-    console.log('ngOnInit - before subscribing to messages');
-
-    this.auth.currentUserProfile$.pipe(filter(p => p != null)).subscribe(c => {
-      this.notification.start().then(s => {
-        console.log('notification registered');
-      });
-    });
-
-    // this.pushService.messages.subscribe((m: any) => {
-    //   if (m.notification && m.notification.body) {
-    //     this.snackbar.open(m.notification.body, 'OK');
-    //     this.notification.raiseActivityReceived();
-    //   }
-    // });
-
-    console.log('ngOnInit - before subscribing to clicks');
-    this.pushService.notificationClicks.subscribe(event => {
-      const url = event.notification.data.url || 'https://bingebuddy.azureedge.net';
-      window.open(url);
-      console.log('[Service Worker] Notification click Received. event', event);
-    });
   }
+
 
   ngOnDestroy() {
     if (this.sub) {
@@ -114,7 +95,16 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
+
+  private initLanguage() {
+    this.translate.setDefaultLang(this.settingsService.DefaultLanguage);
+    this.userLanguage = this.settingsService.getLanguage();
+    // the lang to use, if the lang isn't available, it will use the current loader to get them
+    this.translate.setActiveLang(this.userLanguage);
+  }
+
   handleInvitations() {
+    console.log('handleInvitations');
     const invitationToken = localStorage.getItem('invitationToken');
     if (invitationToken) {
       console.log('accepting invitation ...', invitationToken);
@@ -131,6 +121,10 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   getPushInfo(sub: PushSubscription): PushInfo {
+    if (!sub) {
+      return null;
+    }
+
     const subJSObject = JSON.parse(JSON.stringify(sub));
 
     const pushInfo: PushInfo = {

@@ -22,7 +22,7 @@ namespace BingeBuddyNg.Services.FriendsRequest
         public async Task AddFriendRequestAsync(UserInfo friend, UserInfo requestingUser)
         {
             var table = storageAccessService.GetTableReference(TableName);
-            
+
             var requestingEntity = new FriendRequestEntity(friend.UserId, requestingUser.UserId, requestingUser, friend);
             var friendEntity = new FriendRequestEntity(requestingUser.UserId, friend.UserId, requestingUser, friend);
 
@@ -30,18 +30,16 @@ namespace BingeBuddyNg.Services.FriendsRequest
             await table.ExecuteAsync(TableOperation.Insert(friendEntity));
         }
 
-
         public async Task DeleteFriendRequestAsync(string userId, string requestingUserId)
         {
             await this.storageAccessService.DeleteTableEntityAsync(TableName, userId, requestingUserId);
             await this.storageAccessService.DeleteTableEntityAsync(TableName, requestingUserId, userId);
         }
 
-
         public async Task<List<FriendRequestDTO>> GetFriendRequestsAsync(string userId)
         {
             var whereClause = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId);
-            
+
             var queryResult = await this.storageAccessService.QueryTableAsync<FriendRequestEntity>(TableName, whereClause);
 
             var result = queryResult.Select(r => new FriendRequestDTO(
@@ -54,7 +52,7 @@ namespace BingeBuddyNg.Services.FriendsRequest
         {
             var result = await Task.WhenAll(InternalHasPendingFriendRequestAsync(userId, requestingUserId), InternalHasPendingFriendRequestAsync(requestingUserId, userId));
 
-            return result.Any(r=>r);
+            return result.Any(r => r);
         }
 
         private async Task<bool> InternalHasPendingFriendRequestAsync(string userId, string requestingUserId)

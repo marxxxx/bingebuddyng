@@ -26,7 +26,7 @@ namespace BingeBuddyNg.Tests
                     new PersonalUsagePerWeekdayTableEntity() { WeekDay = "Sat"}
                 });
 
-            var queryHandler = new AnalyticReportsQueryHandler(storageAccessServiceMock.Object);
+            var queryHandler = new GetPersonalUsagePerWeekdayQueryHandler(storageAccessServiceMock.Object);
 
             // Act
             var result = await queryHandler.Handle(new GetPersonalUsagePerWeekdayQuery("123"), new CancellationTokenSource().Token);

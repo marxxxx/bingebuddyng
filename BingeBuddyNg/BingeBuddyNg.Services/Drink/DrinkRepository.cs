@@ -43,7 +43,7 @@ namespace BingeBuddyNg.Services.Drink
             }
             else
             {
-                return drinks.Select(d => d.ToDrink());
+                return drinks.Select(d => d.ToDrink()).ToList();
             }
         }
 
@@ -70,6 +70,12 @@ namespace BingeBuddyNg.Services.Drink
             var table = storageAccessService.GetTableReference(TableName);
 
             await table.ExecuteBatchAsync(batch);
+        }
+
+        public async Task CreateDefaultDrinksForUserAsync(string userId)
+        {
+            var defaultDrinksForUser = defaultDrinks.Select(d => new Drink(Guid.NewGuid().ToString(), d.DrinkType, d.Name, d.AlcPrc, d.Volume));
+            await SaveDrinksAsync(userId, defaultDrinksForUser);
         }
 
         public async Task DeleteDrinkAsync(string userId, string drinkId)

@@ -1,8 +1,7 @@
-﻿using System;
+﻿using BingeBuddyNg.Services.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Venue;
 
 namespace BingeBuddyNg.Services.User
 {
@@ -21,7 +20,7 @@ namespace BingeBuddyNg.Services.User
         public List<string> MutedFriendUserIds { get; set; } = new List<string>();
         public List<string> MutedByFriendUserIds { get; set; } = new List<string>();
         public string MonitoringInstanceId { get; set; }
-        public VenueModel CurrentVenue { get; set; }
+        public Venue.Venue CurrentVenue { get; set; }
         public string Language { get; set; }
         public DateTime LastOnline { get; set; }
 

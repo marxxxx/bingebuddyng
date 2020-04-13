@@ -4,7 +4,7 @@ import * as signalR from '@microsoft/signalr';
 
 import { ActivityStatsDTO } from 'src/models/ActivityStatsDTO';
 import { environment } from 'src/environments/environment';
-import { AuthService } from './auth.service';
+import { AuthService } from './auth/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {

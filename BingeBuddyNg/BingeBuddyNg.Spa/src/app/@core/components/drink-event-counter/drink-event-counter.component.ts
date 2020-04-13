@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { DrinkEventService } from 'src/app/@core/services/drinkevent.service';
 import { DrinkEvent } from 'src/models/DrinkEvent';
 import { MatTooltip } from '@angular/material/tooltip';
-import { AuthService } from 'src/app/@core/services/auth.service';
+import { AuthService } from 'src/app/@core/services/auth/auth.service';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../../services/notification.service';
@@ -15,6 +15,7 @@ import { NotificationService } from '../../services/notification.service';
 export class DrinkEventCounterComponent implements OnInit, OnDestroy {
   remainingTime: string;
   currentDrinkEvent: DrinkEvent;
+  currentUserId: string;
   intervalId: any;
   subscriptions: Subscription[] = [];
 
@@ -29,7 +30,8 @@ export class DrinkEventCounterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscriptions.push(
-      this.authService.isLoggedIn$.pipe(filter(isLoggedIn => isLoggedIn)).subscribe(_ => {
+      this.authService.currentUserProfile$.pipe(filter(profile => profile != null)).subscribe(p => {
+        this.currentUserId = p.sub;
         this.load();
       })
     );
@@ -50,7 +52,7 @@ export class DrinkEventCounterComponent implements OnInit, OnDestroy {
 
     const currentUserAlreadyScored =
       this.currentDrinkEvent.scoringUserIds &&
-      this.currentDrinkEvent.scoringUserIds.includes(this.authService.currentUserProfile$.value.sub);
+      this.currentDrinkEvent.scoringUserIds.includes(this.currentUserId);
     if (currentUserAlreadyScored === true) {
       return false;
     }

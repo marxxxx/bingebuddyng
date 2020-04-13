@@ -52,9 +52,7 @@ namespace BingeBuddyNg.Services.DrinkEvent
 
             var result = queryResult?.FirstOrDefault()?.Entity;
             return result;
-        }
-
-        
+        }        
 
         public async Task UpdateDrinkEventAsync(DrinkEvent drinkEvent)
         {

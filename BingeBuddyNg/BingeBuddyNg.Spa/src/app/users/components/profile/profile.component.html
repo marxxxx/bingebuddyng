@@ -1,7 +1,7 @@
 <app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
 
 <!-- Context menu-->
-<button *ngIf="!isBusy" mat-icon-button class="context-menu" [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+<button *ngIf="!isBusy && isYou()" mat-icon-button class="context-menu" [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
 
 <mat-menu #menu="matMenu">
   <button mat-menu-item (click)="isEditingUserName=true" [disabled]="isEditingUserName"><mat-icon>edit</mat-icon>{{'UserProfile.Edit' | transloco }}</button>

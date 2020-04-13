@@ -5,7 +5,7 @@ namespace BingeBuddyNg.Services.Activity
 {
     public class AddVenueActivityDTO : AddActivityBaseDTO
     {
-        public AddVenueActivityDTO(string userId, string message, VenueModel venue, VenueAction action)
+        public AddVenueActivityDTO(string userId, string message, Venue.Venue venue, VenueAction action)
         {
             this.UserId = userId ?? throw new ArgumentNullException(nameof(userId));
             this.Message = message ?? throw new ArgumentNullException(nameof(message));

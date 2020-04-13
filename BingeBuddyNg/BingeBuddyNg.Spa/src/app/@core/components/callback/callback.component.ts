@@ -1,6 +1,7 @@
-import { AuthService } from '../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-callback',
@@ -15,7 +16,6 @@ export class CallbackComponent implements OnInit {
   ngOnInit() {
 
     this.activatedRoute.paramMap.subscribe(p => {
-
 
       // get return url from route parameters or default to '/'
       const snapshot = this.activatedRoute.snapshot;
