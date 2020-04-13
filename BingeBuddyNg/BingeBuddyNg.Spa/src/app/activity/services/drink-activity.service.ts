@@ -17,6 +17,17 @@ export class DrinkActivityService {
     private dialog: MatDialog) { }
 
   drink(drink: Drink, displayDialog: boolean = true): Observable<[any, string]> {
+
+    const activity = this.buildAddDrinkDto(drink);
+
+    const observable = displayDialog ?
+      forkJoin([this.displayDrinkDialog(drink.drinkType), this.activityService.addDrinkActivity(activity)]) :
+      forkJoin([timer(5000), this.activityService.addDrinkActivity(activity)]);
+
+    return observable;
+  }
+
+  buildAddDrinkDto(drink: Drink): AddDrinkActivityDTO {
     const activity: AddDrinkActivityDTO = {
       drinkId: drink.id,
       drinkType: drink.drinkType,
@@ -26,12 +37,7 @@ export class DrinkActivityService {
       location: this.locationService.getCurrentLocation(),
       venue: this.locationService.getCurrentVenue()
     };
-
-    const observable = displayDialog ?
-      forkJoin([this.displayDrinkDialog(drink.drinkType), this.activityService.addDrinkActivity(activity)]) :
-      forkJoin([timer(5000), this.activityService.addDrinkActivity(activity)]);
-
-    return observable;
+    return activity;
   }
 
 

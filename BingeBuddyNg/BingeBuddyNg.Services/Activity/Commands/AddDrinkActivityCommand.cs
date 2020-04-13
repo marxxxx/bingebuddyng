@@ -60,7 +60,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
             var savedActivity = await this.activityRepository.AddActivityAsync(activity);
 
-            await activityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
+            await activityRepository.AddToActivityAddedTopicAsync(savedActivity.Id);
 
             await messagingService.SendMessageAsync(new DrinkEventMessage(request.UserId, request.DrinkId, activity.Timestamp));
 

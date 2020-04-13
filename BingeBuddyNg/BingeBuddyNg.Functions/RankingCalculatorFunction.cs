@@ -29,7 +29,10 @@ namespace BingeBuddyNg.Functions
         {
             var users = await UserRepository.GetUsersAsync();
 
-            foreach (var u in users)
+            // Filter for active users
+            var activeUsers = users.Where(u => u.LastOnline > DateTime.UtcNow.Subtract(TimeSpan.FromDays(30))).ToList();
+
+            foreach (var u in activeUsers)
             {
                 try
                 {

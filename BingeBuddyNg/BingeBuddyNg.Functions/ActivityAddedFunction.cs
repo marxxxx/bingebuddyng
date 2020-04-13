@@ -4,9 +4,11 @@ using BingeBuddyNg.Services.DrinkEvent;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
+using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Azure.SignalR.Management;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
+using Microsoft.Azure.WebJobs.Extensions.EventGrid;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -47,14 +49,14 @@ namespace BingeBuddyNg.Functions
 
         [FunctionName("ActivityAddedFunction")]
         public async Task Run(
-            [QueueTrigger(Shared.Constants.QueueNames.ActivityAdded, Connection = "AzureWebJobsStorage")]string message,
+            [EventGridTrigger]EventGridEvent gridEvent,
             [DurableClient]IDurableClient starter,
             ILogger log)
         {
             this.durableClient = starter ?? throw new ArgumentNullException(nameof(starter));
             this.logger = log;
 
-            var activityAddedMessage = JsonConvert.DeserializeObject<ActivityAddedMessage>(message);
+            var activityAddedMessage = JsonConvert.DeserializeObject<ActivityAddedMessage>(gridEvent.Data.ToString());
             var activity = await activityRepository.GetActivityAsync(activityAddedMessage.ActivityId);
 
             log.LogInformation($"Handling added activity [{activity}] ...");

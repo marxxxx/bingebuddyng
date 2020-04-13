@@ -202,40 +202,33 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     this.pendingDrinkType = drink.drinkType;
     this.isBusyAdding = true;
 
-    this.drinkActivityService.drink(drink, false)
-      .pipe(finalize(() => this.isBusyAdding = false))
-      .subscribe(
-        ([_, activityId]) => {
-          console.log('received activity id', activityId);
-          const activity: ActivityStatsDTO = {
-            activity: {
-              id: activityId,
-              activityType: ActivityType.Drink,
-              drinkType: drink.drinkType,
-              drinkName: drink.name,
-              userId: this.currentUser.id,
-              userName: this.currentUser.name,
-              timestamp: new Date(),
-              message: '',
-              cheers: [],
-              comments: [],
-              likes: []
-            },
-            userStats: null
-          };
+    const addDrinkDto = this.drinkActivityService.buildAddDrinkDto(drink);
+    this.activityService.addDrinkActivity(addDrinkDto).subscribe(activityId => {
 
-          this.onActivityReceived(activity);
+      const activity: ActivityStatsDTO = {
+        activity: {
+          id: activityId,
+          activityType: ActivityType.Drink,
+          drinkType: drink.drinkType,
+          drinkName: drink.name,
+          userId: this.currentUser.id,
+          userName: this.currentUser.name,
+          timestamp: new Date(),
+          message: '',
+          cheers: [],
+          comments: [],
+          likes: []
         },
-        e => {
-          console.error(e);
-          this.shellInteraction.showErrorMessage();
-        }
-      );
-  }
+        userStats: null
+      };
+      this.onActivityReceived(activity);
 
-  onCancelDrinkAnimation() {
-    this.isBusyAdding = false;
-    this.load();
+      setTimeout(() => this.isBusyAdding = false, 5000);
+
+    }, e => {
+      console.error(e);
+      this.shellInteraction.showErrorMessage();
+    });
   }
 
   onAddMessage() {

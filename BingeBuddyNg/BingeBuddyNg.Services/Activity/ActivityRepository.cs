@@ -1,11 +1,12 @@
-﻿using System;
+﻿using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.Infrastructure.EventGrid;
+using Microsoft.Azure.EventGrid;
+using Microsoft.Azure.EventGrid.Models;
+using Microsoft.WindowsAzure.Storage.Table;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Shared;
-using Microsoft.WindowsAzure.Storage.Table;
-using Newtonsoft.Json;
 
 namespace BingeBuddyNg.Services.Activity
 {
@@ -16,12 +17,17 @@ namespace BingeBuddyNg.Services.Activity
         private static readonly DateTime MaxTimestamp = new DateTime(2100, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         private readonly IStorageAccessService storageAccessService;
-        private readonly ICacheService sacheService;
+        private readonly ICacheService cacheService;
+        private readonly IEventGridService eventGridService;
 
-        public ActivityRepository(IStorageAccessService storageAccessService, ICacheService cacheService)
+        public ActivityRepository(
+            IStorageAccessService storageAccessService, 
+            ICacheService cacheService,
+            IEventGridService eventGridService)
         {
             this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
-            this.sacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
+            this.cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
+            this.eventGridService = eventGridService ?? throw new ArgumentNullException(nameof(eventGridService));
         }
         
         public string GetActivityCacheKey(string userId) => $"Activity:{userId}";
@@ -137,7 +143,7 @@ namespace BingeBuddyNg.Services.Activity
             TableOperation perUserOperation = TableOperation.Insert(perUserEntity);
             await perUserActivityTable.ExecuteAsync(perUserOperation);
 
-            sacheService.Remove(GetActivityCacheKey(activity.UserId));
+            cacheService.Remove(GetActivityCacheKey(activity.UserId));
 
             return activity;
         }
@@ -195,7 +201,7 @@ namespace BingeBuddyNg.Services.Activity
             await table.ExecuteAsync(updateOperation);
 
             // invalidate cache
-            sacheService.Remove(GetActivityCacheKey(activity.UserId));
+            cacheService.Remove(GetActivityCacheKey(activity.UserId));
         }
 
         public async Task DeleteActivityAsync(string userId, string id)
@@ -214,15 +220,12 @@ namespace BingeBuddyNg.Services.Activity
             var perUserActivity = await this.GetActivityPerUserEntityAsync(userId, activity.Entity.Timestamp);
             await perUserTable.ExecuteAsync(TableOperation.Delete(perUserActivity));
 
-            sacheService.Remove(GetActivityCacheKey(userId));
+            cacheService.Remove(GetActivityCacheKey(userId));
         }
 
-
-        public async Task AddToActivityAddedQueueAsync(string activityId)
+        public async Task AddToActivityAddedTopicAsync(string activityId)
         {
-            var queueClient = this.storageAccessService.GetQueueReference(Constants.QueueNames.ActivityAdded);
-            var message = new ActivityAddedMessage(activityId);
-            await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
+            await this.eventGridService.PublishAsync("ActivityAdded", new ActivityAddedMessage(activityId));
         }
 
         private string GetPartitionKey(DateTime timestampUtc)

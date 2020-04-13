@@ -3,7 +3,7 @@
 
 <div id="activity-container">
 
-  <mat-card class="drink-animation" *ngIf="isBusyAdding && pendingDrinkType != DrinkType.Unknown" (click)="onCancelDrinkAnimation()">
+  <mat-card class="drink-animation" *ngIf="isBusyAdding && pendingDrinkType != DrinkType.Unknown" (click)="isBusyAdding = false">
     <app-drink-animation [drinkType]="pendingDrinkType"></app-drink-animation>
   </mat-card>
 
