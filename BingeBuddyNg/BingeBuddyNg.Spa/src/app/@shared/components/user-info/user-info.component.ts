@@ -32,10 +32,16 @@ export class UserInfoComponent implements OnInit {
   }
 
   getFilter(): string {
+    if (!this.currentAlcoholization) {
+      return null;
+    }
     return `blur(${this.currentAlcoholization}px)`;
   }
 
   getTransform(): string {
+    if (!this.currentAlcoholization) {
+      return null;
+    }
     return `rotate(${this.currentAlcoholization * 30}deg)`;
   }
 }

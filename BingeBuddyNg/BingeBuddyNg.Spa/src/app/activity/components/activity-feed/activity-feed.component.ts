@@ -86,7 +86,10 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
       this.load();
     });
 
-    this.subscriptions.push(this.notification.activityReceived$.subscribe(as => this.onActivityReceived(as)));
+    this.subscriptions.push(this.notification.activityReceived$.subscribe(as => {
+      console.log('activity received via signalR', as);
+      this.onActivityReceived(as);
+    }));
     this.subscriptions.push(
       this.auth.currentUserProfile$
         .pipe(filter(p => p != null))
@@ -189,9 +192,12 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     }
   }
 
-  onActivityReceived(as: ActivityStatsDTO): void {
+  onActivityReceived(as: ActivityStatsDTO, ignoreIfExists: boolean = false): void {
     const foundIndex = this.activitys.findIndex(a => a.activity.id === as.activity.id);
     if (foundIndex >= 0) {
+      if (ignoreIfExists) {
+        return;
+      }
       this.activitys.splice(foundIndex, 1, as);
     } else {
       this.activitys.splice(0, 0, as);
@@ -221,7 +227,8 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
         },
         userStats: null
       };
-      this.onActivityReceived(activity);
+
+      this.onActivityReceived(activity, true);
 
       setTimeout(() => this.isBusyAdding = false, 5000);
 
@@ -264,7 +271,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
               userStats: null
             };
 
-            this.onActivityReceived(newActivity);
+            this.onActivityReceived(newActivity, true);
           },
           e => {
             this.isBusyAdding = false;
