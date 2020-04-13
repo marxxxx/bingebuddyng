@@ -21,6 +21,6 @@ namespace BingeBuddyNg.Services.Activity
 
         Task UpdateActivityAsync(Activity activity);
 
-        Task AddToActivityAddedQueueAsync(string activityId);
+        Task AddToActivityAddedTopicAsync(string activityId);
     }
 }

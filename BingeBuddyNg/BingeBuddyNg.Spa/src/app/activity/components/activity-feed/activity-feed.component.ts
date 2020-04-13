@@ -86,7 +86,10 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
       this.load();
     });
 
-    this.subscriptions.push(this.notification.activityReceived$.subscribe(as => this.onActivityReceived(as)));
+    this.subscriptions.push(this.notification.activityReceived$.subscribe(as => {
+      console.log('activity received via signalR', as);
+      this.onActivityReceived(as);
+    }));
     this.subscriptions.push(
       this.auth.currentUserProfile$
         .pipe(filter(p => p != null))
@@ -189,9 +192,12 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     }
   }
 
-  onActivityReceived(as: ActivityStatsDTO): void {
+  onActivityReceived(as: ActivityStatsDTO, ignoreIfExists: boolean = false): void {
     const foundIndex = this.activitys.findIndex(a => a.activity.id === as.activity.id);
     if (foundIndex >= 0) {
+      if (ignoreIfExists) {
+        return;
+      }
       this.activitys.splice(foundIndex, 1, as);
     } else {
       this.activitys.splice(0, 0, as);
@@ -202,40 +208,34 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     this.pendingDrinkType = drink.drinkType;
     this.isBusyAdding = true;
 
-    this.drinkActivityService.drink(drink, false)
-      .pipe(finalize(() => this.isBusyAdding = false))
-      .subscribe(
-        ([_, activityId]) => {
-          console.log('received activity id', activityId);
-          const activity: ActivityStatsDTO = {
-            activity: {
-              id: activityId,
-              activityType: ActivityType.Drink,
-              drinkType: drink.drinkType,
-              drinkName: drink.name,
-              userId: this.currentUser.id,
-              userName: this.currentUser.name,
-              timestamp: new Date(),
-              message: '',
-              cheers: [],
-              comments: [],
-              likes: []
-            },
-            userStats: null
-          };
+    const addDrinkDto = this.drinkActivityService.buildAddDrinkDto(drink);
+    this.activityService.addDrinkActivity(addDrinkDto).subscribe(activityId => {
 
-          this.onActivityReceived(activity);
+      const activity: ActivityStatsDTO = {
+        activity: {
+          id: activityId,
+          activityType: ActivityType.Drink,
+          drinkType: drink.drinkType,
+          drinkName: drink.name,
+          userId: this.currentUser.id,
+          userName: this.currentUser.name,
+          timestamp: new Date(),
+          message: '',
+          cheers: [],
+          comments: [],
+          likes: []
         },
-        e => {
-          console.error(e);
-          this.shellInteraction.showErrorMessage();
-        }
-      );
-  }
+        userStats: null
+      };
 
-  onCancelDrinkAnimation() {
-    this.isBusyAdding = false;
-    this.load();
+      this.onActivityReceived(activity, true);
+
+      setTimeout(() => this.isBusyAdding = false, 5000);
+
+    }, e => {
+      console.error(e);
+      this.shellInteraction.showErrorMessage();
+    });
   }
 
   onAddMessage() {
@@ -271,7 +271,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
               userStats: null
             };
 
-            this.onActivityReceived(newActivity);
+            this.onActivityReceived(newActivity, true);
           },
           e => {
             this.isBusyAdding = false;

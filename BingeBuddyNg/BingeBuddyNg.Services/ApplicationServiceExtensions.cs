@@ -3,6 +3,7 @@ using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.DrinkEvent;
 using BingeBuddyNg.Services.FriendsRequest;
 using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.Infrastructure.EventGrid;
 using BingeBuddyNg.Services.Infrastructure.Messaging;
 using BingeBuddyNg.Services.Invitation;
 using BingeBuddyNg.Services.Statistics;
@@ -35,6 +36,7 @@ namespace BingeBuddyNg.Services
             services.AddAzureSignalRIntegration(configuration);
             services.AddUtility(configuration);
             services.AddStorage(configuration);
+            services.AddEventGrid(configuration);
             
             // add domain services
             services.AddScoped<IActivityRepository, ActivityRepository>();
@@ -94,6 +96,13 @@ namespace BingeBuddyNg.Services
             services.AddSingleton(new StorageConfiguration(storageConnectionString));
 
             services.AddSingleton<IStorageAccessService, StorageAccessService>();
+        }
+
+        public static void AddEventGrid(this IServiceCollection services, IConfiguration configuration)
+        {
+            var config = configuration.GetSection("EventGrid").Get<EventGridConfiguration>();
+            services.AddSingleton(config);
+            services.AddSingleton<IEventGridService, EventGridService>();
         }
     }
 }

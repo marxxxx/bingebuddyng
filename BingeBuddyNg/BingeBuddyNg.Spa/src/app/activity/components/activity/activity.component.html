@@ -3,7 +3,7 @@
     <div fxLayout fxLayoutAlign="start center">
       <app-user-info
         [userInfo]="activity.activity.activityType === ActivityType.Registration ? activity.activity.registrationUser : userInfo"
-        [showName]="true" [currentAlcoholization]="activity.userStats.currentAlcoholization"></app-user-info>
+        [showName]="true" [currentAlcoholization]="activity?.userStats?.currentAlcoholization"></app-user-info>
     </div>
     <mat-chip-list class="stats" *ngIf="
           activity.userStats && (activity.activity.drinkCount +

@@ -45,7 +45,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
             activity.Venue = request.Venue;
 
             var savedActivity = await this.activityRepository.AddActivityAsync(activity);
-            await activityRepository.AddToActivityAddedQueueAsync(savedActivity.Id);
+            await activityRepository.AddToActivityAddedTopicAsync(savedActivity.Id);
 
             return savedActivity.Id;
         }
