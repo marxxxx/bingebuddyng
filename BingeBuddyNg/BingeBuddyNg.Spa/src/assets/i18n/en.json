@@ -171,5 +171,7 @@
       "DeleteProfile": "delete profile",
       "ProfileDeletionRequested": "Your profile has been marked for deletion. You can come back anytime but you will have to start your drinking carreer from scratch.",
       "ReallyDeleteProfile": "Do you really want to delete your profile? This can not be undone!"
-    }
+    },
+
+    "PleaseWait": "Please wait ..."
 }

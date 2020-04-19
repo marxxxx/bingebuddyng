@@ -16,7 +16,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -33,7 +32,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatButtonModule, MatCheckboxModule,
     MatCardModule, MatDialogModule,
     MatInputModule, MatListModule, MatMenuModule, MatProgressBarModule, MatProgressSpinnerModule, MatRadioModule,
-    MatSelectModule, MatSidenavModule, MatSlideToggleModule, MatSnackBarModule, MatToolbarModule,
+    MatSelectModule, MatSidenavModule, MatSnackBarModule, MatToolbarModule,
     MatTooltipModule, MatIconModule, MatChipsModule, MatTabsModule,
     MatBadgeModule, MatStepperModule
   ],
@@ -41,7 +40,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatButtonModule, MatCheckboxModule,
     MatCardModule, MatDialogModule,
     MatInputModule, MatListModule, MatMenuModule, MatProgressBarModule, MatProgressSpinnerModule, MatRadioModule,
-    MatSelectModule, MatSidenavModule, MatSlideToggleModule, MatSnackBarModule, MatToolbarModule,
+    MatSelectModule, MatSidenavModule, MatSnackBarModule, MatToolbarModule,
     MatTooltipModule, MatIconModule, MatChipsModule, MatTabsModule,
     MatBadgeModule, MatStepperModule
   ]

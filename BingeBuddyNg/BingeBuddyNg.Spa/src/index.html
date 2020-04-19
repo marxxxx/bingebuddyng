@@ -1,8 +1,9 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
   <meta charset="utf-8">
   <title>BingeBuddy - The social drinking network</title>
   <base href="/">
@@ -15,10 +16,23 @@
   <meta name="theme-color" content="#1976d2">
   <meta name="description" content="The social drinking network.">
 
+  <style>
+    .loading {
+      height: 100vh;
+      min-height: 100%;
+      background-color: black;
+    }
+  </style>
 </head>
+
 <body>
-  <app-root><img class="loading" src="assets/img/load_beer.gif"></app-root>
-  <script src="https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver"></script>
+  <app-root>
+    <video class="loading" autoplay loop muted playsinline>
+      <source src="assets/img/load_beer.webm" type="video/webm">
+      <source src="assets/img/load_beer.mp4" type="video/mp4">
+    </video>
+  </app-root>
   <noscript>Please enable JavaScript to continue using this application.</noscript>
 </body>
+
 </html>

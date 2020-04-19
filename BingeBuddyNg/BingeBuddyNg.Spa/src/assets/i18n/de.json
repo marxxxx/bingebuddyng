@@ -164,5 +164,6 @@
     "DeleteProfile": "Profil löschen",
     "ProfileDeletionRequested": "Dein Profil wurde zur Löschung markiert. Du kannst jederzeit zurückkehren, musst deine Trinkerkarriere jedoch von 0 starten.",
     "ReallyDeleteProfile": "Möchtest du dein Profil wirklich komplett löschen? Dies kann nicht rückgängig gemacht werden!"
-  }
+  },
+  "PleaseWait": "Bitte warten ..."
 }

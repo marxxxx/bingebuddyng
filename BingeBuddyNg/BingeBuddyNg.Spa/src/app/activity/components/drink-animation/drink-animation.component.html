@@ -1,3 +1,8 @@
  <div fxLayout="column" fxLayoutAlign="center center"  class="full-width">
-  <img [src]="imageUrl">
+  <img *ngIf="imageUrl" [src]="imageUrl">
+
+  <video *ngIf="!imageUrl" autoplay loop muted playsinline>
+    <source src="assets/img/funny_beers.webm" type="video/webm">
+    <source src="assets/img/funny_beers.mp4" type="video/mp4">
+  </video>
 </div>
