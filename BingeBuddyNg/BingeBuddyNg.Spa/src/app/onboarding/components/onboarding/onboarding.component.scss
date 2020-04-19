@@ -1,7 +1,7 @@
-@import '../../../../theme.scss';
+@import '../../../../colors.scss';
 
 mat-icon.yellow {
-    color: map-get($mat-bingebuddyprimary, 500);
+    color: $yellow;
     font-size: x-large;
 }
 

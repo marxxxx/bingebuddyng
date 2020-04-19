@@ -1,4 +1,4 @@
-@import '../../../../theme.scss';
+@import '../../../../colors.scss';
 
 .activityspinner {
     margin-top: -200px !important;
@@ -73,7 +73,7 @@ mat-card {
 
 
 button.btn-icon {
-    color: map-get($mat-bingebuddyprimary, 500) !important;
+    color: $yellow !important;
 }
 
 .venue-info {

@@ -1,4 +1,4 @@
-@import '../../../../theme.scss';
+@import '../../../../colors.scss';
 
 .sidenav-container {
   height: 100%;
@@ -38,7 +38,7 @@ img {
 .menu-item {
   margin-left: 5px;
   margin-right: 12px;
-  color: map-get($mat-bingebuddyprimary, 500)
+  color: $yellow;
 }
 
 span {

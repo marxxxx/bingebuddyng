@@ -1,4 +1,4 @@
-@import '../../../../theme.scss';
+@import '../../../../colors.scss';
 
 .empty {
     margin-top: 20px;
@@ -8,5 +8,5 @@
 }
 
 mat-icon {
-    color: map-get($mat-bingebuddyprimary, 500)
+    color: $yellow;
 }

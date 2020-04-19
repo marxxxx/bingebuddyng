@@ -1,4 +1,4 @@
-@import '../../../../theme.scss';
+@import '../../../../colors.scss';
 
 mat-card {
     margin: 5px 5px 6px 5px;
@@ -69,7 +69,7 @@ div{
 }
 
 a {
-    color: map-get($mat-bingebuddyprimary, 500)
+    color: $yellow;
 }
 mat-chip-list {
     margin-left: 5px;
@@ -116,7 +116,7 @@ img[matListAvatar] {
 }
 
 mat-icon {
-    color: map-get($mat-bingebuddyprimary, 500)
+    color: $yellow;
 }
 
 .activity-content-spinner {
