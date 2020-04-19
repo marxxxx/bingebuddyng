@@ -1,12 +1,16 @@
 <div fxLayout="column" fxLayoutAlign="center center">
-    <h1>{{'WelcomeMessage' | transloco}}</h1>
-    <h3>{{'WelcomeSubTitle' | transloco }}</h3>
+  <h1>{{'WelcomeMessage' | transloco}}</h1>
+  <h3>{{'WelcomeSubTitle' | transloco }}</h3>
 
-    <img class="pulsate-transform" (click)="onLogin()" src="../../assets/img/logo.png">
+  <img class="pulsate-transform" (click)="onLogin()" src="../../assets/img/logo.png">
 
 
-    <div id="started-text" class="pulsate" *ngIf="!auth.isAuthenticated()">
-        {{'GetStarted' | transloco }}
+  <div id="started-text" class="pulsate" *ngIf="!auth.isAuthenticated()">
+    {{'GetStarted' | transloco }}
+  </div>
 
-    </div>
+  <div *ngIf="auth.isAuthenticated()" fxLayout fxLayoutAlign="center center">
+    <mat-progress-spinner mode="indeterminate" color="primary" diameter="32"></mat-progress-spinner>
+    <span>{{'PleaseWait' | transloco }}</span>
+  </div>
 </div>

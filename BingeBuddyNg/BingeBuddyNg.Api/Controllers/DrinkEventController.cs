@@ -1,5 +1,4 @@
 ﻿using BingeBuddyNg.Services.DrinkEvent;
-using BingeBuddyNg.Services.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,11 +11,9 @@ namespace BingeBuddyNg.Api.Controllers
     public class DrinkEventController : Controller
     {
         private readonly IDrinkEventRepository drinkEventRepository;
-        private readonly IIdentityService identityService;
 
-        public DrinkEventController(IIdentityService identityService, IDrinkEventRepository drinkEventRepository)
+        public DrinkEventController(IDrinkEventRepository drinkEventRepository)
         {
-            this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.drinkEventRepository = drinkEventRepository ?? throw new ArgumentNullException(nameof(drinkEventRepository));
         }
 

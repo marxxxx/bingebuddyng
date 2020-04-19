@@ -21,17 +21,17 @@ h1, h3 {
 
 .pulsate {
     animation: pulsate 3s ease-in-out;
-    animation-iteration-count: infinite; 
+    animation-iteration-count: infinite;
     opacity: 0.5;
 }
 @keyframes pulsate {
-    0% { 
+    0% {
         opacity: 0.5;
     }
-    50% { 
+    50% {
         opacity: 1.0;
     }
-    100% { 
+    100% {
         opacity: 0.5;
     }
 }
@@ -41,17 +41,21 @@ h1, h3 {
     margin: 0px;
     padding: 0px;
     animation: pulsate-transform 3s ease-in-out;
-    animation-iteration-count: infinite; 
+    animation-iteration-count: infinite;
     transform: scale(1)
 }
 @keyframes pulsate-transform {
-    0% { 
+    0% {
         transform: scale(1)
     }
-    50% { 
+    50% {
         transform: scale(1.1)
     }
-    100% { 
+    100% {
         transform: scale(1)
     }
+}
+
+mat-progress-spinner {
+  margin-right: 10px;
 }
