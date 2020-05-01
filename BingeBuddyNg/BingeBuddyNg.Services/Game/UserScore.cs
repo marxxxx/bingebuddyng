@@ -4,15 +4,15 @@ namespace BingeBuddyNg.Services.Game
 {
     public class UserScore
     {
-        public UserScore(Guid userId, int currentScore)
+        public UserScore(Guid userId, int score)
         {
             this.UserId = userId;
-            this.CurrentScore = currentScore;
+            this.Score = score;
         }
 
         public Guid UserId { get; }
 
-        public int CurrentScore { get; }
+        public int Score { get; }
 
         public override bool Equals(object obj)
         {
@@ -27,7 +27,7 @@ namespace BingeBuddyNg.Services.Game
 
         public override string ToString()
         {
-            return $"{{{nameof(UserId)}={UserId.ToString()}, {nameof(CurrentScore)}={CurrentScore.ToString()}}}";
+            return $"{{{nameof(UserId)}={UserId.ToString()}, {nameof(Score)}={Score.ToString()}}}";
         }
     }
 }

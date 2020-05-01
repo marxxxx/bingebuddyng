@@ -6,14 +6,17 @@ namespace BingeBuddyNg.Services.Game
 {
     public class Game
     {
-        public Game(Guid id, IEnumerable<Guid> playerUserIds)
+        public Game(Guid id, string title, IEnumerable<Guid> playerUserIds)
         {
             this.Id = id;
+            this.Title = title;
             this.PlayerUserIds = playerUserIds ?? throw new ArgumentNullException(nameof(playerUserIds));
             this.Scores = new ConcurrentDictionary<Guid, int>();
         }
 
         public Guid Id { get; }
+
+        public string Title { get; }
 
         public IEnumerable<Guid> PlayerUserIds { get; set; }
 

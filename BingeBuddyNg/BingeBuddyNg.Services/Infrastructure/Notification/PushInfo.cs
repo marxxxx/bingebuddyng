@@ -1,7 +1,20 @@
-﻿namespace BingeBuddyNg.Services.Infrastructure
+﻿using System;
+
+namespace BingeBuddyNg.Services.Infrastructure
 {
     public class PushInfo
     {
+        public PushInfo()
+        {
+        }
+
+        public PushInfo(string subscriptionEndpoint, string auth, string p256dh)
+        {
+            SubscriptionEndpoint = subscriptionEndpoint ?? throw new ArgumentNullException(nameof(subscriptionEndpoint));
+            Auth = auth ?? throw new ArgumentNullException(nameof(auth));
+            this.p256dh = p256dh ?? throw new ArgumentNullException(nameof(p256dh));
+        }
+
         public string SubscriptionEndpoint { get; set; }
         public string Auth { get; set; }
         public string p256dh { get; set; }

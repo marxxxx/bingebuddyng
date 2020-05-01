@@ -55,5 +55,17 @@ namespace BingeBuddyNg.Services.Game
 
             return game.Scores.Select(s => new UserScore(s.Key, s.Value)).ToList().AsReadOnly();
         }
+
+        public UserScore GetWinner(Guid gameId)
+        {
+            if (!this.Games.TryGetValue(gameId, out Game game))
+            {
+                throw new ArgumentException($"Game with Id {gameId} not found!");
+            }
+
+            var orderedResult = game.Scores.OrderByDescending(s => s.Value);
+            var winner = orderedResult.First();
+            return new UserScore(winner.Key, winner.Value);
+        }
     }
 }

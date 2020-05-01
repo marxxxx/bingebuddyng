@@ -2,9 +2,9 @@
 
 namespace BingeBuddyNg.Services.Game
 {
-    public class UserScoreUpdatedMessage
+    public class GameUpdateReceivedMessage
     {
-        public UserScoreUpdatedMessage(Guid gameId, Guid userId, int currentScore)
+        public GameUpdateReceivedMessage(Guid gameId, Guid userId, int currentScore)
         {
             GameId = gameId;
             UserId = userId;

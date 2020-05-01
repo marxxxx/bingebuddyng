@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services
 {
-    public class AddGameEventCommand
+    public class AddGameEventCommand : IRequest
     {
         public Guid GameId { get; }
         public Guid UserId { get; }
@@ -23,9 +23,9 @@ namespace BingeBuddyNg.Services
         }
     }
 
-    public class AddGameEventCommandHandler
+    public class AddGameEventCommandHandler : IRequestHandler<AddGameEventCommand>
     {
-        public static readonly string UserScoreUpdatedMethodName = "UserScoreUpdated";
+        public static readonly string GameUpdateReceivedMethodName = "GameUpdateReceived";
 
         private INotificationService notificationService;
         private IGameManager manager;
@@ -45,8 +45,8 @@ namespace BingeBuddyNg.Services
             await this.notificationService.SendSignalRMessageAsync(
                 game.PlayerUserIds.Select(u => u.ToString()).ToList().AsReadOnly(),
                 Constants.SignalR.NotificationHubName,
-                UserScoreUpdatedMethodName,
-                new UserScoreUpdatedMessage(command.GameId, command.UserId, currentScore));
+                GameUpdateReceivedMethodName,
+                new GameUpdateReceivedMessage(command.GameId, command.UserId, currentScore));
 
             return Unit.Value;
         }
