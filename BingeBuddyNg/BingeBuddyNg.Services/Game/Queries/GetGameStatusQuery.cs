@@ -22,9 +22,17 @@ namespace BingeBuddyNg.Services.Game.Queries
 
     public class GetGameStatusQueryHandler : IRequestHandler<GetGameStatusQuery, GameStatusDTO>
     {
-        public Task<GameStatusDTO> Handle(GetGameStatusQuery request, CancellationToken cancellationToken)
+        private readonly IGameManager manager;
+
+        public GetGameStatusQueryHandler(IGameManager manager)
         {
-            throw new NotImplementedException();
+            this.manager = manager ?? throw new ArgumentNullException(nameof(manager));
+        }
+
+        public async Task<GameStatusDTO> Handle(GetGameStatusQuery request, CancellationToken cancellationToken)
+        {
+            var game = this.manager.GetGame(request.GameId);
+            return game.ToDto();
         }
     }
 }

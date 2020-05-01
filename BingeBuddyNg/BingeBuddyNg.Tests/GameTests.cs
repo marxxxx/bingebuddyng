@@ -92,12 +92,18 @@ namespace BingeBuddyNg.Tests
         {
             var gameId = Guid.NewGuid();
             var manager = new GameManager();
+            var game = new Game(gameId, "my game", new[] { Guid.NewGuid() });
+            manager.CreateGame(game);
 
             var query = new GetGameStatusQuery(gameId);
-            var handler = new GetGameStatusQueryHandler();
+            var handler = new GetGameStatusQueryHandler(manager);
 
             var result = await handler.Handle(query, CancellationToken.None);
-            
+
+            Assert.Equal(game.Id, result.Id);
+            Assert.Equal(game.Title, result.Title);
+            Assert.Equal(game.PlayerUserIds, game.PlayerUserIds);
+            Assert.Equal(game.Scores, game.Scores);
         }
 
         private bool AreEqual<T>(IEnumerable<T> list1, IEnumerable<T> list2)
