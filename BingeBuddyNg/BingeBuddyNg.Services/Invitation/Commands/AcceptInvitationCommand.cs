@@ -23,7 +23,7 @@ namespace BingeBuddyNg.Services.Invitation.Commands
         public string InvitationToken { get; }
     }
 
-    public class AcceptInvitationCommandHandler :IRequestHandler<AcceptInvitationCommand>
+    public class AcceptInvitationCommandHandler : IRequestHandler<AcceptInvitationCommand>
     {
         private readonly ILogger<AcceptInvitationCommandHandler> logger;
 
@@ -51,7 +51,7 @@ namespace BingeBuddyNg.Services.Invitation.Commands
 
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-        
+
         public async Task<Unit> Handle(AcceptInvitationCommand request, CancellationToken cancellationToken)
         {
             var invitation = await this.invitationRepository.AcceptInvitationAsync(request.AcceptingUserId, request.InvitationToken);

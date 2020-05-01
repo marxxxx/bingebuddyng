@@ -1,0 +1,31 @@
+API
+----
+-> StartGame
+   > UserId[]
+   > Title
+   < GameId
+   
+-> SendGameEvent
+	> GameId
+    > Count
+	
+-> GetGame
+	> GameId
+	< Title
+	< { UserId, Count } []
+  
+-> GetGameResults
+	> GameId
+	< Title
+	< { UserId, Count } []
+
+-> GetGames
+   < {Timestamp, Title, UserId[], Winner } []
+
+
+SignalR Methods
+---------------
+
+- GameStarted (GameId, Title, UserId[])
+- GameUpdateReceived (GameId, UserId, TotalCount)
+- GameEnded (GameId, Winner)
