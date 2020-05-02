@@ -18,8 +18,9 @@ namespace BingeBuddyNg.Tests
         [Fact]
         public async Task ShouldCreateGameAndSendNotificationsWhenGameWasStarted()
         {
-            Guid myUserId = Guid.NewGuid();
-            Guid[] friendUserIds = new[] { Guid.NewGuid(), Guid.NewGuid() };
+            // Arrange
+            string myUserId = Guid.NewGuid().ToString();
+            string[] friendUserIds = new[] { Guid.NewGuid().ToString(), Guid.NewGuid().ToString() };
             string[] friendUserIdsAsString = friendUserIds.Select(f => f.ToString()).ToArray();
             string gameTitle = "My Game";
             var notificationServiceMock = new Mock<INotificationService>();
@@ -35,8 +36,10 @@ namespace BingeBuddyNg.Tests
             var command = new StartGameCommand(myUserId, gameTitle, friendUserIds);
             var handler = new StartGameCommandHandler(notificationServiceMock.Object, manager, userRepository.Object);
 
-            StartGameResult result = await handler.Handle(command, CancellationToken.None);
+            // Act
+            StartGameResultDTO result = await handler.Handle(command, CancellationToken.None);
 
+            // Assert
             var game = manager.GetGame(result.GameId);
             Assert.Equal(result.GameId, game.Id);
 
@@ -47,7 +50,7 @@ namespace BingeBuddyNg.Tests
                     It.Is<IReadOnlyList<string>>(u => AreEqual(u, friendUserIdsAsString)), 
                     Shared.Constants.SignalR.NotificationHubName, 
                     StartGameCommandHandler.GameStartedMethodName,
-                    It.Is<GameStartedMessage>( m => m.GameId == result.GameId && m.Title ==  gameTitle && AreEqual(friendUserIds, m.UserIds))), Times.Once);
+                    It.Is<GameStartedMessage>( m => m.GameId == result.GameId && m.Title ==  gameTitle && AreEqual<string>(friendUserIds, m.UserIds))), Times.Once);
 
             notificationServiceMock.Verify(s =>
                s.SendWebPushMessage(It.IsAny<IEnumerable<PushInfo>>(), It.Is<NotificationMessage>(m => m.data.url.Contains(game.Id.ToString()))), Times.Once);
@@ -56,9 +59,10 @@ namespace BingeBuddyNg.Tests
         [Fact]
         public async Task ShouldSendMessageWithIncrementedScoreWhenGameEventWasSent()
         {
+            // Arrange
             Guid gameId = Guid.NewGuid();
-            Guid userId = Guid.NewGuid();
-            Guid[] friendUserIds = new[] { Guid.NewGuid(), Guid.NewGuid() };
+            string userId = Guid.NewGuid().ToString();
+            string[] friendUserIds = new[] { Guid.NewGuid().ToString(), Guid.NewGuid().ToString() };
             string[] friendUserIdsAsString = friendUserIds.Select(f => f.ToString()).ToArray();
             var notificationServiceMock = new Mock<INotificationService>();
             var manager = new GameManager();
@@ -67,8 +71,10 @@ namespace BingeBuddyNg.Tests
             var command = new AddGameEventCommand(gameId, userId, 5);
             var handler = new AddGameEventCommandHandler(notificationServiceMock.Object, manager);
 
+            // Act
             await handler.Handle(command, CancellationToken.None);
 
+            // Assert
             notificationServiceMock.Verify(s =>
                 s.SendSignalRMessageAsync(
                     It.Is<IReadOnlyList<string>>(u => AreEqual(u, friendUserIdsAsString)),
@@ -90,16 +96,19 @@ namespace BingeBuddyNg.Tests
         [Fact]
         public async Task ShouldGetStatusOfExistingGame()
         {
+            // Arrage
             var gameId = Guid.NewGuid();
             var manager = new GameManager();
-            var game = new Game(gameId, "my game", new[] { Guid.NewGuid() });
+            var game = new Game(gameId, "my game", new[] { Guid.NewGuid().ToString() });
             manager.CreateGame(game);
 
             var query = new GetGameStatusQuery(gameId);
             var handler = new GetGameStatusQueryHandler(manager);
 
+            // Act
             var result = await handler.Handle(query, CancellationToken.None);
 
+            // Assert
             Assert.Equal(game.Id, result.Id);
             Assert.Equal(game.Title, result.Title);
             Assert.Equal(game.PlayerUserIds, game.PlayerUserIds);

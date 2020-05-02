@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services
 {
-    public class StartGameCommand : IRequest<StartGameResult>
+    public class StartGameCommand : IRequest<StartGameResultDTO>
     {
-        public Guid UserId { get; }
+        public string UserId { get; }
         public string Title { get; }
-        public Guid[] FriendUserIds { get; }
+        public string[] FriendUserIds { get; }
 
-        public StartGameCommand(Guid myUserId, string gameTitle, Guid[] friendUserIds)
+        public StartGameCommand(string myUserId, string gameTitle, string[] friendUserIds)
         {
             this.UserId = myUserId;
             this.Title = gameTitle;
@@ -25,17 +25,8 @@ namespace BingeBuddyNg.Services
         }
     }
 
-    public class StartGameResult
-    {
-        public StartGameResult(Guid gameId)
-        {
-            GameId = gameId;
-        }
-
-        public Guid GameId { get; set; }
-    }
-
-    public class StartGameCommandHandler : IRequestHandler<StartGameCommand, StartGameResult>
+   
+    public class StartGameCommandHandler : IRequestHandler<StartGameCommand, StartGameResultDTO>
     {
         public static readonly string GameStartedMethodName = "GameStarted";
 
@@ -50,7 +41,7 @@ namespace BingeBuddyNg.Services
             this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
-        public async Task<StartGameResult> Handle(StartGameCommand command, CancellationToken cancellationToken)
+        public async Task<StartGameResultDTO> Handle(StartGameCommand command, CancellationToken cancellationToken)
         {
             var gameId = Guid.NewGuid();
 
@@ -80,7 +71,7 @@ namespace BingeBuddyNg.Services
                 pushInfosOfInvitedFriends,
                 pushMessage);
 
-            return new StartGameResult(gameId);
+            return new StartGameResultDTO(gameId);
         }
     }
 }

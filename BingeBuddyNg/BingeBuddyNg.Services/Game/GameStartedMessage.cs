@@ -6,7 +6,7 @@ namespace BingeBuddyNg.Services.Game
 {
     public class GameStartedMessage
     {
-        public GameStartedMessage(Guid gameId, string title, Guid[] userIds)
+        public GameStartedMessage(Guid gameId, string title, string[] userIds)
         {
             GameId = gameId;
             Title = title ?? throw new ArgumentNullException(nameof(title));
@@ -17,7 +17,7 @@ namespace BingeBuddyNg.Services.Game
 
         public string Title { get; }
 
-        public Guid[] UserIds { get;  }
+        public string[] UserIds { get;  }
 
         public override string ToString()
         {

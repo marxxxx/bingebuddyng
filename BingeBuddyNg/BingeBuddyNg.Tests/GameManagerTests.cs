@@ -8,12 +8,12 @@ namespace BingeBuddyNg.Tests
     {
         private GameManager calculator;
         private Guid gameId;
-        private Guid userId;
+        private string userId;
 
         public GameManagerTests()
         {
             this.gameId = Guid.NewGuid();
-            this.userId = Guid.NewGuid();
+            this.userId = Guid.NewGuid().ToString();
             this.calculator = new GameManager();
             this.calculator.CreateGame(new Game(this.gameId, "my game", new[] { this.userId }));
         }
@@ -87,8 +87,8 @@ namespace BingeBuddyNg.Tests
         [Fact]
         public void ShouldCalculateScoreCorrentlyAfterMultipleIncrementsForMultipleUsers()
         {
-            Guid userId2 = Guid.NewGuid();
-            Guid userId3 = Guid.NewGuid();
+            string userId2 = Guid.NewGuid().ToString();
+            string userId3 = Guid.NewGuid().ToString();
 
             calculator.AddUserScore(gameId, userId, 1);
             calculator.AddUserScore(gameId, userId2, 4);
@@ -113,8 +113,8 @@ namespace BingeBuddyNg.Tests
         [Fact]
         public void ShouldDetermineWinner()
         {
-            Guid userId2 = Guid.NewGuid();
-            Guid userId3 = Guid.NewGuid();
+            string userId2 = Guid.NewGuid().ToString();
+            string userId3 = Guid.NewGuid().ToString();
 
             calculator.AddUserScore(gameId, userId, 1);
             calculator.AddUserScore(gameId, userId2, 2);

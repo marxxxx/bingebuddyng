@@ -34,7 +34,7 @@ namespace BingeBuddyNg.Services.Game
             return game;
         }
 
-        public int AddUserScore(Guid gameId, Guid userId, int score)
+        public int AddUserScore(Guid gameId, string userId, int score)
         {
             if (!this.Games.TryGetValue(gameId, out Game game))
             {

@@ -9,7 +9,7 @@ namespace BingeBuddyNg.Services.Game
 
         Game GetGame(Guid gameId);
 
-        int AddUserScore(Guid gameId, Guid userId, int score);
+        int AddUserScore(Guid gameId, string userId, int score);
 
         IReadOnlyList<UserScore> GetGameResult(Guid gameId);
     }

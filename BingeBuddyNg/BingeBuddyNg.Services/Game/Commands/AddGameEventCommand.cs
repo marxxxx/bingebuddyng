@@ -12,10 +12,10 @@ namespace BingeBuddyNg.Services
     public class AddGameEventCommand : IRequest
     {
         public Guid GameId { get; }
-        public Guid UserId { get; }
+        public string UserId { get; }
         public int Count { get; }
 
-        public AddGameEventCommand(Guid gameId, Guid myUserId, int count)
+        public AddGameEventCommand(Guid gameId, string myUserId, int count)
         {
             this.GameId = gameId;
             this.UserId = myUserId;

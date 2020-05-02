@@ -4,7 +4,7 @@ namespace BingeBuddyNg.Services.Game
 {
     public class GameUpdateReceivedMessage
     {
-        public GameUpdateReceivedMessage(Guid gameId, Guid userId, int currentScore)
+        public GameUpdateReceivedMessage(Guid gameId, string userId, int currentScore)
         {
             GameId = gameId;
             UserId = userId;
@@ -12,7 +12,7 @@ namespace BingeBuddyNg.Services.Game
         }
 
         public Guid GameId { get; }
-        public Guid UserId { get; }
+        public string UserId { get; }
         public int CurrentScore { get; }
 
         public override string ToString()

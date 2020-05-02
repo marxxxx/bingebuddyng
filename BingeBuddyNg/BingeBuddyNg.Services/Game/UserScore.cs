@@ -4,13 +4,13 @@ namespace BingeBuddyNg.Services.Game
 {
     public class UserScore
     {
-        public UserScore(Guid userId, int score)
+        public UserScore(string userId, int score)
         {
             this.UserId = userId;
             this.Score = score;
         }
 
-        public Guid UserId { get; }
+        public string UserId { get; }
 
         public int Score { get; }
 
@@ -27,7 +27,7 @@ namespace BingeBuddyNg.Services.Game
 
         public override string ToString()
         {
-            return $"{{{nameof(UserId)}={UserId.ToString()}, {nameof(Score)}={Score.ToString()}}}";
+            return $"{{{nameof(UserId)}={UserId}, {nameof(Score)}={Score.ToString()}}}";
         }
     }
 }
