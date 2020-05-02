@@ -1,11 +1,13 @@
 ﻿using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Calculation;
 using BingeBuddyNg.Services.DrinkEvent;
+using BingeBuddyNg.Services.Game;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
 using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 
 namespace BingeBuddyNg.Functions
@@ -27,6 +29,8 @@ namespace BingeBuddyNg.Functions
             services.AddTransient<IUserStatsHistoryRepository, UserStatsHistoryRepository>();
 
             services.AddTransient<ICacheService, NoCacheService>();
+
+            services.AddGame();
 
             // Infrastructure
             services.AddHttpClient();
@@ -72,6 +76,12 @@ namespace BingeBuddyNg.Functions
             services.AddSingleton(new StorageConfiguration(storageConnectionString));
 
             services.AddSingleton<IStorageAccessService, StorageAccessService>();
+        }
+
+        public static void AddGame(this IServiceCollection services)
+        {
+            services.AddSingleton<IGameManager, GameManager>();
+            services.AddSingleton<IHostedService, GameEndNotificationService>();
         }
     }
 }
