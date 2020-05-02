@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace BingeBuddyNg.Services.Game
 {
@@ -9,7 +10,9 @@ namespace BingeBuddyNg.Services.Game
     {
         public ConcurrentDictionary<Guid, Game> Games { get; } = new ConcurrentDictionary<Guid, Game>();
 
-        public void CreateGame(Game game)
+        public event EventHandler<GameEndedEventArgs> GameEnded;
+
+        public void StartGame(Game game)
         {
             if (game == null)
             {
@@ -22,6 +25,21 @@ namespace BingeBuddyNg.Services.Game
             }
 
             this.Games.AddOrUpdate(game.Id, game, (id, g) => game);
+            var timer = new Timer(OnGameElapsed, game , game.Duration, TimeSpan.FromMilliseconds(-1));
+            game.Timer = timer;
+        }
+
+        private void OnGameElapsed(object state)
+        {
+            var game = (Game)state;
+            var winnerUserId = GetWinner(game.Id);
+
+            this.GameEnded?.Invoke(this, new GameEndedEventArgs(game, winnerUserId.UserId));
+            if(game.Timer != null)
+            {
+                game.Timer.Dispose();
+                game.Timer = null;
+            }            
         }
 
         public Game GetGame(Guid gameId)

@@ -34,7 +34,7 @@ namespace BingeBuddyNg.Services.Infrastructure
             }
         }
 
-        public async Task SendSignalRMessageAsync(IReadOnlyList<string> userIds, string hubName, string method, object payload)
+        public async Task SendSignalRMessageAsync(IEnumerable<string> userIds, string hubName, string method, object payload)
         {
             var hubContext = await serviceManager.CreateHubContextAsync(hubName);
 
@@ -50,7 +50,7 @@ namespace BingeBuddyNg.Services.Infrastructure
 
             var serialized = JsonConvert.SerializeObject(payload, settings);
 
-            await hubContext.Clients.Users(userIds).SendCoreAsync(method, new[] { serialized });
+            await hubContext.Clients.Users(new List<string>(userIds).AsReadOnly()).SendCoreAsync(method, new[] { serialized });
         }
     }
 }

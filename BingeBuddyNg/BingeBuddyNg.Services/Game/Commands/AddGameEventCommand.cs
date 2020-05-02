@@ -25,8 +25,6 @@ namespace BingeBuddyNg.Services
 
     public class AddGameEventCommandHandler : IRequestHandler<AddGameEventCommand>
     {
-        public static readonly string GameUpdateReceivedMethodName = "GameUpdateReceived";
-
         private INotificationService notificationService;
         private IGameManager manager;
 
@@ -45,7 +43,7 @@ namespace BingeBuddyNg.Services
             await this.notificationService.SendSignalRMessageAsync(
                 game.PlayerUserIds.Select(u => u.ToString()).ToList().AsReadOnly(),
                 Constants.SignalR.NotificationHubName,
-                GameUpdateReceivedMethodName,
+                HubMethodNames.GameUpdateReceived,
                 new GameUpdateReceivedMessage(command.GameId, command.UserId, currentScore));
 
             return Unit.Value;

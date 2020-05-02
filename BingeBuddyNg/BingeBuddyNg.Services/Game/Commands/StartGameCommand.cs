@@ -28,7 +28,6 @@ namespace BingeBuddyNg.Services
    
     public class StartGameCommandHandler : IRequestHandler<StartGameCommand, StartGameResultDTO>
     {
-        public static readonly string GameStartedMethodName = "GameStarted";
 
         private readonly INotificationService notificationService;
         private readonly IGameManager manager;
@@ -45,7 +44,7 @@ namespace BingeBuddyNg.Services
         {
             var gameId = Guid.NewGuid();
 
-            this.manager.CreateGame(new Game.Game(gameId, command.Title, command.FriendUserIds));
+            this.manager.StartGame(new Game.Game(gameId, command.Title, command.FriendUserIds));
 
             var friendIds = command.FriendUserIds.Select(f => f.ToString()).ToList();
             var allParticipents = new List<string>(friendIds);
@@ -59,7 +58,7 @@ namespace BingeBuddyNg.Services
             await this.notificationService.SendSignalRMessageAsync(
                 friendIds,
                 Constants.SignalR.NotificationHubName,
-                GameStartedMethodName,
+                HubMethodNames.GameStarted,
                 message);
 
             var inviter = users.FirstOrDefault(u => u.Id == command.UserId.ToString());

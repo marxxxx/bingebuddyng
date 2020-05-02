@@ -49,7 +49,7 @@ namespace BingeBuddyNg.Tests
                 s.SendSignalRMessageAsync(
                     It.Is<IReadOnlyList<string>>(u => AreEqual(u, friendUserIdsAsString)), 
                     Shared.Constants.SignalR.NotificationHubName, 
-                    StartGameCommandHandler.GameStartedMethodName,
+                    HubMethodNames.GameStarted,
                     It.Is<GameStartedMessage>( m => m.GameId == result.GameId && m.Title ==  gameTitle && AreEqual<string>(friendUserIds, m.UserIds))), Times.Once);
 
             notificationServiceMock.Verify(s =>
@@ -66,7 +66,7 @@ namespace BingeBuddyNg.Tests
             string[] friendUserIdsAsString = friendUserIds.Select(f => f.ToString()).ToArray();
             var notificationServiceMock = new Mock<INotificationService>();
             var manager = new GameManager();
-            manager.CreateGame(new Game(gameId, "my game", friendUserIds));
+            manager.StartGame(new Game(gameId, "my game", friendUserIds));
 
             var command = new AddGameEventCommand(gameId, userId, 5);
             var handler = new AddGameEventCommandHandler(notificationServiceMock.Object, manager);
@@ -79,7 +79,7 @@ namespace BingeBuddyNg.Tests
                 s.SendSignalRMessageAsync(
                     It.Is<IReadOnlyList<string>>(u => AreEqual(u, friendUserIdsAsString)),
                     Shared.Constants.SignalR.NotificationHubName,
-                    AddGameEventCommandHandler.GameUpdateReceivedMethodName,
+                    HubMethodNames.GameUpdateReceived,
                     It.Is<GameUpdateReceivedMessage>(m => m.GameId == gameId && m.UserId == userId && m.CurrentScore == 5)), Times.Once);
 
             var secondCommand = new AddGameEventCommand(gameId, userId, 3);
@@ -89,7 +89,7 @@ namespace BingeBuddyNg.Tests
                 s.SendSignalRMessageAsync(
                     It.Is<IReadOnlyList<string>>(u => AreEqual(u, friendUserIdsAsString)),
                     Shared.Constants.SignalR.NotificationHubName,
-                    AddGameEventCommandHandler.GameUpdateReceivedMethodName,
+                    HubMethodNames.GameUpdateReceived,
                     It.Is<GameUpdateReceivedMessage>(m => m.GameId == gameId && m.UserId == userId && m.CurrentScore == 8)), Times.Once);
         }
 
@@ -100,7 +100,7 @@ namespace BingeBuddyNg.Tests
             var gameId = Guid.NewGuid();
             var manager = new GameManager();
             var game = new Game(gameId, "my game", new[] { Guid.NewGuid().ToString() });
-            manager.CreateGame(game);
+            manager.StartGame(game);
 
             var query = new GetGameStatusQuery(gameId);
             var handler = new GetGameStatusQueryHandler(manager);

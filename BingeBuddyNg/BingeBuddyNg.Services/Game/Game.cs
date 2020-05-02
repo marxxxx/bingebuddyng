@@ -1,17 +1,24 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace BingeBuddyNg.Services.Game
 {
     public class Game
     {
         public Game(Guid id, string title, IEnumerable<string> playerUserIds)
+            : this(id, title, playerUserIds, TimeSpan.FromMinutes(1))
+        {
+        }
+
+        public Game(Guid id, string title, IEnumerable<string> playerUserIds, TimeSpan duration)
         {
             this.Id = id;
             this.Title = title;
             this.PlayerUserIds = playerUserIds ?? throw new ArgumentNullException(nameof(playerUserIds));
             this.Scores = new ConcurrentDictionary<string, int>();
+            this.Duration = duration;
         }
 
         public Guid Id { get; }
@@ -21,6 +28,10 @@ namespace BingeBuddyNg.Services.Game
         public IEnumerable<string> PlayerUserIds { get; set; }
 
         public ConcurrentDictionary<string, int> Scores { get; }
+
+        public TimeSpan Duration { get; }
+
+        public Timer Timer { get; set; }
 
         public int IncrementScore(string userId, int count)
         {

@@ -7,6 +7,6 @@ namespace BingeBuddyNg.Services.Infrastructure
     {
         void SendWebPushMessage(IEnumerable<PushInfo> receivers, NotificationMessage message);
 
-        Task SendSignalRMessageAsync(IReadOnlyList<string> userIds, string hubName, string method, object payload);
+        Task SendSignalRMessageAsync(IEnumerable<string> userIds, string hubName, string method, object payload);
     }
 }
