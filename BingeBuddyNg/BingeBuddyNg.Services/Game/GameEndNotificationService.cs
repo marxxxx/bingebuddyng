@@ -1,6 +1,9 @@
 ﻿using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Shared;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,11 +13,13 @@ namespace BingeBuddyNg.Services.Game
     {
         private readonly IGameManager gameManager;
         private readonly INotificationService notificationService;
+        private readonly IUserRepository userRepository;
 
-        public GameEndNotificationService(IGameManager gameManager, INotificationService notificationService)
+        public GameEndNotificationService(IGameManager gameManager, INotificationService notificationService, IUserRepository userRepository)
         {
             this.gameManager = gameManager ?? throw new ArgumentNullException(nameof(gameManager));
             this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -23,9 +28,22 @@ namespace BingeBuddyNg.Services.Game
             return Task.CompletedTask;
         }
 
-        private void OnGameEnded(object sender, GameEndedEventArgs e)
+        private async void OnGameEnded(object sender, GameEndedEventArgs e)
         {
-            throw new NotImplementedException();
+            await this.notificationService.SendSignalRMessageAsync(
+                e.Game.PlayerUserIds,
+                Constants.SignalR.NotificationHubName,
+                HubMethodNames.GameEnded,
+                new GameEndedMessage(e.Game.Id, e.WinnerUserId));
+
+            var users = await this.userRepository.GetUsersAsync(e.Game.PlayerUserIds);
+            var pushInfos = users.Where(u => u.PushInfo != null).Select(u => u.PushInfo);
+            var winnerUser = users.FirstOrDefault(u => u.Id == e.WinnerUserId);
+
+            string url = $"{Constants.Urls.ApplicationUrl}/game-ended/{e.Game.Id}";
+
+            this.notificationService.SendWebPushMessage(pushInfos,
+                new NotificationMessage($"{winnerUser.Name} hat gewonnen!", "Spiel beended", url));            
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
