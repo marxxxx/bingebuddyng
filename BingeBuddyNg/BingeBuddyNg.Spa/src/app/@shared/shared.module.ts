@@ -10,6 +10,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import { RouterModule } from '@angular/router';
+import { EmptyListComponent } from './components/empty-list/empty-list.component';
+import { NoFriendsComponent } from './components/no-friends/no-friends.component';
 
 
 
@@ -35,13 +37,17 @@ import { RouterModule } from '@angular/router';
     ProgressSpinnerComponent,
     UserInfoComponent,
     DrinkIconComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    EmptyListComponent,
+    NoFriendsComponent
   ],
   declarations: [
     ProgressSpinnerComponent,
     UserInfoComponent,
     DrinkIconComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    EmptyListComponent,
+    NoFriendsComponent
   ],
   entryComponents: [ConfirmationDialogComponent],
   providers: []

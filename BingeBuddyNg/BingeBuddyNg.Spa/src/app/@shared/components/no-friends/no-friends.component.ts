@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-no-friends',
@@ -6,6 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./no-friends.component.css']
 })
 export class NoFriendsComponent implements OnInit {
+
+  @Input()
+  showEnterDrinkHint = true;
 
   constructor() { }
 

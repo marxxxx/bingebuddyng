@@ -136,7 +136,7 @@
     "Close": "Close",
 
     "Onboarding": {
-      "AcceptConditions": "I accept that my data will be saved and cookies are used.",
+      "AcceptConditions": "I accept that my data will be saved and processed automatically and cookies are used.",
       "Navmenu_Entry": "Tutorial",
       "Heading": "What's this all about?",
       "Label_Activitys": "Activities",
@@ -173,5 +173,10 @@
       "ReallyDeleteProfile": "Do you really want to delete your profile? This can not be undone!"
     },
 
-    "PleaseWait": "Please wait ..."
+    "PleaseWait": "Please wait ...",
+
+    "Game": {
+      "SelectPlayers":"Please select players",
+      "StartGame": "Start game"
+    }
 }

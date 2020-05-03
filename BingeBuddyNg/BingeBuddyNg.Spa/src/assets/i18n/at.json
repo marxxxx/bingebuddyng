@@ -133,7 +133,7 @@
   "Reactions": "Reaktionen",
   "Close": "Zuamocha",
   "Onboarding": {
-    "AcceptConditions": "I akzeptier dass meine Daten gspeichert werdn und dass Cookies verwendet wern.",
+    "AcceptConditions": "I akzeptier dass meine Daten gspeichert und automatisiert vaoawat werdn und dass Cookies verwendet wern.",
     "Navmenu_Entry": "Hüfe",
     "Heading": "Um wos gehts do üwahaupt?",
     "Label_Activitys": "Aktivitätn",
@@ -165,5 +165,9 @@
     "ProfileDeletionRequested": "Dei Profü wird gelöscht. Do kaust eh wieder kuma owa dei Trinkerkarriere muast wieder bei 0 beginnen!",
     "ReallyDeleteProfile": "Geh mechadst dei Profü wirklich löschn?? Des kaust nimma rückgängig mochn muast wissen!"
   },
-  "PleaseWait": "Woat a neichtl ..."
+  "PleaseWait": "Woat a neichtl ...",
+  "Game": {
+    "SelectPlayers":"Wö deine Mitspiela aus",
+    "StartGame": "Start spü"
+  }
 }

@@ -112,6 +112,7 @@ export class AuthService {
           this.userService.getUser(profile.sub).subscribe(u => {
             profile.nickname = u.name;
             profile.name = u.name;
+            profile.user = u;
             resolve(new ProfileInfoResult(profile, true));
           }, e => {
             console.log('AuthService: user authenticated but not yet registered.', profile, e);

@@ -2,6 +2,7 @@
 using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.DrinkEvent;
 using BingeBuddyNg.Services.FriendsRequest;
+using BingeBuddyNg.Services.Game;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Infrastructure.EventGrid;
 using BingeBuddyNg.Services.Infrastructure.Messaging;
@@ -13,6 +14,7 @@ using MediatR;
 using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace BingeBuddyNg.Services
 {
@@ -39,18 +41,20 @@ namespace BingeBuddyNg.Services
             services.AddEventGrid(configuration);
             
             // add domain services
-            services.AddScoped<IActivityRepository, ActivityRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUserStatsRepository, UserStatsRepository>();
-            services.AddScoped<IFriendRequestRepository, FriendRequestRepository>();
-            services.AddScoped<IInvitationRepository, InvitationRepository>();
+            services.AddSingleton<IActivityRepository, ActivityRepository>();
+            services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IUserStatsRepository, UserStatsRepository>();
+            services.AddSingleton<IFriendRequestRepository, FriendRequestRepository>();
+            services.AddSingleton<IInvitationRepository, InvitationRepository>();
 
-            services.AddScoped<IDrinkEventRepository, DrinkEventRepository>();
+            services.AddSingleton<IDrinkEventRepository, DrinkEventRepository>();
 
-            services.AddScoped<IVenueUserRepository, VenueUserRepository>();
+            services.AddSingleton<IVenueUserRepository, VenueUserRepository>();
 
-            services.AddScoped<IDrinkRepository, DrinkRepository>();
-            services.AddScoped<IUserStatsHistoryRepository, UserStatsHistoryRepository>();
+            services.AddSingleton<IDrinkRepository, DrinkRepository>();
+            services.AddSingleton<IUserStatsHistoryRepository, UserStatsHistoryRepository>();
+
+            services.AddGame();
         }
 
         private static void AddConfiguration(IServiceCollection services, IConfiguration configuration)
@@ -103,6 +107,12 @@ namespace BingeBuddyNg.Services
             var config = configuration.GetSection("EventGrid").Get<EventGridConfiguration>();
             services.AddSingleton(config);
             services.AddSingleton<IEventGridService, EventGridService>();
+        }
+
+        public static void AddGame(this IServiceCollection services)
+        {
+            services.AddSingleton<IGameManager, GameManager>();
+            services.AddSingleton<IHostedService, GameEndNotificationService>();
         }
     }
 }

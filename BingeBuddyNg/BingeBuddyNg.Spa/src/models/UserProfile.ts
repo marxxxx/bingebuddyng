@@ -1,3 +1,5 @@
+import { UserDTO } from './UserDTO';
+
 export class UserProfile {
     family_name: string;
     given_name: string;
@@ -6,4 +8,5 @@ export class UserProfile {
     picture: string;
     sub: string;
     updated_at: any;
+    user: UserDTO;
 }

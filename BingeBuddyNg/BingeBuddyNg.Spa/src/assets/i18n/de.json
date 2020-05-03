@@ -133,7 +133,7 @@
   "Reactions": "Reaktionen",
   "Close": "Schließen",
   "Onboarding": {
-    "AcceptConditions": "Ich akzeptiere, dass meine Daten gespeichert werden und dass Cookies verwendet werden.",
+    "AcceptConditions": "Ich akzeptiere, dass meine Daten gespeichert und automatisiert verarbeitet werden und außerdem stimme ich der Verwendung von Cookies zu.",
     "Navmenu_Entry": "Einführung",
     "Heading": "Worum geht's hier eigentlich?",
     "Label_Activitys": "Aktivitäten",
@@ -165,5 +165,10 @@
     "ProfileDeletionRequested": "Dein Profil wurde zur Löschung markiert. Du kannst jederzeit zurückkehren, musst deine Trinkerkarriere jedoch von 0 starten.",
     "ReallyDeleteProfile": "Möchtest du dein Profil wirklich komplett löschen? Dies kann nicht rückgängig gemacht werden!"
   },
-  "PleaseWait": "Bitte warten ..."
+  "PleaseWait": "Bitte warten ...",
+  "Game": {
+    "SelectPlayers":"Bitte Mitspieler auswählen",
+    "StartGame": "Spiel starten",
+    "SelectGameTitle": "Gib dem Spiel einen Namen"
+  }
 }

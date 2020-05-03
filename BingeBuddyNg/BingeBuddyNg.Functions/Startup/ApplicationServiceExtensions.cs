@@ -30,8 +30,6 @@ namespace BingeBuddyNg.Functions
 
             services.AddTransient<ICacheService, NoCacheService>();
 
-            services.AddGame();
-
             // Infrastructure
             services.AddHttpClient();
             services.AddNotification();
@@ -76,12 +74,6 @@ namespace BingeBuddyNg.Functions
             services.AddSingleton(new StorageConfiguration(storageConnectionString));
 
             services.AddSingleton<IStorageAccessService, StorageAccessService>();
-        }
-
-        public static void AddGame(this IServiceCollection services)
-        {
-            services.AddSingleton<IGameManager, GameManager>();
-            services.AddSingleton<IHostedService, GameEndNotificationService>();
         }
     }
 }

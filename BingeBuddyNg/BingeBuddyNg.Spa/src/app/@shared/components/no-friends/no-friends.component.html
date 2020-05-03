@@ -9,7 +9,7 @@
   <mat-icon>info</mat-icon>{{'FindFriendsOnDrinkersPage' | transloco }}
 </p>
 
-<p  fxLayoutAlign="start center">
+<p  fxLayoutAlign="start center" *ngIf="showEnterDrinkHint">
   <mat-icon>local_drink</mat-icon>{{'EnterDrinks' | transloco }}
 </p>
 
