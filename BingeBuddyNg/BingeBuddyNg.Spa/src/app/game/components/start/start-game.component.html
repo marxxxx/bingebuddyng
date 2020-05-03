@@ -1,17 +1,18 @@
+<div class="header full-width">
+  <h2>
+    {{'Game.StartGame' | transloco}}
+  </h2>
 
-<h2>
-  {{'Game.StartGame' | transloco}}
-</h2>
+  <div>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="{{'Game.SelectGameTitle' | transloco }}" [(ngModel)]="gameTitle">
+    </mat-form-field>
+  </div>
 
-<div>
-  <mat-form-field class="full-width">
-    <input matInput placeholder="{{'Game.SelectGameTitle' | transloco }}" [(ngModel)]="gameTitle">
-  </mat-form-field>
+  <h2>
+    {{'Game.SelectPlayers' | transloco}}
+  </h2>
 </div>
-
-<h2>
-  {{'Game.SelectPlayers' | transloco}}
-</h2>
 
 <div fxLayout fxLayoutAlign="start space-between">
   <mat-selection-list color="primary" (selectionChange)="onSelectionChange($event)">
@@ -26,8 +27,10 @@
 
 </div>
 
-<div class="actions">
+<mat-card class="actions" fxLayoutAlign="end">
   <button mat-button [routerLink]="['/activity-feed']">{{'Cancel' | transloco }}</button>
-  <button mat-raised-button color="primary" *ngIf="!isBusyStartingGame" [disabled]="selectedPlayers.length === 0 || !gameTitle" (click)="onStartGame()">{{'Game.StartGame' | transloco }}</button>
+  <button mat-raised-button color="primary" *ngIf="!isBusyStartingGame"
+    [disabled]="selectedPlayers.length === 0 || !gameTitle"
+    (click)="onStartGame()">{{'Game.StartGame' | transloco }}</button>
   <mat-progress-spinner *ngIf="isBusyStartingGame" color="primary" diameter="48"></mat-progress-spinner>
-</div>
+</mat-card>
