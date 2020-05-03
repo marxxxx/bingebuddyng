@@ -1,11 +1,19 @@
 <app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
 
-<ng-container *ngIf="!isBusy">
-  <h3>{{'Game.Players' | transloco }}</h3>
+<ng-container *ngIf="!isBusy && game">
+  <h2>{{'Game.Players' | transloco }}</h2>
 
-  <mat-card *ngFor="let p of game.userScores" fxLayout fxLayoutAlign="space-between center">
+  <mat-card *ngFor="let p of game.userScores" fxLayout fxLayoutAlign="space-between center" [ngClass]="{'winner': p.user.userId === game.winnerUserId}">
     <app-user-info [userInfo]="p.user" [showName]="true"></app-user-info>
     <span class="score">{{p.score}}</span>
+  </mat-card>
+
+  <mat-card class="status" fxLayoutAlign="center center">
+    <app-game-pad *ngIf="game.status === GameStatus.Running" (scored)="onScored($event)"></app-game-pad>
+
+    <mat-card-content *ngIf="game.status === GameStatus.Ended">
+      <span class="game-over">{{'Game.GameOver' | transloco }}</span>
+    </mat-card-content>
   </mat-card>
 
 </ng-container>

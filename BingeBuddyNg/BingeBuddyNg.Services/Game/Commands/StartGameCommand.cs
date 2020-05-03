@@ -15,13 +15,13 @@ namespace BingeBuddyNg.Services
     {
         public string UserId { get; }
         public string Title { get; }
-        public string[] FriendUserIds { get; }
+        public string[] PlayerUserIds { get; }
 
         public StartGameCommand(string myUserId, string gameTitle, string[] friendUserIds)
         {
             this.UserId = myUserId;
             this.Title = gameTitle;
-            this.FriendUserIds = friendUserIds;
+            this.PlayerUserIds = friendUserIds;
         }
     }
    
@@ -43,16 +43,19 @@ namespace BingeBuddyNg.Services
         {
             var gameId = Guid.NewGuid();
 
-            this.manager.StartGame(new Game.Game(gameId, command.Title, command.FriendUserIds));
+            var totalPlayers = new List<string>(command.PlayerUserIds);
+            totalPlayers.Add(command.UserId);
 
-            var friendIds = command.FriendUserIds.Select(f => f.ToString()).ToList();
+            this.manager.StartGame(new Game.Game(gameId, command.Title, totalPlayers));
+
+            var friendIds = command.PlayerUserIds.Select(f => f.ToString()).ToList();
             var allParticipents = new List<string>(friendIds);
             allParticipents.Add(command.UserId.ToString());
 
             var users = await this.userRepository.GetUsersAsync(allParticipents);
             var pushInfosOfInvitedFriends = users.Where(u => u.PushInfo != null && u.Id != command.UserId.ToString()).Select(u => u.PushInfo).ToList();
 
-            var message = new GameStartedMessage(gameId, command.Title, command.FriendUserIds);
+            var message = new GameStartedMessage(gameId, command.Title, command.PlayerUserIds);
 
             await this.notificationService.SendSignalRMessageAsync(
                 friendIds,

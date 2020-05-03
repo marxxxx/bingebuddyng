@@ -5,6 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../@core/services/auth.guard';
 import { EndGameComponent } from './components/end/end-game.component';
 import { StartGameComponent } from './components/start/start-game.component';
+import { GamePadComponent } from './components/game-pad/game-pad.component';
 
 const routes: Routes = [
   {
@@ -25,7 +26,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [StartGameComponent, PlayfieldComponent, EndGameComponent],
+  declarations: [StartGameComponent, PlayfieldComponent, EndGameComponent, GamePadComponent],
   imports: [
     SharedModule,
     RouterModule.forChild(routes)

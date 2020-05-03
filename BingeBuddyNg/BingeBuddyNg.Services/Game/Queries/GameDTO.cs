@@ -12,5 +12,7 @@ namespace BingeBuddyNg.Services.Game.Queries
         public IEnumerable<UserScoreInfoDTO> UserScores { get; set; }
 
         public GameStatus Status { get; set; }
+
+        public string WinnerUserId { get; set; }
     }
 }

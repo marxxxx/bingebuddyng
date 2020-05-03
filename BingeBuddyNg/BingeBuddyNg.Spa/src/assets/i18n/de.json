@@ -172,6 +172,7 @@
     "SelectGameTitle": "Gib dem Spiel einen Namen",
     "DefaultGameTitle": "Saufspiel",
     "Players": "Spieler",
-    "Score": "Punkte"
+    "Score": "Punkte",
+    "GameOver": "Das Spiel ist vorbei!"
   }
 }

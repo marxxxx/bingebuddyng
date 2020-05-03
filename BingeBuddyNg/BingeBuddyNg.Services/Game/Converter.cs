@@ -19,7 +19,8 @@ namespace BingeBuddyNg.Services.Game
                     {
                         User = p,
                         Score = game.Scores.ContainsKey(p.UserId) ? game.Scores[p.UserId] : 0
-                    }).ToList()
+                    }).ToList(),
+                WinnerUserId = game.Winner?.UserId
             };
         }
     }

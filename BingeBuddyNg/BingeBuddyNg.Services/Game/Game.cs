@@ -19,6 +19,7 @@ namespace BingeBuddyNg.Services.Game
             this.PlayerUserIds = playerUserIds ?? throw new ArgumentNullException(nameof(playerUserIds));
             this.Scores = new ConcurrentDictionary<string, int>();
             this.Duration = duration;
+            this.Status = GameStatus.Running;
         }
 
         public Guid Id { get; }
@@ -34,6 +35,8 @@ namespace BingeBuddyNg.Services.Game
         public Timer Timer { get; set; }
 
         public GameStatus Status { get; set; }
+
+        public UserScore Winner { get; set; }
 
         public int IncrementScore(string userId, int count)
         {

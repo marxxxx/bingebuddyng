@@ -9,4 +9,6 @@ export interface GameDTO {
   userScores: UserScoreInfoDTO[];
 
   status: GameStatus;
+
+  winnerUserId?: string;
 }

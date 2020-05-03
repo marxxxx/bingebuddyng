@@ -32,7 +32,11 @@ namespace BingeBuddyNg.Services.Game
         private void OnGameElapsed(object state)
         {
             var game = (Game)state;
+            
             var winner = FindWinner(game.Id);
+
+            game.Status = GameStatus.Ended;
+            game.Winner = winner;
 
             this.GameEnded?.Invoke(this, new GameEndedEventArgs(game, winner?.UserId));
             if(game.Timer != null)

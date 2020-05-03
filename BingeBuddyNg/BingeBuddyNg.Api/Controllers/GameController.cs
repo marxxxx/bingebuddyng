@@ -42,11 +42,11 @@ namespace BingeBuddyNg.Api.Controllers
             return result;
         }
 
-        [HttpPost("event")]
-        public async Task AddGameEvent(AddGameEventDTO gameEvent)
+        [HttpPost("{gameId}/event")]
+        public async Task AddGameEvent(Guid gameId, AddGameEventDTO gameEvent)
         {
             var userId = this.identityService.GetCurrentUserId();
-            var command = new AddGameEventCommand(gameEvent.GameId, userId, gameEvent.Count);
+            var command = new AddGameEventCommand(gameId, userId, gameEvent.Count);
             await this.mediator.Send(command);
         }
     }

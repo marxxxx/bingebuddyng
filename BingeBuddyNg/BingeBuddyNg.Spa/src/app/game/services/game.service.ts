@@ -21,8 +21,8 @@ export class GameService {
     return this.http.post<StartGameResultDTO>(url, game);
   }
 
-  addGameEvent(gameEvent: AddGameEventDTO): Observable<void> {
-    const url = `${this.baseUrl}/event`;
+  addGameEvent(gameId: string, gameEvent: AddGameEventDTO): Observable<void> {
+    const url = `${this.baseUrl}/${gameId}/event`;
     return this.http.post<void>(url, gameEvent);
   }
 
