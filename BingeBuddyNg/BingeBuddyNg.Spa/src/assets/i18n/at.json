@@ -168,6 +168,11 @@
   "PleaseWait": "Woat a neichtl ...",
   "Game": {
     "SelectPlayers":"Wö deine Mitspiela aus",
-    "StartGame": "Start spü"
+    "StartGame": "Start spü",
+    "SelectGameTitle": "Wie soi des spü hoassn?",
+    "DefaultGameTitle": "Saufspü",
+    "Players": "Spüla",
+    "Score": "Punkte",
+    "GameOver": "S'Spü is vorbei!"
   }
 }
