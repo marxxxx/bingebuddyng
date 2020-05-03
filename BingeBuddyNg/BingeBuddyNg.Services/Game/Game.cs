@@ -33,6 +33,8 @@ namespace BingeBuddyNg.Services.Game
 
         public Timer Timer { get; set; }
 
+        public GameStatus Status { get; set; }
+
         public int IncrementScore(string userId, int count)
         {
             int newScore = count;

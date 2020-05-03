@@ -101,9 +101,14 @@ namespace BingeBuddyNg.Tests
             var manager = new GameManager();
             var game = new Game(gameId, "my game", new[] { Guid.NewGuid().ToString() });
             manager.StartGame(game);
+            var userRepositoryMock = new Mock<IUserRepository>();
+            userRepositoryMock
+                .Setup(r => r.GetUsersAsync(It.IsAny<IEnumerable<string>>()))
+                .ReturnsAsync((IEnumerable<string> _userIds) => _userIds.Select(_u => new User() { Id = _u, Name = _u })
+                .ToList());
 
-            var query = new GetGameStatusQuery(gameId);
-            var handler = new GetGameStatusQueryHandler(manager);
+            var query = new GetGameQuery(gameId);
+            var handler = new GetGameQueryHandler(manager, userRepositoryMock.Object);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
@@ -111,7 +116,7 @@ namespace BingeBuddyNg.Tests
             // Assert
             Assert.Equal(game.Id, result.Id);
             Assert.Equal(game.Title, result.Title);
-            Assert.Equal(game.PlayerUserIds, game.PlayerUserIds);
+            Assert.All(game.PlayerUserIds, p => result.UserScores.Any( p2 => p2.User.UserId == p));
             Assert.Equal(game.Scores, game.Scores);
         }
 

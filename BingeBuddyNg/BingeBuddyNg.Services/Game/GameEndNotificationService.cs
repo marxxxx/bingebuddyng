@@ -42,8 +42,10 @@ namespace BingeBuddyNg.Services.Game
 
             string url = $"{Constants.Urls.ApplicationUrl}/game/end/{e.Game.Id}";
 
+            string message = winnerUser != null ? $"{winnerUser.Name} hat gewonnen!" : "Niemand hat gewonnen!";
+
             this.notificationService.SendWebPushMessage(pushInfos,
-                new NotificationMessage($"{winnerUser.Name} hat gewonnen!", "Spiel beended", url));            
+                new NotificationMessage(message, "Spiel beendet", url));
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

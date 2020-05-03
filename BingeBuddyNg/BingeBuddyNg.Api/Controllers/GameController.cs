@@ -1,6 +1,7 @@
 ﻿using BingeBuddyNg.Services;
 using BingeBuddyNg.Services.Game;
 using BingeBuddyNg.Services.Game.Commands;
+using BingeBuddyNg.Services.Game.Queries;
 using BingeBuddyNg.Services.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -22,6 +23,14 @@ namespace BingeBuddyNg.Api.Controllers
         {
             this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        }
+
+        [HttpGet("{gameId}")]
+        public async Task<GameDTO> GetGame(Guid gameId)
+        {
+            var query = new GetGameQuery(gameId);
+            var result = await this.mediator.Send(query);
+            return result;
         }
 
         [HttpPost("start")]

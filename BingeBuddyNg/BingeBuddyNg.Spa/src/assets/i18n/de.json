@@ -167,9 +167,11 @@
   },
   "PleaseWait": "Bitte warten ...",
   "Game": {
-    "StartGame":"Spiel starten",
+    "StartGame": "Spiel starten",
     "SelectPlayers": "Bitte Mitspieler auswählen",
     "SelectGameTitle": "Gib dem Spiel einen Namen",
-    "DefaultGameTitle": "Saufspiel"
+    "DefaultGameTitle": "Saufspiel",
+    "Players": "Spieler",
+    "Score": "Punkte"
   }
 }

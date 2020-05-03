@@ -9,7 +9,7 @@ namespace BingeBuddyNg.Services.Game
         public GameEndedMessage(Guid gameId, string winnerUserId)
         {
             GameId = gameId;
-            WinnerUserId = winnerUserId ?? throw new ArgumentNullException(nameof(winnerUserId));
+            WinnerUserId = winnerUserId;
         }
 
         public Guid GameId { get; set; }

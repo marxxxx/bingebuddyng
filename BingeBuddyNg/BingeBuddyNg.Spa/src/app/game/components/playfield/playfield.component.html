@@ -1,1 +1,11 @@
-<p>playfield works!</p>
+<app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
+
+<ng-container *ngIf="!isBusy">
+  <h3>{{'Game.Players' | transloco }}</h3>
+
+  <mat-card *ngFor="let p of game.userScores" fxLayout fxLayoutAlign="space-between center">
+    <app-user-info [userInfo]="p.user" [showName]="true"></app-user-info>
+    <span class="score">{{p.score}}</span>
+  </mat-card>
+
+</ng-container>

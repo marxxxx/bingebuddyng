@@ -29,12 +29,6 @@ namespace BingeBuddyNg.Services.User
 
         }
 
-        public UserInfo ToUserInfo()
-        {
-            return new UserInfo(Id, Name);
-        }
-
-
         public List<string> GetVisibleFriendUserIds(bool includeMe = true)
         {
             var visibleUserIds = Friends.Select(f => f.UserId).Except(MutedByFriendUserIds);

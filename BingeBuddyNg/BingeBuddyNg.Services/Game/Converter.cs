@@ -1,20 +1,25 @@
 ﻿using BingeBuddyNg.Services.Game.Queries;
-using System;
+using BingeBuddyNg.Services.User;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace BingeBuddyNg.Services.Game
 {
     public static class Converter
     {
-        public static GameStatusDTO ToDto(this Game game)
+        public static GameDTO ToDto(this Game game, IEnumerable<UserInfoDTO> players)
         {
-            return new GameStatusDTO()
+            return new GameDTO()
             {
                 Id = game.Id,
                 Title = game.Title,
-                Scores = game.Scores.Select(gameScore => new UserScore(gameScore.Key, gameScore.Value)).ToList()
+                Status = game.Status,
+                UserScores = players.Select(p =>
+                    new UserScoreInfoDTO()
+                    {
+                        User = p,
+                        Score = game.Scores.ContainsKey(p.UserId) ? game.Scores[p.UserId] : 0
+                    }).ToList()
             };
         }
     }
