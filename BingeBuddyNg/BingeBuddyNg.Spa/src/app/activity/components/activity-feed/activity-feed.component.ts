@@ -354,9 +354,9 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     this.currentProgress = progress;
   }
 
-  onActionsOpenChange(open: boolean): void {
+  onActionsOpenChange(position: 'right' | 'left', open: boolean): void {
     if (open) {
-      setTimeout(() => this.tooltips.forEach(t => t.show()), 500);
+      setTimeout(() => this.tooltips.filter(t => t.position === position).forEach(t => t.show()), 500);
     } else {
       this.tooltips.forEach(t => t.hide());
     }

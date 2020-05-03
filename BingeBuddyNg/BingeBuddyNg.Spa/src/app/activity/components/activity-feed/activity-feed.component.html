@@ -3,18 +3,22 @@
 
 <div id="activity-container">
 
-  <mat-card class="drink-animation" *ngIf="isBusyAdding && pendingDrinkType != DrinkType.Unknown" (click)="isBusyAdding = false">
+  <mat-card class="drink-animation" *ngIf="isBusyAdding && pendingDrinkType != DrinkType.Unknown"
+    (click)="isBusyAdding = false">
     <app-drink-animation [drinkType]="pendingDrinkType"></app-drink-animation>
   </mat-card>
 
   <!-- The actual activity feed-->
-  <app-activity *ngFor="let a of activitys; trackBy: trackByActivity" [activity]="a" [currentUser]="currentUserInfo" (commentOpenChanged)="isCommentOpen = $event"
-  (deleted)="load()" [id]="a.activity.id" [isHighlighted]="a.activity.id === highlightedActivityId"></app-activity>
+  <app-activity *ngFor="let a of activitys; trackBy: trackByActivity" [activity]="a" [currentUser]="currentUserInfo"
+    (commentOpenChanged)="isCommentOpen = $event" (deleted)="load()" [id]="a.activity.id"
+    [isHighlighted]="a.activity.id === highlightedActivityId"></app-activity>
 
   <!-- Reload-spinner -->
-  <mat-progress-spinner [ngClass]="{noactivityspinner: activitys && activitys.length < 5, activityspinner: activitys && activitys.length >= 5}"
-    id="loadingSpinner" *ngIf="isReloadSpinnerActive && activitys && activitys.length > 5" mode="indeterminate" color="primary"
-    inViewport [inViewportOptions]="{ threshold: [0] }" (inViewportAction)="onAppear($event)"></mat-progress-spinner>
+  <mat-progress-spinner
+    [ngClass]="{noactivityspinner: activitys && activitys.length < 5, activityspinner: activitys && activitys.length >= 5}"
+    id="loadingSpinner" *ngIf="isReloadSpinnerActive && activitys && activitys.length > 5" mode="indeterminate"
+    color="primary" inViewport [inViewportOptions]="{ threshold: [0] }" (inViewportAction)="onAppear($event)">
+  </mat-progress-spinner>
 
   <!-- Placeholder when you have no friends (sad panda)-->
   <app-no-friends *ngIf="!isBusy && !isInitialLoad && activitys && activitys.length === 0"></app-no-friends>
@@ -30,14 +34,46 @@
   </button>
 </mat-card>
 
-<!-- Game FAB Button -->
-<button mat-fab color="primary" class="bottom-left" [routerLink]="['/game']">
-  <mat-icon>sports_esports</mat-icon>
-</button>
-
 <!-- Action FAB Button -->
+<div class="bottom-left">
+  <eco-fab-speed-dial *ngIf="!isBusyAdding && !isBusyUploading && !isCommentOpen" animationMode="scale"
+    (openChange)="onActionsOpenChange('right', $event)">
+    <eco-fab-speed-dial-trigger [spin]="true">
+      <button mat-fab color="accent">
+        <mat-icon>games</mat-icon>
+      </button>
+    </eco-fab-speed-dial-trigger>
+
+    <eco-fab-speed-dial-actions class="btn-act">
+      <button mat-mini-fab color="accent" [routerLink]="['/game']" matTooltip="{{'Game.StartGame' | transloco }}"
+        matTooltipPosition="right">
+        <mat-icon>sports_esports</mat-icon>
+      </button>
+
+      <button *ngIf="locationService.hasLocation() != null" mat-mini-fab matTooltip="{{'CheckInVenue' | transloco}}"
+        (click)="onCheckInVenue()" matTooltipPosition="right">
+        <mat-icon>map</mat-icon>
+      </button>
+
+      <button mat-mini-fab (click)="onAddMessage()" matTooltip="{{'PostMessage' | transloco}}"
+        matTooltipPosition="right">
+        <mat-icon>message</mat-icon>
+      </button>
+
+      <button mat-mini-fab matTooltip="{{'PostImage' | transloco}}" (click)="fileUpload.click()" matTooltipPosition="right">
+        <mat-icon>image</mat-icon>
+      </button>
+
+      <input type="file" #fileUpload id="fileUpload" ng2FileSelect style="display:none;" [uploader]="uploader" />
+      <mat-progress-spinner *ngIf="isBusyUploading" diameter="48" [value]="currentProgress"></mat-progress-spinner>
+    </eco-fab-speed-dial-actions>
+  </eco-fab-speed-dial>
+</div>
+
+<!-- Drink FAB Button -->
 <div class="bottom-right">
-  <eco-fab-speed-dial *ngIf="!isBusyAdding && !isBusyUploading && !isCommentOpen" animationMode="scale" (openChange)="onActionsOpenChange($event)">
+  <eco-fab-speed-dial *ngIf="!isBusyAdding && !isBusyUploading && !isCommentOpen" animationMode="scale"
+    (openChange)="onActionsOpenChange('left', $event)">
     <eco-fab-speed-dial-trigger [spin]="true">
       <button mat-fab color="primary">
         <mat-icon>add</mat-icon>
@@ -45,26 +81,14 @@
     </eco-fab-speed-dial-trigger>
 
     <eco-fab-speed-dial-actions class="btn-act">
-        <button *ngFor="let d of drinks" mat-mini-fab (click)="onDrink(d)" matTooltip="{{d.name | transloco}}" matTooltipPosition="left">
-            <app-drink-icon [drinkType]="d.drinkType"></app-drink-icon>
-          </button>
-      <button class="btn-icon" mat-mini-fab (click)="onAddMessage()" matTooltip="{{'PostMessage' | transloco}}"
+      <button *ngFor="let d of drinks" mat-mini-fab (click)="onDrink(d)" matTooltip="{{d.name | transloco}}"
         matTooltipPosition="left">
-        <mat-icon>message</mat-icon>
-      </button>
-      <button mat-mini-fab matTooltip="{{'PostImage' | transloco}}" (click)="fileUpload.click()" matTooltipPosition="left">
-        <img id="btn-img" class="action-icon" src="../../assets/img/image.png">
-      </button>
-
-      <button *ngIf="locationService.hasLocation() != null" class="btn-icon" mat-mini-fab matTooltip="{{'CheckInVenue' | transloco}}"
-        (click)="onCheckInVenue()" matTooltipPosition="left">
-        <mat-icon>map</mat-icon>
+        <app-drink-icon [drinkType]="d.drinkType"></app-drink-icon>
       </button>
 
     </eco-fab-speed-dial-actions>
   </eco-fab-speed-dial>
 
-  <input type="file" #fileUpload id="fileUpload" ng2FileSelect style="display:none;" [uploader]="uploader" />
   <mat-progress-spinner *ngIf="isBusyAdding" mode="indeterminate" diameter="48"></mat-progress-spinner>
-  <mat-progress-spinner *ngIf="isBusyUploading" diameter="48" [value]="currentProgress"></mat-progress-spinner>
+
 </div>
