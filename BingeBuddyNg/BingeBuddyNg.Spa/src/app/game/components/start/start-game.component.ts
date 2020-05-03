@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { UserInfoDTO } from 'src/models/UserInfoDTO';
-import { UserService } from 'src/app/@core/services/user.service';
-import { UserDTO } from 'src/models/UserDTO';
-import { AuthService } from 'src/app/@core/services/auth/auth.service';
-import { filter, finalize } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { MatSelectionListChange } from '@angular/material/list';
+import { filter, finalize } from 'rxjs/operators';
+
+import { UserInfoDTO } from 'src/models/UserInfoDTO';
+import { AuthService } from 'src/app/@core/services/auth/auth.service';
 import { GameService } from '../../services/game.service';
 import { StartGameDTO } from '../../models/StartGameDTO';
-import { Router } from '@angular/router';
 import { ShellInteractionService } from 'src/app/@core/services/shell-interaction.service';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
-  selector: 'app-select-players',
-  templateUrl: './select-players.component.html',
-  styleUrls: ['./select-players.component.css']
+  selector: 'app-start-game',
+  templateUrl: './start-game.component.html',
+  styleUrls: ['./start-game.component.css']
 })
-export class SelectPlayersComponent implements OnInit {
+export class StartGameComponent implements OnInit {
 
   isBusy = false;
   isBusyStartingGame = false;
@@ -29,6 +29,7 @@ export class SelectPlayersComponent implements OnInit {
     private auth: AuthService,
     private gameService: GameService,
     private router: Router,
+    private translate: TranslocoService,
     private shellInteraction: ShellInteractionService) { }
 
   ngOnInit(): void {
@@ -40,6 +41,8 @@ export class SelectPlayersComponent implements OnInit {
         this.friends = p.user.friends;
         this.isBusy = false;
       });
+
+    this.gameTitle = this.translate.translate('Game.DefaultGameTitle');
   }
 
   onSelectionChange(change: MatSelectionListChange) {
@@ -67,5 +70,4 @@ export class SelectPlayersComponent implements OnInit {
         this.shellInteraction.showErrorMessage();
       });
   }
-
 }

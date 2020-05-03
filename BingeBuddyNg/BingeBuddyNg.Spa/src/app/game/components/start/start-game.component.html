@@ -1,5 +1,6 @@
+
 <h2>
-  {{'Game.SelectPlayers' | transloco}}
+  {{'Game.StartGame' | transloco}}
 </h2>
 
 <div>
@@ -7,6 +8,10 @@
     <input matInput placeholder="{{'Game.SelectGameTitle' | transloco }}" [(ngModel)]="gameTitle">
   </mat-form-field>
 </div>
+
+<h2>
+  {{'Game.SelectPlayers' | transloco}}
+</h2>
 
 <div fxLayout fxLayoutAlign="start space-between">
   <mat-selection-list color="primary" (selectionChange)="onSelectionChange($event)">

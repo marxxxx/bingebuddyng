@@ -40,7 +40,7 @@ namespace BingeBuddyNg.Services.Game
             var pushInfos = users.Where(u => u.PushInfo != null).Select(u => u.PushInfo);
             var winnerUser = users.FirstOrDefault(u => u.Id == e.WinnerUserId);
 
-            string url = $"{Constants.Urls.ApplicationUrl}/game-ended/{e.Game.Id}";
+            string url = $"{Constants.Urls.ApplicationUrl}/game/end/{e.Game.Id}";
 
             this.notificationService.SendWebPushMessage(pushInfos,
                 new NotificationMessage($"{winnerUser.Name} hat gewonnen!", "Spiel beended", url));            

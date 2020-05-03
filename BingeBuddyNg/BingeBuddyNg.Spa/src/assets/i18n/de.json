@@ -167,8 +167,9 @@
   },
   "PleaseWait": "Bitte warten ...",
   "Game": {
-    "SelectPlayers":"Bitte Mitspieler auswählen",
-    "StartGame": "Spiel starten",
-    "SelectGameTitle": "Gib dem Spiel einen Namen"
+    "StartGame":"Spiel starten",
+    "SelectPlayers": "Bitte Mitspieler auswählen",
+    "SelectGameTitle": "Gib dem Spiel einen Namen",
+    "DefaultGameTitle": "Saufspiel"
   }
 }

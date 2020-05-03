@@ -24,7 +24,6 @@ namespace BingeBuddyNg.Services
             this.FriendUserIds = friendUserIds;
         }
     }
-
    
     public class StartGameCommandHandler : IRequestHandler<StartGameCommand, StartGameResultDTO>
     {
@@ -63,7 +62,7 @@ namespace BingeBuddyNg.Services
 
             var inviter = users.FirstOrDefault(u => u.Id == command.UserId.ToString());
 
-            string url = $"${Constants.Urls.ApplicationUrl}/game/{gameId}";
+            string url = $"{Constants.Urls.ApplicationUrl}/game/play/{gameId}";
 
             var pushMessage = new NotificationMessage("Spiel gestartet", $"Du wurdest von {inviter.Name} eingeladen ein Spiel zu spielen!", url);
             this.notificationService.SendWebPushMessage(

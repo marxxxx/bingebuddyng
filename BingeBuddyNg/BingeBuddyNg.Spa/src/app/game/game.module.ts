@@ -1,25 +1,31 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../@shared/shared.module';
 import { PlayfieldComponent } from './components/playfield/playfield.component';
-import { SelectPlayersComponent } from './components/select-players/select-players.component';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../@core/services/auth.guard';
+import { EndGameComponent } from './components/end/end-game.component';
+import { StartGameComponent } from './components/start/start-game.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: SelectPlayersComponent,
+    component: StartGameComponent,
     canActivate: [AuthGuard]
   },
   {
     path: 'play/:gameId',
     component: PlayfieldComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'end/:gameId',
+    component: EndGameComponent,
+    canActivate: [AuthGuard]
   }
 ];
 
 @NgModule({
-  declarations: [SelectPlayersComponent, PlayfieldComponent],
+  declarations: [StartGameComponent, PlayfieldComponent, EndGameComponent],
   imports: [
     SharedModule,
     RouterModule.forChild(routes)
