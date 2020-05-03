@@ -15,6 +15,6 @@ namespace BingeBuddyNg.Services.Game
 
         IReadOnlyList<UserScore> GetGameResult(Guid gameId);
 
-        UserScore GetWinner(Guid gameId);
+        UserScore FindWinner(Guid gameId);
     }
 }

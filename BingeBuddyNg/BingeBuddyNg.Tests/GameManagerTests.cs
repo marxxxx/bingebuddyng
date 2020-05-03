@@ -121,10 +121,17 @@ namespace BingeBuddyNg.Tests
             manager.AddUserScore(gameId, userId2, 2);
             manager.AddUserScore(gameId, userId3, 3);
 
-            var winner = manager.GetWinner(gameId);
+            var winner = manager.FindWinner(gameId);
             Assert.NotNull(winner);
             Assert.Equal(userId3, winner.UserId);
             Assert.Equal(3, winner.Score);
+        }
+
+        [Fact]
+        public void ShouldReturnNoWinnerIfNoScoresAreAvailable()
+        {
+            var winner = manager.FindWinner(gameId);
+            Assert.Null(winner);
         }
     }
 }

@@ -32,9 +32,9 @@ namespace BingeBuddyNg.Services.Game
         private void OnGameElapsed(object state)
         {
             var game = (Game)state;
-            var winnerUserId = GetWinner(game.Id);
+            var winner = FindWinner(game.Id);
 
-            this.GameEnded?.Invoke(this, new GameEndedEventArgs(game, winnerUserId.UserId));
+            this.GameEnded?.Invoke(this, new GameEndedEventArgs(game, winner?.UserId));
             if(game.Timer != null)
             {
                 game.Timer.Dispose();
@@ -74,11 +74,16 @@ namespace BingeBuddyNg.Services.Game
             return game.Scores.Select(s => new UserScore(s.Key, s.Value)).ToList().AsReadOnly();
         }
 
-        public UserScore GetWinner(Guid gameId)
+        public UserScore FindWinner(Guid gameId)
         {
             if (!this.Games.TryGetValue(gameId, out Game game))
             {
                 throw new ArgumentException($"Game with Id {gameId} not found!");
+            }
+
+            if(game.Scores.Count == 0)
+            {
+                return null;
             }
 
             var orderedResult = game.Scores.OrderByDescending(s => s.Value);
