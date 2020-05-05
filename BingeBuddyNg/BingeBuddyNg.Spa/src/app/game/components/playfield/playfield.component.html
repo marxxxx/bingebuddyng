@@ -3,7 +3,8 @@
 <ng-container *ngIf="!isBusy && game">
   <h2>{{'Game.Players' | transloco }}</h2>
 
-  <mat-card *ngFor="let p of game.userScores" fxLayout fxLayoutAlign="space-between center" [ngClass]="{'winner': p.user.userId === game.winnerUserId}">
+  <mat-card *ngFor="let p of game.userScores" fxLayout fxLayoutAlign="space-between center"
+    [ngClass]="{'winner': p.user.userId === game.winnerUserId}">
     <app-user-info [userInfo]="p.user" [showName]="true"></app-user-info>
     <span class="score">{{p.score}}</span>
   </mat-card>
@@ -16,6 +17,7 @@
     </mat-card-content>
   </mat-card>
 
-  <button mat-raised-button class="full-width play-again" color="primary" [routerLink]="['/game']">{{'Game.PlayAgain' | transloco }}</button>
+  <button *ngIf="game.status === GameStatus.Ended" mat-raised-button class="full-width play-again" color="primary"
+    [routerLink]="['/game']">{{'Game.PlayAgain' | transloco }}</button>
 
 </ng-container>

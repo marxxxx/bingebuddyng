@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { DrinkType } from 'src/models/DrinkType';
 
 @Component({
@@ -6,7 +6,7 @@ import { DrinkType } from 'src/models/DrinkType';
   templateUrl: './game-pad.component.html',
   styleUrls: ['./game-pad.component.scss']
 })
-export class GamePadComponent implements OnInit {
+export class GamePadComponent implements OnInit, OnDestroy {
 
   drinks: DrinkType[] = [DrinkType.Unknown, DrinkType.Unknown, DrinkType.Unknown, DrinkType.Unknown, DrinkType.Unknown];
   timer: any;
@@ -21,6 +21,13 @@ export class GamePadComponent implements OnInit {
     this.timer = setInterval(() => {
       this.generateRandomDrinkTypes();
     }, 1000);
+  }
+
+  ngOnDestroy() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
   }
 
   onDrink(drinkType: DrinkType) {

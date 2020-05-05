@@ -19,7 +19,7 @@
 <div fxLayout fxLayoutAlign="start space-between">
   <mat-selection-list color="primary" (selectionChange)="onSelectionChange($event)">
     <mat-list-option *ngFor="let f of friends" [value]="f">
-      <app-user-info style="width: 350px;" [userInfo]="f" [showName]="true"></app-user-info>
+      <app-user-info style="width: 250px;" [userInfo]="f" [showName]="true"></app-user-info>
     </mat-list-option>
   </mat-selection-list>
 
