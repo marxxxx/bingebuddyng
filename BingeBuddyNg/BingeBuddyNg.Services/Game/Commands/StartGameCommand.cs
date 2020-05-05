@@ -3,6 +3,7 @@ using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Shared;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,15 +25,17 @@ namespace BingeBuddyNg.Services
             this.PlayerUserIds = friendUserIds;
         }
     }
-   
+
     public class StartGameCommandHandler : IRequestHandler<StartGameCommand, StartGameResultDTO>
     {
-
         private readonly INotificationService notificationService;
         private readonly IGameManager manager;
-        private IUserRepository userRepository;
+        private readonly IUserRepository userRepository;
 
-        public StartGameCommandHandler(INotificationService notificationService, IGameManager manager, IUserRepository userRepository)
+        public StartGameCommandHandler(
+            INotificationService notificationService,
+            IGameManager manager,
+            IUserRepository userRepository)
         {
             this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
             this.manager = manager ?? throw new ArgumentNullException(nameof(manager));

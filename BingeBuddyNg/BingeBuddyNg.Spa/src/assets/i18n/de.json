@@ -173,6 +173,7 @@
     "DefaultGameTitle": "Saufspiel",
     "Players": "Spieler",
     "Score": "Punkte",
-    "GameOver": "Das Spiel ist vorbei!"
+    "GameOver": "Das Spiel ist vorbei!",
+    "PlayAgain": "Nochmal!"
   }
 }

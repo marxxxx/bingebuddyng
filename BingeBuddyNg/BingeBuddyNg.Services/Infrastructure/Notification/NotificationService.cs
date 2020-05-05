@@ -1,4 +1,5 @@
 ﻿using Microsoft.Azure.SignalR.Management;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -12,11 +13,13 @@ namespace BingeBuddyNg.Services.Infrastructure
     {
         private readonly WebPushConfiguration configuration;
         private readonly IServiceManager serviceManager;
+        private readonly ILogger<NotificationService> logger;
 
-        public NotificationService(WebPushConfiguration configuration, IServiceManager serviceManager)
+        public NotificationService(WebPushConfiguration configuration, IServiceManager serviceManager, ILogger<NotificationService> logger)
         {
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.serviceManager = serviceManager ?? throw new ArgumentNullException(nameof(serviceManager));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public void SendWebPushMessage(IEnumerable<PushInfo> receivers, NotificationMessage message)
@@ -29,8 +32,15 @@ namespace BingeBuddyNg.Services.Infrastructure
 
             foreach (var pushInfo in receivers)
             {
-                webPushClient.SendNotification(new PushSubscription(pushInfo.SubscriptionEndpoint, pushInfo.p256dh, pushInfo.Auth), 
+                try
+                {
+                    webPushClient.SendNotification(new PushSubscription(pushInfo.SubscriptionEndpoint, pushInfo.p256dh, pushInfo.Auth),
                     JsonConvert.SerializeObject(pushMessage), vapidDetails);
+                }
+                catch(Exception ex)
+                {
+                    this.logger.LogError(ex, $"Error sending push notification!");
+                }                
             }
         }
 

@@ -1,3 +1,5 @@
+<app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
+
 <div class="header full-width">
   <h2>
     {{'Game.StartGame' | transloco}}
@@ -16,18 +18,15 @@
 
 <div fxLayout fxLayoutAlign="start space-between">
   <mat-selection-list color="primary" (selectionChange)="onSelectionChange($event)">
-    <mat-list-option *ngFor="let f of friends" fxLayout fxLayoutAlign="space-between center" [value]="f">
-      <app-user-info [userInfo]="f" [showName]="true"></app-user-info>
+    <mat-list-option *ngFor="let f of friends" [value]="f">
+      <app-user-info style="width: 350px;" [userInfo]="f" [showName]="true"></app-user-info>
     </mat-list-option>
   </mat-selection-list>
 
   <app-no-friends *ngIf="!isBusy && friends.length === 0" [showEnterDrinkHint]="false"></app-no-friends>
-
-  <mat-progress-spinner *ngIf="isBusy" mode="indeterminate" diameter="48"></mat-progress-spinner>
-
 </div>
 
-<mat-card class="actions" fxLayoutAlign="end">
+<mat-card class="actions" fxLayoutAlign="end" *ngIf="!isBusy">
   <button mat-button [routerLink]="['/activity-feed']">{{'Cancel' | transloco }}</button>
   <button mat-raised-button color="primary" *ngIf="!isBusyStartingGame"
     [disabled]="selectedPlayers.length === 0 || !gameTitle"

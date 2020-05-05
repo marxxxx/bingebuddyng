@@ -173,6 +173,7 @@
     "DefaultGameTitle": "Drinking game",
     "Players": "Players",
     "Score": "Score",
-    "GameOver": "The game is over!"
+    "GameOver": "The game is over!",
+    "PlayAgain": "Play again!"
   }
 }

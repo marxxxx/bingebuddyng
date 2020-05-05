@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatSelectionListChange } from '@angular/material/list';
 import { filter, finalize } from 'rxjs/operators';
 
@@ -37,8 +37,7 @@ export class StartGameComponent implements OnInit {
     this.auth.currentUserProfile$
       .pipe(filter(p => p && p.user != null))
       .subscribe(p => {
-        console.log('got profile', p);
-        this.friends = p.user.friends;
+        this.friends = p.user.friends.sort((f1, f2) => f1.userName < f2.userName ? -1 : 1);
         this.isBusy = false;
       });
 

@@ -173,6 +173,7 @@
     "DefaultGameTitle": "Saufspü",
     "Players": "Spüla",
     "Score": "Punkte",
-    "GameOver": "S'Spü is vorbei!"
+    "GameOver": "S'Spü is vorbei!",
+    "PlayAgain": "Nu amoi!"
   }
 }
