@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import * as signalR from '@microsoft/signalr';
 
 import { ActivityStatsDTO } from 'src/models/ActivityStatsDTO';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth/auth.service';
+import { filter } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
@@ -17,9 +18,11 @@ export class NotificationService {
 
   activityReceived$ = this.activityReceivedSource.asObservable();
 
+  private initialized = new BehaviorSubject<boolean>(false);
+
   constructor(private auth: AuthService) { }
 
-  start(): Promise<void> {
+  async start(): Promise<void> {
 
     const url = `${environment.BaseDataUrl}/Negotiation/${this.hubName}`;
 
@@ -32,10 +35,22 @@ export class NotificationService {
       this.activityReceivedSource.next(JSON.parse(payload));
     });
 
-    return this.connection.start();
+    await this.connection.start();
+
+    this.initialized.next(true);
   }
 
   stop(): Promise<void> {
     return this.connection.stop();
+  }
+
+  on(methodName: string, callback: (payload) => void) {
+    this.initialized.pipe(filter(isInitialized => isInitialized))
+      .subscribe(() => {
+        this.connection.on(methodName, (nativePayload) => {
+          callback(JSON.parse(nativePayload));
+        });
+      });
+
   }
 }

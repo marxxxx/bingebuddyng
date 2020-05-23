@@ -6,7 +6,6 @@ import { VenueDialogComponent } from './components/venue-dialog/venue-dialog.com
 import { ActivityService } from './services/activity.service';
 import { ActivityFeedComponent } from './components/activity-feed/activity-feed.component';
 import { ActivityComponent } from './components/activity/activity.component';
-import { NoFriendsComponent } from './components/no-friends/no-friends.component';
 import { InViewportModule } from 'ng-in-viewport';
 import { EcoFabSpeedDialModule } from '@ecodev/fab-speed-dial';
 import { RouterModule } from '@angular/router';
@@ -21,7 +20,6 @@ import { DrinkAnimationComponent } from './components/drink-animation/drink-anim
   declarations: [
     ActivityFeedComponent,
     ActivityComponent,
-    NoFriendsComponent,
     MessageDialogComponent,
     VenueDialogComponent,
     ReactionDialogComponent,

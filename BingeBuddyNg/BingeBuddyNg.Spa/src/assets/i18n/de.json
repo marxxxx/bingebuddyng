@@ -133,7 +133,7 @@
   "Reactions": "Reaktionen",
   "Close": "Schließen",
   "Onboarding": {
-    "AcceptConditions": "Ich akzeptiere, dass meine Daten gespeichert werden und dass Cookies verwendet werden.",
+    "AcceptConditions": "Ich akzeptiere, dass meine Daten gespeichert und automatisiert verarbeitet werden und außerdem stimme ich der Verwendung von Cookies zu.",
     "Navmenu_Entry": "Einführung",
     "Heading": "Worum geht's hier eigentlich?",
     "Label_Activitys": "Aktivitäten",
@@ -157,7 +157,7 @@
   },
   "Total": "Gesamt",
   "UsagePerWeekDay": "Trunkenheit pro Wochentag",
-  "MedianMaxAlcLevel": "Median max. Alkoholisierung",
+  "MedianMaxAlcLevel": "Betrunkenheit",
   "Probability": "Wahrscheinlichkeit",
   "UserProfile": {
     "Edit": "Bearbeiten",
@@ -165,5 +165,21 @@
     "ProfileDeletionRequested": "Dein Profil wurde zur Löschung markiert. Du kannst jederzeit zurückkehren, musst deine Trinkerkarriere jedoch von 0 starten.",
     "ReallyDeleteProfile": "Möchtest du dein Profil wirklich komplett löschen? Dies kann nicht rückgängig gemacht werden!"
   },
-  "PleaseWait": "Bitte warten ..."
+  "PleaseWait": "Bitte warten ...",
+  "Game": {
+    "StartOwnGame": "Eigenes Spiel starten",
+    "StartGame": "Spiel starten",
+    "SelectPlayers": "Bitte Mitspieler auswählen",
+    "SelectGameTitle": "Gib dem Spiel einen Namen",
+    "DefaultGameTitle": "Saufspiel",
+    "Players": "Spieler",
+    "Score": "Punkte",
+    "GameOver": "Das Spiel ist vorbei!",
+    "PlayAgain": "Nochmal!",
+    "EndResult": "Spielergebnis",
+    "WinnerMessage": "{0} hat gewonnen!",
+    "NoWinnerMessage": "Niemand hat gewonnen!",
+    "InvitationMessage": "Du wurdest von {0} eingeladen ein Spiel zu spielen!",
+    "ActivityMessage": "Ich habe das Spiel namens '{{title}}' gewonnen!"
+  }
 }

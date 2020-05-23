@@ -16,6 +16,10 @@
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@models/*": ["src/models"],
+      "@shared/*": ["src/app/@shared"]
+    }
   }
 }

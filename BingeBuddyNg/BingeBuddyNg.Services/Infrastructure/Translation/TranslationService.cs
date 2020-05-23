@@ -26,7 +26,9 @@ namespace BingeBuddyNg.Services.Infrastructure
 
             var translationObject = await translationTask;
 
-            var translationString = translationObject[key].Value<string>();
+            var val = translationObject.SelectToken(key);
+            
+            var translationString = val.ToString();
             if(values != null && values.Length > 0)
             {
                 translationString = string.Format(translationString, values);

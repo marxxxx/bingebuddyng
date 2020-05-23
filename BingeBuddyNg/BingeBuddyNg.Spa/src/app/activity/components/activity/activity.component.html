@@ -74,9 +74,29 @@
       <div class="message" *ngIf="activity.activity.activityType === ActivityType.Registration">
         <span>{{'WelcomeNewUserMessage' | transloco: activity.activity}}</span>
       </div>
+      <!-- Profile Image Update -->
       <div class="message" *ngIf="activity.activity.activityType === ActivityType.ProfileImageUpdate">
         <span>{{'ProfileImageUpdateMessage' | transloco:activity.activity }}</span>
       </div>
+      <!-- Game Result -->
+      <div class="game-result" *ngIf="activity.activity.activityType === ActivityType.GameResult">
+        <span>{{'Game.ActivityMessage' | transloco:activity.activity.gameInfo }}</span>
+
+        <h3>{{'Game.EndResult' | transloco}}</h3>
+
+        <div fxLayout fxLayoutAlign="space-between center" *ngFor="let p of activity.activity.gameInfo.userScores">
+          <app-user-info [userInfo]="p.user" [showName]="true"></app-user-info>
+          <p class="score">{{p.score}}</p>
+        </div>
+        
+
+        <div fxLayout fxLayoutAlign="end end">
+          <button mat-raised-button color="accent"
+            [routerLink]="['/game']">{{'Game.StartOwnGame' | transloco }}</button>
+        </div>
+
+      </div>
+      <!-- Metadata -->
       <div class="metadata" fxLayout fxLayoutAlign="space-between center">
         <span class="timestamp">{{
         activity.activity.timestamp | date: 'dd.MM.yyyy HH:mm'

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, ViewChildren } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -33,6 +33,7 @@ import { VenueDialogResult } from '../venue-dialog/VenueDialogResult';
 import { Drink } from 'src/models/Drink';
 import { DrinkRetrieverService } from '../../services/drink-retriever.service';
 import { ActivityType } from 'src/models/ActivityType';
+import { GameStartedMessage } from 'src/app/game/models/GameStartedMessage';
 
 @Component({
   selector: 'app-activity-feed',
@@ -74,7 +75,8 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private translateService: TranslocoService,
     private dialog: MatDialog,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -121,6 +123,11 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
           });
       })
     );
+
+    this.notification.on('GameStarted', (payload: GameStartedMessage) => {
+      console.log('GameStarted', payload);
+      this.router.navigate(['/game/play', payload.gameId]);
+    });
   }
 
 
@@ -354,9 +361,9 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     this.currentProgress = progress;
   }
 
-  onActionsOpenChange(open: boolean): void {
+  onActionsOpenChange(position: 'right' | 'left', open: boolean): void {
     if (open) {
-      setTimeout(() => this.tooltips.forEach(t => t.show()), 500);
+      setTimeout(() => this.tooltips.filter(t => t.position === position).forEach(t => t.show()), 500);
     } else {
       this.tooltips.forEach(t => t.hide());
     }

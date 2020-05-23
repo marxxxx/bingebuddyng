@@ -1,4 +1,5 @@
 ﻿using BingeBuddyNg.Services.Drink;
+using BingeBuddyNg.Services.Game.Queries;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.Venue;
 using Newtonsoft.Json;
@@ -29,6 +30,8 @@ namespace BingeBuddyNg.Services.Activity
         public string CountryLongName { get; set; }
         public string CountryShortName { get; set; }
         public Venue.Venue Venue { get; set; }
+
+        public GameDTO GameInfo { get; set; }
 
         public UserInfo RegistrationUser { get; set; }
 

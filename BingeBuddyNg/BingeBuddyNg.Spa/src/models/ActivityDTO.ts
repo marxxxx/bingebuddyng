@@ -5,6 +5,8 @@ import { ActivityType } from './ActivityType';
 import { ReactionDTO } from './ReactionDTO';
 import { CommentReactionDTO } from './CommentReactionDTO';
 import { UserInfoDTO } from './UserInfoDTO';
+import { GameDTO } from 'src/app/game/models/GameDTO';
+
 export class ActivityDTO {
     id: string;
     activityType: ActivityType;
@@ -25,4 +27,5 @@ export class ActivityDTO {
     comments: CommentReactionDTO[];
     registrationUser?: UserInfoDTO;
     originalUserName?: string;
+    gameInfo?: GameDTO;
 }

@@ -1,0 +1,5 @@
+<div fxLayout fxLayoutAlign="space-between center">
+  <div class="cell" *ngFor="let d of drinks" fxLayout fxLayoutAlign="center center">
+    <app-drink-icon *ngIf="d !== DrinkTypeEnum.Unknown" [drinkType]="d" (click)="onDrink(d)"></app-drink-icon>
+  </div>
+</div>
