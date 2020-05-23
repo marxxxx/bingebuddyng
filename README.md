@@ -9,6 +9,9 @@ https://play.google.com/store/apps/details?id=xyz.appmaker.zrvgly
 - ASP.NET Core 3.1
 - Azure Functions v3
 - Azure Storage
+- Azure Databricks
+- Azure Data Factory
+- Azure SignalR Service
 - Azure CDN
 - Application Insights
 - Auth0
