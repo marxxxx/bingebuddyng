@@ -9,6 +9,7 @@
     <span class="score">{{p.score}}</span>
   </mat-card>
 
+
   <mat-card class="status" fxLayoutAlign="center center">
     <app-game-pad *ngIf="game.status === GameStatus.Running" (scored)="onScored($event)"></app-game-pad>
 
@@ -16,6 +17,8 @@
       <span class="game-over">{{'Game.GameOver' | transloco }}</span>
     </mat-card-content>
   </mat-card>
+
+  <mat-progress-bar *ngIf="game.status !== GameStatus.Ended && secondsLeft > 0" [value]="progressValue" mode="determinate"></mat-progress-bar>
 
   <button *ngIf="game.status === GameStatus.Ended" mat-raised-button class="full-width play-again" color="primary"
     [routerLink]="['/game']">{{'Game.PlayAgain' | transloco }}</button>

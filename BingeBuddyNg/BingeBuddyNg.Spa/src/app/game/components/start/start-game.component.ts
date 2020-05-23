@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatSelectionListChange } from '@angular/material/list';
 import { filter, finalize } from 'rxjs/operators';
 
@@ -13,7 +13,7 @@ import { TranslocoService } from '@ngneat/transloco';
 @Component({
   selector: 'app-start-game',
   templateUrl: './start-game.component.html',
-  styleUrls: ['./start-game.component.css']
+  styleUrls: ['./start-game.component.scss']
 })
 export class StartGameComponent implements OnInit {
 

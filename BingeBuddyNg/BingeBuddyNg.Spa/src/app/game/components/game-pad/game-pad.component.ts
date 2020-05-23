@@ -31,7 +31,10 @@ export class GamePadComponent implements OnInit, OnDestroy {
   }
 
   onDrink(drinkType: DrinkType) {
-    this.scored.emit(drinkType);
+    if (drinkType !== DrinkType.Anti) {
+      this.scored.emit(drinkType);
+    }
+
     for (let i = 0; i < this.drinks.length; i++) {
       this.drinks[i] = DrinkType.Unknown;
     }
@@ -48,7 +51,7 @@ export class GamePadComponent implements OnInit, OnDestroy {
   }
 
   getRandomDrinkType(): DrinkType {
-    const index = this.getRandomNumber(4);
+    const index = this.getRandomNumber(5);
     const drinkType = DrinkType[Object.keys(DrinkType)[index]];
     return drinkType;
   }
