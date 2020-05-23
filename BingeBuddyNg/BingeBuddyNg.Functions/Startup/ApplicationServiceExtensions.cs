@@ -3,6 +3,7 @@ using BingeBuddyNg.Services.Calculation;
 using BingeBuddyNg.Services.DrinkEvent;
 using BingeBuddyNg.Services.Game;
 using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.Infrastructure.EventGrid;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
 using Microsoft.Azure.SignalR.Management;
@@ -36,6 +37,7 @@ namespace BingeBuddyNg.Functions
             services.AddAzureSignalRIntegration();
             services.AddUtility();
             services.AddStorage();
+            services.AddEventGrid();
         }
 
         public static void AddNotification(this IServiceCollection services)
@@ -75,5 +77,17 @@ namespace BingeBuddyNg.Functions
 
             services.AddSingleton<IStorageAccessService, StorageAccessService>();
         }
+
+        public static void AddEventGrid(this IServiceCollection services)
+        {
+            var endpoint = Environment.GetEnvironmentVariable("EventGrid__Endpoint", EnvironmentVariableTarget.Process);
+            var topicKey = Environment.GetEnvironmentVariable("EventGrid__TopicKey", EnvironmentVariableTarget.Process);
+
+            var config = new EventGridConfiguration() { Endpoint = endpoint, TopicKey = topicKey };
+            
+            services.AddSingleton(config);
+            services.AddSingleton<IEventGridService, EventGridService>();
+        }
+
     }
 }
