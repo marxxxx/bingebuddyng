@@ -174,6 +174,10 @@
     "Players": "Spüla",
     "Score": "Punkte",
     "GameOver": "S'Spü is vorbei!",
-    "PlayAgain": "Nu amoi!"
+    "PlayAgain": "Nu amoi!",
+    "EndResult": "Spüergebnis",
+    "WinnerMessage": "{0} hot gwunga!",
+    "NoWinnerMessage": "Nermt hot gwunga!",
+    "InvitationMessage": "Du bist vu {0} zum spün eiglodn worn!"
   }
 }

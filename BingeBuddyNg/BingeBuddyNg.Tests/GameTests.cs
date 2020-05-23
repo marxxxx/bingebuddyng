@@ -34,7 +34,7 @@ namespace BingeBuddyNg.Tests
                 );
             
             var command = new StartGameCommand(myUserId, gameTitle, friendUserIds);
-            var handler = new StartGameCommandHandler(notificationServiceMock.Object, manager, userRepository.Object);
+            var handler = new StartGameCommandHandler(notificationServiceMock.Object, manager, userRepository.Object, new Mock<ITranslationService>().Object);
 
             // Act
             StartGameResultDTO result = await handler.Handle(command, CancellationToken.None);

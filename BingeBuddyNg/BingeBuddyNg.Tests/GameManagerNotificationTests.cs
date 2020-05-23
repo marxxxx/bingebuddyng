@@ -29,7 +29,11 @@ namespace BingeBuddyNg.Tests
                 .ReturnsAsync((IEnumerable<string> _userIds) =>
                     _userIds.Select(u => new User() { Id = u, Name = "username", PushInfo = new PushInfo("sub", "auth", "p256dh") }).ToList());
 
-            var gameNotificationService = new GameEndNotificationService(gameManager, notificationServiceMock.Object, userRepositoryMock.Object);
+            var gameNotificationService = new GameEndNotificationService(
+                gameManager,
+                notificationServiceMock.Object,
+                userRepositoryMock.Object,
+                new Mock<ITranslationService>().Object);
 
             await gameNotificationService.StartAsync(CancellationToken.None);
 

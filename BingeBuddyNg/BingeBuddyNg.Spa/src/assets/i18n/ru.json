@@ -183,6 +183,10 @@
       "DefaultGameTitle": "питьевая игра",
       "Players": "игроки",
       "Score": "Гол",
-      "GameOver": "Игра окончена!"
+      "GameOver": "Игра окончена!",
+      "EndResult": "результат игры",
+      "WinnerMessage": "{0} победил!",
+      "NoWinnerMessage": "Никто не победил!",
+      "InvitationMessage": "{0} пригласил вас сыграть в игру!"
     }
 }

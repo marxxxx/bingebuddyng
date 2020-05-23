@@ -175,6 +175,9 @@
     "Score": "Punkte",
     "GameOver": "Das Spiel ist vorbei!",
     "PlayAgain": "Nochmal!",
-    "EndResult": "Spielergebnis"
+    "EndResult": "Spielergebnis",
+    "WinnerMessage": "{0} hat gewonnen!",
+    "NoWinnerMessage": "Niemand hat gewonnen!",
+    "InvitationMessage": "Du wurdest von {0} eingeladen ein Spiel zu spielen!"
   }
 }
