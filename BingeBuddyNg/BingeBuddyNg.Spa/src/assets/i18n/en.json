@@ -179,6 +179,7 @@
     "EndResult": "Game result",
     "WinnerMessage": "{0} won!",
     "NoWinnerMessage": "Nobody won!",
-    "InvitationMessage": "You've been invited by {0} to play a game!"
+    "InvitationMessage": "You've been invited by {0} to play a game!",
+    "ActivityMessage": "I won the game titled '{{title}}'!"
   }
 }

@@ -179,6 +179,7 @@
     "EndResult": "Spüergebnis",
     "WinnerMessage": "{0} hot gwunga!",
     "NoWinnerMessage": "Nermt hot gwunga!",
-    "InvitationMessage": "Du bist vu {0} zum spün eiglodn worn!"
+    "InvitationMessage": "Du bist vu {0} zum spün eiglodn worn!",
+    "ActivityMessage": "I hob des spü '{{title}}' gwunga!"
   }
 }
