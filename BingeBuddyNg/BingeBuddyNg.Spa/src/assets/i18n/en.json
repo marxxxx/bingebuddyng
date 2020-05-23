@@ -167,6 +167,7 @@
   },
   "PleaseWait": "Please wait ...",
   "Game": {
+    "StartOwnGame": "Start game",
     "SelectPlayers": "Please select players",
     "StartGame": "Start game",
     "SelectGameTitle": "Select game title",

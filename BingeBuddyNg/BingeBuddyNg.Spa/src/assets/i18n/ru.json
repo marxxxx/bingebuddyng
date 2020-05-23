@@ -177,6 +177,7 @@
     "PleaseWait": "пожалуйста подождите ...",
 
     "Game": {
+      "StartOwnGame": "начать игру",
       "SelectPlayers": "Пожалуйста, выберите игроков",
       "StartGame": "начать игру",
       "SelectGameTitle": "Выберите название игры",

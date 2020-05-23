@@ -1,4 +1,5 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
+﻿using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Shared;
 using Microsoft.Extensions.Hosting;
@@ -15,17 +16,20 @@ namespace BingeBuddyNg.Services.Game
         private readonly INotificationService notificationService;
         private readonly IUserRepository userRepository;
         private readonly ITranslationService translationService;
+        private readonly IActivityRepository activityRepository;
 
         public GameEndNotificationService(
             IGameManager gameManager, 
             INotificationService notificationService, 
             IUserRepository userRepository,
-            ITranslationService translationService)
+            ITranslationService translationService,
+            IActivityRepository activityRepository)
         {
             this.gameManager = gameManager ?? throw new ArgumentNullException(nameof(gameManager));
             this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
             this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             this.translationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
+            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -60,6 +64,12 @@ namespace BingeBuddyNg.Services.Game
                 this.notificationService.SendWebPushMessage(languagePushInfos,
                     new NotificationMessage(gameOverMessage, gameOverTitle, url));
             }
+
+            var activity = Activity.Activity.CreateGameResultActivity(DateTime.UtcNow, e.Game.ToDto(users.Select(u=>u.ToUserInfoDTO())), winnerUser?.ToUserInfo());
+            
+            var savedActivity = await this.activityRepository.AddActivityAsync(activity);
+
+            await activityRepository.AddToActivityAddedTopicAsync(savedActivity.Id);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

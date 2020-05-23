@@ -11,6 +11,7 @@
         VenueLeft = 51,
         Registration = 60,
         Rename = 70,
-        ProfileImageUpdate = 80
+        ProfileImageUpdate = 80,
+        GameResult = 90
     }
 }

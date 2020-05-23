@@ -27,11 +27,9 @@ namespace BingeBuddyNg.Services.Activity
                 CountryLongName = a.CountryLongName,
                 CountryShortName = a.CountryShortName,
                 Venue = a.Venue,
-
                 RegistrationUser = a.RegistrationUser,
-
                 OriginalUserName = a.OriginalUserName,
-
+                GameInfo = a.GameInfo,
                 Likes = a.Likes?.Select(l => new ReactionDTO() { Timestamp = l.Timestamp, UserId = l.UserId, UserName = l.UserName }).ToList(),
                 Cheers = a.Cheers?.Select(c => new ReactionDTO() { Timestamp = c.Timestamp, UserId = c.UserId, UserName = c.UserName }).ToList(),
                 Comments = a.Comments?.Select(c => new CommentReactionDTO() { Timestamp = c.Timestamp, UserId = c.UserId, UserName = c.UserName, Comment = c.Comment }).ToList()

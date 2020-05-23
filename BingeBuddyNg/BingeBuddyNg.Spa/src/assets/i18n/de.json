@@ -167,6 +167,7 @@
   },
   "PleaseWait": "Bitte warten ...",
   "Game": {
+    "StartOwnGame": "Eigenes Spiel starten",
     "StartGame": "Spiel starten",
     "SelectPlayers": "Bitte Mitspieler auswählen",
     "SelectGameTitle": "Gib dem Spiel einen Namen",
@@ -178,6 +179,7 @@
     "EndResult": "Spielergebnis",
     "WinnerMessage": "{0} hat gewonnen!",
     "NoWinnerMessage": "Niemand hat gewonnen!",
-    "InvitationMessage": "Du wurdest von {0} eingeladen ein Spiel zu spielen!"
+    "InvitationMessage": "Du wurdest von {0} eingeladen ein Spiel zu spielen!",
+    "ActivityMessage": "Ich habe das Spiel namens '{{title}}' gewonnen!"
   }
 }
