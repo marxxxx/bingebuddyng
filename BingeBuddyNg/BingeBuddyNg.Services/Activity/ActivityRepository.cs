@@ -1,12 +1,10 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Infrastructure.EventGrid;
-using Microsoft.Azure.EventGrid;
-using Microsoft.Azure.EventGrid.Models;
-using Microsoft.WindowsAzure.Storage.Table;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.Infrastructure.EventGrid;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace BingeBuddyNg.Services.Activity
 {
@@ -14,6 +12,8 @@ namespace BingeBuddyNg.Services.Activity
     {
         private const string ActivityTableName = "activity";
         private const string ActivityPerUserTableName = "activityperuser";
+        private const string ActivityUserFeedTableName = "activityuserfeed";
+
         private static readonly DateTime MaxTimestamp = new DateTime(2100, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         private readonly IStorageAccessService storageAccessService;
@@ -85,27 +85,13 @@ namespace BingeBuddyNg.Services.Activity
                 whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And, userWhereClause);
             }
 
-
-
             var result = await storageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityTableName, whereClause, args.PageSize, args.ContinuationToken);
 
-            List<Activity> resultActivitys = ConvertActivities(result.ResultPage).ToList();
+            List<Activity> resultActivitys = result.ResultPage.ToList();
             return new PagedQueryResult<Activity>(resultActivitys, result.ContinuationToken);
         }
 
-
-        private List<Activity> ConvertActivities(IEnumerable<ActivityTableEntity> result)
-        {
-            List<Activity> resultActivities = new List<Activity>();
-            foreach(var r in result)
-            {
-                r.Entity.Id = r.RowKey;
-                resultActivities.Add(r.Entity);
-            }
-            return resultActivities;
-        }
-
-        public async Task<List<Activity>> GetActivitysForUserAsync(string userId, DateTime startTimeUtc, ActivityType activityType)
+        public async Task<List<Activity>> GetUserActivitiesAsync(string userId, DateTime startTimeUtc, ActivityType activityType)
         {
             string startRowKey = GetActivityPerUserRowKey(startTimeUtc);
             var whereClause =
@@ -120,7 +106,7 @@ namespace BingeBuddyNg.Services.Activity
 
             var result = await storageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityPerUserTableName, whereClause);
 
-            var activitys = ConvertActivities(result).ToList();
+            var activitys = result.ToList();
             return activitys;
         }
 
@@ -147,6 +133,16 @@ namespace BingeBuddyNg.Services.Activity
 
             return activity;
         }
+
+        public async Task AddToUserFeedAsync(string userId, Activity activity)
+        {
+            var userFeedTable = this.storageAccessService.GetTableReference(ActivityUserFeedTableName);
+            var entity = new ActivityTableEntity(userId, activity.Id, activity);
+
+            TableOperation operation = TableOperation.Insert(entity);
+            await userFeedTable.ExecuteAsync(operation);
+        }
+
 
         public async Task<Activity> GetActivityAsync(string id)
         {

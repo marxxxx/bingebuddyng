@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.DrinkEvent;
@@ -5,16 +9,12 @@ using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
 using Microsoft.Azure.EventGrid.Models;
-using Microsoft.Azure.SignalR.Management;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.EventGrid;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Polly;
 
 namespace BingeBuddyNg.Functions
 {
@@ -28,9 +28,9 @@ namespace BingeBuddyNg.Functions
         private readonly IDrinkEventRepository drinkEventRepository;
         private readonly ITranslationService translationService;
         private readonly IUserStatisticsService userStatisticsService;
-        
+
         private ILogger logger;
-        private IDurableClient durableClient;
+        private IDurableOrchestrationClient durableClient;
 
         public ActivityAddedFunction(IUtilityService utilityService, IActivityRepository activityRepository,
             IUserRepository userRepository, IUserStatsRepository userStatsRepository,
@@ -50,7 +50,7 @@ namespace BingeBuddyNg.Functions
         [FunctionName("ActivityAddedFunction")]
         public async Task Run(
             [EventGridTrigger]EventGridEvent gridEvent,
-            [DurableClient]IDurableClient starter,
+            [DurableClient]IDurableOrchestrationClient starter,
             ILogger log)
         {
             this.durableClient = starter ?? throw new ArgumentNullException(nameof(starter));
@@ -60,7 +60,6 @@ namespace BingeBuddyNg.Functions
             var activity = await activityRepository.GetActivityAsync(activityAddedMessage.ActivityId);
 
             log.LogInformation($"Handling added activity [{activity}] ...");
-
 
             try
             {
@@ -110,18 +109,9 @@ namespace BingeBuddyNg.Functions
                 {
                     await activityRepository.UpdateActivityAsync(activity);
                 }
-                
-                var friendUserIds = currentUser.GetVisibleFriendUserIds(true);
-                // send Realtime-Notification via SignalR
-                var activityStats = new ActivityStatsDTO(activity.ToDto(), userStats?.ToDto());
-                await this.notificationService.SendSignalRMessageAsync(friendUserIds, Shared.Constants.SignalR.NotificationHubName, Shared.Constants.SignalR.ActivityReceivedMethodName, activityStats);
 
-                // remind only first and every 5th drink this night to avoid spamming
-                if (ShouldNotifyUsers(activity, userStats))
-                {
-                    // get friends of this user who didn't mute themselves from him
-                    await HandleUserNotificationsAsync(friendUserIds.Where(u=> u != currentUser.Id).ToList().AsReadOnly(), activity);
-                }
+                await DistributeActivitiesAsync(currentUser, activity);
+                await NotifyUsersAsync(currentUser, activity, userStats);
 
                 // check for drink events
                 try
@@ -136,6 +126,46 @@ namespace BingeBuddyNg.Functions
             catch (Exception ex)
             {
                 log.LogError($"Processing failed: [{ex}]");
+            }
+        }
+
+        private async Task DistributeActivitiesAsync(User currentUser, Activity activity)
+        {
+            IEnumerable<string> userIds;
+
+            if (activity.ActivityType == ActivityType.Registration)
+            {
+                userIds = await this.userRepository.GetAllUserIdsAsync();
+            }
+            else
+            {
+                // get friends of this user who didn't mute themselves from him
+                userIds = currentUser.GetVisibleFriendUserIds(true);
+            }            
+
+            foreach (var userId in userIds)
+            {
+                await this.activityRepository.AddToUserFeedAsync(userId, activity);
+            }
+        }
+
+        private async Task NotifyUsersAsync(User currentUser, Activity activity, UserStatistics userStats)
+        {
+            var friendsAndMeUserIds = currentUser.GetVisibleFriendUserIds(true);
+
+            var activityStats = new ActivityStatsDTO(activity.ToDto(), userStats?.ToDto());
+
+            // send Realtime-Notification via SignalR
+            await this.notificationService.SendSignalRMessageAsync(
+                friendsAndMeUserIds,
+                Shared.Constants.SignalR.NotificationHubName,
+                Shared.Constants.SignalR.ActivityReceivedMethodName,
+                activityStats);
+
+            // remind only first and every 5th drink this night to avoid spamming
+            if (ShouldNotifyUsers(activity, userStats))
+            {
+                await HandleUserNotificationsAsync(friendsAndMeUserIds.Where(u => u != currentUser.Id), activity);
             }
         }
 
@@ -159,8 +189,8 @@ namespace BingeBuddyNg.Functions
             activity.CountryShortName = address.CountryShortName;
         }
 
-        private async Task HandleUserNotificationsAsync(IReadOnlyList<string> friendUserIds, Activity activity)
-        {            
+        private async Task HandleUserNotificationsAsync(IEnumerable<string> friendUserIds, Activity activity)
+        {
             foreach (var friendUserId in friendUserIds)
             {
                 try
@@ -185,36 +215,44 @@ namespace BingeBuddyNg.Functions
 
         private async Task HandleDrinkEventsAsync(Activity activity, User currentUser)
         {
-            if (activity.ActivityType == ActivityType.Drink || activity.DrinkType != DrinkType.Anti)
+            if (activity.ActivityType != ActivityType.Drink && activity.DrinkType == DrinkType.Anti)
             {
-                var drinkEvent = await drinkEventRepository.FindCurrentDrinkEventAsync();
-                if (drinkEvent != null)
-                {
-                    if (drinkEvent.AddScoringUserId(currentUser.Id))
-                    {
-                        await drinkEventRepository.UpdateDrinkEventAsync(drinkEvent);
+                return;
+            }
+            var drinkEvent = await drinkEventRepository.FindCurrentDrinkEventAsync();
+            if (drinkEvent == null)
+            {
+                return;
+            }
 
-                        await userStatsRepository.IncreaseScoreAsync(currentUser.Id, Shared.Constants.Scores.StandardDrinkAction);
+            if (!drinkEvent.AddScoringUserId(currentUser.Id))
+            {
+                return;
+            }
 
-                        string message = await translationService.GetTranslationAsync(currentUser.Language, "DrinkEventActivityWinMessage", Shared.Constants.Scores.StandardDrinkAction);
+            await drinkEventRepository.UpdateDrinkEventAsync(drinkEvent);
 
-                        var drinkEventNotificiationActivity = Activity.CreateNotificationActivity(DateTime.UtcNow, currentUser.Id, currentUser.Name, message);
-                        await activityRepository.AddActivityAsync(drinkEventNotificiationActivity);
+            await userStatsRepository.IncreaseScoreAsync(currentUser.Id, Shared.Constants.Scores.StandardDrinkAction);
 
-                        if (currentUser.PushInfo != null)
-                        {
-                            string notificationMessage = await translationService.GetTranslationAsync(currentUser.Language, "DrinkEventWinMessage", Shared.Constants.Scores.StandardDrinkAction);
-                            notificationService.SendWebPushMessage(new[] { currentUser.PushInfo }, new NotificationMessage("Gratuliere!", notificationMessage));
-                        }
-                    }
-                }
+            string message = await translationService.GetTranslationAsync(currentUser.Language, "DrinkEventActivityWinMessage", Shared.Constants.Scores.StandardDrinkAction);
+
+            var drinkEventNotificiationActivity = Activity.CreateNotificationActivity(DateTime.UtcNow, currentUser.Id, currentUser.Name, message);
+            await activityRepository.AddActivityAsync(drinkEventNotificiationActivity);
+
+            if (currentUser.PushInfo != null)
+            {
+                string notificationMessage = await translationService.GetTranslationAsync(currentUser.Language, "DrinkEventWinMessage", Shared.Constants.Scores.StandardDrinkAction);
+                notificationService.SendWebPushMessage(new[] { currentUser.PushInfo }, new NotificationMessage("Gratuliere!", notificationMessage));
             }
         }
 
         private bool ShouldNotifyUsers(Activity activity, UserStatistics userStats)
         {
-            bool shouldNotify = ((activity.ActivityType == ActivityType.Image || activity.ActivityType == ActivityType.Message) ||
+            bool shouldNotify = (
+                (activity.ActivityType == ActivityType.Image || activity.ActivityType == ActivityType.Message ||
+                activity.ActivityType == ActivityType.Registration || activity.ActivityType == ActivityType.GameResult) ||
                 (userStats == null || userStats.CurrentNightDrinks == 1 || (userStats.CurrentNightDrinks % 5 == 0)));
+
             return shouldNotify;
         }
 
@@ -250,7 +288,6 @@ namespace BingeBuddyNg.Functions
                 Constants.NotificationIconUrl, Constants.ApplicationUrl, Constants.ApplicationName,
                     $"{activity.UserName} {activityString}");
             return notificationMessage;
-
         }
     }
 }

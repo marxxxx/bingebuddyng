@@ -11,11 +11,13 @@ namespace BingeBuddyNg.Services.Activity
 
         Task<PagedQueryResult<Activity>> GetActivityFeedAsync(GetActivityFilterArgs args);
 
-        Task<List<Activity>> GetActivitysForUserAsync(string userId, DateTime startTimeUtc, ActivityType activityType);
+        Task<List<Activity>> GetUserActivitiesAsync(string userId, DateTime startTimeUtc, ActivityType activityType);
 
         Task<Activity> GetActivityAsync(string id);
 
         Task<Activity> AddActivityAsync(Activity activity);
+
+        Task AddToUserFeedAsync(string userId, Activity activity);
 
         Task DeleteActivityAsync(string userId, string id);
 

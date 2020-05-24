@@ -60,7 +60,7 @@ namespace BingeBuddyNg.Services.Calculation
         public async Task<DrinkCalculationResult> CalculateStatsForUserAsync(User.User user)
         {
             DateTime startTimestamp = DateTime.UtcNow.Subtract(TimeSpan.FromHours(NightConsiderationTimespanInHours));
-            var activity = await this.activityRepository.GetActivitysForUserAsync(user.Id, startTimestamp,
+            var activity = await this.activityRepository.GetUserActivitiesAsync(user.Id, startTimestamp,
                 ActivityType.Drink);
 
             var drinkActivity = activity.Where(a=>a.Timestamp >= startTimestamp).Select(a => new DrinkActivityItem(a.Timestamp, a.DrinkAlcPrc.GetValueOrDefault(),

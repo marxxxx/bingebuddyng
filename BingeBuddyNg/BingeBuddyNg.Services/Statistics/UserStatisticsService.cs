@@ -35,7 +35,7 @@ namespace BingeBuddyNg.Services.Statistics
         {
             DateTime startTimestamp = DateTime.UtcNow.Subtract(TimeSpan.FromDays(30));
 
-            var drinkActivityLastMonth = await activityRepository.GetActivitysForUserAsync(userId, startTimestamp, ActivityType.Drink);
+            var drinkActivityLastMonth = await activityRepository.GetUserActivitiesAsync(userId, startTimestamp, ActivityType.Drink);
 
             // filter non-alcoholic drinks and calculate count
             var alcoholicDrinkCount = drinkActivityLastMonth.Count(d => d.DrinkType != DrinkType.Anti);

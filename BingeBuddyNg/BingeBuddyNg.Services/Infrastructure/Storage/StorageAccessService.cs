@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -87,6 +88,30 @@ namespace BingeBuddyNg.Services.Infrastructure
             return new PagedQueryResult<T>(result, tableQueryResult.ContinuationToken);
         }
 
+        public async Task<IEnumerable<string>> GetRowKeysAsync(string tableName, string partitionKey)
+        {
+            var query = new TableQuery<DynamicTableEntity>()
+            {
+                FilterString = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey),
+                SelectColumns = new List<string>()
+                {
+                    "RowKey"
+                }
+            };
+
+            List<string> rowKeys = new List<string>();
+
+            var table = this.GetTableReference(tableName);
+            TableContinuationToken continuationToken = null;
+            do
+            {
+                var tableResult = await table.ExecuteQuerySegmentedAsync(query, continuationToken);
+                rowKeys.AddRange(tableResult.Select(t => t.RowKey).ToList());
+                continuationToken = tableResult.ContinuationToken;
+            } while (continuationToken != null);
+
+            return rowKeys;
+        }
 
         public CloudQueue GetQueueReference(string queueName)
         {

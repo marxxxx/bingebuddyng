@@ -27,5 +27,7 @@ namespace BingeBuddyNg.Services.Infrastructure
         Task<string> SaveFileInBlobStorage(string containerName, string fullPath, Stream file);
 
         Task<string> SaveFileInBlobStorage(string containerName, string path, string fileName, Stream file);
+
+        Task<IEnumerable<string>> GetRowKeysAsync(string tableName, string partitionKey);
     }
 }
