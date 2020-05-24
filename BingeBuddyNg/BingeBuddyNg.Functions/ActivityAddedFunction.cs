@@ -141,12 +141,9 @@ namespace BingeBuddyNg.Functions
             {
                 // get friends of this user who didn't mute themselves from him
                 userIds = currentUser.GetVisibleFriendUserIds(true);
-            }            
-
-            foreach (var userId in userIds)
-            {
-                await this.activityRepository.AddToUserFeedAsync(userId, activity);
             }
+
+            await this.activityRepository.DistributeActivityAsync(userIds, activity);
         }
 
         private async Task NotifyUsersAsync(User currentUser, Activity activity, UserStatistics userStats)

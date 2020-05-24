@@ -17,7 +17,7 @@ namespace BingeBuddyNg.Services.Activity
 
         Task<Activity> AddActivityAsync(Activity activity);
 
-        Task AddToUserFeedAsync(string userId, Activity activity);
+        Task DistributeActivityAsync(IEnumerable<string> distributionUserIds, Activity activity);
 
         Task DeleteActivityAsync(string userId, string id);
 

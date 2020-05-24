@@ -8,23 +8,24 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
+using System.Collections.Generic;
 
 namespace BingeBuddyNg.Functions
 {
     public class ReactionAddedFunction
     {
-        public IActivityRepository ActivityRepository { get; }
-        public IUserRepository UserRepository { get; }
-        public INotificationService NotificationService { get; }
-        public ITranslationService TranslationService { get; }
+        private readonly IActivityRepository activityRepository;
+        private readonly IUserRepository userRepository;
+        private readonly INotificationService notificationService;
+        private readonly ITranslationService translationService;
 
         public ReactionAddedFunction(IActivityRepository activityRepository, IUserRepository userRepository, 
             INotificationService notificationService, ITranslationService translationService)
         {
-            this.ActivityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
-            this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            this.NotificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
-            this.TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
+            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+            this.translationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
         }
 
         [FunctionName("ReactionAddedFunction")]
@@ -32,14 +33,16 @@ namespace BingeBuddyNg.Functions
         {
             var reactionAddedMessage = JsonConvert.DeserializeObject<ReactionAddedMessage>(reactionQueueItem);
 
-            var activity = await ActivityRepository.GetActivityAsync(reactionAddedMessage.ActivityId);
-            var reactingUser = await UserRepository.FindUserAsync(reactionAddedMessage.UserId);
+            var activity = await activityRepository.GetActivityAsync(reactionAddedMessage.ActivityId);
+            var reactingUser = await userRepository.FindUserAsync(reactionAddedMessage.UserId);
+            var originUser = await userRepository.FindUserAsync(activity.UserId);
 
+            await DistributeActivitiesAsync(originUser, activity);
 
             // notify involved users
             if (activity.UserId != reactingUser.Id)
             {
-                await NotifyOriginUserAsync(activity.Id, reactionAddedMessage.ReactionType, activity.UserId, reactingUser);
+                await NotifyOriginUserAsync(activity.Id, reactionAddedMessage.ReactionType, originUser, reactingUser);
             }
 
             // now other ones (with likes and cheers)
@@ -49,13 +52,11 @@ namespace BingeBuddyNg.Functions
                 .Where(u => u.UserId != activity.UserId && u.UserId != reactingUser.Id)
                 .ToList();
 
-
-
             foreach (var user in involvedUsers)
             {
                 try
                 {
-                    var userInfo = await UserRepository.FindUserAsync(user.UserId);
+                    var userInfo = await userRepository.FindUserAsync(user.UserId);
                     if (userInfo.PushInfo != null)
                     {
                         string message = await GetReactionMessageAsync(userInfo.Language, reactionAddedMessage.ReactionType, reactingUser.Name,
@@ -63,7 +64,7 @@ namespace BingeBuddyNg.Functions
 
                         var notification = new NotificationMessage(Constants.NotificationIconUrl,
                             Constants.NotificationIconUrl, GetActivityUrlWithHighlightedActivityId(activity.Id), Constants.ApplicationName, message);
-                        NotificationService.SendWebPushMessage(new[] { userInfo.PushInfo }, notification);
+                        notificationService.SendWebPushMessage(new[] { userInfo.PushInfo }, notification);
                     }
                 }
                 catch (Exception ex)
@@ -71,23 +72,38 @@ namespace BingeBuddyNg.Functions
                     log.LogError($"Error notifying user {user}: {ex}");
                 }
             }
+        }
 
+        private async Task DistributeActivitiesAsync(User currentUser, Activity activity)
+        {
+            IEnumerable<string> userIds;
 
+            if (activity.ActivityType == ActivityType.Registration)
+            {
+                userIds = await this.userRepository.GetAllUserIdsAsync();
+            }
+            else
+            {
+                // get friends of this user who didn't mute themselves from him
+                userIds = currentUser.GetVisibleFriendUserIds(true);
+            }
+
+            await this.activityRepository.DistributeActivityAsync(userIds, activity);
         }
 
         private async Task NotifyOriginUserAsync(
             string activityId,
-            ReactionType reactionType, string originUserId, User reactingUser)
+            ReactionType reactionType, User originUser, User reactingUser)
         {
-            var originUser = await UserRepository.FindUserAsync(originUserId);
-
-            if (originUser.PushInfo != null)
+            if (originUser.PushInfo == null)
             {
-                string message = await GetReactionMessageAsync(originUser.Language, reactionType, reactingUser.Name, originUser.Name);
-                var notification = new NotificationMessage(Constants.NotificationIconUrl,
-                    Constants.NotificationIconUrl, GetActivityUrlWithHighlightedActivityId(activityId), Constants.ApplicationName, message);
-                NotificationService.SendWebPushMessage(new[] { originUser.PushInfo }, notification);
+                return;
             }
+
+            string message = await GetReactionMessageAsync(originUser.Language, reactionType, reactingUser.Name, originUser.Name);
+            var notification = new NotificationMessage(Constants.NotificationIconUrl,
+                Constants.NotificationIconUrl, GetActivityUrlWithHighlightedActivityId(activityId), Constants.ApplicationName, message);
+            notificationService.SendWebPushMessage(new[] { originUser.PushInfo }, notification);
         }
 
         private string GetActivityUrlWithHighlightedActivityId(string activityId)
@@ -120,13 +136,13 @@ namespace BingeBuddyNg.Functions
             switch (reactionType)
             {
                 case ReactionType.Cheers:
-                    message = await TranslationService.GetTranslationAsync(language, "CheersReactionMessage" + postFix, originUserName);
+                    message = await translationService.GetTranslationAsync(language, "CheersReactionMessage" + postFix, originUserName);
                     break;
                 case ReactionType.Like:
-                    message = await TranslationService.GetTranslationAsync(language, "LikeReactionMessage" + postFix, originUserName);
+                    message = await translationService.GetTranslationAsync(language, "LikeReactionMessage" + postFix, originUserName);
                     break;
                 case ReactionType.Comment:
-                    message = await TranslationService.GetTranslationAsync(language, "CommentReactionMessage" + postFix, originUserName);
+                    message = await translationService.GetTranslationAsync(language, "CommentReactionMessage" + postFix, originUserName);
                     break;
             }
 
