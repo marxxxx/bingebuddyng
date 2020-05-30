@@ -34,13 +34,28 @@ namespace BingeBuddyNg.Services.Activity
 
         public async Task<PagedQueryResult<Activity>> GetActivityFeedAsync(GetActivityFilterArgs args)
         {
-            string currentPartition = GetPartitionKey(DateTime.UtcNow);
-            string previousPartition = GetPartitionKey(DateTime.UtcNow.AddDays(-(DateTime.UtcNow.Day + 1)));
-            var whereClause =
-                TableQuery.CombineFilters(
-                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, currentPartition),
-                TableOperators.Or,
-                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, previousPartition));
+            string whereClause = null;
+            string tableName = null;
+
+            if(args.UserId != null)
+            {
+                tableName = ActivityUserFeedTableName;
+
+                whereClause = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, args.UserId);
+            }
+            else
+            {
+                tableName = ActivityTableName;
+
+                string currentPartition = GetPartitionKey(DateTime.UtcNow);
+                string previousPartition = GetPartitionKey(DateTime.UtcNow.AddDays(-(DateTime.UtcNow.Day + 1)));
+                whereClause =
+                    TableQuery.CombineFilters(
+                    TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, currentPartition),
+                    TableOperators.Or,
+                    TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, previousPartition));
+            }
+            
 
             if (string.IsNullOrEmpty(args.StartActivityId) == false)
             {
@@ -66,26 +81,7 @@ namespace BingeBuddyNg.Services.Activity
                         TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.ActivityType), QueryComparisons.Equal, args.ActivityType.ToString()));
             }
 
-            if (args.UserIds != null && args.UserIds.Any())
-            {
-                string userWhereClause = null;
-                foreach (var userId in args.UserIds)
-                {
-                    var userCondition = TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.UserId), QueryComparisons.Equal, userId);
-                    if (userWhereClause == null)
-                    {
-                        userWhereClause = userCondition;
-                    }
-                    else
-                    {
-                        userWhereClause = TableQuery.CombineFilters(userWhereClause, TableOperators.Or, userCondition);
-                    }
-                }
-
-                whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And, userWhereClause);
-            }
-
-            var result = await storageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityTableName, whereClause, args.PageSize, args.ContinuationToken);
+            var result = await storageAccessService.QueryTableAsync<ActivityTableEntity>(tableName, whereClause, args.PageSize, args.ContinuationToken);
 
             List<Activity> resultActivitys = result.ResultPage.ToList();
             return new PagedQueryResult<Activity>(resultActivitys, result.ContinuationToken);

@@ -28,7 +28,8 @@ namespace BingeBuddyNg.Services.Activity.Querys
 
         public async Task<List<ActivityDTO>> Handle(GetActivitysForMapQuery request, CancellationToken cancellationToken)
         {
-            var result = await this.activityRepository.GetActivityFeedAsync(new GetActivityFilterArgs(request.UserId, ActivityFilterOptions.WithLocation, pageSize: 50));
+            var args = new GetActivityFilterArgs() { UserId = request.UserId, FilterOptions = ActivityFilterOptions.WithLocation, PageSize = 50 };
+            var result = await this.activityRepository.GetActivityFeedAsync(args);
             return result.ResultPage?.Select(a => a.ToDto()).ToList();
         }
     }
