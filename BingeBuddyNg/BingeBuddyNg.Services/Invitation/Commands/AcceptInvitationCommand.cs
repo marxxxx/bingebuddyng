@@ -85,7 +85,7 @@ namespace BingeBuddyNg.Services.Invitation.Commands
                     string userName = acceptingUser?.Name ?? await translationService.GetTranslationAsync(invitingUser.Language, "Somebody");
                     string messageContent = await translationService.GetTranslationAsync(invitingUser.Language, "AcceptedInvitation", userName);
 
-                    var message = new NotificationMessage(Constants.Urls.ApplicationIconUrl, Constants.Urls.ApplicationIconUrl, Constants.Urls.ApplicationUrl,
+                    var message = new WebPushNotificationMessage(Constants.Urls.ApplicationIconUrl, Constants.Urls.ApplicationIconUrl, Constants.Urls.ApplicationUrl,
                         "Binge Buddy", messageContent);
                     this.notificationService.SendWebPushMessage(new[] { invitingUser.PushInfo }, message);
                 }

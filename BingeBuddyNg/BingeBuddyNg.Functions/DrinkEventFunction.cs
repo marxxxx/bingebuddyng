@@ -28,11 +28,10 @@ namespace BingeBuddyNg.Functions
             this.TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
         }
 
-        [FunctionName("DrinkEventFunction")]
+        [FunctionName(nameof(DrinkEventFunction))]
         public async Task Run([TimerTrigger("0 */60 * * * *")]TimerInfo myTimer, ILogger log)
         {
             log.LogInformation($"Drink Event executed at: {DateTime.Now}");
-
 
             int max = CalculateEventProbability();
 
@@ -53,7 +52,7 @@ namespace BingeBuddyNg.Functions
                     {
                         var subject = await TranslationService.GetTranslationAsync(u.Language, "DrinkEvent");
                         var messageContent = await TranslationService.GetTranslationAsync(u.Language, "DrinkEventNotificationMessage", Shared.Constants.Scores.StandardDrinkAction);
-                        var message = new NotificationMessage(subject, messageContent);
+                        var message = new WebPushNotificationMessage(subject, messageContent);
                         NotificationService.SendWebPushMessage(new[] { u.PushInfo }, message);
                     }
                 }

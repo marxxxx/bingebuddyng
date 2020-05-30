@@ -50,7 +50,7 @@ namespace BingeBuddyNg.Services.FriendsRequest.Commands
 
                 notificationService.SendWebPushMessage(
                     new[] { requestingUser.PushInfo },
-                    new NotificationMessage(Constants.Urls.ApplicationIconUrl,
+                    new WebPushNotificationMessage(Constants.Urls.ApplicationIconUrl,
                     Constants.Urls.ApplicationIconUrl,
                     Constants.Urls.FriendRequestApplicationUrl,
                     subject,

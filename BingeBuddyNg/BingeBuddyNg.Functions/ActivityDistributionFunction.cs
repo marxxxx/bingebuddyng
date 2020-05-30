@@ -31,7 +31,7 @@ namespace BingeBuddyNg.Functions
             this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
         }
 
-        [FunctionName("ActivityDistributionFunction")]
+        [FunctionName(nameof(ActivityDistributionFunction))]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)

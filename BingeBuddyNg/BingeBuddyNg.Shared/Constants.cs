@@ -4,6 +4,8 @@ namespace BingeBuddyNg.Shared
 {
     public static class Constants
     {
+        public const string ApplicationName = "BingeBuddy";
+
         public const string DefaultLanguage = "de";
 
         public static class ContainerNames

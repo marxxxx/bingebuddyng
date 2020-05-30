@@ -1,8 +1,8 @@
 ﻿namespace BingeBuddyNg.Services.Infrastructure
 {
-    public class NotificationData
+    public class WebPushNotificationData
     {
-        public NotificationData(string url)
+        public WebPushNotificationData(string url)
         {
             this.url = url;
         }
