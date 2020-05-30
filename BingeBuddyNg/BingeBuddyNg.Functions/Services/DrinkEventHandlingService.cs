@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Functions.Services.Notifications;
@@ -10,43 +9,55 @@ using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Shared;
+using Microsoft.Extensions.Logging;
 
 namespace BingeBuddyNg.Functions.Services
 {
     public class DrinkEventHandlingService
     {
+        private const int LuckyNumber = 1;
+
+        private readonly IUserRepository userRepository;
         private readonly IDrinkEventRepository drinkEventRepository;
         private readonly IUserStatsRepository userStatsRepository;
         private readonly ITranslationService translationService;
         private readonly IActivityRepository activityRepository;
-        
+        private readonly PushNotificationService pushNotificationService;
+        private readonly ILogger<DrinkEventHandlingService> logger;
+
         public DrinkEventHandlingService(
+            IUserRepository userRepository,
             IDrinkEventRepository drinkEventRepository, 
             IUserStatsRepository userStatsRepository, 
             ITranslationService translationService, 
-            IActivityRepository activityRepository)
+            IActivityRepository activityRepository,
+            PushNotificationService pushNotificationService,
+            ILogger<DrinkEventHandlingService> logger)
         {
+            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             this.drinkEventRepository = drinkEventRepository ?? throw new ArgumentNullException(nameof(drinkEventRepository));
             this.userStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
             this.translationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
             this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.pushNotificationService = pushNotificationService ?? throw new ArgumentNullException(nameof(pushNotificationService));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<IEnumerable<NotificationBase>> HandleDrinkEventsAsync(Activity activity, User currentUser)
+        public async Task HandleDrinkEventsAsync(Activity activity, User currentUser)
         {
             if (activity.ActivityType != ActivityType.Drink && activity.DrinkType == DrinkType.Anti)
             {
-                return Enumerable.Empty<NotificationBase>();
+                return;
             }
             var drinkEvent = await drinkEventRepository.FindCurrentDrinkEventAsync();
             if (drinkEvent == null)
             {
-                return Enumerable.Empty<NotificationBase>();
+                return;
             }
 
             if (!drinkEvent.AddScoringUserId(currentUser.Id))
             {
-                return Enumerable.Empty<NotificationBase>();
+                return;
             }
 
             await drinkEventRepository.UpdateDrinkEventAsync(drinkEvent);
@@ -58,7 +69,51 @@ namespace BingeBuddyNg.Functions.Services
             var drinkEventNotificationActivity = Activity.CreateNotificationActivity(DateTime.UtcNow, currentUser.Id, currentUser.Name, message);
             await activityRepository.AddActivityAsync(drinkEventNotificationActivity);
 
-            return new[] { new DrinkEventCongratulationNotification(currentUser.Id) };
+            var notifications = new[] { new DrinkEventCongratulationNotification(currentUser.Id) };
+            await pushNotificationService.NotifyAsync(notifications);
+        }
+
+        public async Task TryCreateDrinkEventAsync()
+        {
+            int max = CalculateEventProbability();
+
+            int result = new Random().Next(max);
+
+            logger.LogInformation($"Random result was {result}.");
+
+            if (result != LuckyNumber)
+            {
+                return;
+            }
+
+            logger.LogInformation($"Drink Event!!!!");
+
+            await drinkEventRepository.CreateDrinkEventAsync(DateTime.UtcNow, DateTime.UtcNow.AddMinutes(30));
+
+            var users = await userRepository.GetUsersAsync();
+
+            var notifications = users.Select(u => new DrinkEventNotification(u.Id));
+            await this.pushNotificationService.NotifyAsync(notifications);            
+        }
+
+
+        private int CalculateEventProbability()
+        {
+            int max = 30;
+            if ((DateTime.UtcNow.DayOfWeek == DayOfWeek.Friday ||
+                DateTime.UtcNow.DayOfWeek == DayOfWeek.Saturday) &&
+                (DateTime.UtcNow.Hour > 16))
+            {
+                max = 7;
+            };
+
+            if ((DateTime.UtcNow.Day == 31 && DateTime.UtcNow.Month == 12) ||
+                (DateTime.UtcNow.Day == 1 && DateTime.UtcNow.Month == 1 && DateTime.UtcNow.Hour < 8))
+            {
+                max = 5;
+            }
+
+            return max;
         }
     }
 }

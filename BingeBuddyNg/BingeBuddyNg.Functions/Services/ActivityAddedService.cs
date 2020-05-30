@@ -105,13 +105,10 @@ namespace BingeBuddyNg.Functions.Services
 
                 await SendActivityUpdateAsync(currentUser, activity, userStats);
 
-                List<NotificationBase> notifications = BuildNotifications(currentUser, activity, userStats);
-
                 // check for drink events
                 try
                 {
-                    var drinkNotifications = await this.drinkEventHandlingService.HandleDrinkEventsAsync(activity, currentUser);
-                    notifications.AddRange(drinkNotifications);
+                    await this.drinkEventHandlingService.HandleDrinkEventsAsync(activity, currentUser);
                 }
                 catch (Exception ex)
                 {
@@ -119,7 +116,8 @@ namespace BingeBuddyNg.Functions.Services
                 }
 
                 // send out push notifications
-                if(notifications.Any())
+                var notifications = BuildNotifications(currentUser, activity, userStats);
+                if (notifications.Any())
                 {
                     await pushNotificationService.NotifyAsync(notifications);
                 }

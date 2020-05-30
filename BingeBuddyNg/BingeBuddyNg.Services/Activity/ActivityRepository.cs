@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Activity.Messages;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Infrastructure.EventGrid;
 using Microsoft.WindowsAzure.Storage.Table;
+using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Services.Activity
 {
@@ -215,7 +217,22 @@ namespace BingeBuddyNg.Services.Activity
             var perUserActivity = await this.GetActivityPerUserEntityAsync(userId, activity.Entity.Timestamp);
             await perUserTable.ExecuteAsync(TableOperation.Delete(perUserActivity));
 
+            // Delete activity in personalized feeds
+            await storageAccessService.AddQueueMessage(QueueNames.DeleteActivity, new DeleteActivityMessage(id));
+
             cacheService.Remove(GetActivityCacheKey(userId));
+        }
+
+        public async Task DeleteActivityFromPersonalizedFeedAsync(string userId, string id)
+        {
+            var userFeedTable = this.storageAccessService.GetTableReference(ActivityUserFeedTableName);
+            
+            TableOperation retrieveOperation = TableOperation.Retrieve<ActivityTableEntity>(userId, id);
+            var result = await userFeedTable.ExecuteAsync(retrieveOperation);
+
+            var entity = (ActivityTableEntity)result.Result;
+
+            await userFeedTable.ExecuteAsync(TableOperation.Delete(entity));
         }
 
         public async Task AddToActivityAddedTopicAsync(string activityId)
@@ -249,6 +266,5 @@ namespace BingeBuddyNg.Services.Activity
 
             return $"{partitionKey}|{ticks}|{userId}";
         }
-
     }
 }

@@ -64,6 +64,12 @@ namespace BingeBuddyNg.Functions.Services
                                 message = await BuildNotificationMessageAsync(user.Language, congrats);
                                 break;
                             }
+                        case DrinkEventNotification drinkEvent:
+                            {
+                                message = await BuildNotificationMessageAsync(user.Language, drinkEvent);
+                                break;
+                            }
+
                         default:
                             {
                                 this.logger.LogError($"Unsupported notification message [{message}].");
@@ -161,6 +167,14 @@ namespace BingeBuddyNg.Functions.Services
         {
             var title = await translationService.GetTranslationAsync(language, "DrinkReminder");
             var body = await translationService.GetTranslationAsync(language, "DrinkReminderMessage");
+
+            return new NotificationMessage(title, body);
+        }
+
+        private async Task<NotificationMessage> BuildNotificationMessageAsync(string language, DrinkEventNotification drinkEvent)
+        {
+            var title = await translationService.GetTranslationAsync(language, "DrinkEvent");
+            var body = await translationService.GetTranslationAsync(language, "DrinkEventNotificationMessage", Shared.Constants.Scores.StandardDrinkAction);
 
             return new NotificationMessage(title, body);
         }

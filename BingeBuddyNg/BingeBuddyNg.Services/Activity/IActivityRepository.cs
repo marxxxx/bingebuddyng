@@ -21,6 +21,8 @@ namespace BingeBuddyNg.Services.Activity
 
         Task DeleteActivityAsync(string userId, string id);
 
+        Task DeleteActivityFromPersonalizedFeedAsync(string userId, string id);
+
         Task UpdateActivityAsync(Activity activity);
 
         Task AddToActivityAddedTopicAsync(string activityId);
