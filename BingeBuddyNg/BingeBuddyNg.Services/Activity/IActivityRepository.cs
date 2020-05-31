@@ -11,7 +11,7 @@ namespace BingeBuddyNg.Services.Activity
 
         Task<PagedQueryResult<Activity>> GetActivityFeedAsync(GetActivityFilterArgs args);
 
-        Task<List<Activity>> GetUserActivitiesAsync(string userId, DateTime startTimeUtc, ActivityType activityType);
+        Task<List<Activity>> GetUserActivitiesAsync(string userId, DateTime startTimeUtc, ActivityType activityType = ActivityType.None);
 
         Task<Activity> GetActivityAsync(string id);
 

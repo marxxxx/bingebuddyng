@@ -57,7 +57,6 @@ namespace BingeBuddyNg.Services.Activity
                     TableOperators.Or,
                     TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, previousPartition));
             }
-            
 
             if (string.IsNullOrEmpty(args.StartActivityId) == false)
             {
@@ -85,11 +84,11 @@ namespace BingeBuddyNg.Services.Activity
 
             var result = await storageAccessService.QueryTableAsync<ActivityTableEntity>(tableName, whereClause, args.PageSize, args.ContinuationToken);
 
-            List<Activity> resultActivitys = result.ResultPage.ToList();
+            List<Activity> resultActivitys = result.ResultPage.ToActivityListWithAdjustedIds();
             return new PagedQueryResult<Activity>(resultActivitys, result.ContinuationToken);
         }
 
-        public async Task<List<Activity>> GetUserActivitiesAsync(string userId, DateTime startTimeUtc, ActivityType activityType)
+        public async Task<List<Activity>> GetUserActivitiesAsync(string userId, DateTime startTimeUtc, ActivityType activityType = ActivityType.None)
         {
             string startRowKey = GetActivityPerUserRowKey(startTimeUtc);
             var whereClause =
@@ -98,13 +97,15 @@ namespace BingeBuddyNg.Services.Activity
                 TableOperators.And,
                 TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, startRowKey));
 
-            whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
-                TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.ActivityType), QueryComparisons.Equal, activityType.ToString()));
-
+            if(activityType != ActivityType.None)
+            {
+                whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
+                    TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.ActivityType), QueryComparisons.Equal, activityType.ToString()));
+            }
 
             var result = await storageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityPerUserTableName, whereClause);
 
-            var activitys = result.ToList();
+            var activitys = result.Select(a=>a.Entity).ToList();
             return activitys;
         }
 
@@ -232,7 +233,10 @@ namespace BingeBuddyNg.Services.Activity
 
             var entity = (ActivityTableEntity)result.Result;
 
-            await userFeedTable.ExecuteAsync(TableOperation.Delete(entity));
+            if(entity != null)
+            {
+                await userFeedTable.ExecuteAsync(TableOperation.Delete(entity));
+            }            
         }
 
         public async Task AddToActivityAddedTopicAsync(string activityId)

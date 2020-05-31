@@ -20,6 +20,7 @@ namespace BingeBuddyNg.Shared
             public const string UserRenamed = "user-renamed";
             public const string DeleteUser = "delete-user";
             public const string DeleteActivity = "delete-activity";
+            public const string FriendStatusChanged = "friend-status-changed";
         }
 
         public static class Urls

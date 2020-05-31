@@ -9,11 +9,8 @@ namespace BingeBuddyNg.Services.Activity.Querys
 {
     public class GetActivitysForMapQuery : IRequest<List<ActivityDTO>>
     {
-        public string UserId { get; }
-
-        public GetActivitysForMapQuery(string userId)
+        public GetActivitysForMapQuery()
         {
-            this.UserId = userId ?? throw new ArgumentNullException(nameof(userId));
         }
     }
 
@@ -28,7 +25,7 @@ namespace BingeBuddyNg.Services.Activity.Querys
 
         public async Task<List<ActivityDTO>> Handle(GetActivitysForMapQuery request, CancellationToken cancellationToken)
         {
-            var args = new GetActivityFilterArgs() { UserId = request.UserId, FilterOptions = ActivityFilterOptions.WithLocation, PageSize = 50 };
+            var args = new GetActivityFilterArgs() { FilterOptions = ActivityFilterOptions.WithLocation, PageSize = 50 };
             var result = await this.activityRepository.GetActivityFeedAsync(args);
             return result.ResultPage?.Select(a => a.ToDto()).ToList();
         }

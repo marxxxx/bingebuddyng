@@ -37,7 +37,7 @@ namespace BingeBuddyNg.Services.Activity
             };
         }
 
-        public static List<Activity> ToList(this IEnumerable<ActivityTableEntity> result)
+        public static List<Activity> ToActivityListWithAdjustedIds(this IEnumerable<ActivityTableEntity> result)
         {
             List<Activity> resultActivities = new List<Activity>();
             foreach (var r in result)
