@@ -1,57 +1,50 @@
-﻿using BingeBuddyNg.Services.Drink;
-using BingeBuddyNg.Services.Game.Queries;
-using BingeBuddyNg.Services.User;
-using BingeBuddyNg.Services.Venue;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using BingeBuddyNg.Services.Activity.Domain.Events;
 
 namespace BingeBuddyNg.Services.Activity
 {
-    public class Activity
+    public abstract class Activity
     {
-        public string Id { get; set; }
-        public ActivityType ActivityType { get; set; }
-        public DateTime Timestamp { get; set; }
-        public Location Location { get; set; }
-        public string LocationAddress { get; set; }
-        public string UserId { get; set; }
-        public string UserName { get; set; }
-        public string Message { get; set; }
-        public DrinkType DrinkType { get; set; }
-        public string DrinkId { get; set; }
-        public string DrinkName { get; set; }
-        public double? DrinkAlcPrc { get; set; }
-        public double? DrinkVolume { get; set; }
-        public int DrinkCount { get; set; }
-        public double? AlcLevel { get; set; }
-        public string ImageUrl { get; set; }
+        public List<IDomainEvent> DomainEvents { get; } = new List<IDomainEvent>();
+
+        public string Id { get; private set; }
+
+        public ActivityType ActivityType { get; private set; }
+
+        public DateTime Timestamp { get; private set; }
+
+        public Location Location { get; private set; }
+
+        public string LocationAddress { get; protected set; }
+
+        public string UserId { get; private set; }
+
+        public string UserName { get; private set; }
+
+        public int DrinkCount { get; private set; }
+
+        public double? AlcLevel { get; private set; }
+
         public string CountryLongName { get; set; }
-        public string CountryShortName { get; set; }
-        public Venue.Venue Venue { get; set; }
-        public GameDTO GameInfo { get; set; }
 
-        public UserInfo RegistrationUser { get; set; }
+        public string CountryShortName { get; private set; }
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string OriginalUserName { get; set; }
+        public Venue.Venue Venue { get; protected set; }
 
-        public List<Reaction> Likes { get; set; } = new List<Reaction>();
-        public List<Reaction> Cheers { get; set; } = new List<Reaction>();
-        public List<CommentReaction> Comments { get; set; } = new List<CommentReaction>();
+        public List<Reaction> Likes { get; private set; } = new List<Reaction>();
 
+        public List<Reaction> Cheers { get; private set; } = new List<Reaction>();
 
-        public Activity()
-        { }
+        public List<CommentReaction> Comments { get; private set; } = new List<CommentReaction>();
 
-        public Activity(ActivityType type, DateTime timestamp, Location location,
-            string userId, string userName)
-            : this(null, type, timestamp, location, userId, userName)
-        {
-        }
-
-        public Activity(string id, ActivityType type, DateTime timestamp, Location location,
-            string userId, string userName)
+        protected Activity(
+            string id,
+            ActivityType type,
+            DateTime timestamp,
+            Location location,
+            string userId,
+            string userName)
         {
             this.Id = id;
             this.ActivityType = type;
@@ -61,137 +54,25 @@ namespace BingeBuddyNg.Services.Activity
             this.UserName = userName;
         }
 
-        public static Activity CreateDrinkActivity(DateTime activityTimestamp,
-           Location location, string userId, string userName,
-           DrinkType drinkType, string drinkId, string drinkName,
-           double drinkAlcPrc, double drinkVolume)
-        {
-            var activity = new Activity(ActivityType.Drink, activityTimestamp,
-                location, userId, userName)
-            {
-                DrinkType = drinkType,
-                DrinkId = drinkId,
-                DrinkName = drinkName,
-                DrinkAlcPrc = drinkAlcPrc,
-                DrinkVolume = drinkVolume
-            };
-
-            return activity;
-        }
-
-        public static Activity CreateMessageActivity(DateTime activityTimestamp,
-           Location location, string userId, string userName, string message)
-        {
-            var activity = new Activity(ActivityType.Message, activityTimestamp,
-                location, userId, userName)
-            {
-                Message = message
-            };
-
-            return activity;
-        }
-
-        public static Activity CreateNotificationActivity(DateTime activityTimestamp,
-           string userId, string userName, string message, Location location = null)
-        {
-            var activity = new Activity(ActivityType.Notification, activityTimestamp,
-                location, userId, userName)
-            {
-                Message = message
-            };
-
-            return activity;
-        }
-
-        public static Activity CreateRegistrationActivity(string userId, string userName, UserInfo registrationUser)
-        {
-            var activity = new Activity(ActivityType.Registration, DateTime.UtcNow, null,
-                userId, userName)
-            {
-                RegistrationUser = registrationUser
-            };
-
-            return activity;
-        }
-
-        public static Activity CreateRenameActivity(string userId, string userName, string originalUserName)
-        {
-            var activity = new Activity(ActivityType.Rename, DateTime.UtcNow, null,
-                userId, userName)
-            {
-                OriginalUserName = originalUserName
-            };
-
-            return activity;
-        }
-
-        public static Activity CreateProfileImageUpdateActivity(string userId, string userName)
-        {
-            var activity = new Activity(ActivityType.ProfileImageUpdate, DateTime.UtcNow, null,
-                userId, userName);
-
-            return activity;
-        }
-
-
-        public static Activity CreateVenueActivity(DateTime activityTimestamp,
-           string userId, string userName, string message, Venue.Venue venue, VenueAction action)
-        {
-            if (action == VenueAction.Unknown)
-            {
-                throw new ArgumentException("Invalid venue action!");
-            }
-
-            var activity = new Activity(action == VenueAction.Enter ? ActivityType.VenueEntered : ActivityType.VenueLeft,
-                activityTimestamp, venue.Location, userId, userName)
-            {
-                Message = message,
-                Venue = venue
-            };
-
-            return activity;
-        }
-
-        public static Activity CreateImageActivity(DateTime activityTimestamp,
-                    Location location, string userId, string userName, string imageUrl)
-        {
-            var activity = new Activity(ActivityType.Image, activityTimestamp,
-                location, userId, userName)
-            {
-                ImageUrl = imageUrl
-            };
-
-            return activity;
-        }
-
-        public static Activity CreateGameResultActivity(DateTime activityTimestamp, GameDTO game, UserInfo winner)
-        {
-            var activity = new Activity(ActivityType.GameResult, activityTimestamp, null, winner.UserId, winner.UserName)
-            {
-                GameInfo = game
-            };
-
-            return activity;
-        }
-
         public void AddComment(CommentReaction reaction)
         {
             this.Comments.Add(reaction);
+
+            this.DomainEvents.Add(new ReactionAdded(this.Id, ReactionType.Comment, reaction.UserId, reaction.Comment));
         }
 
         public void AddLike(Reaction reaction)
         {
             this.Likes.Add(reaction);
+
+            this.DomainEvents.Add(new ReactionAdded(this.Id, ReactionType.Like, reaction.UserId));
         }
 
         public void AddCheers(Reaction reaction)
         {
             this.Cheers.Add(reaction);
-        }
 
-        public override string ToString()
-        {
-            return $"{nameof(Id)}: {Id}, {nameof(ActivityType)}: {ActivityType}, {nameof(Timestamp)}: {Timestamp}, {nameof(UserName)}: {UserName}, {nameof(Message)}: {Message}";
+            this.DomainEvents.Add(new ReactionAdded(this.Id, ReactionType.Cheers, reaction.UserId));
         }
     }
 }

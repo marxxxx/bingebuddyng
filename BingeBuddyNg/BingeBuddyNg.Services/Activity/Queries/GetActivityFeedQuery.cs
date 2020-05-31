@@ -1,14 +1,13 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Statistics;
-using BingeBuddyNg.Services.User;
-using MediatR;
-using Microsoft.WindowsAzure.Storage.Table;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.Statistics;
+using MediatR;
+using Microsoft.WindowsAzure.Storage.Table;
+using Newtonsoft.Json;
 
 namespace BingeBuddyNg.Services.Activity.Querys
 {
@@ -35,43 +34,19 @@ namespace BingeBuddyNg.Services.Activity.Querys
 
     public class GetActivityFeedQueryHandler : IRequestHandler<GetActivityFeedQuery, PagedQueryResult<ActivityStatsDTO>>
     {
-        private readonly IUserRepository userRepository;
         private readonly IActivityRepository activityRepository;
         private readonly IUserStatsRepository userStatsRepository;
-        private readonly ICacheService cacheService;
-
+        
         public GetActivityFeedQueryHandler(
-            IUserRepository userRepository,
             IActivityRepository activityRepository,
             IUserStatsRepository userStatsRepository,
             ICacheService cacheService)
         {
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
             this.userStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
-            this.cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
         }
 
         public async Task<PagedQueryResult<ActivityStatsDTO>> Handle(GetActivityFeedQuery request, CancellationToken cancellationToken)
-        {
-            PagedQueryResult<ActivityStatsDTO> result = null;
-
-            if (request.ContinuationToken == null)
-            {
-                result = await cacheService.GetOrCreateAsync(
-                    activityRepository.GetActivityCacheKey(request.UserId),
-                    () => HandleGetActivityFeedQuery(request),
-                    TimeSpan.FromMinutes(1));
-            }
-            else
-            {
-                result = await HandleGetActivityFeedQuery(request);
-            }
-
-            return result;
-        }
-
-        private async Task<PagedQueryResult<ActivityStatsDTO>> HandleGetActivityFeedQuery(GetActivityFeedQuery request)
         {
             var args = new GetActivityFilterArgs() { UserId = request.UserId, ContinuationToken = request.ContinuationToken, StartActivityId = request.StartActivityId };
             var activities = await this.activityRepository.GetActivityFeedAsync(args);

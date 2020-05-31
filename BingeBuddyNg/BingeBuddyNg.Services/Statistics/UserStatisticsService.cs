@@ -1,4 +1,5 @@
 ﻿using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Activity.Domain;
 using BingeBuddyNg.Services.Calculation;
 using BingeBuddyNg.Services.Drink;
 using Microsoft.Extensions.Logging;
@@ -38,7 +39,7 @@ namespace BingeBuddyNg.Services.Statistics
             var drinkActivityLastMonth = await activityRepository.GetUserActivitiesAsync(userId, startTimestamp, ActivityType.Drink);
 
             // filter non-alcoholic drinks and calculate count
-            var alcoholicDrinkCount = drinkActivityLastMonth.Count(d => d.DrinkType != DrinkType.Anti);
+            var alcoholicDrinkCount = drinkActivityLastMonth.OfType<DrinkActivity>().Count(d => d.DrinkType != DrinkType.Anti);
 
             await userStatsRepository.UpdateTotalDrinkCountLastMonthAsync(userId, alcoholicDrinkCount);
         }

@@ -1,4 +1,5 @@
-﻿using BingeBuddyNg.Services.Drink;
+﻿using BingeBuddyNg.Services.Activity.Domain;
+using BingeBuddyNg.Services.Drink;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace BingeBuddyNg.Services.Activity.Querys
 
             var result = await this.activityRepository.GetUserActivitiesAsync(request.UserId, startTime, ActivityType.Drink);
 
-            var groupedByDay = result.GroupBy(t => t.Timestamp.Date)
+            var groupedByDay = result.OfType<DrinkActivity>().GroupBy(t => t.Timestamp.Date)
                 .OrderBy(t => t.Key)
                 .Select(t => new ActivityAggregationDTO()
                 {

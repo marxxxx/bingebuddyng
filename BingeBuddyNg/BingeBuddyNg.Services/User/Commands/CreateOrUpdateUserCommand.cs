@@ -1,4 +1,5 @@
 ﻿using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Activity.Domain;
 using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Infrastructure;
 using MediatR;
@@ -66,13 +67,13 @@ namespace BingeBuddyNg.Services.User.Commands
                     }
                 }
 
-                await activityRepository.AddActivityAsync(Activity.Activity.CreateRegistrationActivity(
+                await activityRepository.AddActivityAsync(RegistrationActivity.Create(
                     User.BingeBuddyUserId, User.BingeBuddyUserName, new UserInfo(request.UserId, request.Name)));
             }
 
             if (result.NameHasChanged)
             {
-                var activity = Activity.Activity.CreateRenameActivity(request.UserId, request.Name, result.OriginalUserName);
+                var activity = RenameActivity.Create(request.UserId, request.Name, result.OriginalUserName);
                 await activityRepository.AddActivityAsync(activity);
 
                 var renameMessage = new UserRenamedMessage(request.UserId, result.OriginalUserName, request.Name);

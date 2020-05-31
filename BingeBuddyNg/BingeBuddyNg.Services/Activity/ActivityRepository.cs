@@ -19,20 +19,15 @@ namespace BingeBuddyNg.Services.Activity
         private static readonly DateTime MaxTimestamp = new DateTime(2100, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         private readonly IStorageAccessService storageAccessService;
-        private readonly ICacheService cacheService;
         private readonly IEventGridService eventGridService;
 
         public ActivityRepository(
             IStorageAccessService storageAccessService,
-            ICacheService cacheService,
             IEventGridService eventGridService)
         {
             this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
-            this.cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
             this.eventGridService = eventGridService ?? throw new ArgumentNullException(nameof(eventGridService));
         }
-
-        public string GetActivityCacheKey(string userId) => $"Activity:{userId}";
 
         public async Task<PagedQueryResult<Activity>> GetActivityFeedAsync(GetActivityFilterArgs args)
         {
@@ -114,7 +109,6 @@ namespace BingeBuddyNg.Services.Activity
             var activityTable = this.storageAccessService.GetTableReference(ActivityTableName);
 
             string activityFeedRowKey = GetActivityFeedRowKey(activity.Timestamp, activity.UserId);
-            activity.Id = activityFeedRowKey;
             var entity = new ActivityTableEntity(GetPartitionKey(activity.Timestamp), activityFeedRowKey, activity);
 
             TableOperation operation = TableOperation.Insert(entity);
@@ -130,8 +124,6 @@ namespace BingeBuddyNg.Services.Activity
 
             // store in own personalize feed first
             await DistributeActivityAsync(new[] { activity.UserId }, activity);
-
-            cacheService.Remove(GetActivityCacheKey(activity.UserId));
 
             return activity;
         }
@@ -187,21 +179,10 @@ namespace BingeBuddyNg.Services.Activity
             var table = this.storageAccessService.GetTableReference(ActivityTableName);
 
             ActivityTableEntity entity = await GetActivityEntityAsync(activity.Id);
-
-            // extend to other propertys if needed
-            // Note to my future-self: Why do we need this? Just replace entity maybe and we're good?
-            entity.Entity.LocationAddress = activity.LocationAddress;
-            entity.Entity.Likes = activity.Likes;
-            entity.Entity.Comments = activity.Comments;
-            entity.Entity.Cheers = activity.Cheers;
-            entity.Entity.DrinkCount = activity.DrinkCount;
-            entity.Entity.AlcLevel = activity.AlcLevel;
+            entity.Entity = activity;
 
             TableOperation updateOperation = TableOperation.Replace(entity);
             await table.ExecuteAsync(updateOperation);
-
-            // invalidate cache
-            cacheService.Remove(GetActivityCacheKey(activity.UserId));
         }
 
         public async Task DeleteActivityAsync(string userId, string id)
@@ -231,8 +212,6 @@ namespace BingeBuddyNg.Services.Activity
 
             // Delete activity in personalized feeds
             await storageAccessService.AddQueueMessage(QueueNames.DeleteActivity, new DeleteActivityMessage(id));
-
-            cacheService.Remove(GetActivityCacheKey(userId));
         }
 
         public async Task DeleteActivityFromPersonalizedFeedAsync(string userId, string id)
@@ -267,7 +246,6 @@ namespace BingeBuddyNg.Services.Activity
             string[] tokens = rowKey.Split('|');
             return tokens[0];
         }
-
 
         private string GetActivityPerUserRowKey(DateTime timestampUtc)
         {

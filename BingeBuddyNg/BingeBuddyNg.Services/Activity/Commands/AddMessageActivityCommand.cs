@@ -1,4 +1,5 @@
-﻿using BingeBuddyNg.Services.User;
+﻿using BingeBuddyNg.Services.Activity.Domain;
+using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.Venue;
 using MediatR;
 using System;
@@ -41,8 +42,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
         {
             var user = await this.userRepository.FindUserAsync(request.UserId);
 
-            var activity = Activity.CreateMessageActivity(DateTime.UtcNow, request.Location, request.UserId, user.Name, request.Message);
-            activity.Venue = request.Venue;
+            var activity = MessageActivity.Create(request.Location, request.UserId, user.Name, request.Message, request.Venue);
 
             var savedActivity = await this.activityRepository.AddActivityAsync(activity);
             await activityRepository.AddToActivityAddedTopicAsync(savedActivity.Id);

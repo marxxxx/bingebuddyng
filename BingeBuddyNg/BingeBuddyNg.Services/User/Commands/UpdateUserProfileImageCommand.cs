@@ -1,4 +1,5 @@
 ﻿using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Activity.Domain;
 using BingeBuddyNg.Services.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -40,7 +41,7 @@ namespace BingeBuddyNg.Services.User.Commands
             using (var stream = request.Image.OpenReadStream())
             {
                 await storageAccessService.SaveFileInBlobStorage(ContainerNames.ProfileImages, request.UserId, stream);
-                var activity = Activity.Activity.CreateProfileImageUpdateActivity(request.UserId, user.Name);
+                var activity = ProfileImageUpdateActivity.Create(request.UserId, user.Name);
                 await activityRepository.AddActivityAsync(activity);
             }
             return Unit.Value;

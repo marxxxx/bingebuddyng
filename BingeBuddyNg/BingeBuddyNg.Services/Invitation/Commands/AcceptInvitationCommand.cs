@@ -1,4 +1,5 @@
 ﻿using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Activity.Domain;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
@@ -70,7 +71,7 @@ namespace BingeBuddyNg.Services.Invitation.Commands
                     await this.userStatsRepository.IncreaseScoreAsync(invitingUser.Id, Constants.Scores.FriendInvitation);
 
                     var message = await translationService.GetTranslationAsync(invitingUser.Language, "RecruitmentActivityMessage", acceptingUser.Name, Constants.Scores.FriendInvitation);
-                    var notificationActivity = Activity.Activity.CreateNotificationActivity(DateTime.UtcNow, invitingUser.Id, invitingUser.Name, message);
+                    var notificationActivity = NotificationActivity.Create(invitingUser.Id, invitingUser.Name, message);
 
                     await this.activityRepository.AddActivityAsync(notificationActivity);
                 }

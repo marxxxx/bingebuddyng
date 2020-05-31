@@ -10,10 +10,7 @@
             return Latitude != 0 && Longitude != 0;
         }
 
-        public Location()
-        {
-
-        }
+        public static Location Nowhere => null;
 
         public Location(double latitude, double longitude)
         {

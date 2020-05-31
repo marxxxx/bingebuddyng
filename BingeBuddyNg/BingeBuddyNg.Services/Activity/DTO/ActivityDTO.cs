@@ -1,11 +1,9 @@
-﻿using BingeBuddyNg.Services.Drink;
+﻿using System;
+using System.Collections.Generic;
+using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Game.Queries;
 using BingeBuddyNg.Services.User;
-using BingeBuddyNg.Services.Venue;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BingeBuddyNg.Services.Activity
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Activity.Domain;
 using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Infrastructure.Messaging;
 using BingeBuddyNg.Services.User;
@@ -53,9 +54,10 @@ namespace BingeBuddyNg.Services.Activity.Commands
         {
             var user = await this.userRepository.FindUserAsync(request.UserId);
 
-            var activity = Activity.CreateDrinkActivity(DateTime.UtcNow, request.Location, request.UserId, user.Name,
-                request.DrinkType, request.DrinkId, request.DrinkName, request.AlcPrc, request.Volume);
-            activity.Venue = request.Venue;
+            var timestamp = DateTime.UtcNow;
+            var id = ActivityId.Create(timestamp, request.UserId);
+            var activity = DrinkActivity.Create(id.Value, timestamp, request.Location, request.UserId, user.Name,
+                request.DrinkType, request.DrinkId, request.DrinkName, request.AlcPrc, request.Volume, request.Venue);
 
             var savedActivity = await this.activityRepository.AddActivityAsync(activity);
 

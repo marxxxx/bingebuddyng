@@ -7,8 +7,6 @@ namespace BingeBuddyNg.Services.Activity
 {
     public interface IActivityRepository
     {
-        string GetActivityCacheKey(string userId);
-
         Task<PagedQueryResult<Activity>> GetActivityFeedAsync(GetActivityFilterArgs args);
 
         Task<List<Activity>> GetUserActivitiesAsync(string userId, DateTime startTimeUtc, ActivityType activityType = ActivityType.None);

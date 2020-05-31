@@ -1,4 +1,5 @@
 ﻿using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Activity.Domain;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Shared;
@@ -65,7 +66,7 @@ namespace BingeBuddyNg.Services.Game
                     new WebPushNotificationMessage(gameOverMessage, gameOverTitle, url));
             }
 
-            var activity = Activity.Activity.CreateGameResultActivity(DateTime.UtcNow, e.Game.ToDto(users.Select(u=>u.ToUserInfoDTO())), winnerUser?.ToUserInfo());
+            var activity = GameResultActivity.Create(e.Game.ToDto(users.Select(u=>u.ToUserInfoDTO())), winnerUser?.ToUserInfo());
             
             var savedActivity = await this.activityRepository.AddActivityAsync(activity);
 

@@ -1,4 +1,5 @@
 ﻿using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Activity.Domain;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
 using MediatR;
@@ -38,7 +39,7 @@ namespace BingeBuddyNg.Services.Venue.Commands
                 {
                     this.userRepository.UpdateUserAsync(user),
                     this.venueUserRepository.AddUserToVenueAsync(request.Venue.Id, request.Venue.Name, request.UserId, user.Name),
-                    this.AddVenueActivityAsync(new AddVenueActivityDTO(user.Id, message, request.Venue, VenueAction.Enter))
+                    this.AddVenueActivityAsync(new AddVenueActivityDTO(user.Id, request.Venue, VenueAction.Enter))
                 };
 
                 await Task.WhenAll(tasks);
@@ -55,13 +56,12 @@ namespace BingeBuddyNg.Services.Venue.Commands
             if (currentVenue != null)
             {
                 user.CurrentVenue = null;
-                var message = await translationService.GetTranslationAsync(user.Language, "PersonalVenueLeaveActivityMessage", currentVenue.Name);
 
                 var tasks = new[]
                 {
                     this.userRepository.UpdateUserAsync(user),
                     this.venueUserRepository.RemoveUserFromVenueAsync(currentVenue.Id, request.UserId),
-                    this.AddVenueActivityAsync(new AddVenueActivityDTO(user.Id, message, currentVenue, VenueAction.Leave))
+                    this.AddVenueActivityAsync(new AddVenueActivityDTO(user.Id, currentVenue, VenueAction.Leave))
                 };
 
                 await Task.WhenAll(tasks);
@@ -73,13 +73,19 @@ namespace BingeBuddyNg.Services.Venue.Commands
         private async Task AddVenueActivityAsync(AddVenueActivityDTO activity)
         {
             var user = await this.userRepository.FindUserAsync(activity.UserId);
-            var activityEntity = Activity.Activity.CreateVenueActivity(DateTime.UtcNow, activity.UserId, user.Name,
-                activity.Message, activity.Venue, activity.Action);
+            var timestamp = DateTime.UtcNow;
+            var id = ActivityId.Create(timestamp, activity.UserId);
+            var activityEntity = VenueActivity.Create(
+                id.Value,
+                timestamp,
+                activity.UserId,
+                user.Name,
+                activity.Venue,
+                activity.Action);
 
             var savedActivity = await this.activityRepository.AddActivityAsync(activityEntity);
 
             await activityRepository.AddToActivityAddedTopicAsync(savedActivity.Id);
         }
-
     }
 }
