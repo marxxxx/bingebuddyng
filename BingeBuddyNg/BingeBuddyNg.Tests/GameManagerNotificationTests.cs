@@ -1,4 +1,5 @@
 ﻿using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Activity.Domain;
 using BingeBuddyNg.Services.Game;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
@@ -69,7 +70,7 @@ namespace BingeBuddyNg.Tests
 
             await Task.Delay(2000);
 
-            activityRepository.Verify(a => a.AddActivityAsync(It.Is<Activity>(a => a.ActivityType == ActivityType.GameResult && a.GameInfo != null && a.GameInfo.Id == gameId)));
+            activityRepository.Verify(a => a.AddActivityAsync(It.Is<GameResultActivity>(a => a.ActivityType == ActivityType.GameResult && a.GameInfo != null && a.GameInfo.Id == gameId)));
         }
 
         private static GameEndNotificationService SetupGameEndNotificationService(

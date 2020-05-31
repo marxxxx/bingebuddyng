@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Functions.Services.Notifications;
 using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Activity.Domain;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
@@ -106,7 +107,11 @@ namespace BingeBuddyNg.Functions.Services
                 // check for drink events
                 try
                 {
-                    await this.drinkEventHandlingService.HandleDrinkEventsAsync(activity, currentUser);
+                    var drinkActivity = activity as DrinkActivity;
+                    if(drinkActivity != null)
+                    {
+                        await this.drinkEventHandlingService.HandleDrinkEventsAsync(drinkActivity, currentUser);
+                    }                    
                 }
                 catch (Exception ex)
                 {

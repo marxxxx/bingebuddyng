@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Functions.Services.Notifications;
 using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Activity.Domain;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Shared;
@@ -103,13 +104,13 @@ namespace BingeBuddyNg.Functions.Services
             switch (activity.ActivityType)
             {
                 case ActivityType.Drink:
-                    activityString = await translationService.GetTranslationAsync(language, "DrinkActivityMessage", activity.DrinkName, locationSnippet);
+                    activityString = await translationService.GetTranslationAsync(language, "DrinkActivityMessage", ((DrinkActivity)activity).DrinkName, locationSnippet);
                     break;
                 case ActivityType.Image:
                     activityString = await translationService.GetTranslationAsync(language, "ImageActivityMessage");
                     break;
                 case ActivityType.Message:
-                    activityString = await translationService.GetTranslationAsync(language, "MessageActivityMessage", activity.Message);
+                    activityString = await translationService.GetTranslationAsync(language, "MessageActivityMessage", ((MessageActivity)activity).Message);
                     break;
                 case ActivityType.VenueEntered:
                     activityString = await translationService.GetTranslationAsync(language, "VenueEnterActivityMessage", activity.Venue.Name);
