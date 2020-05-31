@@ -29,19 +29,6 @@ namespace BingeBuddyNg.Services.Activity.Commands
             this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
         }
 
-        public async Task<string> Handle(AddVenueActivityCommand request, CancellationToken cancellationToken)
-        {
-            var user = await this.userRepository.FindUserAsync(request.UserId);
-            var activityEntity = Activity.CreateVenueActivity(DateTime.UtcNow, request.UserId, user.Name,
-                request.Message, request.Venue, request.Action);
-
-            var savedActivity = await this.activityRepository.AddActivityAsync(activityEntity);
-
-            await activityRepository.AddToActivityAddedTopicAsync(savedActivity.Id);
-
-            return savedActivity.Id;
-        }
-
         public async Task<Unit> Handle(DeleteActivityCommand request, CancellationToken cancellationToken)
         {
             await activityRepository.DeleteActivityAsync(request.UserId, request.ActivityId);

@@ -39,7 +39,7 @@ namespace BingeBuddyNg.Services.Activity
             string whereClause = null;
             string tableName = null;
 
-            if(args.UserId != null)
+            if (args.UserId != null)
             {
                 tableName = ActivityUserFeedTableName;
 
@@ -97,7 +97,7 @@ namespace BingeBuddyNg.Services.Activity
                 TableOperators.And,
                 TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, startRowKey));
 
-            if(activityType != ActivityType.None)
+            if (activityType != ActivityType.None)
             {
                 whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
                     TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.ActivityType), QueryComparisons.Equal, activityType.ToString()));
@@ -105,7 +105,7 @@ namespace BingeBuddyNg.Services.Activity
 
             var result = await storageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityPerUserTableName, whereClause);
 
-            var activitys = result.Select(a=>a.Entity).ToList();
+            var activitys = result.Select(a => a.Entity).ToList();
             return activitys;
         }
 
@@ -127,6 +127,9 @@ namespace BingeBuddyNg.Services.Activity
 
             TableOperation perUserOperation = TableOperation.Insert(perUserEntity);
             await perUserActivityTable.ExecuteAsync(perUserOperation);
+
+            // store in own personalize feed first
+            await DistributeActivityAsync(new[] { activity.UserId }, activity);
 
             cacheService.Remove(GetActivityCacheKey(activity.UserId));
 
@@ -206,17 +209,26 @@ namespace BingeBuddyNg.Services.Activity
         {
             var activityTable = this.storageAccessService.GetTableReference(ActivityTableName);
             var activity = await this.GetActivityEntityAsync(id);
-            if (string.Compare(activity.UserId, userId, true) != 0)
+            if (activity != null)
             {
-                throw new UnauthorizedAccessException($"User {userId} is not permitted to delete an activity of user {activity.UserId}");
-            }
+                if (string.Compare(activity.UserId, userId, true) != 0)
+                {
+                    throw new UnauthorizedAccessException($"User {userId} is not permitted to delete an activity of user {activity.UserId}");
+                }
 
-            await activityTable.ExecuteAsync(TableOperation.Delete(activity));
+                await activityTable.ExecuteAsync(TableOperation.Delete(activity));
+            }
 
             // Delete activity in per-user table as well
             var perUserTable = this.storageAccessService.GetTableReference(ActivityPerUserTableName);
             var perUserActivity = await this.GetActivityPerUserEntityAsync(userId, activity.Entity.Timestamp);
-            await perUserTable.ExecuteAsync(TableOperation.Delete(perUserActivity));
+            if (perUserActivity != null)
+            {
+                await perUserTable.ExecuteAsync(TableOperation.Delete(perUserActivity));
+            }
+
+            // delete from own feed immediately
+            await DeleteActivityFromPersonalizedFeedAsync(userId, id);
 
             // Delete activity in personalized feeds
             await storageAccessService.AddQueueMessage(QueueNames.DeleteActivity, new DeleteActivityMessage(id));
@@ -227,16 +239,16 @@ namespace BingeBuddyNg.Services.Activity
         public async Task DeleteActivityFromPersonalizedFeedAsync(string userId, string id)
         {
             var userFeedTable = this.storageAccessService.GetTableReference(ActivityUserFeedTableName);
-            
+
             TableOperation retrieveOperation = TableOperation.Retrieve<ActivityTableEntity>(userId, id);
             var result = await userFeedTable.ExecuteAsync(retrieveOperation);
 
             var entity = (ActivityTableEntity)result.Result;
 
-            if(entity != null)
+            if (entity != null)
             {
                 await userFeedTable.ExecuteAsync(TableOperation.Delete(entity));
-            }            
+            }
         }
 
         public async Task AddToActivityAddedTopicAsync(string activityId)
