@@ -17,11 +17,10 @@ namespace BingeBuddyNg.Functions
         private const int ResizeMaxWidth = 1024;
         private const int ResizeMaxHeight = 768;
 
-        [FunctionName("ImageResizingFunction")]
-        public void Run(
-            [BlobTrigger("img/{name}", Connection = "AzureWebJobsStorage")]Stream strm, string name,
-             [Blob("img/{name}", FileAccess.Write, Connection = "AzureWebJobsStorage")]out byte[] resizedData,
-            ILogger log)
+        [FunctionName(nameof(ImageResizingFunction))]
+        public void Run([BlobTrigger("img/{name}", Connection = "AzureWebJobsStorage")] Stream strm, string name,
+                        [Blob("img/{name}", FileAccess.Write, Connection = "AzureWebJobsStorage")] out byte[] resizedData,
+                        ILogger log)
         {
             Image<SixLabors.ImageSharp.PixelFormats.Rgba32> img = null;
 
@@ -31,7 +30,7 @@ namespace BingeBuddyNg.Functions
             }
             catch (Exception ex)
             {
-                log.LogError(ex, $"Error processing image [{name}]"); 
+                log.LogError(ex, $"Error processing image [{name}]");
                 resizedData = null;
                 return;
             }

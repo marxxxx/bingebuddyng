@@ -31,8 +31,7 @@ namespace BingeBuddyNg.Api.Controllers
         [HttpGet("map")]
         public async Task<ActionResult<IEnumerable<ActivityDTO>>> GetActivitysForMap()
         {
-            var userId = this.identityService.GetCurrentUserId();
-            var result = await this.mediator.Send(new GetActivitysForMapQuery(userId));
+            var result = await this.mediator.Send(new GetActivitysForMapQuery());
             return result;
         }
 

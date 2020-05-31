@@ -62,7 +62,7 @@ namespace BingeBuddyNg.Services.Game
 
                 var languagePushInfos = lang.Select(l => l.PushInfo).ToList();
                 this.notificationService.SendWebPushMessage(languagePushInfos,
-                    new NotificationMessage(gameOverMessage, gameOverTitle, url));
+                    new WebPushNotificationMessage(gameOverMessage, gameOverTitle, url));
             }
 
             var activity = Activity.Activity.CreateGameResultActivity(DateTime.UtcNow, e.Game.ToDto(users.Select(u=>u.ToUserInfoDTO())), winnerUser?.ToUserInfo());

@@ -1,15 +1,13 @@
-﻿using BingeBuddyNg.Services.Activity;
+﻿using System;
+using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Calculation;
 using BingeBuddyNg.Services.DrinkEvent;
-using BingeBuddyNg.Services.Game;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Infrastructure.EventGrid;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
 using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System;
 
 namespace BingeBuddyNg.Functions
 {
@@ -18,18 +16,13 @@ namespace BingeBuddyNg.Functions
         public static void AddBingeBuddy(this IServiceCollection services)
         {
             // Domain Services
-            services.AddSingleton<ITranslationService, TranslationService>();
             services.AddTransient<IActivityRepository, ActivityRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IUtilityService, UtilityService>();
-
             services.AddTransient<ICalculationService, CalculationService>();
             services.AddTransient<IUserStatsRepository, UserStatsRepository>();
             services.AddTransient<IDrinkEventRepository, DrinkEventRepository>();
             services.AddTransient<IUserStatisticsService, UserStatisticsService>();
             services.AddTransient<IUserStatsHistoryRepository, UserStatsHistoryRepository>();
-
-            services.AddTransient<ICacheService, NoCacheService>();
 
             // Infrastructure
             services.AddHttpClient();
@@ -38,6 +31,10 @@ namespace BingeBuddyNg.Functions
             services.AddUtility();
             services.AddStorage();
             services.AddEventGrid();
+
+            services.AddTransient<ICacheService, NoCacheService>();
+            services.AddSingleton<ITranslationService, TranslationService>();
+            services.AddTransient<IUtilityService, UtilityService>();
         }
 
         public static void AddNotification(this IServiceCollection services)
@@ -88,6 +85,5 @@ namespace BingeBuddyNg.Functions
             services.AddSingleton(config);
             services.AddSingleton<IEventGridService, EventGridService>();
         }
-
     }
 }

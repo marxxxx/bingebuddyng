@@ -19,7 +19,7 @@ namespace BingeBuddyNg.Functions
             this.UserStatisticsService = userStatisticsService ?? throw new ArgumentNullException(nameof(userStatisticsService));
         }
 
-        [FunctionName("DrinkCalculatorFunction")]
+        [FunctionName(nameof(DrinkCalculatorFunction))]
         public async Task Run([TimerTrigger("0 */15 * * * *")]TimerInfo myTimer,
             ILogger log)
         {

@@ -1,61 +1,49 @@
-using Microsoft.Azure.WebJobs;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Functions.Services;
+using BingeBuddyNg.Functions.Services.Notifications;
 using BingeBuddyNg.Services.User;
+using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
+using Microsoft.Extensions.Logging;
 
 namespace BingeBuddyNg.Functions
 {
     public class DrinkReminderFunction
     {
-        public IUserRepository UserRepository { get; }
-        public INotificationService NotificationService { get; }
-        public ITranslationService TranslationService { get; }
+        private readonly IUserRepository userRepository;
+        private readonly PushNotificationService notificationService;
 
-        public DrinkReminderFunction(IUserRepository userRepository, INotificationService notificationService, ITranslationService translationService)
+        public DrinkReminderFunction(IUserRepository userRepository, PushNotificationService notificationService)
         {
-            this.UserRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            this.NotificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
-            this.TranslationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
+            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
         }
 
         [FunctionName(nameof(DrinkReminderFunction))]
-        public async Task RunOrchestrator(
-            [OrchestrationTrigger] IDurableOrchestrationContext context, ILogger log)
+        public async Task RunOrchestrator([OrchestrationTrigger] IDurableOrchestrationContext context, ILogger log)
         {
             log.LogInformation($"Running drink reminder function ...");
-            
-            
+
             User user = context.GetInput<User>();
 
             log.LogInformation($"Got user {user} ");
 
             if (user.PushInfo == null)
             {
-                await UserRepository.UpdateMonitoringInstanceAsync(user.Id, null);
+                await userRepository.UpdateMonitoringInstanceAsync(user.Id, null);
+                return;
             }
-            else
-            {
-                using (var cts = new CancellationTokenSource())
-                {
-                    log.LogInformation($"Waiting for next drink to occur.");
-                    await context.CreateTimer(DateTime.UtcNow.AddHours(1), cts.Token);
 
-                    var subject = await TranslationService.GetTranslationAsync(user.Language, "DrinkReminder");
-                    var messageContent = await TranslationService.GetTranslationAsync(user.Language, "DrinkReminderMessage");
+            log.LogInformation($"Waiting for next drink to occur.");
+            await context.CreateTimer(DateTime.UtcNow.AddHours(1), CancellationToken.None);
 
-                    var reminderMessage = new NotificationMessage(subject, messageContent);
+            var notification = new DrinkReminderNotification(user.Id);
+            await notificationService.NotifyAsync(new[] { notification });
 
-                    NotificationService.SendWebPushMessage(new[] { user.PushInfo }, reminderMessage);
-                }
-
-                await UserRepository.UpdateMonitoringInstanceAsync(user.Id, null);
-                log.LogInformation($"Terminating monitoring instance for usr {user}");
-            }
+            await userRepository.UpdateMonitoringInstanceAsync(user.Id, null);
+            log.LogInformation($"Terminating monitoring instance for user {user}");
         }
     }
 }

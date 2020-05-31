@@ -1,10 +1,10 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User.Commands;
-using Microsoft.WindowsAzure.Storage.Table;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.User.Commands;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace BingeBuddyNg.Services.User
 {
@@ -20,7 +20,7 @@ namespace BingeBuddyNg.Services.User
         {
             this.storageAccess = storageAccess ?? throw new ArgumentNullException(nameof(storageAccess));
             this.cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
-        }                
+        }
 
         public async Task<User> FindUserAsync(string id)
         {
@@ -52,18 +52,18 @@ namespace BingeBuddyNg.Services.User
         }
 
         private string GetUserCacheKey(string userId) => $"User:{userId}";
-        
+
 
         public async Task<CreateOrUpdateUserResult> CreateOrUpdateUserAsync(CreateOrUpdateUserCommand request)
         {
             var table = storageAccess.GetTableReference(TableName);
-
-            TableOperation saveUserOperation = null;
             bool profilePicHasChanged = true;
             bool nameHasChanged = false;
             var savedUser = await FindUserEntityAsync(request.UserId);
             bool isNewUser = false;
             string originalUserName = null;
+
+            TableOperation saveUserOperation;
             if (savedUser != null)
             {
                 originalUserName = savedUser.Entity.Name;
@@ -78,7 +78,7 @@ namespace BingeBuddyNg.Services.User
                     savedUser.Entity.PushInfo = request.PushInfo;
                 }
 
-                if(request.Language != null)
+                if (request.Language != null)
                 {
                     savedUser.Entity.Language = request.Language;
                 }
@@ -110,11 +110,11 @@ namespace BingeBuddyNg.Services.User
         }
 
         public async Task UpdateUserAsync(User user)
-        {
-            var table = storageAccess.GetTableReference(TableName);
+        {            
             var userEntity = await FindUserEntityAsync(user.Id);
             userEntity.Entity = user;
-            
+
+            var table = storageAccess.GetTableReference(TableName);
             TableOperation saveUserOperation = TableOperation.Replace(userEntity);
 
             await table.ExecuteAsync(saveUserOperation);
@@ -122,31 +122,36 @@ namespace BingeBuddyNg.Services.User
             cacheService.Remove(GetUserCacheKey(user.Id));
         }
 
-        public async Task<List<User>> GetUsersAsync(IEnumerable<string> userIds = null)
+        public async Task<IEnumerable<User>> GetUsersAsync(IEnumerable<string> userIds = null)
         {
             string whereClause = BuildWhereClause(userIds);
 
             var result = await storageAccess.QueryTableAsync<JsonTableEntity<User>>(TableName, whereClause);
 
-            var users = result.OrderByDescending(u=>u.Timestamp).Select(r =>
-            {
-                var user = r.Entity;
-                user.LastOnline = r.Timestamp.UtcDateTime;
-                return user;
-            }).ToList();
+            var users = result.OrderByDescending(u => u.Timestamp).Select(r =>
+              {
+                  var user = r.Entity;
+                  user.LastOnline = r.Timestamp.UtcDateTime;
+                  return user;
+              }).ToList();
             return users;
+        }
+
+        public async Task<IEnumerable<string>> GetAllUserIdsAsync()
+        {
+            return await this.storageAccess.GetRowKeysAsync(TableName, PartitionKeyValue);
         }
 
         private string BuildWhereClause(IEnumerable<string> userIds)
         {
             string whereClause = null;
 
-            if(userIds != null)
+            if (userIds != null)
             {
-                foreach(var u in userIds)
+                foreach (var u in userIds)
                 {
                     string filter = TableQuery.GenerateFilterCondition(nameof(TableEntity.RowKey), QueryComparisons.Equal, u);
-                    if(whereClause != null)
+                    if (whereClause != null)
                     {
                         whereClause = TableQuery.CombineFilters(whereClause, TableOperators.Or, filter);
                     }
@@ -184,10 +189,17 @@ namespace BingeBuddyNg.Services.User
         public async Task UpdateMonitoringInstanceAsync(string userId, string monitoringInstanceId)
         {
             var user = await FindUserEntityAsync(userId);
-            if(user != null)
+            if (user == null || user.Entity.MonitoringInstanceId == monitoringInstanceId)
             {
-                user.Entity.MonitoringInstanceId = monitoringInstanceId;
+                return;
             }
+
+            var table = storageAccess.GetTableReference(TableName);
+
+            user.Entity.MonitoringInstanceId = monitoringInstanceId;
+            TableOperation saveUserOperation = TableOperation.Replace(user);
+
+            await table.ExecuteAsync(saveUserOperation);
         }
     }
 }

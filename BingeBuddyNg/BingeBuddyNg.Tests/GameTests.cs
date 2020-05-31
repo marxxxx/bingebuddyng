@@ -53,7 +53,7 @@ namespace BingeBuddyNg.Tests
                     It.Is<GameStartedMessage>( m => m.GameId == result.GameId && m.Title ==  gameTitle && AreEqual<string>(friendUserIds, m.UserIds))), Times.Once);
 
             notificationServiceMock.Verify(s =>
-               s.SendWebPushMessage(It.IsAny<IEnumerable<PushInfo>>(), It.Is<NotificationMessage>(m => m.data.url.Contains(game.Id.ToString()))), Times.Once);
+               s.SendWebPushMessage(It.IsAny<IEnumerable<PushInfo>>(), It.Is<WebPushNotificationMessage>(m => m.data.url.Contains(game.Id.ToString()))), Times.Once);
         }
 
         [Fact]

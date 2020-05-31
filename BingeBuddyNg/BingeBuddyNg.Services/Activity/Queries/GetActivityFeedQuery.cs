@@ -73,10 +73,7 @@ namespace BingeBuddyNg.Services.Activity.Querys
 
         private async Task<PagedQueryResult<ActivityStatsDTO>> HandleGetActivityFeedQuery(GetActivityFeedQuery request)
         {
-            var callingUser = await this.userRepository.FindUserAsync(request.UserId);
-
-            var visibleUserIds = callingUser.GetVisibleFriendUserIds();
-            var args = new GetActivityFilterArgs(request.UserId, visibleUserIds, request.ContinuationToken) { StartActivityId = request.StartActivityId };
+            var args = new GetActivityFilterArgs() { UserId = request.UserId, ContinuationToken = request.ContinuationToken, StartActivityId = request.StartActivityId };
             var activities = await this.activityRepository.GetActivityFeedAsync(args);
 
             var userIds = activities.ResultPage.Select(a => a.UserId).Distinct();

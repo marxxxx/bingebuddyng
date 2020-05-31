@@ -4,6 +4,8 @@ namespace BingeBuddyNg.Shared
 {
     public static class Constants
     {
+        public const string ApplicationName = "BingeBuddy";
+
         public const string DefaultLanguage = "de";
 
         public static class ContainerNames
@@ -17,6 +19,8 @@ namespace BingeBuddyNg.Shared
             public const string ReactionAdded = "reaction-added";
             public const string UserRenamed = "user-renamed";
             public const string DeleteUser = "delete-user";
+            public const string DeleteActivity = "delete-activity";
+            public const string FriendStatusChanged = "friend-status-changed";
         }
 
         public static class Urls

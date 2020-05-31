@@ -1,11 +1,10 @@
-﻿using BingeBuddyNg.Services.Drink;
-using BingeBuddyNg.Services.Infrastructure.Messaging;
-using BingeBuddyNg.Services.User;
-using BingeBuddyNg.Services.Venue;
-using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Drink;
+using BingeBuddyNg.Services.Infrastructure.Messaging;
+using BingeBuddyNg.Services.User;
+using MediatR;
 
 namespace BingeBuddyNg.Services.Activity.Commands
 {

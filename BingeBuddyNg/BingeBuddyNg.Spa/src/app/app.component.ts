@@ -14,6 +14,8 @@ import { InvitationService } from './invitation/services/invitation.service';
 import { SettingsService } from './@core/services/settings.service';
 import { CreateOrUpdateUserDTO } from 'src/models/CreateOrUpdateUserDTO';
 import { credentials } from 'src/environments/credentials';
+import { Router } from '@angular/router';
+import { GameStartedMessage } from './game/models/GameStartedMessage';
 
 @Component({
   selector: 'app-root',
@@ -35,7 +37,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private invitationService: InvitationService,
     private settingsService: SettingsService,
     private pushService: SwPush,
-    private updateService: SwUpdate
+    private updateService: SwUpdate,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -87,6 +90,11 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.notification.start().then(s => {
           console.log('notification registered');
+
+          this.notification.on('GameStarted', (payload: GameStartedMessage) => {
+            console.log('GameStarted', payload);
+            this.router.navigate(['/game/play', payload.gameId]);
+          });
         });
       }));
   }

@@ -6,7 +6,9 @@ namespace BingeBuddyNg.Services.User
 {
     public interface IUserRepository
     {
-        Task<List<User>> GetUsersAsync(IEnumerable<string> userIds = null);
+        Task<IEnumerable<User>> GetUsersAsync(IEnumerable<string> userIds = null);
+
+        Task<IEnumerable<string>> GetAllUserIdsAsync();
 
         Task<User> FindUserAsync(string id);
 

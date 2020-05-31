@@ -84,7 +84,7 @@ namespace BingeBuddyNg.Services
 
                 this.notificationService.SendWebPushMessage(
                     lang.Select(l=>l.PushInfo),
-                    new NotificationMessage(command.Title, translatedMessage, url));
+                    new WebPushNotificationMessage(command.Title, translatedMessage, url));
             }
 
             return new StartGameResultDTO(gameId);

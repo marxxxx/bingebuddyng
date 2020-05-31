@@ -45,7 +45,7 @@ namespace BingeBuddyNg.Tests
             notificationServiceMock.Verify(s =>
                  s.SendWebPushMessage(
                      It.IsAny<IEnumerable<PushInfo>>(),
-                    It.IsAny<NotificationMessage>()));
+                    It.IsAny<WebPushNotificationMessage>()));
 
             await gameNotificationService.StopAsync(CancellationToken.None);
         }
