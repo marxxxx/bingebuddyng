@@ -84,7 +84,7 @@ namespace BingeBuddyNg.Services.Activity
 
             var result = await storageAccessService.QueryTableAsync<ActivityTableEntity>(tableName, whereClause, args.PageSize, args.ContinuationToken);
 
-            List<Activity> resultActivitys = result.ResultPage.ToActivityListWithAdjustedIds();
+            List<Activity> resultActivitys = result.ResultPage.Select(a=>a.Entity).ToList();
             return new PagedQueryResult<Activity>(resultActivitys, result.ContinuationToken);
         }
 
@@ -166,7 +166,6 @@ namespace BingeBuddyNg.Services.Activity
             var result = await table.ExecuteAsync(retrieveOperation);
 
             var entity = (ActivityTableEntity)result.Result;
-            entity.Entity.Id = id;
             return entity;
         }
 
@@ -217,15 +216,15 @@ namespace BingeBuddyNg.Services.Activity
                 }
 
                 await activityTable.ExecuteAsync(TableOperation.Delete(activity));
-            }
 
-            // Delete activity in per-user table as well
-            var perUserTable = this.storageAccessService.GetTableReference(ActivityPerUserTableName);
-            var perUserActivity = await this.GetActivityPerUserEntityAsync(userId, activity.Entity.Timestamp);
-            if (perUserActivity != null)
-            {
-                await perUserTable.ExecuteAsync(TableOperation.Delete(perUserActivity));
-            }
+                // Delete activity in per-user table as well
+                var perUserTable = this.storageAccessService.GetTableReference(ActivityPerUserTableName);
+                var perUserActivity = await this.GetActivityPerUserEntityAsync(userId, activity.Entity.Timestamp);
+                if (perUserActivity != null)
+                {
+                    await perUserTable.ExecuteAsync(TableOperation.Delete(perUserActivity));
+                }
+            }            
 
             // delete from own feed immediately
             await DeleteActivityFromPersonalizedFeedAsync(userId, id);

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
 namespace BingeBuddyNg.Services.Activity
 {
@@ -35,17 +34,6 @@ namespace BingeBuddyNg.Services.Activity
                 Cheers = a.Cheers?.Select(c => new ReactionDTO() { Timestamp = c.Timestamp, UserId = c.UserId, UserName = c.UserName }).ToList(),
                 Comments = a.Comments?.Select(c => new CommentReactionDTO() { Timestamp = c.Timestamp, UserId = c.UserId, UserName = c.UserName, Comment = c.Comment }).ToList()
             };
-        }
-
-        public static List<Activity> ToActivityListWithAdjustedIds(this IEnumerable<ActivityTableEntity> result)
-        {
-            List<Activity> resultActivities = new List<Activity>();
-            foreach (var r in result)
-            {
-                r.Entity.Id = r.RowKey;
-                resultActivities.Add(r.Entity);
-            }
-            return resultActivities;
         }
     }
 }

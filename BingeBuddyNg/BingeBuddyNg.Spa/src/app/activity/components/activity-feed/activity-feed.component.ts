@@ -123,11 +123,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
           });
       })
     );
-
-    this.notification.on('GameStarted', (payload: GameStartedMessage) => {
-      console.log('GameStarted', payload);
-      this.router.navigate(['/game/play', payload.gameId]);
-    });
   }
 
 
