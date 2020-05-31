@@ -76,11 +76,9 @@ namespace BingeBuddyNg.Functions.Services
                     {
                         // Immediately update Stats for current user
                         userStats = await userStatisticsService.UpdateStatsForUserAsync(currentUser);
-                        activity.DrinkCount = userStats.CurrentNightDrinks;
                         await userStatisticsService.UpdateRankingForUserAsync(currentUser.Id);
 
-                        activity.DrinkCount = userStats.CurrentNightDrinks;
-                        activity.AlcLevel = userStats.CurrentAlcoholization;
+                        activity.UpdateStats(userStats.CurrentNightDrinks, userStats.CurrentAlcoholization);
 
                         shouldUpdate = true;
                     }
@@ -150,9 +148,7 @@ namespace BingeBuddyNg.Functions.Services
         private async Task HandleLocationUpdateAsync(Activity activity)
         {
             var address = await utilityService.GetAddressFromLongLatAsync(activity.Location);
-            activity.LocationAddress = address.AddressText;
-            activity.CountryLongName = address.CountryLongName;
-            activity.CountryShortName = address.CountryShortName;
+            activity.UpdateLocation(address.AddressText, address.CountryShortName, address.CountryLongName);
         }
 
         private async Task SendActivityUpdateAsync(User currentUser, Activity activity, UserStatistics userStats)

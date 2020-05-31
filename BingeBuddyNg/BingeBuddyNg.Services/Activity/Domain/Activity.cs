@@ -74,5 +74,18 @@ namespace BingeBuddyNg.Services.Activity
 
             this.DomainEvents.Add(new ReactionAdded(this.Id, ReactionType.Cheers, reaction.UserId));
         }
+
+        public void UpdateStats(int drinkCount, double alcLevel)
+        {
+            this.DrinkCount = drinkCount;
+            this.AlcLevel = alcLevel;
+        }
+
+        public void UpdateLocation(string locationAddress, string countryShortName, string countryLongName)
+        {
+            this.LocationAddress = locationAddress;
+            this.CountryShortName = countryShortName;
+            this.CountryLongName = countryLongName;
+        }
     }
 }
