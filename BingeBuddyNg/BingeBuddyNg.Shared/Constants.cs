@@ -23,6 +23,13 @@ namespace BingeBuddyNg.Shared
             public const string FriendStatusChanged = "friend-status-changed";
         }
 
+        public static class TableNames
+        {
+            public const string ActivityTableName = "activity";
+            public const string ActivityPerUserTableName = "activityperuser";
+            public const string ActivityUserFeedTableName = "activityuserfeed";
+        }
+
         public static class Urls
         {
             public const string ApplicationIconUrl = "https://bingebuddystorage.z6.web.core.windows.net/favicon.ico";

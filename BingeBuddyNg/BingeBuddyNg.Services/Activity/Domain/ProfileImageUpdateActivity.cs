@@ -25,12 +25,12 @@ namespace BingeBuddyNg.Services.Activity.Domain
             return activity;
         }
 
-        public static ProfileImageUpdateActivity Create(string id, string userId, string userName)
+        public static ProfileImageUpdateActivity Create(string id, DateTime timestamp, string userId, string userName)
         {
             var activity = new ProfileImageUpdateActivity(
                 id,
-                ActivityType.ProfileImageUpdate, 
-                DateTime.UtcNow, 
+                ActivityType.ProfileImageUpdate,
+                timestamp, 
                 Location.Nowhere,
                 userId, 
                 userName);

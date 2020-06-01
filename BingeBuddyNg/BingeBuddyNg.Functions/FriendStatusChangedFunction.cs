@@ -54,11 +54,11 @@ namespace BingeBuddyNg.Functions
             log.LogInformation($"Successfully updated personalized feeds as a result of a friendship status change: {myQueueItem}");
         }
 
-        private async Task ImportActivities(string userId, IEnumerable<Activity> activities)
+        private async Task ImportActivities(string userId, IEnumerable<ActivityDTO> activities)
         {
             foreach (var a in activities)
             {
-                await this.activityRepository.DistributeActivityAsync(new[] { userId }, a);
+                await this.activityRepository.DistributeActivityAsync(new[] { userId }, a.ToDomain());
             }
         }
 

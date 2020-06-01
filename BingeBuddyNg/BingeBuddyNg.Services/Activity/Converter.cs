@@ -1,10 +1,62 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using BingeBuddyNg.Services.Activity.Domain;
 
 namespace BingeBuddyNg.Services.Activity
 {
     public static class Converter
     {
+        public static Activity ToDomain(this ActivityDTO a) 
+        {
+            switch(a.ActivityType)
+            {
+                case ActivityType.Drink:
+                    {
+                        return DrinkActivity.Create(a.Id, a.Timestamp, a.Location, a.UserId, a.UserName, a.DrinkType, a.DrinkId, a.DrinkName, a.DrinkAlcPrc.GetValueOrDefault(), a.DrinkVolume.GetValueOrDefault(), a.Venue);
+                    }
+                case ActivityType.GameResult:
+                    {
+                        return GameResultActivity.Create(a.Id, a.Timestamp, a.GameInfo, new User.UserInfo(a.UserId, a.UserName));
+                    }
+                case ActivityType.Image:
+                    {
+                        return ImageActivity.Create(a.Id, a.Timestamp, a.Location, a.UserId, a.UserName, a.ImageUrl);
+                    }
+                case ActivityType.Message:
+                    {
+                        return MessageActivity.Create(a.Id, a.Timestamp, a.Location, a.UserId, a.UserName, a.Message, a.Venue);
+                    }
+                case ActivityType.Notification:
+                    {
+                        return NotificationActivity.Create(a.Id, a.Timestamp, a.UserId, a.UserName, a.Message);
+                    }
+                case ActivityType.ProfileImageUpdate:
+                    {
+                        return ProfileImageUpdateActivity.Create(a.Id, a.Timestamp, a.UserId, a.UserName);
+                    }
+                case ActivityType.Registration:
+                    {
+                        return RegistrationActivity.Create(a.Id, a.Timestamp, a.UserId, a.UserName, a.RegistrationUser);
+                    }
+                case ActivityType.Rename:
+                    {
+                        return RenameActivity.Create(a.Id, a.Timestamp, a.UserId, a.UserName, a.OriginalUserName);
+                    }
+                case ActivityType.VenueEntered:
+                    {
+                        return VenueActivity.Create(a.Id, a.Timestamp, a.UserId, a.UserName, a.Venue, Venue.VenueAction.Enter);
+                    }
+                case ActivityType.VenueLeft:
+                    {
+                        return VenueActivity.Create(a.Id, a.Timestamp, a.UserId, a.UserName, a.Venue, Venue.VenueAction.Leave);
+                    }
+                default:
+                    {
+                        throw new InvalidOperationException("Invalid activity type");
+                    }
+            }
+        }
+
         public static ActivityDTO ToDto(this Activity a)
         {
             var dto = new ActivityDTO()

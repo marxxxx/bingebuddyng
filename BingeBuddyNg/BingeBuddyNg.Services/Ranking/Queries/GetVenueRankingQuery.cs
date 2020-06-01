@@ -24,8 +24,8 @@ namespace BingeBuddyNg.Services.Ranking.Querys
         public async Task<IEnumerable<VenueRankingDTO>> Handle(GetVenueRankingQuery request, CancellationToken cancellationToken)
         {
             var args = new GetActivityFilterArgs() { FilterOptions = ActivityFilterOptions.WithVenue, PageSize = 100, ActivityType = ActivityType.Drink };
-            var activitys = await activityRepository.GetActivityFeedAsync(args);
-            var result = activitys.ResultPage.GroupBy(r => new { r.Venue.Id, r.Venue.Name })
+            var activitys = await activityRepository.GetMasterActivitiesAsync(args);
+            var result = activitys.GroupBy(r => new { r.Venue.Id, r.Venue.Name })
                 .Select(r => new VenueRankingDTO(r.Key.Id, r.Key.Name, r.Count()))
                 .OrderByDescending(r => r.Count);
             return result;

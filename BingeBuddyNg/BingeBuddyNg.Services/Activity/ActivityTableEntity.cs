@@ -5,6 +5,7 @@ using BingeBuddyNg.Services.Infrastructure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace BingeBuddyNg.Services.Activity
 {
@@ -57,12 +58,17 @@ namespace BingeBuddyNg.Services.Activity
             var type = properties[nameof(ActivityType)];
 
             var activityType = (ActivityType)Enum.Parse(typeof(ActivityType), type.StringValue);
+            var json = JObject.Parse(jsonProperty.StringValue);
 
             switch(activityType)
             {
                 case ActivityType.VenueLeft:
                     {
-                        return JsonConvert.DeserializeObject<VenueActivity>(jsonProperty.StringValue);
+                        return VenueActivity.Create(
+                            json.GetValue("UserId").ToString(), 
+                            json.GetValue("UserName").ToString(), 
+                            json.GetValue("Venue").ToObject<Venue.Venue>(), 
+                            Venue.VenueAction.Leave);
                     }
                 case ActivityType.VenueEntered:
                     {

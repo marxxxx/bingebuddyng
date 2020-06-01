@@ -21,9 +21,9 @@ namespace BingeBuddyNg.Services.Activity.Domain
             return activity;
         }
 
-        public static RegistrationActivity Create(string id, string userId, string userName, UserInfo registrationUser)
+        public static RegistrationActivity Create(string id, DateTime timestamp, string userId, string userName, UserInfo registrationUser)
         {
-            var activity = new RegistrationActivity(id, ActivityType.Registration, DateTime.UtcNow, Location.Nowhere,
+            var activity = new RegistrationActivity(id, ActivityType.Registration, timestamp, Location.Nowhere,
                 userId, userName, registrationUser);
 
             return activity;

@@ -1,8 +1,7 @@
-﻿using BingeBuddyNg.Services.User;
-using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace BingeBuddyNg.Services.Activity.Commands
 {
@@ -20,12 +19,10 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
     public class DeleteActivityCommandHandler : IRequestHandler<DeleteActivityCommand>
     {
-        private readonly IUserRepository userRepository;
         private readonly IActivityRepository activityRepository;
 
-        public DeleteActivityCommandHandler(IUserRepository userRepository, IActivityRepository activityRepository)
+        public DeleteActivityCommandHandler(IActivityRepository activityRepository)
         {
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
         }
 
