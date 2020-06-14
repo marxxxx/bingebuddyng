@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BingeBuddyNg.Services.Activity.Domain;
 using BingeBuddyNg.Services.Activity.Domain.Events;
 using BingeBuddyNg.Services.Drink;
@@ -11,7 +12,8 @@ namespace BingeBuddyNg.Services.Activity
 {
     public class Activity
     {
-        public List<IDomainEvent> DomainEvents { get; } = new List<IDomainEvent>();
+        private List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
+        public IReadOnlyCollection<IDomainEvent> DomainEvents => this._domainEvents.AsReadOnly();
 
         public string Id { get; private set; }
 
@@ -21,7 +23,7 @@ namespace BingeBuddyNg.Services.Activity
 
         public Location Location { get; private set; }
 
-        public string LocationAddress { get; protected set; }
+        public string LocationAddress { get; private set; }
 
         public string UserId { get; private set; }
 
@@ -35,13 +37,16 @@ namespace BingeBuddyNg.Services.Activity
 
         public string CountryShortName { get; private set; }
 
-        public Venue.Venue Venue { get; protected set; }
+        public Venue.Venue Venue { get; private set; }
 
-        public List<Reaction> Likes { get; private set; } = new List<Reaction>();
+        private List<Reaction> _likes = new List<Reaction>();
+        public IReadOnlyCollection<Reaction> Likes => this._likes.AsReadOnly();
 
-        public List<Reaction> Cheers { get; private set; } = new List<Reaction>();
+        private List<Reaction> _cheers = new List<Reaction>();
+        public IReadOnlyCollection<Reaction> Cheers => this._cheers.AsReadOnly();
 
-        public List<CommentReaction> Comments { get; private set; } = new List<CommentReaction>();
+        private List<CommentReaction> _comments = new List<CommentReaction>();
+        public IReadOnlyCollection<CommentReaction> Comments => this._comments.AsReadOnly();
 
         public DrinkActivityInfo Drink { get; private set; }
 
@@ -199,25 +204,40 @@ namespace BingeBuddyNg.Services.Activity
             this.UserName = userName;
         }
 
-        public void AddComment(CommentReaction reaction)
+        public void AddComment(CommentReaction comment)
         {
-            this.Comments.Add(reaction);
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
 
-            this.DomainEvents.Add(new ReactionAdded(this.Id, ReactionType.Comment, reaction.UserId, reaction.Comment));
+            this._comments.Add(comment);
+
+            this._domainEvents.Add(new ReactionAdded(this.Id, ReactionType.Comment, comment.UserId, comment.Comment));
         }
 
         public void AddLike(Reaction reaction)
         {
-            this.Likes.Add(reaction);
+            if(this.Likes.Any(l=>l.UserId == reaction.UserId))
+            {
+                throw new InvalidOperationException("User already liked this activity");
+            }
 
-            this.DomainEvents.Add(new ReactionAdded(this.Id, ReactionType.Like, reaction.UserId));
+            this._likes.Add(reaction);
+
+            this._domainEvents.Add(new ReactionAdded(this.Id, ReactionType.Like, reaction.UserId));
         }
 
         public void AddCheers(Reaction reaction)
         {
-            this.Cheers.Add(reaction);
+            if (this.Cheers.Any(c => c.UserId == reaction.UserId))
+            {
+                throw new InvalidOperationException("User already cheered to this activity");
+            }
 
-            this.DomainEvents.Add(new ReactionAdded(this.Id, ReactionType.Cheers, reaction.UserId));
+            this._cheers.Add(reaction);
+
+            this._domainEvents.Add(new ReactionAdded(this.Id, ReactionType.Cheers, reaction.UserId));
         }
 
         public void UpdateStats(int drinkCount, double alcLevel)
