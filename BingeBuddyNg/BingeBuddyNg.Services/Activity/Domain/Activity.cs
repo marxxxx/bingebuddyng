@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using BingeBuddyNg.Services.Activity.Domain;
-using BingeBuddyNg.Services.Activity.Domain.Events;
 using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Game.Persistence;
 using BingeBuddyNg.Services.User;
@@ -12,9 +11,6 @@ namespace BingeBuddyNg.Services.Activity
 {
     public class Activity
     {
-        private List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
-        public IReadOnlyCollection<IDomainEvent> DomainEvents => this._domainEvents.AsReadOnly();
-
         public string Id { get; private set; }
 
         public ActivityType ActivityType { get; private set; }
@@ -212,8 +208,6 @@ namespace BingeBuddyNg.Services.Activity
             }
 
             this._comments.Add(comment);
-
-            this._domainEvents.Add(new ReactionAdded(this.Id, ReactionType.Comment, comment.UserId, comment.Comment));
         }
 
         public void AddLike(Reaction reaction)
@@ -224,8 +218,6 @@ namespace BingeBuddyNg.Services.Activity
             }
 
             this._likes.Add(reaction);
-
-            this._domainEvents.Add(new ReactionAdded(this.Id, ReactionType.Like, reaction.UserId));
         }
 
         public void AddCheers(Reaction reaction)
@@ -236,8 +228,6 @@ namespace BingeBuddyNg.Services.Activity
             }
 
             this._cheers.Add(reaction);
-
-            this._domainEvents.Add(new ReactionAdded(this.Id, ReactionType.Cheers, reaction.UserId));
         }
 
         public void UpdateStats(int drinkCount, double alcLevel)
