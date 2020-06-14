@@ -4,6 +4,10 @@ namespace BingeBuddyNg.Services.User
 {
     public class UserInfo : IEquatable<UserInfo>
     {
+        public string UserId { get; set; }
+
+        public string UserName { get; set; }
+
         public UserInfo()
         {
         }
@@ -13,9 +17,6 @@ namespace BingeBuddyNg.Services.User
             UserId = userId ?? throw new ArgumentNullException(nameof(userId));
             UserName = userName ?? throw new ArgumentNullException(nameof(userName));
         }
-
-        public string UserId { get; set; }
-        public string UserName { get; set; }
 
         public bool Equals(UserInfo other)
         {

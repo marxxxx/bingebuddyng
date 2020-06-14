@@ -70,20 +70,20 @@ namespace BingeBuddyNg.Services.Venue.Commands
             return Unit.Value;
         }
 
-        private async Task AddVenueActivityAsync(AddVenueActivityDTO activity)
+        private async Task AddVenueActivityAsync(AddVenueActivityDTO venueActivity)
         {
-            var user = await this.userRepository.FindUserAsync(activity.UserId);
+            var user = await this.userRepository.FindUserAsync(venueActivity.UserId);
             var timestamp = DateTime.UtcNow;
-            var id = ActivityId.Create(timestamp, activity.UserId);
-            var activityEntity = VenueActivity.Create(
+            var id = ActivityId.Create(timestamp, venueActivity.UserId);
+            var activity = Activity.Activity.CreateVenueActivity(
                 id.Value,
                 timestamp,
-                activity.UserId,
+                venueActivity.UserId,
                 user.Name,
-                activity.Venue,
-                activity.Action);
+                venueActivity.Venue,
+                venueActivity.Action);
 
-            var savedActivity = await this.activityRepository.AddActivityAsync(activityEntity);
+            var savedActivity = await this.activityRepository.AddActivityAsync(activity.ToEntity());
 
             await activityRepository.AddToActivityAddedTopicAsync(savedActivity.Id);
         }

@@ -54,6 +54,10 @@ namespace BingeBuddyNg.Services.User.Commands
         public async Task<Unit> Handle(CreateOrUpdateUserCommand request, CancellationToken cancellationToken)
         {
             var result = await this.userRepository.CreateOrUpdateUserAsync(request);
+
+            var timestamp = DateTime.UtcNow;
+            var id = ActivityId.Create(timestamp, request.UserId);
+
             if (result.IsNewUser)
             {
                 await this.drinkRepository.CreateDefaultDrinksForUserAsync(request.UserId);
@@ -67,14 +71,18 @@ namespace BingeBuddyNg.Services.User.Commands
                     }
                 }
 
-                await activityRepository.AddActivityAsync(RegistrationActivity.Create(
-                    User.BingeBuddyUserId, User.BingeBuddyUserName, new UserInfo(request.UserId, request.Name)));
+               
+                var activity = Activity.Activity.CreateRegistrationActivity(id.Value, timestamp,
+                    User.BingeBuddyUserId, User.BingeBuddyUserName, new UserInfo(request.UserId, request.Name));
+
+                await activityRepository.AddActivityAsync(activity.ToEntity());
             }
 
             if (result.NameHasChanged)
             {
-                var activity = RenameActivity.Create(request.UserId, request.Name, result.OriginalUserName);
-                await activityRepository.AddActivityAsync(activity);
+
+                var activity = Activity.Activity.CreateRenameActivity(id.Value, timestamp,request.UserId, request.Name, result.OriginalUserName);
+                await activityRepository.AddActivityAsync(activity.ToEntity());
 
                 var renameMessage = new UserRenamedMessage(request.UserId, result.OriginalUserName, request.Name);
                 await storageAccessService.AddQueueMessage(QueueNames.UserRenamed, renameMessage);

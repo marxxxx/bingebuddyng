@@ -41,7 +41,7 @@ namespace BingeBuddyNg.Functions
             var reactingUser = await userRepository.FindUserAsync(reactionAddedMessage.UserId);
             var originUser = await userRepository.FindUserAsync(activity.UserId);
 
-            await this.activityDistributionService.DistributeActivitiesAsync(originUser, activity);
+            await this.activityDistributionService.DistributeActivitiesAsync(originUser, activity.ToEntity());
 
             List<NotificationBase> notifications = new List<NotificationBase>();
             var url = GetActivityUrlWithHighlightedActivityId(activity.Id);

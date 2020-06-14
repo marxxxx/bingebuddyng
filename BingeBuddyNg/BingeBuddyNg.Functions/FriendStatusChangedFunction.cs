@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Activity.Persistence;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.User.Messages;
 using Microsoft.Azure.WebJobs;
@@ -54,11 +55,11 @@ namespace BingeBuddyNg.Functions
             log.LogInformation($"Successfully updated personalized feeds as a result of a friendship status change: {myQueueItem}");
         }
 
-        private async Task ImportActivities(string userId, IEnumerable<ActivityDTO> activities)
+        private async Task ImportActivities(string userId, IEnumerable<ActivityEntity> activities)
         {
             foreach (var a in activities)
             {
-                await this.activityRepository.DistributeActivityAsync(new[] { userId }, a.ToDomain());
+                await this.activityRepository.DistributeActivityAsync(new[] { userId }, a);
             }
         }
 

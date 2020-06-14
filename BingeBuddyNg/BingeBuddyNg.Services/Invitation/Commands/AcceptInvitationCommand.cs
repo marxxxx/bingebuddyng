@@ -71,9 +71,13 @@ namespace BingeBuddyNg.Services.Invitation.Commands
                     await this.userStatsRepository.IncreaseScoreAsync(invitingUser.Id, Constants.Scores.FriendInvitation);
 
                     var message = await translationService.GetTranslationAsync(invitingUser.Language, "RecruitmentActivityMessage", acceptingUser.Name, Constants.Scores.FriendInvitation);
-                    var notificationActivity = NotificationActivity.Create(invitingUser.Id, invitingUser.Name, message);
 
-                    await this.activityRepository.AddActivityAsync(notificationActivity);
+                    var timestamp = DateTime.UtcNow;
+                    var id = ActivityId.Create(timestamp, invitingUser.Id);
+
+                    var notificationActivity = Activity.Activity.CreateNotificationActivity(id.Value, timestamp, invitingUser.Id, invitingUser.Name, message);
+
+                    await this.activityRepository.AddActivityAsync(notificationActivity.ToEntity());
                 }
                 catch (Exception ex)
                 {

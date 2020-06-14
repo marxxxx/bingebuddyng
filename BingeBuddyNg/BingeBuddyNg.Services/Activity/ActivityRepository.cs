@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.Activity.Messages;
+using BingeBuddyNg.Services.Activity.Persistence;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Infrastructure.EventGrid;
+using BingeBuddyNg.Services.Venue;
 using BingeBuddyNg.Shared;
 using Microsoft.WindowsAzure.Storage.Table;
 using static BingeBuddyNg.Shared.Constants;
@@ -26,7 +28,7 @@ namespace BingeBuddyNg.Services.Activity
             this.eventGridService = eventGridService ?? throw new ArgumentNullException(nameof(eventGridService));
         }
 
-        public async Task<IEnumerable<ActivityDTO>> GetMasterActivitiesAsync(GetActivityFilterArgs args)
+        public async Task<IEnumerable<ActivityEntity>> GetMasterActivitiesAsync(GetActivityFilterArgs args)
         {
             string whereClause = null;
             string tableName = Constants.TableNames.ActivityTableName;
@@ -57,13 +59,13 @@ namespace BingeBuddyNg.Services.Activity
                         TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.ActivityType), QueryComparisons.Equal, args.ActivityType.ToString()));
             }
 
-            var result = await storageAccessService.QueryTableAsync<JsonTableEntity<ActivityDTO>>(tableName, whereClause, args.PageSize);
+            var result = await storageAccessService.QueryTableAsync<JsonTableEntity<ActivityEntity>>(tableName, whereClause, args.PageSize);
 
             var resultActivities = result.ResultPage.Select(a => a.Entity).ToList();
             return resultActivities;
         }
 
-        public async Task<IEnumerable<ActivityDTO>> GetUserActivitiesAsync(string userId, DateTime startTimeUtc, ActivityType activityType = ActivityType.None)
+        public async Task<IEnumerable<ActivityEntity>> GetUserActivitiesAsync(string userId, DateTime startTimeUtc, ActivityType activityType = ActivityType.None)
         {
             string startRowKey = GetActivityPerUserRowKey(startTimeUtc);
             var whereClause =
@@ -78,13 +80,13 @@ namespace BingeBuddyNg.Services.Activity
                     TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.ActivityType), QueryComparisons.Equal, activityType.ToString()));
             }
 
-            var result = await storageAccessService.QueryTableAsync<JsonTableEntity<ActivityDTO>>(Constants.TableNames.ActivityPerUserTableName, whereClause);
+            var result = await storageAccessService.QueryTableAsync<JsonTableEntity<ActivityEntity>>(Constants.TableNames.ActivityPerUserTableName, whereClause);
 
             var activitys = result.Select(a => a.Entity).ToList();
             return activitys;
         }
 
-        public async Task<Activity> AddActivityAsync(Activity activity)
+        public async Task<ActivityEntity> AddActivityAsync(ActivityEntity activity)
         {
             var activityTable = this.storageAccessService.GetTableReference(Constants.TableNames.ActivityTableName);
 
@@ -108,7 +110,7 @@ namespace BingeBuddyNg.Services.Activity
             return activity;
         }
 
-        public async Task DistributeActivityAsync(IEnumerable<string> distributionUserIds, Activity activity)
+        public async Task DistributeActivityAsync(IEnumerable<string> distributionUserIds, ActivityEntity activity)
         {
             var userFeedTable = this.storageAccessService.GetTableReference(Constants.TableNames.ActivityUserFeedTableName);
 
@@ -123,9 +125,9 @@ namespace BingeBuddyNg.Services.Activity
 
         public async Task<Activity> GetActivityAsync(string id)
         {
-            ActivityTableEntity entity = await GetActivityEntityAsync(id);
-
-            return entity.Entity;
+            var tableEntity = await GetActivityEntityAsync(id);
+            var entity = tableEntity.Entity;
+            return entity.ToDomain();
         }
 
         private async Task<ActivityTableEntity> GetActivityEntityAsync(string id)
@@ -154,7 +156,7 @@ namespace BingeBuddyNg.Services.Activity
             return entity;
         }
 
-        public async Task UpdateActivityAsync(Activity activity)
+        public async Task UpdateActivityAsync(ActivityEntity activity)
         {
             var table = this.storageAccessService.GetTableReference(Constants.TableNames.ActivityTableName);
 

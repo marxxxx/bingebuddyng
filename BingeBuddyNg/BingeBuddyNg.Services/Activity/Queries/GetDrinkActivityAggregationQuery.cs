@@ -39,7 +39,7 @@ namespace BingeBuddyNg.Services.Activity.Querys
 
             var result = await this.activityRepository.GetUserActivitiesAsync(request.UserId, startTime, ActivityType.Drink);
 
-            var groupedByDay = result.OfType<DrinkActivity>().GroupBy(t => t.Timestamp.Date)
+            var groupedByDay = result.Where(r=>r.ActivityType == ActivityType.Drink).GroupBy(t => t.Timestamp.Date)
                 .OrderBy(t => t.Key)
                 .Select(t => new ActivityAggregationDTO()
                 {

@@ -1,16 +1,15 @@
-﻿using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Activity.Domain;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Activity.Persistence;
 using BingeBuddyNg.Services.Game;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Shared;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace BingeBuddyNg.Tests
@@ -70,7 +69,7 @@ namespace BingeBuddyNg.Tests
 
             await Task.Delay(2000);
 
-            activityRepository.Verify(a => a.AddActivityAsync(It.Is<GameResultActivity>(a => a.ActivityType == ActivityType.GameResult && a.GameInfo != null && a.GameInfo.Id == gameId)));
+            activityRepository.Verify(a => a.AddActivityAsync(It.Is<ActivityEntity>(a => a.ActivityType == ActivityType.GameResult && a.GameInfo != null && a.GameInfo.Id == gameId)));
         }
 
         private static GameEndNotificationService SetupGameEndNotificationService(
@@ -84,8 +83,8 @@ namespace BingeBuddyNg.Tests
             activityRepositoryMock = new Mock<IActivityRepository>();
 
             activityRepositoryMock
-                .Setup(a => a.AddActivityAsync(It.IsAny<Activity>()))
-                .ReturnsAsync((Activity _a) => _a);
+                .Setup(a => a.AddActivityAsync(It.IsAny<ActivityEntity>()))
+                .ReturnsAsync((ActivityEntity _a) => _a);
 
             userRepositoryMock
                 .Setup(s => s.GetUsersAsync(It.IsAny<IEnumerable<string>>()))

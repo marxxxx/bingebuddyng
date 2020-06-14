@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Activity.Persistence;
 using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Functions.Services
@@ -17,7 +18,7 @@ namespace BingeBuddyNg.Functions.Services
             this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
         }
 
-        public async Task DistributeActivitiesAsync(User currentUser, Activity activity)
+        public async Task DistributeActivitiesAsync(User currentUser, ActivityEntity activity)
         {
             IEnumerable<string> userIds;
 

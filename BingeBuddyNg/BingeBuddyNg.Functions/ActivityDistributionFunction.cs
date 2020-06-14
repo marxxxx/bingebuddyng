@@ -60,7 +60,7 @@ namespace BingeBuddyNg.Functions
                 log.LogInformation($"[{count} / {activityKeys.Count()}] Distributing activity {id} to {userIds.Count()} users.");
 
 
-                await this.activityRepository.DistributeActivityAsync(userIds, activity);
+                await this.activityRepository.DistributeActivityAsync(userIds, activity.ToEntity());
 
                 count++;
             }

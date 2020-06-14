@@ -66,9 +66,12 @@ namespace BingeBuddyNg.Services.Game
                     new WebPushNotificationMessage(gameOverMessage, gameOverTitle, url));
             }
 
-            var activity = GameResultActivity.Create(e.Game.ToDto(users.Select(u=>u.ToUserInfoDTO())), winnerUser?.ToUserInfo());
+            var timestamp = DateTime.UtcNow;
+            var id = ActivityId.Create(timestamp, winnerUser.Id);
+
+            var activity = Activity.Activity.CreateGameActivity(id.Value, timestamp, e.Game.ToEntity(users.Select(u=>u.ToUserInfo())), winnerUser?.ToUserInfo());
             
-            var savedActivity = await this.activityRepository.AddActivityAsync(activity);
+            var savedActivity = await this.activityRepository.AddActivityAsync(activity.ToEntity());
 
             await activityRepository.AddToActivityAddedTopicAsync(savedActivity.Id);
         }

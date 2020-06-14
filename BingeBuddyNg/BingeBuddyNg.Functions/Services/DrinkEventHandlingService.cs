@@ -44,9 +44,9 @@ namespace BingeBuddyNg.Functions.Services
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task HandleDrinkEventsAsync(DrinkActivity activity, User currentUser)
+        public async Task HandleDrinkEventsAsync(Activity activity, User currentUser)
         {
-            if (activity.DrinkType == DrinkType.Anti)
+            if (activity.Drink.DrinkType == DrinkType.Anti)
             {
                 return;
             }
@@ -67,8 +67,10 @@ namespace BingeBuddyNg.Functions.Services
 
             string message = await translationService.GetTranslationAsync(currentUser.Language, "DrinkEventActivityWinMessage", Constants.Scores.StandardDrinkAction);
 
-            var drinkEventNotificationActivity = NotificationActivity.Create(currentUser.Id, currentUser.Name, message);
-            await activityRepository.AddActivityAsync(drinkEventNotificationActivity);
+            var timestamp = DateTime.UtcNow;
+            var id = ActivityId.Create(timestamp, currentUser.Id);
+            var drinkEventNotificationActivity = Activity.CreateNotificationActivity(id.Value, timestamp, currentUser.Id, currentUser.Name, message);
+            await activityRepository.AddActivityAsync(drinkEventNotificationActivity.ToEntity());
 
             var notifications = new[] { new DrinkEventCongratulationNotification(currentUser.Id) };
             await pushNotificationService.NotifyAsync(notifications);

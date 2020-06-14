@@ -60,9 +60,9 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
             var timestamp = DateTime.UtcNow;
             var id = ActivityId.Create(timestamp, request.UserId);
-            var activity = ImageActivity.Create(id.Value, timestamp, request.Location, request.UserId, user.Name, imageUrlOriginal);
+            var activity = Activity.CreateImageActivity(id.Value, timestamp, request.Location, request.UserId, user.Name, imageUrlOriginal);
 
-            var savedActivity = await this.activityRepository.AddActivityAsync(activity);
+            var savedActivity = await this.activityRepository.AddActivityAsync(activity.ToEntity());
 
             await activityRepository.AddToActivityAddedTopicAsync(id.Value);
 

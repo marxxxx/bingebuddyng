@@ -64,8 +64,10 @@ namespace BingeBuddyNg.Services.Calculation
             var activity = await this.activityRepository.GetUserActivitiesAsync(user.Id, startTimestamp,
                 ActivityType.Drink);
 
-            var drinkActivity = activity.OfType<DrinkActivity>().Where(a=>a.Timestamp >= startTimestamp).Select(a => new DrinkActivityItem(a.Timestamp, a.DrinkAlcPrc.GetValueOrDefault(),
-                a.DrinkVolume.GetValueOrDefault()));
+            var drinkActivity = activity
+                .Where(a=> a.ActivityType == ActivityType.Drink && a.Timestamp >= startTimestamp)
+                .Select(a => 
+                    new DrinkActivityItem(a.Timestamp, a.DrinkAlcPrc.GetValueOrDefault(), a.DrinkVolume.GetValueOrDefault()));
                         
             UserDrinkActivity userDrinkActivity = new UserDrinkActivity(user.Id, user.Gender, user.Weight.GetValueOrDefault(), drinkActivity);
 

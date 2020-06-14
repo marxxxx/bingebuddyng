@@ -104,13 +104,13 @@ namespace BingeBuddyNg.Functions.Services
             switch (activity.ActivityType)
             {
                 case ActivityType.Drink:
-                    activityString = await translationService.GetTranslationAsync(language, "DrinkActivityMessage", ((DrinkActivity)activity).DrinkName, locationSnippet);
+                    activityString = await translationService.GetTranslationAsync(language, "DrinkActivityMessage", activity.Drink.DrinkName, locationSnippet);
                     break;
                 case ActivityType.Image:
                     activityString = await translationService.GetTranslationAsync(language, "ImageActivityMessage");
                     break;
                 case ActivityType.Message:
-                    activityString = await translationService.GetTranslationAsync(language, "MessageActivityMessage", ((MessageActivity)activity).Message);
+                    activityString = await translationService.GetTranslationAsync(language, "MessageActivityMessage", activity.Message.Message);
                     break;
                 case ActivityType.VenueEntered:
                     activityString = await translationService.GetTranslationAsync(language, "VenueEnterActivityMessage", activity.Venue.Name);

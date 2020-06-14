@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Game.Queries;
 using BingeBuddyNg.Services.User;
-using Newtonsoft.Json;
 
 namespace BingeBuddyNg.Services.Activity
 {
@@ -16,6 +15,10 @@ namespace BingeBuddyNg.Services.Activity
         public string LocationAddress { get; set; }
         public string UserId { get; set; }
         public string UserName { get; set; }
+        public string CountryLongName { get; set; }
+        public string CountryShortName { get; set; }
+        public Venue.Venue Venue { get; set; }
+
         public string Message { get; set; }
         public DrinkType DrinkType { get; set; }
         public string DrinkId { get; set; }
@@ -25,15 +28,11 @@ namespace BingeBuddyNg.Services.Activity
         public int DrinkCount { get; set; }
         public double? AlcLevel { get; set; }
         public string ImageUrl { get; set; }
-        public string CountryLongName { get; set; }
-        public string CountryShortName { get; set; }
-        public Venue.Venue Venue { get; set; }
 
         public GameDTO GameInfo { get; set; }
 
         public UserInfo RegistrationUser { get; set; }
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string OriginalUserName { get; set; }
 
         public List<ReactionDTO> Likes { get; set; } 

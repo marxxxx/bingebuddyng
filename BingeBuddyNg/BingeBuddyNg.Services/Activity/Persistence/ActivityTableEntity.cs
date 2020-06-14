@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using BingeBuddyNg.Services.Activity.Domain;
+﻿using System.Collections.Generic;
+using BingeBuddyNg.Services.Activity.Persistence;
 using BingeBuddyNg.Services.Infrastructure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace BingeBuddyNg.Services.Activity
 {
-    public class ActivityTableEntity : JsonTableEntity<Activity>
+    public class ActivityTableEntity : JsonTableEntity<ActivityEntity>
     {
         public ActivityType ActivityType { get; set; }
         public bool HasLocation { get; set; }
@@ -22,7 +19,7 @@ namespace BingeBuddyNg.Services.Activity
         public ActivityTableEntity()
         { }
 
-        public ActivityTableEntity(string partitionKey, string rowKey, Activity activity) : base(partitionKey, rowKey, activity)
+        public ActivityTableEntity(string partitionKey, string rowKey, ActivityEntity activity) : base(partitionKey, rowKey, activity)
         {
             this.ActivityType = activity.ActivityType;
             this.HasLocation = activity.Location != null && activity.Location.IsValid();
@@ -51,36 +48,6 @@ namespace BingeBuddyNg.Services.Activity
             var properties = base.WriteEntity(operationContext);
             properties.Add(nameof(ActivityType), new EntityProperty(ActivityType.ToString()));
             return properties;
-        }
-
-        public override Activity DeserializeObject(IDictionary<string, EntityProperty> properties, EntityProperty jsonProperty)
-        {
-            var type = properties[nameof(ActivityType)];
-
-            var activityType = (ActivityType)Enum.Parse(typeof(ActivityType), type.StringValue);
-            var json = JObject.Parse(jsonProperty.StringValue);
-
-            switch(activityType)
-            {
-                case ActivityType.VenueLeft:
-                    {
-                        return VenueActivity.Create(
-                            json.GetValue("UserId").ToString(), 
-                            json.GetValue("UserName").ToString(), 
-                            json.GetValue("Venue").ToObject<Venue.Venue>(), 
-                            Venue.VenueAction.Leave);
-                    }
-                case ActivityType.VenueEntered:
-                    {
-                        return JsonConvert.DeserializeObject<VenueActivity>(jsonProperty.StringValue);
-                    }
-                case ActivityType.Drink:
-                    {
-                        return JsonConvert.DeserializeObject<DrinkActivity>(jsonProperty.StringValue);
-                    }
-                default:
-                    throw new InvalidOperationException("Unknown activity type");
-            }
         }
     }
 }

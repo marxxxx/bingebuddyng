@@ -95,22 +95,23 @@ namespace BingeBuddyNg.Functions.Services
                     shouldUpdate = true;
                 }
 
+                var entity = activity.ToEntity();
+
                 if (shouldUpdate)
                 {
-                    await activityRepository.UpdateActivityAsync(activity);
+                    await activityRepository.UpdateActivityAsync(entity);
                 }
 
-                await this.activityDistributionService.DistributeActivitiesAsync(currentUser, activity);
+                await this.activityDistributionService.DistributeActivitiesAsync(currentUser, entity);
 
                 await SendActivityUpdateAsync(currentUser, activity, userStats);
 
                 // check for drink events
                 try
                 {
-                    var drinkActivity = activity as DrinkActivity;
-                    if(drinkActivity != null)
+                    if(activity.ActivityType == ActivityType.Drink)
                     {
-                        await this.drinkEventHandlingService.HandleDrinkEventsAsync(drinkActivity, currentUser);
+                        await this.drinkEventHandlingService.HandleDrinkEventsAsync(activity, currentUser);
                     }                    
                 }
                 catch (Exception ex)

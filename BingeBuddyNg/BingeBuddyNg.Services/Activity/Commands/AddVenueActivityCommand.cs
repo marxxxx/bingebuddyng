@@ -41,13 +41,18 @@ namespace BingeBuddyNg.Services.Activity.Commands
         {
             var user = await this.userRepository.FindUserAsync(request.UserId);
 
-            var activityEntity = VenueActivity.Create(
+            var timestamp = DateTime.UtcNow;
+            var id = ActivityId.Create(timestamp, request.UserId);
+
+            var activity = Activity.CreateVenueActivity(
+                id.Value,
+                timestamp,
                 request.UserId,
                 user.Name,
                 request.Venue,
                 request.Action);
 
-            var savedActivity = await this.activityRepository.AddActivityAsync(activityEntity);
+            var savedActivity = await this.activityRepository.AddActivityAsync(activity.ToEntity());
 
             await activityRepository.AddToActivityAddedTopicAsync(savedActivity.Id);
 

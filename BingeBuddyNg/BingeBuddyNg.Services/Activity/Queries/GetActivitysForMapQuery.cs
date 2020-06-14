@@ -27,7 +27,7 @@ namespace BingeBuddyNg.Services.Activity.Querys
         {
             var args = new GetActivityFilterArgs() { FilterOptions = ActivityFilterOptions.WithLocation, PageSize = 50 };
             var result = await this.activityRepository.GetMasterActivitiesAsync(args);
-            return result.ToList();
+            return result.Select(r=>r.ToDto()).ToList();
         }
     }
 }
