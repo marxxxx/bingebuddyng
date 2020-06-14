@@ -1,4 +1,5 @@
-﻿using BingeBuddyNg.Services.Activity;
+﻿using BingeBuddyNg.Core.User.Commands;
+using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.DrinkEvent;
 using BingeBuddyNg.Services.FriendsRequest;
@@ -27,6 +28,7 @@ namespace BingeBuddyNg.Services
             services.AddLogging();
 
             services.AddMediatR(typeof(ActivityDTO).Assembly);
+            services.AddScoped<AddFriendCommand>();
 
             // add infrastructure services
             services.AddScoped<IIdentityService, IdentityService>();

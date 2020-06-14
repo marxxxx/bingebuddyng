@@ -76,7 +76,7 @@ namespace BingeBuddyNg.Functions.Services
                     if (activity.ActivityType == ActivityType.Drink && userStats != null)
                     {
                         // Immediately update Stats for current user
-                        userStats = await userStatisticsService.UpdateStatsForUserAsync(currentUser);
+                        userStats = await userStatisticsService.UpdateStatsForUserAsync(currentUser.Id, currentUser.Gender, currentUser.Weight);
                         await userStatisticsService.UpdateRankingForUserAsync(currentUser.Id);
 
                         activity.UpdateStats(userStats.CurrentNightDrinks, userStats.CurrentAlcoholization);

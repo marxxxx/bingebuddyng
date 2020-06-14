@@ -58,10 +58,10 @@ namespace BingeBuddyNg.Services.Calculation
             return new DrinkCalculationResult(userDrinkActivity.UserId, currentAlcoholization, orderedAlcoholicDrinks.Count-1);
         }
 
-        public async Task<DrinkCalculationResult> CalculateStatsForUserAsync(User.User user)
+        public async Task<DrinkCalculationResult> CalculateStatsForUserAsync(string userId, Gender gender, int? weight)
         {
             DateTime startTimestamp = DateTime.UtcNow.Subtract(TimeSpan.FromHours(NightConsiderationTimespanInHours));
-            var activity = await this.activityRepository.GetUserActivitiesAsync(user.Id, startTimestamp,
+            var activity = await this.activityRepository.GetUserActivitiesAsync(userId, startTimestamp,
                 ActivityType.Drink);
 
             var drinkActivity = activity
@@ -69,7 +69,7 @@ namespace BingeBuddyNg.Services.Calculation
                 .Select(a => 
                     new DrinkActivityItem(a.Timestamp, a.DrinkAlcPrc.GetValueOrDefault(), a.DrinkVolume.GetValueOrDefault()));
                         
-            UserDrinkActivity userDrinkActivity = new UserDrinkActivity(user.Id, user.Gender, user.Weight.GetValueOrDefault(), drinkActivity);
+            UserDrinkActivity userDrinkActivity = new UserDrinkActivity(userId, gender, weight.GetValueOrDefault(), drinkActivity);
 
             DrinkCalculationResult result = CalculateStats(userDrinkActivity);
             

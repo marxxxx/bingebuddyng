@@ -3,6 +3,7 @@ using BingeBuddyNg.Services.Game;
 using BingeBuddyNg.Services.Game.Queries;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Services.User.Persistence;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace BingeBuddyNg.Tests
             userRepository
                 .Setup(u => u.GetUsersAsync(It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync((IEnumerable<string> _userIds) =>
-                    _userIds.Select(u => new User() { Id = u, PushInfo = new PushInfo("url", "auth", "p256dh") }).ToList()
+                    _userIds.Select(u => new UserEntity() { Id = u, PushInfo = new PushInfo("url", "auth", "p256dh") }).ToList()
                 );
             
             var command = new StartGameCommand(myUserId, gameTitle, friendUserIds);
@@ -104,7 +105,7 @@ namespace BingeBuddyNg.Tests
             var userRepositoryMock = new Mock<IUserRepository>();
             userRepositoryMock
                 .Setup(r => r.GetUsersAsync(It.IsAny<IEnumerable<string>>()))
-                .ReturnsAsync((IEnumerable<string> _userIds) => _userIds.Select(_u => new User() { Id = _u, Name = _u })
+                .ReturnsAsync((IEnumerable<string> _userIds) => _userIds.Select(_u => new UserEntity() { Id = _u, Name = _u })
                 .ToList());
 
             var query = new GetGameQuery(gameId);

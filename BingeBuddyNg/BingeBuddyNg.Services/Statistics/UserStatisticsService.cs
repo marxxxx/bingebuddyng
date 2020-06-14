@@ -2,6 +2,7 @@
 using BingeBuddyNg.Services.Activity.Domain;
 using BingeBuddyNg.Services.Calculation;
 using BingeBuddyNg.Services.Drink;
+using BingeBuddyNg.Services.User;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -43,10 +44,10 @@ namespace BingeBuddyNg.Services.Statistics
 
             await userStatsRepository.UpdateTotalDrinkCountLastMonthAsync(userId, alcoholicDrinkCount);
         }
-        public async Task<UserStatistics> UpdateStatsForUserAsync(User.User user)
+        public async Task<UserStatistics> UpdateStatsForUserAsync(string userId, Gender gender, int? weight)
         {
-            var stats = await calculationService.CalculateStatsForUserAsync(user);
-            var userStats = new UserStatistics(user.Id, stats.CurrentAlcLevel, stats.CurrentNightDrinks);
+            var stats = await calculationService.CalculateStatsForUserAsync(userId, gender, weight);
+            var userStats = new UserStatistics(userId, stats.CurrentAlcLevel, stats.CurrentNightDrinks);
 
             await userStatsRepository.SaveStatisticsForUserAsync(userStats);
 
@@ -54,14 +55,14 @@ namespace BingeBuddyNg.Services.Statistics
             {
                 if (userStats.CurrentAlcoholization > 0)
                 {
-                    await statsHistoryRepository.SaveStatisticsHistoryAsync(new UserStatisticHistory(user.Id, DateTime.UtcNow, stats.CurrentAlcLevel));
+                    await statsHistoryRepository.SaveStatisticsHistoryAsync(new UserStatisticHistory(userId, DateTime.UtcNow, stats.CurrentAlcLevel));
                 }
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Failed to save history entry for user [{user}].");
             }
-            logger.LogDebug($"Successfully updated stats for user {user}: {userStats}");
+            logger.LogDebug($"Successfully updated stats for user {userId}: {userStats}");
             return userStats;
         }
     }

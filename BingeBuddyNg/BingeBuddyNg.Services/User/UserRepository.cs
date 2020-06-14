@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User.Commands;
+using BingeBuddyNg.Services.User.Persistence;
+using BingeBuddyNg.Services.Venue;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace BingeBuddyNg.Services.User
@@ -25,19 +27,19 @@ namespace BingeBuddyNg.Services.User
         public async Task<User> FindUserAsync(string id)
         {
             var result = await FindUserEntityAsync(id);
-            User user = null;
+            UserEntity user = null;
             if (result != null)
             {
                 user = result.Entity;
                 user.LastOnline = result.Timestamp.UtcDateTime;
             }
 
-            return user;
+            return new User(user.Id, user.Name, user.Weight, user.Gender, user.ProfileImageUrl, user.PushInfo, user.Friends, user.MutedByFriendUserIds, user.MutedByFriendUserIds, user.MonitoringInstanceId, user.CurrentVenue?.ToDomain(), user.Language, user.LastOnline);
         }
 
-        private async Task<JsonTableEntity<User>> FindUserEntityAsync(string id)
+        private async Task<JsonTableEntity<UserEntity>> FindUserEntityAsync(string id)
         {
-            var result = await cacheService.GetOrCreateAsync<JsonTableEntity<User>>(GetUserCacheKey(id), async () =>
+            var result = await cacheService.GetOrCreateAsync<JsonTableEntity<UserEntity>>(GetUserCacheKey(id), async () =>
             {
                 var table = storageAccess.GetTableReference(TableName);
 
@@ -45,7 +47,7 @@ namespace BingeBuddyNg.Services.User
 
                 var userResult = await table.ExecuteAsync(retrieveOperation);
 
-                return userResult?.Result as JsonTableEntity<User>;
+                return userResult?.Result as JsonTableEntity<UserEntity>;
             }, TimeSpan.FromMinutes(1));
 
             return result;
@@ -89,7 +91,7 @@ namespace BingeBuddyNg.Services.User
             }
             else
             {
-                var user = new User()
+                var user = new UserEntity()
                 {
                     Id = request.UserId,
                     Name = request.Name,
@@ -100,7 +102,7 @@ namespace BingeBuddyNg.Services.User
                     LastOnline = DateTime.UtcNow,
                     ProfileImageUrl = request.ProfileImageUrl
                 };
-                saveUserOperation = TableOperation.Insert(new JsonTableEntity<User>(PartitionKeyValue, request.UserId, user));
+                saveUserOperation = TableOperation.Insert(new JsonTableEntity<UserEntity>(PartitionKeyValue, request.UserId, user));
                 isNewUser = true;
             }
 
@@ -109,7 +111,7 @@ namespace BingeBuddyNg.Services.User
             return new CreateOrUpdateUserResult(isNewUser, profilePicHasChanged, nameHasChanged, originalUserName);
         }
 
-        public async Task UpdateUserAsync(User user)
+        public async Task UpdateUserAsync(UserEntity user)
         {            
             var userEntity = await FindUserEntityAsync(user.Id);
             userEntity.Entity = user;
@@ -122,11 +124,11 @@ namespace BingeBuddyNg.Services.User
             cacheService.Remove(GetUserCacheKey(user.Id));
         }
 
-        public async Task<IEnumerable<User>> GetUsersAsync(IEnumerable<string> userIds = null)
+        public async Task<IEnumerable<UserEntity>> GetUsersAsync(IEnumerable<string> userIds = null)
         {
             string whereClause = BuildWhereClause(userIds);
 
-            var result = await storageAccess.QueryTableAsync<JsonTableEntity<User>>(TableName, whereClause);
+            var result = await storageAccess.QueryTableAsync<JsonTableEntity<UserEntity>>(TableName, whereClause);
 
             var users = result.OrderByDescending(u => u.Timestamp).Select(r =>
               {
@@ -165,27 +167,7 @@ namespace BingeBuddyNg.Services.User
             return whereClause;
         }
 
-        public async Task AddFriendAsync(string userId, string friendUserId)
-        {
-            var user = await FindUserAsync(userId);
-            var friend = await FindUserAsync(friendUserId);
-
-            user.AddFriend(friend.ToUserInfo());
-            friend.AddFriend(user.ToUserInfo());
-
-            await Task.WhenAll(UpdateUserAsync(user), UpdateUserAsync(friend));
-        }
-
-        public async Task RemoveFriendAsync(string userId, string friendUserId)
-        {
-            var results = await Task.WhenAll(FindUserAsync(userId), FindUserAsync(friendUserId));
-
-            results[0].RemoveFriend(friendUserId);
-            results[1].RemoveFriend(userId);
-
-            await Task.WhenAll(UpdateUserAsync(results[0]), UpdateUserAsync(results[1]));
-        }
-
+     
         public async Task UpdateMonitoringInstanceAsync(string userId, string monitoringInstanceId)
         {
             var user = await FindUserEntityAsync(userId);

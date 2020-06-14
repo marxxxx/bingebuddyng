@@ -1,4 +1,5 @@
-﻿using BingeBuddyNg.Services.Activity;
+﻿using BingeBuddyNg.Core.User.Commands;
+using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Activity.Domain;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Statistics;
@@ -34,6 +35,7 @@ namespace BingeBuddyNg.Services.Invitation.Commands
         private readonly IActivityRepository activityRepository;
         private readonly ITranslationService translationService;
         private readonly IUserStatsRepository userStatsRepository;
+        private readonly AddFriendCommand addFriendCommand;
 
         public AcceptInvitationCommandHandler(IInvitationRepository invitationRepository,
             IUserRepository userRepository,
@@ -41,6 +43,7 @@ namespace BingeBuddyNg.Services.Invitation.Commands
             IActivityRepository activityRepository,
             ITranslationService translationService,
             IUserStatsRepository userStatsRepository,
+            AddFriendCommand addFriendCommand,
             ILogger<AcceptInvitationCommandHandler> logger)
         {
             this.invitationRepository = invitationRepository ?? throw new ArgumentNullException(nameof(invitationRepository));
@@ -49,6 +52,7 @@ namespace BingeBuddyNg.Services.Invitation.Commands
             this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
             this.translationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
             this.userStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
+            this.addFriendCommand = addFriendCommand ?? throw new ArgumentNullException(nameof(addFriendCommand));
 
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -63,7 +67,7 @@ namespace BingeBuddyNg.Services.Invitation.Commands
 
                 if (invitingUser != null && acceptingUser != null)
                 {
-                    await this.userRepository.AddFriendAsync(invitingUser.Id, acceptingUser.Id);
+                    await this.addFriendCommand.ExecuteAsync(invitingUser.Id, acceptingUser.Id);
                 }
 
                 try

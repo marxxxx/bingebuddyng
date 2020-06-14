@@ -8,6 +8,7 @@ using BingeBuddyNg.Services.Activity.Persistence;
 using BingeBuddyNg.Services.Game;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Services.User.Persistence;
 using BingeBuddyNg.Shared;
 using Moq;
 using Xunit;
@@ -89,7 +90,7 @@ namespace BingeBuddyNg.Tests
             userRepositoryMock
                 .Setup(s => s.GetUsersAsync(It.IsAny<IEnumerable<string>>()))
                 .ReturnsAsync((IEnumerable<string> _userIds) =>
-                    _userIds.Select(u => new User() { Id = u, Name = "username", PushInfo = new PushInfo("sub", "auth", "p256dh") }).ToList());
+                    _userIds.Select(u => new UserEntity() { Id = u, Name = "username", PushInfo = new PushInfo("sub", "auth", "p256dh") }).ToList());
 
             var gameNotificationService = new GameEndNotificationService(
                 gameManager,

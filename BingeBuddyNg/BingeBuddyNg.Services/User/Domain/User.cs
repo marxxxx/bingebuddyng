@@ -10,29 +10,57 @@ namespace BingeBuddyNg.Services.User
         public static readonly string BingeBuddyUserId = "bingebuddy";
         public static readonly string BingeBuddyUserName = "Binge Buddy";
 
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public int? Weight { get; set; }
-        public Gender Gender { get; set; }
-        public string ProfileImageUrl { get; set; }
-        public PushInfo PushInfo { get; set; }
-        public List<UserInfo> Friends { get; set; } = new List<UserInfo>();
-        public List<string> MutedFriendUserIds { get; set; } = new List<string>();
-        public List<string> MutedByFriendUserIds { get; set; } = new List<string>();
-        public string MonitoringInstanceId { get; set; }
-        public Venue.Venue CurrentVenue { get; set; }
-        public string Language { get; set; }
-        public DateTime LastOnline { get; set; }
+        public string Id { get; }
+        public string Name { get; }
+        public int? Weight { get; private set; }
+        public Gender Gender { get; private set; }
+        public string ProfileImageUrl { get; private set; }
+        public PushInfo PushInfo { get; private set; }
+        public List<UserInfo> Friends { get; private set; } = new List<UserInfo>();
+        public List<string> MutedFriendUserIds { get; private set; } = new List<string>();
 
-        public User()
+        public List<string> MutedByFriendUserIds { get; private set; } = new List<string>();
+        public string MonitoringInstanceId { get; private set; }
+        public Venue.Venue CurrentVenue { get; private set; }
+        public string Language { get; private set; }
+        public DateTime LastOnline { get; private set; }
+
+        public User(string id, string name, int? weight, Gender gender, string profileImageUrl, PushInfo pushInfo, List<UserInfo> friends, List<string> mutedFriendUserIds, List<string> mutedByFriendUserIds, string monitoringInstanceId, Venue.Venue currentVenue, string language, DateTime lastOnline)
         {
+            this.Id = id ?? throw new ArgumentNullException(nameof(id));
+            this.Name = name ?? throw new ArgumentNullException(nameof(name));
+            this.Weight = weight;
+            this.Gender = gender;
+            this.ProfileImageUrl = profileImageUrl ?? throw new ArgumentNullException(nameof(profileImageUrl));
+            this.PushInfo = pushInfo ?? throw new ArgumentNullException(nameof(pushInfo));
+            this.Friends = friends ?? throw new ArgumentNullException(nameof(friends));
+            this.MutedFriendUserIds = mutedFriendUserIds ?? throw new ArgumentNullException(nameof(mutedFriendUserIds));
+            this.MutedByFriendUserIds = mutedByFriendUserIds ?? throw new ArgumentNullException(nameof(mutedByFriendUserIds));
+            this.MonitoringInstanceId = monitoringInstanceId ?? throw new ArgumentNullException(nameof(monitoringInstanceId));
+            this.CurrentVenue = currentVenue ?? throw new ArgumentNullException(nameof(currentVenue));
+            this.Language = language ?? throw new ArgumentNullException(nameof(language));
+            this.LastOnline = lastOnline;
+        }
 
+        public void EnterVenue(Venue.Venue venue)
+        {
+            if (venue == null)
+            {
+                throw new ArgumentNullException(nameof(venue));
+            }
+
+            this.CurrentVenue = venue;
+        }
+
+        public void LeaveVenue()
+        {
+            this.CurrentVenue = null;
         }
 
         public List<string> GetVisibleFriendUserIds(bool includeMe = true)
         {
             var visibleUserIds = Friends.Select(f => f.UserId).Except(MutedByFriendUserIds);
-            if(includeMe)
+            if (includeMe)
             {
                 visibleUserIds = visibleUserIds.Union(new[] { this.Id, BingeBuddyUserId });
             }
@@ -41,7 +69,7 @@ namespace BingeBuddyNg.Services.User
 
         public void AddFriend(UserInfo user)
         {
-            if(Friends.Any(f=>f.UserId == user.UserId) == false)
+            if (Friends.Any(f => f.UserId == user.UserId) == false)
             {
                 Friends.Add(user);
             }
@@ -50,7 +78,7 @@ namespace BingeBuddyNg.Services.User
         public void RemoveFriend(string userId)
         {
             var foundFriend = Friends.FirstOrDefault(f => f.UserId == userId);
-            if(foundFriend != null)
+            if (foundFriend != null)
             {
                 Friends.Remove(foundFriend);
             }

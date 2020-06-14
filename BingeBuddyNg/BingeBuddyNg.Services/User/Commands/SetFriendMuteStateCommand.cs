@@ -37,7 +37,7 @@ namespace BingeBuddyNg.Services.User.Commands
             var mutedUser = await userRepository.FindUserAsync(request.FriendUserId);
             mutedUser.SetMutedByFriendState(request.UserId, request.MuteState);
 
-            Task.WaitAll(userRepository.UpdateUserAsync(user), userRepository.UpdateUserAsync(mutedUser));
+            Task.WaitAll(userRepository.UpdateUserAsync(user.ToEntity()), userRepository.UpdateUserAsync(mutedUser.ToEntity()));
 
             return Unit.Value;
         }

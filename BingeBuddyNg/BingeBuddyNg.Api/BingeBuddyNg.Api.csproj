@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BingeBuddyNg.Services\BingeBuddyNg.Services.csproj" />
+    <ProjectReference Include="..\BingeBuddyNg.Services\BingeBuddyNg.Core.csproj" />
   </ItemGroup>
 
 </Project>

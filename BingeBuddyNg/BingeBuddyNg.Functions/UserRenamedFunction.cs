@@ -39,7 +39,7 @@ namespace BingeBuddyNg.Functions
                     if(foundFriend != null)
                     {
                         foundFriend.UserName = userRenamedMessage.NewUserName;
-                        await this.userRepository.UpdateUserAsync(friendUser);
+                        await this.userRepository.UpdateUserAsync(friendUser.ToEntity());
                     }
                 }
             }

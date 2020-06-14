@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Services.Statistics
 {
@@ -6,6 +7,6 @@ namespace BingeBuddyNg.Services.Statistics
     {
         Task UpdateRankingForUserAsync(string userId);
 
-        Task<UserStatistics> UpdateStatsForUserAsync(User.User user);
+        Task<UserStatistics> UpdateStatsForUserAsync(string userId, Gender gender, int? weight);
     }
 }

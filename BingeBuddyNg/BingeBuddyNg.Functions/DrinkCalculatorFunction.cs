@@ -29,7 +29,7 @@ namespace BingeBuddyNg.Functions
             {
                 try
                 {
-                    await UserStatisticsService.UpdateStatsForUserAsync(u);
+                    await UserStatisticsService.UpdateStatsForUserAsync(u.Id, u.Gender, u.Weight);
                 }
                 catch (Exception ex)
                 {
