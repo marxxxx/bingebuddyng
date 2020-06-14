@@ -15,14 +15,12 @@ namespace BingeBuddyNg.Services.Venue.Commands
     {
         private readonly IUserRepository userRepository;
         private readonly IVenueUserRepository venueUserRepository;
-        private readonly ITranslationService translationService;
         private readonly IActivityRepository activityRepository;
 
-        public VenueCommandHandler(IUserRepository userRepository, IVenueUserRepository venueUserRepository, ITranslationService translationService, IActivityRepository activityRepository)
+        public VenueCommandHandler(IUserRepository userRepository, IVenueUserRepository venueUserRepository, IActivityRepository activityRepository)
         {
             this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             this.venueUserRepository = venueUserRepository ?? throw new ArgumentNullException(nameof(venueUserRepository));
-            this.translationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
             this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
         }
 
@@ -32,8 +30,6 @@ namespace BingeBuddyNg.Services.Venue.Commands
             if (user.CurrentVenue != request.Venue)
             {
                 user.CurrentVenue = request.Venue;
-
-                var message = await translationService.GetTranslationAsync(user.Language, "PersonalVenueEnterActivityMessage", request.Venue.Name);
 
                 var tasks = new[]
                 {
