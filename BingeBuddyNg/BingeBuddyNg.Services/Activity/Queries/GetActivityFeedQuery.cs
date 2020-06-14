@@ -59,16 +59,7 @@ namespace BingeBuddyNg.Services.Activity.Querys
 
         private async Task<PagedQueryResult<ActivityDTO>> GetActivityFeedAsync(string userId, TableContinuationToken continuationToken, string startActivityId)
         {
-            string whereClause = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId);
-            string tableName = Constants.TableNames.ActivityUserFeedTableName;
-
-            if (string.IsNullOrEmpty(startActivityId) == false)
-            {
-                whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
-                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, startActivityId));
-            }
-
-            var result = await storageAccessService.QueryTableAsync<JsonTableEntity<ActivityDTO>>(tableName, whereClause, 30, continuationToken);
+            var result = await storageAccessService.QueryTableAsync<JsonTableEntity<ActivityDTO>>(Constants.TableNames.ActivityUserFeedTableName, userId, startActivityId, 30, continuationToken);
 
             var activities = result.ResultPage.Select(r => r.Entity).ToList();
             return new PagedQueryResult<ActivityDTO>(activities, result.ContinuationToken);

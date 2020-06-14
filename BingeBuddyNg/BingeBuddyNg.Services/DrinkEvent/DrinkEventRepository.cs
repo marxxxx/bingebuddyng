@@ -41,31 +41,18 @@ namespace BingeBuddyNg.Services.DrinkEvent
         public async Task<DrinkEvent> FindCurrentDrinkEventAsync()
         {
             string now = GetRowKey(DateTime.UtcNow);
-            string whereClause = 
-                TableQuery.CombineFilters(
-                    TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, PartitionKeyValue), 
-                    TableOperators.And,
-                    TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, now)
-                    );
 
-            var queryResult = await storageAccessService.QueryTableAsync<JsonTableEntity<DrinkEvent>>(TableName, whereClause);
+            var queryResult = await storageAccessService.QueryTableAsync<JsonTableEntity<DrinkEvent>>(TableName, PartitionKeyValue, now, 1);
 
-            var result = queryResult?.FirstOrDefault()?.Entity;
+            var result = queryResult.ResultPage.FirstOrDefault()?.Entity;
             return result;
-        }        
+        }
 
         public async Task UpdateDrinkEventAsync(DrinkEvent drinkEvent)
         {
             string rowKey = GetRowKey(drinkEvent.EndUtc);
-            string whereClause =
-                TableQuery.CombineFilters(
-                    TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, PartitionKeyValue),
-                    TableOperators.And,
-                    TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, rowKey)
-                    );
-
-            var queryResult = await storageAccessService.QueryTableAsync<JsonTableEntity<DrinkEvent>>(TableName, whereClause);
-            var entity = queryResult.First();
+            
+            var entity = await storageAccessService.GetTableEntityAsync<JsonTableEntity<DrinkEvent>>(TableName, PartitionKeyValue, rowKey);
             entity.Entity = drinkEvent;
 
             var table = storageAccessService.GetTableReference(TableName);

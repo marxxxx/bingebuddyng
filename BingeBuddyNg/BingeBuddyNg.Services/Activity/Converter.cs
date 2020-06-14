@@ -23,7 +23,7 @@ namespace BingeBuddyNg.Services.Activity
                 AlcLevel = a.AlcLevel,
                 CountryLongName = a.CountryLongName,
                 CountryShortName = a.CountryShortName,
-                Venue = new Venue.Venue(id: a.Venue.Id, location: a.Venue.Location, name: a.Venue.Name, distance: a.Venue.Distance),
+                Venue = a.Venue != null ? new Venue.Venue(id: a.Venue.Id, location: a.Venue.Location, name: a.Venue.Name, distance: a.Venue.Distance) : null,
                 Likes = a.Likes.ConvertAll(aLike => new ReactionDTO()
                 {
                     Timestamp = aLike.Timestamp,

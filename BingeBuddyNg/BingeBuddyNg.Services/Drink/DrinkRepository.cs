@@ -32,18 +32,15 @@ namespace BingeBuddyNg.Services.Drink
 
         public async Task<IEnumerable<Drink>> GetDrinksAsync(string userId)
         {
-            string whereClause =
-                   TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId);
+            var drinks = await this.storageAccessService.QueryTableAsync<DrinkTableEntity>(TableName, partitionKey: userId);
 
-            var drinks = await this.storageAccessService.QueryTableAsync<DrinkTableEntity>(TableName, whereClause);
-
-            if (drinks.Count == 0)
+            if (drinks.ResultPage.Count == 0)
             {
                 return defaultDrinks;
             }
             else
             {
-                return drinks.Select(d => d.ToDrink()).ToList();
+                return drinks.ResultPage.Select(d => d.ToDrink()).ToList();
             }
         }
 

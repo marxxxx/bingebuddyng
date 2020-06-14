@@ -20,6 +20,8 @@ namespace BingeBuddyNg.Services.Infrastructure
 
         CloudTable GetTableReference(string tableName);
 
+        Task<PagedQueryResult<T>> QueryTableAsync<T>(string tableName, string partitionKey, string minRowKey = null, int pageSize = 100, TableContinuationToken continuationToken = null) where T : ITableEntity, new();
+
         Task<List<T>> QueryTableAsync<T>(string tableName, string whereClause = null) where T : ITableEntity, new();
 
         Task<PagedQueryResult<T>> QueryTableAsync<T>(string tableName, string whereClause = null, int pageSize = 100, TableContinuationToken continuationToken = null) where T : ITableEntity, new();

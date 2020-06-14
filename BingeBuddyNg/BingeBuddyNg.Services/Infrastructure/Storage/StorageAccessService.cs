@@ -51,6 +51,19 @@ namespace BingeBuddyNg.Services.Infrastructure
             return (T)result.Result;
         }
 
+        public async Task<PagedQueryResult<T>> QueryTableAsync<T>(string tableName, string partitionKey, string minRowKey, int pageSize, TableContinuationToken continuationToken = null) where T : ITableEntity, new()
+        {
+            string whereClause = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey);
+
+            if (string.IsNullOrEmpty(minRowKey) == false)
+            {
+                whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
+                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, minRowKey));
+            }
+
+            return await QueryTableAsync<T>(tableName, whereClause, pageSize, continuationToken);
+        }
+
         public async Task<List<T>> QueryTableAsync<T>(string tableName, string whereClause = null) where T : ITableEntity, new()
         {
             List<T> resultList = new List<T>();
@@ -165,6 +178,5 @@ namespace BingeBuddyNg.Services.Infrastructure
         {
             return CloudStorageAccount.Parse(this.config.StorageConnectionString);
         }
-
     }
 }
