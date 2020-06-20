@@ -55,8 +55,7 @@ namespace BingeBuddyNg.Services.User.Commands
         {
             var result = await this.userRepository.CreateOrUpdateUserAsync(request);
 
-            var timestamp = DateTime.UtcNow;
-            var id = ActivityId.Create(timestamp, request.UserId);
+            var id = ActivityId.CreateNew(request.UserId, out var timestamp);
 
             if (result.IsNewUser)
             {

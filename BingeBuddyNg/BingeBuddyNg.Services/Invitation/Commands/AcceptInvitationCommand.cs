@@ -76,9 +76,7 @@ namespace BingeBuddyNg.Services.Invitation.Commands
 
                     var message = await translationService.GetTranslationAsync(invitingUser.Language, "RecruitmentActivityMessage", acceptingUser.Name, Constants.Scores.FriendInvitation);
 
-                    var timestamp = DateTime.UtcNow;
-                    var id = ActivityId.Create(timestamp, invitingUser.Id);
-
+                    var id = ActivityId.CreateNew(invitingUser.Id, out var timestamp);
                     var notificationActivity = Activity.Activity.CreateNotificationActivity(id.Value, timestamp, invitingUser.Id, invitingUser.Name, message);
 
                     await this.activityRepository.AddActivityAsync(notificationActivity.ToEntity());

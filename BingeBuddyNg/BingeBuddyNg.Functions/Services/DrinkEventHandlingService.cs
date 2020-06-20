@@ -67,8 +67,7 @@ namespace BingeBuddyNg.Functions.Services
 
             string message = await translationService.GetTranslationAsync(currentUser.Language, "DrinkEventActivityWinMessage", Constants.Scores.StandardDrinkAction);
 
-            var timestamp = DateTime.UtcNow;
-            var id = ActivityId.Create(timestamp, currentUser.Id);
+            var id = ActivityId.CreateNew(currentUser.Id, out var timestamp);            
             var drinkEventNotificationActivity = Activity.CreateNotificationActivity(id.Value, timestamp, currentUser.Id, currentUser.Name, message);
             await activityRepository.AddActivityAsync(drinkEventNotificationActivity.ToEntity());
 

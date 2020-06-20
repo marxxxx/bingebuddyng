@@ -42,8 +42,7 @@ namespace BingeBuddyNg.Services.User.Commands
             {
                 await storageAccessService.SaveFileInBlobStorage(ContainerNames.ProfileImages, request.UserId, stream);
 
-                var timestamp = DateTime.UtcNow;
-                var id = ActivityId.Create(timestamp, request.UserId);
+                var id = ActivityId.CreateNew(request.UserId, out var timestamp);
 
                 var activity = Activity.Activity.CreateProfileImageUpdateActivity(id.Value, timestamp, request.UserId, user.Name);
                 await activityRepository.AddActivityAsync(activity.ToEntity());

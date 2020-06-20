@@ -21,6 +21,12 @@ namespace BingeBuddyNg.Services.Activity.Domain
             return new ActivityId($"{partitionKey}|{ticks}|{userId}");
         }
 
+        public static ActivityId CreateNew(string userId, out DateTime timestampUtc)
+        {
+            timestampUtc = DateTime.UtcNow;
+            return Create(timestampUtc, userId);
+        }
+
         private static string GetPartitionKey(DateTime timestampUtc)
         {
             int year = MaxTimestamp.Year - timestampUtc.Year;
