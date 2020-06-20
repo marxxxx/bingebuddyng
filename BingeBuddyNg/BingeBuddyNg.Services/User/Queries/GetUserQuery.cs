@@ -26,12 +26,8 @@ namespace BingeBuddyNg.Services.User.Querys
 
         public async Task<UserDTO> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
-            var user = await this.userRepository.FindUserAsync(request.UserId);
-            if (user == null)
-            {
-                return null;
-            }
-
+            var user = await this.userRepository.GetUserAsync(request.UserId);
+        
             return new UserDTO()
             {
                 Id = user.Id,

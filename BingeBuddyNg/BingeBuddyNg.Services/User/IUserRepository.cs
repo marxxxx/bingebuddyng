@@ -11,7 +11,7 @@ namespace BingeBuddyNg.Services.User
 
         Task<IEnumerable<string>> GetAllUserIdsAsync();
 
-        Task<User> FindUserAsync(string id);
+        Task<User> GetUserAsync(string id);
 
         Task UpdateUserAsync(UserEntity user);
 

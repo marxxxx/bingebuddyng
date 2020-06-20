@@ -40,8 +40,8 @@ namespace BingeBuddyNg.Services.FriendsRequest.Commands
             var hasPendingRequest = await friendRequestRepository.HasPendingFriendRequestAsync(request.FriendUserId, request.RequestingUserId);
             if (hasPendingRequest == false)
             {
-                var requestingUser = await userRepository.FindUserAsync(request.RequestingUserId);
-                var friendUser = await userRepository.FindUserAsync(request.FriendUserId);
+                var requestingUser = await userRepository.GetUserAsync(request.RequestingUserId);
+                var friendUser = await userRepository.GetUserAsync(request.FriendUserId);
 
                 await friendRequestRepository.AddFriendRequestAsync(friendUser.ToUserInfo(), requestingUser.ToUserInfo());
 

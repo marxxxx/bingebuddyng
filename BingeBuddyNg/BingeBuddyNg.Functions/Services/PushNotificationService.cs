@@ -38,8 +38,8 @@ namespace BingeBuddyNg.Functions.Services
 
             foreach (var userNotifications in notificationPerUser)
             {
-                var user = await this.userRepository.FindUserAsync(userNotifications.Key);
-                if (user == null || user.PushInfo == null ||
+                var user = await this.userRepository.GetUserAsync(userNotifications.Key);
+                if (user.PushInfo == null ||
                     user.LastOnline <= DateTime.UtcNow.Subtract(TimeSpan.FromDays(30)))
                 {
                     continue;

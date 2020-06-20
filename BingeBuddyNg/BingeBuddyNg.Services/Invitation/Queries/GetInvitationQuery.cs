@@ -32,11 +32,7 @@ namespace BingeBuddyNg.Services.Invitation.Querys
         public async Task<InvitationDTO> Handle(GetInvitationQuery request, CancellationToken cancellationToken)
         {
             var invitation = await this.invitationRepository.GetInvitationAsync(request.InvitationToken);
-            var user = await this.userRepository.FindUserAsync(invitation.InvitingUserId);
-            if (user == null)
-            {
-                throw new NotFoundException($"Inviting user {invitation.InvitingUserId} not found!");
-            }
+            var user = await this.userRepository.GetUserAsync(invitation.InvitingUserId);
 
             var result = new InvitationDTO(invitation.InvitationToken, invitation.InvitingUserId, new UserInfoDTO(user.Id, user.Name));
             return result;

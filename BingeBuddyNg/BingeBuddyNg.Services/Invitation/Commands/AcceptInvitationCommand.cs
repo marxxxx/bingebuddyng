@@ -62,8 +62,8 @@ namespace BingeBuddyNg.Services.Invitation.Commands
             var invitation = await this.invitationRepository.AcceptInvitationAsync(request.AcceptingUserId, request.InvitationToken);
             if (request.AcceptingUserId != invitation.InvitingUserId)
             {
-                var invitingUser = await this.userRepository.FindUserAsync(invitation.InvitingUserId);
-                var acceptingUser = await this.userRepository.FindUserAsync(request.AcceptingUserId);
+                var invitingUser = await this.userRepository.GetUserAsync(invitation.InvitingUserId);
+                var acceptingUser = await this.userRepository.GetUserAsync(request.AcceptingUserId);
 
                 if (invitingUser != null && acceptingUser != null)
                 {

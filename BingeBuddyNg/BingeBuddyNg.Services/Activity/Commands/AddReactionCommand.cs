@@ -50,7 +50,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
         {
             var activity = await this.activityRepository.GetActivityAsync(request.ActivityId);
 
-            var reactingUser = await this.userRepository.FindUserAsync(request.UserId);
+            var reactingUser = await this.userRepository.GetUserAsync(request.UserId);
 
             switch (request.Type)
             {

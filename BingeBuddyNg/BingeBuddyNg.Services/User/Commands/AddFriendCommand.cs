@@ -15,8 +15,8 @@ namespace BingeBuddyNg.Core.User.Commands
 
         public async Task ExecuteAsync(string userId, string friendUserId)
         {
-            var user = await this.userRepository.FindUserAsync(userId);
-            var friend = await this.userRepository.FindUserAsync(friendUserId);
+            var user = await this.userRepository.GetUserAsync(userId);
+            var friend = await this.userRepository.GetUserAsync(friendUserId);
 
             user.AddFriend(friend.ToUserInfo());
             friend.AddFriend(user.ToUserInfo());

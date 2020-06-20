@@ -40,7 +40,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
         public async Task<string> Handle(AddMessageActivityCommand request, CancellationToken cancellationToken)
         {
-            var user = await this.userRepository.FindUserAsync(request.UserId);
+            var user = await this.userRepository.GetUserAsync(request.UserId);
 
             var id = ActivityId.CreateNew(request.UserId, out var timestamp);
             var activity = Activity.CreateMessageActivity(id.Value, timestamp, request.Location, request.UserId, user.Name, request.Message, request.Venue);

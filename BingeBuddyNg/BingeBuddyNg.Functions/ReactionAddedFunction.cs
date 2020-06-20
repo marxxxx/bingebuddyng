@@ -38,8 +38,8 @@ namespace BingeBuddyNg.Functions
             var reactionAddedMessage = JsonConvert.DeserializeObject<ReactionAddedMessage>(reactionQueueItem);
 
             var activity = await activityRepository.GetActivityAsync(reactionAddedMessage.ActivityId);
-            var reactingUser = await userRepository.FindUserAsync(reactionAddedMessage.UserId);
-            var originUser = await userRepository.FindUserAsync(activity.UserId);
+            var reactingUser = await userRepository.GetUserAsync(reactionAddedMessage.UserId);
+            var originUser = await userRepository.GetUserAsync(activity.UserId);
 
             await this.activityDistributionService.DistributeActivitiesAsync(originUser, activity.ToEntity());
 

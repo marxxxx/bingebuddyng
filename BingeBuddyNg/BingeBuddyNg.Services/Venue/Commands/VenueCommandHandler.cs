@@ -26,7 +26,7 @@ namespace BingeBuddyNg.Services.Venue.Commands
 
         public async Task<Unit> Handle(EnterVenueCommand request, CancellationToken cancellationToken)
         {
-            var user = await this.userRepository.FindUserAsync(request.UserId);
+            var user = await this.userRepository.GetUserAsync(request.UserId);
 
             if (user.CurrentVenue != request.Venue)
             {
@@ -47,7 +47,7 @@ namespace BingeBuddyNg.Services.Venue.Commands
 
         public async Task<Unit> Handle(LeaveVenueCommand request, CancellationToken cancellationToken)
         {
-            var user = await this.userRepository.FindUserAsync(request.UserId);
+            var user = await this.userRepository.GetUserAsync(request.UserId);
             var currentVenue = user.CurrentVenue;
 
             if (currentVenue != null)
@@ -69,7 +69,7 @@ namespace BingeBuddyNg.Services.Venue.Commands
 
         private async Task AddVenueActivityAsync(AddVenueActivityDTO venueActivity)
         {
-            var user = await this.userRepository.FindUserAsync(venueActivity.UserId);
+            var user = await this.userRepository.GetUserAsync(venueActivity.UserId);
             var id = ActivityId.CreateNew(venueActivity.UserId, out var timestamp);
             var activity = Activity.Activity.CreateVenueActivity(
                 id.Value,

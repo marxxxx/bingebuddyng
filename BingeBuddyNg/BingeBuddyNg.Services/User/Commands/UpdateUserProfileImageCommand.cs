@@ -37,7 +37,7 @@ namespace BingeBuddyNg.Services.User.Commands
 
         public async Task<Unit> Handle(UpdateUserProfileImageCommand request, CancellationToken cancellationToken)
         {
-            var user = await this.userRepository.FindUserAsync(request.UserId);
+            var user = await this.userRepository.GetUserAsync(request.UserId);
             using (var stream = request.Image.OpenReadStream())
             {
                 await storageAccessService.SaveFileInBlobStorage(ContainerNames.ProfileImages, request.UserId, stream);

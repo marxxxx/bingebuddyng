@@ -24,9 +24,14 @@ namespace BingeBuddyNg.Services.User
             this.cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
         }
 
-        public async Task<User> FindUserAsync(string id)
+        public async Task<User> GetUserAsync(string id)
         {
             var result = await FindUserEntityAsync(id);
+            if (result?.Entity == null)
+            {
+                throw new NotFoundException($"User {id} not found!");
+            }
+
             UserEntity user = null;
             if (result != null)
             {
@@ -112,7 +117,7 @@ namespace BingeBuddyNg.Services.User
         }
 
         public async Task UpdateUserAsync(UserEntity user)
-        {            
+        {
             var userEntity = await FindUserEntityAsync(user.Id);
             userEntity.Entity = user;
 
@@ -167,7 +172,7 @@ namespace BingeBuddyNg.Services.User
             return whereClause;
         }
 
-     
+
         public async Task UpdateMonitoringInstanceAsync(string userId, string monitoringInstanceId)
         {
             var user = await FindUserEntityAsync(userId);

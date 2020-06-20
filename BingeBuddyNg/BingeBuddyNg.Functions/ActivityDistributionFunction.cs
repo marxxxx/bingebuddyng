@@ -50,11 +50,8 @@ namespace BingeBuddyNg.Functions
                 }
                 else
                 {
-                    var user = await this.userRepository.FindUserAsync(activity.UserId);
-                    if (user != null)
-                    {
-                        userIds = user.GetVisibleFriendUserIds(true);
-                    }
+                    var user = await this.userRepository.GetUserAsync(activity.UserId);
+                    userIds = user.GetVisibleFriendUserIds(true);
                 }
 
                 log.LogInformation($"[{count} / {activityKeys.Count()}] Distributing activity {id} to {userIds.Count()} users.");

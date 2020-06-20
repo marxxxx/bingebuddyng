@@ -54,8 +54,8 @@ namespace BingeBuddyNg.Services.FriendsRequest.Commands
 
             await friendRequestRepository.DeleteFriendRequestAsync(request.AcceptingUserId, request.RequestingUserId);
 
-            var acceptingUser = await userRepository.FindUserAsync(request.AcceptingUserId);
-            var requestingUser = await userRepository.FindUserAsync(request.RequestingUserId);
+            var acceptingUser = await userRepository.GetUserAsync(request.AcceptingUserId);
+            var requestingUser = await userRepository.GetUserAsync(request.RequestingUserId);
             if (requestingUser.PushInfo != null)
             {
                 var subject = await translationService.GetTranslationAsync(requestingUser.Language, "FriendsRequest");

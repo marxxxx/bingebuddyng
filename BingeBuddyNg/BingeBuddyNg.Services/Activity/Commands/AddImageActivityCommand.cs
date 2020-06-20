@@ -53,7 +53,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
         public async Task<string> Handle(AddImageActivityCommand request, CancellationToken cancellationToken)
         {
-            var user = await this.userRepository.FindUserAsync(request.UserId);
+            var user = await this.userRepository.GetUserAsync(request.UserId);
 
             // store file in blob storage
             string imageUrlOriginal = await storageAccessService.SaveFileInBlobStorage("img", "activities", request.FileName, request.Stream);

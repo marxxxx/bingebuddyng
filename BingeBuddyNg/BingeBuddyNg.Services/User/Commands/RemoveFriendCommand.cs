@@ -33,7 +33,7 @@ namespace BingeBuddyNg.Services.User.Commands
 
         public async Task<Unit> Handle(RemoveFriendCommand request, CancellationToken cancellationToken)
         {
-            var results = await Task.WhenAll(userRepository.FindUserAsync(request.UserId), userRepository.FindUserAsync(request.FriendUserId));
+            var results = await Task.WhenAll(userRepository.GetUserAsync(request.UserId), userRepository.GetUserAsync(request.FriendUserId));
 
             results[0].RemoveFriend(request.FriendUserId);
             results[1].RemoveFriend(request.UserId);

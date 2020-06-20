@@ -54,12 +54,7 @@ namespace BingeBuddyNg.Functions.Services
 
             logger.LogInformation($"Handling added activity [{activity}] ...");
 
-            var currentUser = await userRepository.FindUserAsync(activity.UserId);
-            if (currentUser == null)
-            {
-                logger.LogError($"User [{activity.UserId}] not found!");
-                return;
-            }
+            var currentUser = await userRepository.GetUserAsync(activity.UserId);
 
             try
             {                

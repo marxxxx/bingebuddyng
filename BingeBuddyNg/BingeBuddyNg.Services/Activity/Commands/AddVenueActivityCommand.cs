@@ -39,7 +39,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
         public async Task<string> Handle(AddVenueActivityCommand request, CancellationToken cancellationToken)
         {
-            var user = await this.userRepository.FindUserAsync(request.UserId);
+            var user = await this.userRepository.GetUserAsync(request.UserId);
 
             var id = ActivityId.CreateNew(request.UserId, out var timestamp);
 

@@ -19,28 +19,21 @@ namespace BingeBuddyNg.Functions
         }
 
         [FunctionName(nameof(UserRenamedFunction))]
-        public async Task Run([QueueTrigger(QueueNames.UserRenamed, Connection = "AzureWebJobsStorage")]string message, ILogger log)
+        public async Task Run([QueueTrigger(QueueNames.UserRenamed, Connection = "AzureWebJobsStorage")] string message, ILogger log)
         {
             var userRenamedMessage = JsonConvert.DeserializeObject<UserRenamedMessage>(message);
 
-            var user = await this.userRepository.FindUserAsync(userRenamedMessage.UserId);
-            if(user == null)
-            {
-                log.LogWarning($"User [{userRenamedMessage.UserId}] not found.");
-                return;
-            }
+            var user = await this.userRepository.GetUserAsync(userRenamedMessage.UserId);
 
-            foreach(var friendUserInfo in user.Friends)
+            foreach (var friendUserInfo in user.Friends)
             {
-                var friendUser = await this.userRepository.FindUserAsync(friendUserInfo.UserId);
-                if(friendUser != null)
+                var friendUser = await this.userRepository.GetUserAsync(friendUserInfo.UserId);
+
+                var foundFriend = friendUser.Friends.FirstOrDefault(f => f.UserId == userRenamedMessage.UserId);
+                if (foundFriend != null)
                 {
-                    var foundFriend = friendUser.Friends.FirstOrDefault(f => f.UserId == userRenamedMessage.UserId);
-                    if(foundFriend != null)
-                    {
-                        foundFriend.UserName = userRenamedMessage.NewUserName;
-                        await this.userRepository.UpdateUserAsync(friendUser.ToEntity());
-                    }
+                    foundFriend.UserName = userRenamedMessage.NewUserName;
+                    await this.userRepository.UpdateUserAsync(friendUser.ToEntity());
                 }
             }
         }
