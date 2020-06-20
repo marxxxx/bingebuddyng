@@ -6,7 +6,7 @@ using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.User.Queries
 {
-    public class GetAllUserIdsQuery : IGetAllUserIdsQuery
+    public class GetAllUserIdsQuery
     {
         private readonly IStorageAccessService storageAccessService;
 

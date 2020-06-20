@@ -29,11 +29,16 @@ namespace BingeBuddyNg.Shared
             public const string ActivityPerUser = "activityperuser";
             public const string ActivityUserFeed = "activityuserfeed";
             public const string Users = "users";
+            public const string UserStats = "userstats";
+            public const string UserStatsHistory = "userstatshistory";
+            public const string Reports = "reports";
         }
 
         public static class StaticPartitionKeys
         {
             public const string User = "User";
+            public const string UserStats = "UserStats";
+            public const string PersonalUsagePerWeekdayReport = "personalusageperweekdayreport";
         }
 
         public static class Urls

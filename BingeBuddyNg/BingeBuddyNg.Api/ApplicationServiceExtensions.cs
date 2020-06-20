@@ -3,6 +3,8 @@ using BingeBuddyNg.Core.FriendsRequest;
 using BingeBuddyNg.Core.Game;
 using BingeBuddyNg.Core.Invitation;
 using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.Statistics.Commands;
+using BingeBuddyNg.Core.Statistics.Queries;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Core.User.Queries;
@@ -36,8 +38,10 @@ namespace BingeBuddyNg.Services
 
             services.AddMediatR(typeof(ActivityDTO).Assembly);
             services.AddScoped<AddFriendCommand>();
-            services.AddScoped<ISearchUsersQuery, SearchUsersQuery>();
-            services.AddScoped<IGetAllUserIdsQuery, GetAllUserIdsQuery>();
+            services.AddScoped<SearchUsersQuery>();
+            services.AddScoped<GetAllUserIdsQuery>();
+            services.AddScoped<GetStatisticsQuery>();
+            services.AddScoped<GetPersonalUsagePerWeekdayQuery>();
 
             // add infrastructure services
             services.AddScoped<IIdentityService, IdentityService>();
@@ -54,7 +58,6 @@ namespace BingeBuddyNg.Services
             // add domain services
             services.AddSingleton<IActivityRepository, ActivityRepository>();
             services.AddSingleton<IUserRepository, UserRepository>();
-            services.AddSingleton<IUserStatsRepository, UserStatsRepository>();
             services.AddSingleton<IFriendRequestRepository, FriendRequestRepository>();
             services.AddSingleton<IInvitationRepository, InvitationRepository>();
 
@@ -63,7 +66,9 @@ namespace BingeBuddyNg.Services
             services.AddSingleton<IVenueUserRepository, VenueUserRepository>();
 
             services.AddSingleton<IDrinkRepository, DrinkRepository>();
-            services.AddSingleton<IUserStatsHistoryRepository, UserStatsHistoryRepository>();
+            services.AddScoped<UpdateStatisticsCommand>();
+            services.AddScoped<UpdateRankingCommand>();
+            services.AddScoped<IncreaseScoreCommand>();
 
             services.AddGame();
         }

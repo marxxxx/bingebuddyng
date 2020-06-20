@@ -13,10 +13,10 @@ namespace BingeBuddyNg.Functions.Services
 {
     public class ActivityDistributionService
     {
-        private readonly IGetAllUserIdsQuery getAllUserIdsQuery;
+        private readonly GetAllUserIdsQuery getAllUserIdsQuery;
         private readonly IActivityRepository activityRepository;
 
-        public ActivityDistributionService(IGetAllUserIdsQuery getAllUserIdsQuery, IActivityRepository activityRepository)
+        public ActivityDistributionService(GetAllUserIdsQuery getAllUserIdsQuery, IActivityRepository activityRepository)
         {
             this.getAllUserIdsQuery = getAllUserIdsQuery ?? throw new ArgumentNullException(nameof(getAllUserIdsQuery));
             this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));

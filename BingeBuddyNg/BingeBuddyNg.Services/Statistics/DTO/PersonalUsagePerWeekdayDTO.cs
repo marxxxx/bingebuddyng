@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BingeBuddyNg.Services.Statistics
+﻿namespace BingeBuddyNg.Core.Statistics.DTO
 {
     public class PersonalUsagePerWeekdayDTO
     {

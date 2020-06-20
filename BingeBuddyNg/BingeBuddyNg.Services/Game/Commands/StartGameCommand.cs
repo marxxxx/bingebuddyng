@@ -30,13 +30,13 @@ namespace BingeBuddyNg.Core.Game.Commands
     {
         private readonly INotificationService notificationService;
         private readonly IGameManager manager;
-        private readonly ISearchUsersQuery getUsersQuery;
+        private readonly SearchUsersQuery getUsersQuery;
         private readonly ITranslationService translationServie;
 
         public StartGameCommandHandler(
             INotificationService notificationService,
             IGameManager manager,
-            ISearchUsersQuery getUsersQuery,
+            SearchUsersQuery getUsersQuery,
             ITranslationService translationService)
         {
             this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));

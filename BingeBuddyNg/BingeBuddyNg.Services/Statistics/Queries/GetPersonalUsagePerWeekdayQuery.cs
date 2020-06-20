@@ -1,32 +1,17 @@
-﻿using BingeBuddyNg.Core.Statistics;
-using BingeBuddyNg.Services.Infrastructure;
-using MediatR;
-using Microsoft.WindowsAzure.Storage.Table;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Statistics.DTO;
+using BingeBuddyNg.Services.Infrastructure;
+using Microsoft.WindowsAzure.Storage.Table;
+using static BingeBuddyNg.Shared.Constants;
 
-namespace BingeBuddyNg.Services.Statistics.Querys
+namespace BingeBuddyNg.Core.Statistics.Queries
 {
-    public class GetPersonalUsagePerWeekdayQuery : IRequest<IEnumerable<PersonalUsagePerWeekdayDTO>>
-    {
-        public GetPersonalUsagePerWeekdayQuery(string userId)
-        {
-            UserId = userId ?? throw new ArgumentNullException(nameof(userId));
-        }
-
-        public string UserId { get; }
-    }
-
-    public class GetPersonalUsagePerWeekdayQueryHandler : IRequestHandler<GetPersonalUsagePerWeekdayQuery, IEnumerable<PersonalUsagePerWeekdayDTO>>
+    public class GetPersonalUsagePerWeekdayQuery
     {
         private readonly IStorageAccessService storageAccessService;
-
-        private const string ReportsTableName = "reports";
-
-        private const string PersonalUsagePerWeekdayReportPartitionKey = "personalusageperweekdayreport";
 
         private static readonly Dictionary<int, string> orderedWeekdays = new Dictionary<int, string>()
         {
@@ -39,30 +24,30 @@ namespace BingeBuddyNg.Services.Statistics.Querys
             {7, "Sun" }
         };
 
-        public GetPersonalUsagePerWeekdayQueryHandler(IStorageAccessService storageAccessService)
+        public GetPersonalUsagePerWeekdayQuery(IStorageAccessService storageAccessService)
         {
             this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
         }
 
-        public async Task<IEnumerable<PersonalUsagePerWeekdayDTO>> Handle(GetPersonalUsagePerWeekdayQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<PersonalUsagePerWeekdayDTO>> ExecuteAsync(string userId)
         {
             string whereClause =
                TableQuery.CombineFilters(
-               TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, PersonalUsagePerWeekdayReportPartitionKey),
+               TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, StaticPartitionKeys.PersonalUsagePerWeekdayReport),
                TableOperators.And,
                TableQuery.CombineFilters(
-                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, $"{request.UserId}|Mon"), TableOperators.Or,
+                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, $"{userId}|Mon"), TableOperators.Or,
                     TableQuery.CombineFilters(
-                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, $"{request.UserId}|Tue"), TableOperators.Or,
+                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, $"{userId}|Tue"), TableOperators.Or,
                             TableQuery.CombineFilters(
-                            TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, $"{request.UserId}|Wed"), TableOperators.Or,
+                            TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, $"{userId}|Wed"), TableOperators.Or,
                             TableQuery.CombineFilters(
-                            TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, $"{request.UserId}|Thu"), TableOperators.Or,
+                            TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, $"{userId}|Thu"), TableOperators.Or,
                                 TableQuery.CombineFilters(
-                                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, $"{request.UserId}|Fri"), TableOperators.Or,
+                                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, $"{userId}|Fri"), TableOperators.Or,
                                     TableQuery.CombineFilters(
-                                    TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, $"{request.UserId}|Sat"), TableOperators.Or,
-                                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, $"{request.UserId}|Sun")
+                                    TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, $"{userId}|Sat"), TableOperators.Or,
+                                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, $"{userId}|Sun")
                                         )
                                     )
                                 )
@@ -71,7 +56,7 @@ namespace BingeBuddyNg.Services.Statistics.Querys
                     )
                );
 
-            var result = await this.storageAccessService.QueryTableAsync<PersonalUsagePerWeekdayTableEntity>(ReportsTableName, whereClause);
+            var result = await this.storageAccessService.QueryTableAsync<PersonalUsagePerWeekdayTableEntity>(TableNames.Reports, whereClause);
 
             // add missing weekdays
             result.AddRange(orderedWeekdays
@@ -83,7 +68,7 @@ namespace BingeBuddyNg.Services.Statistics.Querys
                         orderby w.Key
                         select r.ToDto();
 
-            return query.ToList();
+            return query;
         }
     }
 }

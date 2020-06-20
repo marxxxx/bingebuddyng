@@ -1,4 +1,5 @@
 ﻿using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.Statistics.Queries;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.Statistics.Querys;
@@ -27,10 +28,10 @@ namespace BingeBuddyNg.Tests
                     new PersonalUsagePerWeekdayTableEntity() { WeekDay = "Sat"}
                 });
 
-            var queryHandler = new GetPersonalUsagePerWeekdayQueryHandler(storageAccessServiceMock.Object);
+            var queryHandler = new GetPersonalUsagePerWeekdayQuery(storageAccessServiceMock.Object);
 
             // Act
-            var result = await queryHandler.Handle(new GetPersonalUsagePerWeekdayQuery("123"), new CancellationTokenSource().Token);
+            var result = await queryHandler.ExecuteAsync("123");
 
             // Assert
             Assert.NotEmpty(result);

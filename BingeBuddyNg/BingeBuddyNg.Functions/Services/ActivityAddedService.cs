@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.Statistics.Commands;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Functions.Services.Notifications;
 using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Shared;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Extensions.Logging;
@@ -22,7 +22,8 @@ namespace BingeBuddyNg.Functions.Services
         private readonly IActivityRepository activityRepository;
         private readonly IUserRepository userRepository;
         private readonly INotificationService notificationService;
-        private readonly IUserStatisticsService userStatisticsService;
+        private readonly UpdateRankingCommand updateRankingCommand;
+        private readonly UpdateStatisticsCommand updateStatisticsCommand;
         private readonly ActivityDistributionService activityDistributionService;
         private readonly DrinkEventHandlingService drinkEventHandlingService;
         private readonly PushNotificationService pushNotificationService;
@@ -33,21 +34,23 @@ namespace BingeBuddyNg.Functions.Services
             IActivityRepository activityRepository,
             IUserRepository userRepository,
             INotificationService notificationService,
-            IUserStatisticsService userStatisticsService,
+            UpdateRankingCommand updateRankingCommand,
+            UpdateStatisticsCommand updateStatisticsCommand,
             ActivityDistributionService activityDistributionService,
             DrinkEventHandlingService drinkEventHandlingService,
             PushNotificationService pushNotificationService,
             ILogger<ActivityAddedService> logger)
         {
-            this.utilityService = utilityService ?? throw new ArgumentNullException(nameof(utilityService));
-            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
-            this.userStatisticsService = userStatisticsService ?? throw new ArgumentNullException(nameof(userStatisticsService));
-            this.activityDistributionService = activityDistributionService ?? throw new ArgumentNullException(nameof(activityDistributionService));
-            this.drinkEventHandlingService = drinkEventHandlingService ?? throw new ArgumentNullException(nameof(drinkEventHandlingService));
-            this.pushNotificationService = pushNotificationService ?? throw new ArgumentNullException(nameof(pushNotificationService));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.utilityService = utilityService;
+            this.activityRepository = activityRepository;
+            this.userRepository = userRepository;
+            this.notificationService = notificationService;
+            this.updateRankingCommand = updateRankingCommand;
+            this.updateStatisticsCommand = updateStatisticsCommand;
+            this.activityDistributionService = activityDistributionService;
+            this.drinkEventHandlingService = drinkEventHandlingService;
+            this.pushNotificationService = pushNotificationService;
+            this.logger = logger;
         }
 
         public async Task RunAsync(ActivityAddedMessage message, IDurableOrchestrationClient durableClient)
@@ -73,8 +76,8 @@ namespace BingeBuddyNg.Functions.Services
                     if (activity.ActivityType == ActivityType.Drink && userStats != null)
                     {
                         // Immediately update Stats for current user
-                        userStats = await userStatisticsService.UpdateStatsForUserAsync(currentUser.Id, currentUser.Gender, currentUser.Weight);
-                        await userStatisticsService.UpdateRankingForUserAsync(currentUser.Id);
+                        userStats = await updateStatisticsCommand.ExecuteAsync(currentUser.Id, currentUser.Gender, currentUser.Weight);
+                        await updateRankingCommand.ExecuteAsync(currentUser.Id);
 
                         activity.UpdateStats(userStats.CurrentNightDrinks, userStats.CurrentAlcoholization);
 

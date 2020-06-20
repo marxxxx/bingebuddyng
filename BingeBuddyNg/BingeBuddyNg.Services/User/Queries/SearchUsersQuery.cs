@@ -9,7 +9,7 @@ using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Services.User.Queries
 {
-    public class SearchUsersQuery : ISearchUsersQuery
+    public class SearchUsersQuery
     {
         private readonly IStorageAccessService storageAccessService;
 

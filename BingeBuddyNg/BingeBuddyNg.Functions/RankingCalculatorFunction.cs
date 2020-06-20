@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.Statistics.Commands;
 using BingeBuddyNg.Services.User.Queries;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
@@ -10,13 +11,13 @@ namespace BingeBuddyNg.Functions
 {
     public class RankingCalculatorFunction
     {
-        private readonly ISearchUsersQuery searchUsersQuery;
-        private readonly IUserStatisticsService userStatisticsService;
+        private readonly SearchUsersQuery searchUsersQuery;
+        private readonly UpdateRankingCommand updateRankingCommand;
 
-        public RankingCalculatorFunction(ISearchUsersQuery searchUsersQuery, IUserStatisticsService userStatisticsService)
+        public RankingCalculatorFunction(SearchUsersQuery searchUsersQuery, UpdateRankingCommand updateRankingCommand)
         {
             this.searchUsersQuery = searchUsersQuery ?? throw new ArgumentNullException(nameof(searchUsersQuery));
-            this.userStatisticsService = userStatisticsService ?? throw new ArgumentNullException(nameof(userStatisticsService));
+            this.updateRankingCommand = updateRankingCommand ?? throw new ArgumentNullException(nameof(updateRankingCommand));
         }
 
         [FunctionName(nameof(RankingCalculatorFunction))]
@@ -32,7 +33,7 @@ namespace BingeBuddyNg.Functions
                 try
                 {
                     log.LogInformation($"Calculating ranking for user [{u}] ...");
-                    await userStatisticsService.UpdateRankingForUserAsync(u.Id);
+                    await updateRankingCommand.ExecuteAsync(u.Id);
                 }
                 catch (Exception ex)
                 {

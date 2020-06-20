@@ -1,5 +1,5 @@
 ﻿using System;
-using BingeBuddyNg.Services.Statistics;
+using BingeBuddyNg.Core.Statistics.DTO;
 
 namespace BingeBuddyNg.Core.Statistics
 {

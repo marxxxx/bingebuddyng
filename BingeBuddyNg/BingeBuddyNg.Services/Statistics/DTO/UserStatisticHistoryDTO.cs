@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BingeBuddyNg.Api.Dto
+namespace BingeBuddyNg.Core.Statistics.DTO
 {
     public class UserStatisticHistoryDTO
     {

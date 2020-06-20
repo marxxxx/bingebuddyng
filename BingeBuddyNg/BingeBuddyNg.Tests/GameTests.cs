@@ -11,8 +11,10 @@ using BingeBuddyNg.Services.Game.DTO;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User.Persistence;
 using BingeBuddyNg.Services.User.Queries;
+using BingeBuddyNg.Tests.Helpers;
 using Moq;
 using Xunit;
+using System.Linq;
 
 namespace BingeBuddyNg.Tests
 {
@@ -23,21 +25,15 @@ namespace BingeBuddyNg.Tests
         {
             // Arrange
             string myUserId = Guid.NewGuid().ToString();
-            string[] friendUserIds = new[] { Guid.NewGuid().ToString(), Guid.NewGuid().ToString() };
-            string[] friendUserIdsAsString = friendUserIds.Select(f => f.ToString()).ToArray();
+            string[] friendUserIds = new [] { Guid.NewGuid().ToString(), Guid.NewGuid().ToString() };
             string gameTitle = "My Game";
             var notificationServiceMock = new Mock<INotificationService>();
             var manager = new GameManager();
 
-            var searchUsersQueryMock = new Mock<ISearchUsersQuery>();
-            searchUsersQueryMock
-                .Setup(u => u.ExecuteAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<string>()))
-                .ReturnsAsync((IEnumerable<string> _userIds, string _filter) =>
-                    _userIds.Select(u => new UserEntity() { Id = u, PushInfo = new PushInfo("url", "auth", "p256dh") }).ToList()
-                );
+            var searchUsersQuery = SetupHelpers.SetupSearchUsersQuery(friendUserIds);
             
             var command = new StartGameCommand(myUserId, gameTitle, friendUserIds);
-            var handler = new StartGameCommandHandler(notificationServiceMock.Object, manager, searchUsersQueryMock.Object, new Mock<ITranslationService>().Object);
+            var handler = new StartGameCommandHandler(notificationServiceMock.Object, manager, searchUsersQuery, new Mock<ITranslationService>().Object);
 
             // Act
             StartGameResultDTO result = await handler.Handle(command, CancellationToken.None);
@@ -50,7 +46,7 @@ namespace BingeBuddyNg.Tests
             Assert.NotEqual(default(Guid), result.GameId);
             notificationServiceMock.Verify(s =>
                 s.SendSignalRMessageAsync(
-                    It.Is<IReadOnlyList<string>>(u => AreEqual(u, friendUserIdsAsString)), 
+                    It.Is<IReadOnlyList<string>>(u => AreEqual(u, friendUserIds)), 
                     Shared.Constants.SignalR.NotificationHubName, 
                     HubMethodNames.GameStarted,
                     It.Is<GameStartedMessage>( m => m.GameId == result.GameId && m.Title ==  gameTitle && AreEqual<string>(friendUserIds, m.UserIds))), Times.Once);
@@ -104,14 +100,10 @@ namespace BingeBuddyNg.Tests
             var manager = new GameManager();
             var game = new Game(gameId, "my game", new[] { Guid.NewGuid().ToString() });
             manager.StartGame(game);
-            var searchUsersQueryMock = new Mock<ISearchUsersQuery>();
-            searchUsersQueryMock
-                .Setup(r => r.ExecuteAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<string>()))
-                .ReturnsAsync((IEnumerable<string> _userIds, string _filter) => _userIds.Select(_u => new UserEntity() { Id = _u, Name = _u })
-                .ToList());
+            var searchUsersQuery = SetupHelpers.SetupSearchUsersQuery(game.PlayerUserIds);
 
             var query = new GetGameQuery(gameId);
-            var handler = new GetGameQueryHandler(manager, searchUsersQueryMock.Object);
+            var handler = new GetGameQueryHandler(manager, searchUsersQuery);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);

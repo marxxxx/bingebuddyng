@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.Statistics.Commands;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Services.Infrastructure;
@@ -33,7 +34,7 @@ namespace BingeBuddyNg.Core.Invitation.Commands
         private readonly INotificationService notificationService;
         private readonly IActivityRepository activityRepository;
         private readonly ITranslationService translationService;
-        private readonly IUserStatsRepository userStatsRepository;
+        private readonly IncreaseScoreCommand increaseScoreCommand;
         private readonly AddFriendCommand addFriendCommand;
 
         public AcceptInvitationCommandHandler(IInvitationRepository invitationRepository,
@@ -41,17 +42,17 @@ namespace BingeBuddyNg.Core.Invitation.Commands
             INotificationService notificationService,
             IActivityRepository activityRepository,
             ITranslationService translationService,
-            IUserStatsRepository userStatsRepository,
+            IncreaseScoreCommand increaseScoreCommand,
             AddFriendCommand addFriendCommand,
             ILogger<AcceptInvitationCommandHandler> logger)
         {
-            this.invitationRepository = invitationRepository ?? throw new ArgumentNullException(nameof(invitationRepository));
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
-            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
-            this.translationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
-            this.userStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
-            this.addFriendCommand = addFriendCommand ?? throw new ArgumentNullException(nameof(addFriendCommand));
+            this.invitationRepository = invitationRepository;
+            this.userRepository = userRepository;
+            this.notificationService = notificationService;
+            this.activityRepository = activityRepository;
+            this.translationService = translationService;
+            this.increaseScoreCommand = increaseScoreCommand;
+            this.addFriendCommand = addFriendCommand;
 
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -71,7 +72,7 @@ namespace BingeBuddyNg.Core.Invitation.Commands
 
                 try
                 {
-                    await this.userStatsRepository.IncreaseScoreAsync(invitingUser.Id, Constants.Scores.FriendInvitation);
+                    await this.increaseScoreCommand.ExecuteAsync(invitingUser.Id, Constants.Scores.FriendInvitation);
 
                     var message = await translationService.GetTranslationAsync(invitingUser.Language, "RecruitmentActivityMessage", acceptingUser.Name, Constants.Scores.FriendInvitation);
 

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.Statistics.Commands;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Functions.Services.Notifications;
 using BingeBuddyNg.Services.Activity;
@@ -22,18 +23,18 @@ namespace BingeBuddyNg.Functions.Services
     {
         private const int LuckyNumber = 1;
 
-        private readonly ISearchUsersQuery getUsersQuery;
+        private readonly SearchUsersQuery getUsersQuery;
         private readonly IDrinkEventRepository drinkEventRepository;
-        private readonly IUserStatsRepository userStatsRepository;
+        private readonly IncreaseScoreCommand increaseScoreCommand;
         private readonly ITranslationService translationService;
         private readonly IActivityRepository activityRepository;
         private readonly PushNotificationService pushNotificationService;
         private readonly ILogger<DrinkEventHandlingService> logger;
 
         public DrinkEventHandlingService(
-            ISearchUsersQuery getUsersQuery,
-            IDrinkEventRepository drinkEventRepository, 
-            IUserStatsRepository userStatsRepository, 
+            SearchUsersQuery getUsersQuery,
+            IDrinkEventRepository drinkEventRepository,
+            IncreaseScoreCommand increaseScoreCommand, 
             ITranslationService translationService, 
             IActivityRepository activityRepository,
             PushNotificationService pushNotificationService,
@@ -41,7 +42,7 @@ namespace BingeBuddyNg.Functions.Services
         {
             this.getUsersQuery = getUsersQuery ?? throw new ArgumentNullException(nameof(getUsersQuery));
             this.drinkEventRepository = drinkEventRepository ?? throw new ArgumentNullException(nameof(drinkEventRepository));
-            this.userStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
+            this.increaseScoreCommand = increaseScoreCommand ?? throw new ArgumentNullException(nameof(increaseScoreCommand));
             this.translationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
             this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
             this.pushNotificationService = pushNotificationService ?? throw new ArgumentNullException(nameof(pushNotificationService));
@@ -67,7 +68,7 @@ namespace BingeBuddyNg.Functions.Services
 
             await drinkEventRepository.UpdateDrinkEventAsync(drinkEvent);
 
-            await userStatsRepository.IncreaseScoreAsync(currentUser.Id, Constants.Scores.StandardDrinkAction);
+            await increaseScoreCommand.ExecuteAsync(currentUser.Id, Constants.Scores.StandardDrinkAction);
 
             string message = await translationService.GetTranslationAsync(currentUser.Language, "DrinkEventActivityWinMessage", Constants.Scores.StandardDrinkAction);
 

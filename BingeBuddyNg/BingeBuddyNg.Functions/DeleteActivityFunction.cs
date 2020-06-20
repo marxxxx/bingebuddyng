@@ -13,9 +13,9 @@ namespace BingeBuddyNg.Functions
     public class DeleteActivityFunction
     {
         private readonly IActivityRepository activityRepository;
-        private readonly IGetAllUserIdsQuery getAllUserIdsQuery;
+        private readonly GetAllUserIdsQuery getAllUserIdsQuery;
 
-        public DeleteActivityFunction(IActivityRepository activityRepository, IGetAllUserIdsQuery getAllUserIdsQuery)
+        public DeleteActivityFunction(IActivityRepository activityRepository, GetAllUserIdsQuery getAllUserIdsQuery)
         {
             this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
             this.getAllUserIdsQuery = getAllUserIdsQuery ?? throw new ArgumentNullException(nameof(getAllUserIdsQuery));

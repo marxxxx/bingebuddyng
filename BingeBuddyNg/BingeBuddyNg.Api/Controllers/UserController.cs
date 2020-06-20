@@ -22,12 +22,12 @@ namespace BingeBuddyNg.Api.Controllers
     {
         private readonly IIdentityService identityService;
         private readonly IMediator mediator;
-        private readonly ISearchUsersQuery getUsersQuery;
+        private readonly SearchUsersQuery getUsersQuery;
         private readonly IUserRepository userRepository;
 
         public UserController(IIdentityService identityService,
             IMediator mediator,
-            ISearchUsersQuery getUsersQuery, 
+            SearchUsersQuery getUsersQuery, 
             IUserRepository userRepository)
         {
             this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));

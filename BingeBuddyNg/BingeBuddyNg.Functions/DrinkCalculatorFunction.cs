@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.Statistics.Commands;
 using BingeBuddyNg.Services.User.Queries;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
@@ -9,14 +10,13 @@ namespace BingeBuddyNg.Functions
 {
     public class DrinkCalculatorFunction
     {
-        private readonly ISearchUsersQuery getUsersQuery;
-        private readonly IUserStatisticsService userStatisticsService;
+        private readonly SearchUsersQuery getUsersQuery;
+        private readonly UpdateStatisticsCommand updateStatisticsCommand;
 
-        public DrinkCalculatorFunction(ISearchUsersQuery getUsersQuery,
-            IUserStatisticsService userStatisticsService)
+        public DrinkCalculatorFunction(SearchUsersQuery getUsersQuery, UpdateStatisticsCommand updateStatisticsCommand)
         {
-            this.getUsersQuery = getUsersQuery ?? throw new ArgumentNullException(nameof(getUsersQuery));
-            this.userStatisticsService = userStatisticsService ?? throw new ArgumentNullException(nameof(userStatisticsService));
+            this.getUsersQuery = getUsersQuery;
+            this.updateStatisticsCommand = updateStatisticsCommand;
         }
 
         [FunctionName(nameof(DrinkCalculatorFunction))]
@@ -29,7 +29,7 @@ namespace BingeBuddyNg.Functions
             {
                 try
                 {
-                    await userStatisticsService.UpdateStatsForUserAsync(u.Id, u.Gender, u.Weight);
+                    await updateStatisticsCommand.ExecuteAsync(u.Id, u.Gender, u.Weight);
                 }
                 catch (Exception ex)
                 {
@@ -37,7 +37,5 @@ namespace BingeBuddyNg.Functions
                 }
             }
         }
-
-
     }
 }

@@ -1,8 +1,8 @@
-﻿using BingeBuddyNg.Services.Statistics;
+﻿using System;
+using BingeBuddyNg.Core.Statistics.DTO;
 using BingeBuddyNg.Services.User;
-using System;
 
-namespace BingeBuddyNg.Services.Ranking
+namespace BingeBuddyNg.Core.Ranking.DTO
 {
     public class UserRankingDTO
     {

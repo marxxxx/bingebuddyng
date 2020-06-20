@@ -1,4 +1,5 @@
-﻿using BingeBuddyNg.Services.Statistics;
+﻿using BingeBuddyNg.Core.Statistics.DTO;
+using BingeBuddyNg.Services.Statistics;
 using System;
 
 namespace BingeBuddyNg.Services.Activity

@@ -2,6 +2,7 @@
 using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Calculation;
 using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.Statistics.Commands;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Queries;
 using BingeBuddyNg.Services.Activity;
@@ -24,10 +25,12 @@ namespace BingeBuddyNg.Functions
             services.AddTransient<IActivityRepository, ActivityRepository>();
             services.AddUser();
             services.AddTransient<ICalculationService, CalculationService>();
-            services.AddTransient<IUserStatsRepository, UserStatsRepository>();
             services.AddTransient<IDrinkEventRepository, DrinkEventRepository>();
-            services.AddTransient<IUserStatisticsService, UserStatisticsService>();
-            services.AddTransient<IUserStatsHistoryRepository, UserStatsHistoryRepository>();
+            
+            // Commands & Queries
+            services.AddScoped<UpdateRankingCommand>();
+            services.AddScoped<UpdateStatisticsCommand>();
+            services.AddScoped<IncreaseScoreCommand>();
 
             // Infrastructure
             services.AddHttpClient();
@@ -45,8 +48,8 @@ namespace BingeBuddyNg.Functions
         public static void AddUser(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<ISearchUsersQuery, SearchUsersQuery>();
-            services.AddScoped<IGetAllUserIdsQuery, GetAllUserIdsQuery>();
+            services.AddScoped<SearchUsersQuery>();
+            services.AddScoped<GetAllUserIdsQuery>();
         }
 
         public static void AddNotification(this IServiceCollection services)
