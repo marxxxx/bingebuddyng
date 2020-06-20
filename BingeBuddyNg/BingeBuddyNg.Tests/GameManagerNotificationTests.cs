@@ -7,8 +7,8 @@ using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Activity.Persistence;
 using BingeBuddyNg.Services.Game;
 using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.User.Persistence;
+using BingeBuddyNg.Services.User.Queries;
 using BingeBuddyNg.Shared;
 using Moq;
 using Xunit;
@@ -80,22 +80,22 @@ namespace BingeBuddyNg.Tests
         {
             gameManager = new GameManager();
             notificationServiceMock = new Mock<INotificationService>();
-            var userRepositoryMock = new Mock<IUserRepository>();
+            var getUsersQueryMock = new Mock<ISearchUsersQuery>();
             activityRepositoryMock = new Mock<IActivityRepository>();
 
             activityRepositoryMock
                 .Setup(a => a.AddActivityAsync(It.IsAny<ActivityEntity>()))
                 .ReturnsAsync((ActivityEntity _a) => _a);
 
-            userRepositoryMock
-                .Setup(s => s.GetUsersAsync(It.IsAny<IEnumerable<string>>()))
-                .ReturnsAsync((IEnumerable<string> _userIds) =>
+            getUsersQueryMock
+                .Setup(s => s.ExecuteAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<string>()))
+                .ReturnsAsync((IEnumerable<string> _userIds, string _filter) =>
                     _userIds.Select(u => new UserEntity() { Id = u, Name = "username", PushInfo = new PushInfo("sub", "auth", "p256dh") }).ToList());
 
             var gameNotificationService = new GameEndNotificationService(
                 gameManager,
                 notificationServiceMock.Object,
-                userRepositoryMock.Object,
+                getUsersQueryMock.Object,
                 new Mock<ITranslationService>().Object,
                 activityRepositoryMock.Object);
 

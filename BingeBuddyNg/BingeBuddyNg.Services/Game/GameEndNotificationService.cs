@@ -1,13 +1,14 @@
-﻿using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Activity.Domain;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
-using BingeBuddyNg.Shared;
-using Microsoft.Extensions.Hosting;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Activity.Domain;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Services.User.Queries;
+using BingeBuddyNg.Shared;
+using Microsoft.Extensions.Hosting;
 
 namespace BingeBuddyNg.Services.Game
 {
@@ -15,20 +16,20 @@ namespace BingeBuddyNg.Services.Game
     {
         private readonly IGameManager gameManager;
         private readonly INotificationService notificationService;
-        private readonly IUserRepository userRepository;
+        private readonly ISearchUsersQuery getUsersQuery;
         private readonly ITranslationService translationService;
         private readonly IActivityRepository activityRepository;
 
         public GameEndNotificationService(
             IGameManager gameManager, 
-            INotificationService notificationService, 
-            IUserRepository userRepository,
+            INotificationService notificationService,
+            ISearchUsersQuery getUsersQuery,
             ITranslationService translationService,
             IActivityRepository activityRepository)
         {
             this.gameManager = gameManager ?? throw new ArgumentNullException(nameof(gameManager));
             this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.getUsersQuery = getUsersQuery ?? throw new ArgumentNullException(nameof(getUsersQuery));
             this.translationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
             this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
         }
@@ -47,7 +48,7 @@ namespace BingeBuddyNg.Services.Game
                 HubMethodNames.GameEnded,
                 new GameEndedMessage(e.Game.Id, e.WinnerUserId));
 
-            var users = await this.userRepository.GetUsersAsync(e.Game.PlayerUserIds);
+            var users = await this.getUsersQuery.ExecuteAsync(e.Game.PlayerUserIds);
             var pushInfos = users.Where(u => u.PushInfo != null).Select(u => new { u.Language, u.PushInfo });
             var winnerUser = users.FirstOrDefault(u => u.Id == e.WinnerUserId);
 
@@ -66,8 +67,7 @@ namespace BingeBuddyNg.Services.Game
                     new WebPushNotificationMessage(gameOverMessage, gameOverTitle, url));
             }
 
-            var id = ActivityId.CreateNew(winnerUser.Id, out var timestamp);
-            var activity = Activity.Activity.CreateGameActivity(id.Value, timestamp, e.Game.ToEntity(users.Select(u=>u.ToUserInfo())), winnerUser?.ToUserInfo());
+            var activity = Activity.Activity.CreateGameActivity(e.Game.ToEntity(users.Select(u=>u.ToUserInfo())), winnerUser?.ToUserInfo());
             
             var savedActivity = await this.activityRepository.AddActivityAsync(activity.ToEntity());
 

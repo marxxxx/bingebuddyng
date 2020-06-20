@@ -1,12 +1,13 @@
-﻿using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Statistics;
-using BingeBuddyNg.Services.User;
-using MediatR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Statistics;
+using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Services.User.Queries;
+using MediatR;
 
 namespace BingeBuddyNg.Services.Ranking.Querys
 {
@@ -16,12 +17,12 @@ namespace BingeBuddyNg.Services.Ranking.Querys
 
     public class GetScoreRankingQueryHandler : IRequestHandler<GetScoreRankingQuery, List<UserRankingDTO>>
     {
-        private readonly IUserRepository userRepository;
+        private readonly ISearchUsersQuery getAllUsersQuery;
         private readonly IUserStatsRepository userStatsRepository;
 
-        public GetScoreRankingQueryHandler(IUserRepository userRepository, IUserStatsRepository userStatsRepository)
+        public GetScoreRankingQueryHandler(ISearchUsersQuery getAllUsersQuery, IUserStatsRepository userStatsRepository)
         {
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.getAllUsersQuery = getAllUsersQuery ?? throw new ArgumentNullException(nameof(getAllUsersQuery));
             this.userStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
         }
 
@@ -29,9 +30,9 @@ namespace BingeBuddyNg.Services.Ranking.Querys
         {
             var userStats = await this.userStatsRepository.GetScoreStatisticsAsync();
             var userIds = userStats.Select(u => u.UserId).Distinct();
-            var users = await this.userRepository.GetUsersAsync(userIds);
+            var users = await this.getAllUsersQuery.ExecuteAsync(userIds);
 
-            var result = userStats.Select(s => new UserRankingDTO(users.Select(u => new UserInfoDTO(u.Id, u.Name)).First(u => u.UserId == s.UserId), s.ToDto()))
+            var result = userStats.Select(s => new UserRankingDTO(users.First(u => u.Id == s.UserId).ToUserInfoDTO(), s.ToDto()))
                 .OrderByDescending(r => r.Statistics.Score)
                 .ToList();
 

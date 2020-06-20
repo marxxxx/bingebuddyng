@@ -129,50 +129,6 @@ namespace BingeBuddyNg.Services.User
             cacheService.Remove(GetUserCacheKey(user.Id));
         }
 
-        public async Task<IEnumerable<UserEntity>> GetUsersAsync(IEnumerable<string> userIds = null)
-        {
-            string whereClause = BuildWhereClause(userIds);
-
-            var result = await storageAccess.QueryTableAsync<JsonTableEntity<UserEntity>>(TableName, whereClause);
-
-            var users = result.OrderByDescending(u => u.Timestamp).Select(r =>
-              {
-                  var user = r.Entity;
-                  user.LastOnline = r.Timestamp.UtcDateTime;
-                  return user;
-              }).ToList();
-            return users;
-        }
-
-        public async Task<IEnumerable<string>> GetAllUserIdsAsync()
-        {
-            return await this.storageAccess.GetRowKeysAsync(TableName, PartitionKeyValue);
-        }
-
-        private string BuildWhereClause(IEnumerable<string> userIds)
-        {
-            string whereClause = null;
-
-            if (userIds != null)
-            {
-                foreach (var u in userIds)
-                {
-                    string filter = TableQuery.GenerateFilterCondition(nameof(TableEntity.RowKey), QueryComparisons.Equal, u);
-                    if (whereClause != null)
-                    {
-                        whereClause = TableQuery.CombineFilters(whereClause, TableOperators.Or, filter);
-                    }
-                    else
-                    {
-                        whereClause = filter;
-                    }
-                }
-            }
-
-            return whereClause;
-        }
-
-
         public async Task UpdateMonitoringInstanceAsync(string userId, string monitoringInstanceId)
         {
             var user = await FindUserEntityAsync(userId);

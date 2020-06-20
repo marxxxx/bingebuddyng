@@ -7,8 +7,6 @@ namespace BingeBuddyNg.Services.Activity
 {
     public interface IActivityRepository
     {
-        Task<IEnumerable<ActivityEntity>> GetMasterActivitiesAsync(GetActivityFilterArgs args);
-
         Task<IEnumerable<ActivityEntity>> GetUserActivitiesAsync(string userId, DateTime startTimeUtc, ActivityType activityType = ActivityType.None);
 
         Task<Activity> GetActivityAsync(string id);

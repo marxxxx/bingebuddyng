@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.User.Queries;
 using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Activity.Messages;
 using BingeBuddyNg.Services.User;
@@ -13,12 +14,12 @@ namespace BingeBuddyNg.Functions
     public class DeleteActivityFunction
     {
         private readonly IActivityRepository activityRepository;
-        private readonly IUserRepository userRepository;
+        private readonly IGetAllUserIdsQuery getAllUserIdsQuery;
 
-        public DeleteActivityFunction(IActivityRepository activityRepository, IUserRepository userRepository)
+        public DeleteActivityFunction(IActivityRepository activityRepository, IGetAllUserIdsQuery getAllUserIdsQuery)
         {
             this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.getAllUserIdsQuery = getAllUserIdsQuery ?? throw new ArgumentNullException(nameof(getAllUserIdsQuery));
         }
 
         [FunctionName(nameof(DeleteActivityFunction))]
@@ -28,7 +29,7 @@ namespace BingeBuddyNg.Functions
 
             var message = JsonConvert.DeserializeObject<DeleteActivityMessage>(myQueueItem);
 
-            var allUserIds = await this.userRepository.GetAllUserIdsAsync();
+            var allUserIds = await this.getAllUserIdsQuery.ExecuteAsync();
 
             foreach (var userId in allUserIds)
             {

@@ -10,7 +10,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.Venue.Querys
+namespace BingeBuddyNg.Services.Venue.Queries
 {
     public class SearchVenuesQuery : IRequest<List<Venue>>
     {

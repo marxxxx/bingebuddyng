@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BingeBuddyNg.Services.Infrastructure
+namespace BingeBuddyNg.Services.Venue.Queries
 {
     public class FourSquareConfiguration
     {

@@ -16,6 +16,7 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0005" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BingeBuddyNg.Infrastructure\BingeBuddyNg.Infrastructure.csproj" />
     <ProjectReference Include="..\BingeBuddyNg.Services\BingeBuddyNg.Core.csproj" />
     <ProjectReference Include="..\BingeBuddyNg.Shared\BingeBuddyNg.Shared.csproj" />
   </ItemGroup>

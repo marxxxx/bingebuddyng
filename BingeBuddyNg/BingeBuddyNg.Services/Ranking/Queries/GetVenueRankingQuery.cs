@@ -1,4 +1,5 @@
-﻿using BingeBuddyNg.Services.Activity;
+﻿using BingeBuddyNg.Core.Activity.Queries;
+using BingeBuddyNg.Services.Activity;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -14,17 +15,17 @@ namespace BingeBuddyNg.Services.Ranking.Querys
 
     public class GetVenueRankingQueryHandler : IRequestHandler<GetVenueRankingQuery, IEnumerable<VenueRankingDTO>>
     {
-        private readonly IActivityRepository activityRepository;
+        private readonly IGetMasterActivitiesQuery getMasterActivitiesQuery;
 
-        public GetVenueRankingQueryHandler(IActivityRepository activityRepository)
+        public GetVenueRankingQueryHandler(IGetMasterActivitiesQuery getMasterActivitiesQuery)
         {
-            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.getMasterActivitiesQuery = getMasterActivitiesQuery ?? throw new ArgumentNullException(nameof(getMasterActivitiesQuery));
         }
 
         public async Task<IEnumerable<VenueRankingDTO>> Handle(GetVenueRankingQuery request, CancellationToken cancellationToken)
         {
-            var args = new GetActivityFilterArgs() { FilterOptions = ActivityFilterOptions.WithVenue, PageSize = 100, ActivityType = ActivityType.Drink };
-            var activitys = await activityRepository.GetMasterActivitiesAsync(args);
+            var args = new ActivityFilterArgs() { FilterOptions = ActivityFilterOptions.WithVenue, PageSize = 100, ActivityType = ActivityType.Drink };
+            var activitys = await getMasterActivitiesQuery.ExecuteAsync(args);
             var result = activitys.GroupBy(r => new { r.Venue.Id, r.Venue.Name })
                 .Select(r => new VenueRankingDTO(r.Key.Id, r.Key.Name, r.Count()))
                 .OrderByDescending(r => r.Count);

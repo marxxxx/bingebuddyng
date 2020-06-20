@@ -1,14 +1,13 @@
-﻿using BingeBuddyNg.Services.Game;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
-using BingeBuddyNg.Shared;
-using MediatR;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Game;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.User.Queries;
+using BingeBuddyNg.Shared;
+using MediatR;
 
 namespace BingeBuddyNg.Services
 {
@@ -30,18 +29,18 @@ namespace BingeBuddyNg.Services
     {
         private readonly INotificationService notificationService;
         private readonly IGameManager manager;
-        private readonly IUserRepository userRepository;
+        private readonly ISearchUsersQuery getUsersQuery;
         private readonly ITranslationService translationServie;
 
         public StartGameCommandHandler(
             INotificationService notificationService,
             IGameManager manager,
-            IUserRepository userRepository,
+            ISearchUsersQuery getUsersQuery,
             ITranslationService translationService)
         {
             this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
             this.manager = manager ?? throw new ArgumentNullException(nameof(manager));
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.getUsersQuery = getUsersQuery ?? throw new ArgumentNullException(nameof(getUsersQuery));
             this.translationServie = translationService ?? throw new ArgumentNullException(nameof(translationService));
         }
 
@@ -58,7 +57,7 @@ namespace BingeBuddyNg.Services
             var allParticipents = new List<string>(friendIds);
             allParticipents.Add(command.UserId.ToString());
 
-            var users = await this.userRepository.GetUsersAsync(allParticipents);
+            var users = await this.getUsersQuery.ExecuteAsync(allParticipents);
             var pushInfosOfInvitedFriends = users
                 .Where(u => u.PushInfo != null && u.Id != command.UserId.ToString())
                 .Select(u => new { u.Language, u.PushInfo })

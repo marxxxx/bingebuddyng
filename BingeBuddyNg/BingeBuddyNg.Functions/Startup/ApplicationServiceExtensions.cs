@@ -1,4 +1,5 @@
 ﻿using System;
+using BingeBuddyNg.Core.User.Queries;
 using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Calculation;
 using BingeBuddyNg.Services.DrinkEvent;
@@ -6,6 +7,7 @@ using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Infrastructure.EventGrid;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Services.User.Queries;
 using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,7 +19,7 @@ namespace BingeBuddyNg.Functions
         {
             // Domain Services
             services.AddTransient<IActivityRepository, ActivityRepository>();
-            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddUser();
             services.AddTransient<ICalculationService, CalculationService>();
             services.AddTransient<IUserStatsRepository, UserStatsRepository>();
             services.AddTransient<IDrinkEventRepository, DrinkEventRepository>();
@@ -35,6 +37,13 @@ namespace BingeBuddyNg.Functions
             services.AddTransient<ICacheService, NoCacheService>();
             services.AddSingleton<ITranslationService, TranslationService>();
             services.AddTransient<IUtilityService, UtilityService>();
+        }
+
+        public static void AddUser(this IServiceCollection services)
+        {
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ISearchUsersQuery, SearchUsersQuery>();
+            services.AddScoped<IGetAllUserIdsQuery, GetAllUserIdsQuery>();
         }
 
         public static void AddNotification(this IServiceCollection services)

@@ -1,11 +1,10 @@
-﻿using BingeBuddyNg.Services.Activity.Domain;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
-using MediatR;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.User;
+using MediatR;
 
 namespace BingeBuddyNg.Services.Activity.Commands
 {
@@ -58,12 +57,11 @@ namespace BingeBuddyNg.Services.Activity.Commands
             // store file in blob storage
             string imageUrlOriginal = await storageAccessService.SaveFileInBlobStorage("img", "activities", request.FileName, request.Stream);
 
-            var id = ActivityId.CreateNew(request.UserId, out var timestamp);
-            var activity = Activity.CreateImageActivity(id.Value, timestamp, request.Location, request.UserId, user.Name, imageUrlOriginal);
+            var activity = Activity.CreateImageActivity(request.Location, request.UserId, user.Name, imageUrlOriginal);
 
             var savedActivity = await this.activityRepository.AddActivityAsync(activity.ToEntity());
 
-            await activityRepository.AddToActivityAddedTopicAsync(id.Value);
+            await activityRepository.AddToActivityAddedTopicAsync(activity.Id);
 
             return savedActivity.Id;
         }

@@ -9,6 +9,7 @@ using BingeBuddyNg.Services.DrinkEvent;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Services.User.Queries;
 using BingeBuddyNg.Shared;
 using Microsoft.Extensions.Logging;
 
@@ -18,7 +19,7 @@ namespace BingeBuddyNg.Functions.Services
     {
         private const int LuckyNumber = 1;
 
-        private readonly IUserRepository userRepository;
+        private readonly ISearchUsersQuery getUsersQuery;
         private readonly IDrinkEventRepository drinkEventRepository;
         private readonly IUserStatsRepository userStatsRepository;
         private readonly ITranslationService translationService;
@@ -27,7 +28,7 @@ namespace BingeBuddyNg.Functions.Services
         private readonly ILogger<DrinkEventHandlingService> logger;
 
         public DrinkEventHandlingService(
-            IUserRepository userRepository,
+            ISearchUsersQuery getUsersQuery,
             IDrinkEventRepository drinkEventRepository, 
             IUserStatsRepository userStatsRepository, 
             ITranslationService translationService, 
@@ -35,7 +36,7 @@ namespace BingeBuddyNg.Functions.Services
             PushNotificationService pushNotificationService,
             ILogger<DrinkEventHandlingService> logger)
         {
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.getUsersQuery = getUsersQuery ?? throw new ArgumentNullException(nameof(getUsersQuery));
             this.drinkEventRepository = drinkEventRepository ?? throw new ArgumentNullException(nameof(drinkEventRepository));
             this.userStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
             this.translationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
@@ -67,8 +68,7 @@ namespace BingeBuddyNg.Functions.Services
 
             string message = await translationService.GetTranslationAsync(currentUser.Language, "DrinkEventActivityWinMessage", Constants.Scores.StandardDrinkAction);
 
-            var id = ActivityId.CreateNew(currentUser.Id, out var timestamp);            
-            var drinkEventNotificationActivity = Activity.CreateNotificationActivity(id.Value, timestamp, currentUser.Id, currentUser.Name, message);
+            var drinkEventNotificationActivity = Activity.CreateNotificationActivity(currentUser.Id, currentUser.Name, message);
             await activityRepository.AddActivityAsync(drinkEventNotificationActivity.ToEntity());
 
             var notifications = new[] { new DrinkEventCongratulationNotification(currentUser.Id) };
@@ -92,7 +92,7 @@ namespace BingeBuddyNg.Functions.Services
 
             await drinkEventRepository.CreateDrinkEventAsync(DateTime.UtcNow, DateTime.UtcNow.AddMinutes(30));
 
-            var users = await userRepository.GetUsersAsync();
+            var users = await getUsersQuery.ExecuteAsync();
 
             var notifications = users.Select(u => new DrinkEventNotification(u.Id));
             await this.pushNotificationService.NotifyAsync(notifications);            

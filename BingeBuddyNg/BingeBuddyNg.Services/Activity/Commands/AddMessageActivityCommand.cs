@@ -1,10 +1,8 @@
-﻿using BingeBuddyNg.Services.Activity.Domain;
-using BingeBuddyNg.Services.User;
-using BingeBuddyNg.Services.Venue;
-using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.User;
+using MediatR;
 
 namespace BingeBuddyNg.Services.Activity.Commands
 {
@@ -42,8 +40,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
         {
             var user = await this.userRepository.GetUserAsync(request.UserId);
 
-            var id = ActivityId.CreateNew(request.UserId, out var timestamp);
-            var activity = Activity.CreateMessageActivity(id.Value, timestamp, request.Location, request.UserId, user.Name, request.Message, request.Venue);
+            var activity = Activity.CreateMessageActivity(request.Location, request.UserId, user.Name, request.Message, request.Venue);
 
             var savedActivity = await this.activityRepository.AddActivityAsync(activity.ToEntity());
             await activityRepository.AddToActivityAddedTopicAsync(savedActivity.Id);

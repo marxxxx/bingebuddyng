@@ -55,8 +55,6 @@ namespace BingeBuddyNg.Services.User.Commands
         {
             var result = await this.userRepository.CreateOrUpdateUserAsync(request);
 
-            var id = ActivityId.CreateNew(request.UserId, out var timestamp);
-
             if (result.IsNewUser)
             {
                 await this.drinkRepository.CreateDefaultDrinksForUserAsync(request.UserId);
@@ -69,18 +67,15 @@ namespace BingeBuddyNg.Services.User.Commands
                         await storageAccessService.SaveFileInBlobStorage(ContainerNames.ProfileImages, request.UserId, profileImageStream);
                     }
                 }
-
                
-                var activity = Activity.Activity.CreateRegistrationActivity(id.Value, timestamp,
-                    User.BingeBuddyUserId, User.BingeBuddyUserName, new UserInfo(request.UserId, request.Name));
+                var activity = Activity.Activity.CreateRegistrationActivity(User.BingeBuddyUserId, User.BingeBuddyUserName, new UserInfo(request.UserId, request.Name));
 
                 await activityRepository.AddActivityAsync(activity.ToEntity());
             }
 
             if (result.NameHasChanged)
             {
-
-                var activity = Activity.Activity.CreateRenameActivity(id.Value, timestamp,request.UserId, request.Name, result.OriginalUserName);
+                var activity = Activity.Activity.CreateRenameActivity(request.UserId, request.Name, result.OriginalUserName);
                 await activityRepository.AddActivityAsync(activity.ToEntity());
 
                 var renameMessage = new UserRenamedMessage(request.UserId, result.OriginalUserName, request.Name);

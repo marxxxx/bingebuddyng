@@ -54,8 +54,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
         {
             var user = await this.userRepository.GetUserAsync(request.UserId);
 
-            var id = ActivityId.CreateNew(request.UserId, out var timestamp);
-            var activity = Activity.CreateDrinkActivity(id.Value, timestamp, request.Location, request.UserId, user.Name,
+            var activity = Activity.CreateDrinkActivity(request.Location, request.UserId, user.Name,
                 request.DrinkType, request.DrinkId, request.DrinkName, request.AlcPrc, request.Volume, request.Venue);
 
             var savedActivity = await this.activityRepository.AddActivityAsync(activity.ToEntity());

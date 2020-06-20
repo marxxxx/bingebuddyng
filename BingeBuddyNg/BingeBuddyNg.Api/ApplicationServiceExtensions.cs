@@ -1,4 +1,5 @@
 ﻿using BingeBuddyNg.Core.User.Commands;
+using BingeBuddyNg.Core.User.Queries;
 using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.DrinkEvent;
@@ -10,7 +11,9 @@ using BingeBuddyNg.Services.Infrastructure.Messaging;
 using BingeBuddyNg.Services.Invitation;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Services.User.Queries;
 using BingeBuddyNg.Services.Venue;
+using BingeBuddyNg.Services.Venue.Queries;
 using MediatR;
 using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +32,8 @@ namespace BingeBuddyNg.Services
 
             services.AddMediatR(typeof(ActivityDTO).Assembly);
             services.AddScoped<AddFriendCommand>();
+            services.AddScoped<ISearchUsersQuery, SearchUsersQuery>();
+            services.AddScoped<IGetAllUserIdsQuery, GetAllUserIdsQuery>();
 
             // add infrastructure services
             services.AddScoped<IIdentityService, IdentityService>();

@@ -70,10 +70,7 @@ namespace BingeBuddyNg.Services.Venue.Commands
         private async Task AddVenueActivityAsync(AddVenueActivityDTO venueActivity)
         {
             var user = await this.userRepository.GetUserAsync(venueActivity.UserId);
-            var id = ActivityId.CreateNew(venueActivity.UserId, out var timestamp);
             var activity = Activity.Activity.CreateVenueActivity(
-                id.Value,
-                timestamp,
                 venueActivity.UserId,
                 user.Name,
                 venueActivity.Venue,

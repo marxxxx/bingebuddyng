@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using BingeBuddyNg.Services.User.Persistence;
+﻿using BingeBuddyNg.Services.User.Persistence;
 
 namespace BingeBuddyNg.Services.User
 {
@@ -50,6 +47,24 @@ namespace BingeBuddyNg.Services.User
                 } : null,
                 Language = user.Language,
                 LastOnline = user.LastOnline
+            };
+        }
+
+        public static UserDTO ToDto(this User entity)
+        {
+            return new UserDTO()
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                PushInfo = entity.PushInfo,
+                ProfileImageUrl = entity.ProfileImageUrl,
+                Gender = entity.Gender,
+                Language = entity.Language,
+                LastOnline = entity.LastOnline,
+                Weight = entity.Weight,
+                CurrentVenue = entity.CurrentVenue,
+                Friends = entity.Friends,
+                MutedFriendUserIds = entity.MutedFriendUserIds
             };
         }
     }

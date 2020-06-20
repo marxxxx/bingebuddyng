@@ -1,4 +1,5 @@
-﻿using BingeBuddyNg.Services.Activity;
+﻿using BingeBuddyNg.Core.Activity.Queries;
+using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Activity.Commands;
 using BingeBuddyNg.Services.Activity.Querys;
 using BingeBuddyNg.Services.Infrastructure;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Api.Controllers
@@ -19,20 +21,26 @@ namespace BingeBuddyNg.Api.Controllers
     {
         private readonly IIdentityService identityService;
         private readonly IMediator mediator;
+        private readonly IGetMasterActivitiesQuery getMasterActivitiesQuery;
 
         public ActivityController(
             IIdentityService identityService,
-            IMediator mediator)
+            IMediator mediator,
+            IGetMasterActivitiesQuery getMasterActivitiesQuery)
         {
             this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.getMasterActivitiesQuery = getMasterActivitiesQuery ?? throw new ArgumentNullException(nameof(getMasterActivitiesQuery));
         }
 
         [HttpGet("map")]
         public async Task<ActionResult<IEnumerable<ActivityDTO>>> GetActivitysForMap()
         {
-            var result = await this.mediator.Send(new GetActivitysForMapQuery());
-            return result;
+            var args = new ActivityFilterArgs() { FilterOptions = ActivityFilterOptions.WithLocation, PageSize = 50 };
+
+            var result = await this.getMasterActivitiesQuery.ExecuteAsync(args);
+
+            return result.Select(r=>r.ToDto()).ToList();
         }
 
         [HttpGet("feed")]

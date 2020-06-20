@@ -25,9 +25,15 @@ namespace BingeBuddyNg.Shared
 
         public static class TableNames
         {
-            public const string ActivityTableName = "activity";
-            public const string ActivityPerUserTableName = "activityperuser";
-            public const string ActivityUserFeedTableName = "activityuserfeed";
+            public const string Activity = "activity";
+            public const string ActivityPerUser = "activityperuser";
+            public const string ActivityUserFeed = "activityuserfeed";
+            public const string Users = "users";
+        }
+
+        public static class StaticPartitionKeys
+        {
+            public const string User = "User";
         }
 
         public static class Urls

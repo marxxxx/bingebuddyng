@@ -1,6 +1,6 @@
 ﻿namespace BingeBuddyNg.Services.Activity
 {
-    public class GetActivityFilterArgs
+    public class ActivityFilterArgs
     {
         private const int DefaultActivityPageSize = 30;
 

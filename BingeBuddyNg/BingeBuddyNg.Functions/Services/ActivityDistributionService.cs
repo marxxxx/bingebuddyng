@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.User.Queries;
 using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Activity.Persistence;
 using BingeBuddyNg.Services.User;
@@ -9,12 +10,12 @@ namespace BingeBuddyNg.Functions.Services
 {
     public class ActivityDistributionService
     {
-        private readonly IUserRepository userRepository;
+        private readonly IGetAllUserIdsQuery getAllUserIdsQuery;
         private readonly IActivityRepository activityRepository;
 
-        public ActivityDistributionService(IUserRepository userRepository, IActivityRepository activityRepository)
+        public ActivityDistributionService(IGetAllUserIdsQuery getAllUserIdsQuery, IActivityRepository activityRepository)
         {
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.getAllUserIdsQuery = getAllUserIdsQuery ?? throw new ArgumentNullException(nameof(getAllUserIdsQuery));
             this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
         }
 
@@ -24,7 +25,7 @@ namespace BingeBuddyNg.Functions.Services
 
             if (activity.ActivityType == ActivityType.Registration)
             {
-                userIds = await this.userRepository.GetAllUserIdsAsync();
+                userIds = await this.getAllUserIdsQuery.ExecuteAsync();
             }
             else
             {
@@ -34,6 +35,5 @@ namespace BingeBuddyNg.Functions.Services
 
             await this.activityRepository.DistributeActivityAsync(userIds, activity);
         }
-
     }
 }

@@ -1,11 +1,10 @@
-﻿using BingeBuddyNg.Services.Activity.Domain;
-using BingeBuddyNg.Services.Drink;
-using MediatR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Drink;
+using MediatR;
 
 namespace BingeBuddyNg.Services.Activity.Querys
 {

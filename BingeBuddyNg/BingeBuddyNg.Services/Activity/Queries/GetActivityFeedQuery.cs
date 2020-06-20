@@ -59,7 +59,7 @@ namespace BingeBuddyNg.Services.Activity.Querys
 
         private async Task<PagedQueryResult<ActivityDTO>> GetActivityFeedAsync(string userId, TableContinuationToken continuationToken, string startActivityId)
         {
-            var result = await storageAccessService.QueryTableAsync<JsonTableEntity<ActivityDTO>>(Constants.TableNames.ActivityUserFeedTableName, userId, startActivityId, 30, continuationToken);
+            var result = await storageAccessService.QueryTableAsync<JsonTableEntity<ActivityDTO>>(Constants.TableNames.ActivityUserFeed, userId, startActivityId, 30, continuationToken);
 
             var activities = result.ResultPage.Select(r => r.Entity).ToList();
             return new PagedQueryResult<ActivityDTO>(activities, result.ContinuationToken);

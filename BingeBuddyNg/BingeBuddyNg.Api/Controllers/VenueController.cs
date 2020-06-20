@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Venue;
 using MediatR;
-using BingeBuddyNg.Services.Venue.Querys;
+using BingeBuddyNg.Services.Venue.Queries;
 using BingeBuddyNg.Services.Venue.Commands;
 
 
