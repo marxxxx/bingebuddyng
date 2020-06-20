@@ -127,21 +127,5 @@ namespace BingeBuddyNg.Services.User
 
             cacheService.Remove(GetUserCacheKey(user.Id));
         }
-
-        public async Task UpdateMonitoringInstanceAsync(string userId, string monitoringInstanceId)
-        {
-            var user = await FindUserEntityAsync(userId);
-            if (user == null || user.Entity.MonitoringInstanceId == monitoringInstanceId)
-            {
-                return;
-            }
-
-            var table = storageAccess.GetTableReference(TableName);
-
-            user.Entity.MonitoringInstanceId = monitoringInstanceId;
-            TableOperation saveUserOperation = TableOperation.Replace(user);
-
-            await table.ExecuteAsync(saveUserOperation);
-        }
     }
 }

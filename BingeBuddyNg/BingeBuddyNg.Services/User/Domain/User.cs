@@ -118,10 +118,14 @@ namespace BingeBuddyNg.Core.User
             }
         }
 
+        public void UpdateMonitoringInstance(string instanceId)
+        {
+            this.MonitoringInstanceId = instanceId;
+        }
+
         public override string ToString()
         {
             return $"{Id} - {Name}";
         }
-
     }
 }

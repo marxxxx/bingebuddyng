@@ -32,7 +32,8 @@ namespace BingeBuddyNg.Functions
 
             if (user.PushInfo == null)
             {
-                await userRepository.UpdateMonitoringInstanceAsync(user.Id, null);
+                user.UpdateMonitoringInstance(null);
+                await userRepository.UpdateUserAsync(user.ToEntity());
                 return;
             }
 
@@ -42,7 +43,8 @@ namespace BingeBuddyNg.Functions
             var notification = new DrinkReminderNotification(user.Id);
             await notificationService.NotifyAsync(new[] { notification });
 
-            await userRepository.UpdateMonitoringInstanceAsync(user.Id, null);
+            user.UpdateMonitoringInstance(null);
+            await userRepository.UpdateUserAsync(user.ToEntity());
             log.LogInformation($"Terminating monitoring instance for user {user}");
         }
     }

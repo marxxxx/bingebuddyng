@@ -11,7 +11,5 @@ namespace BingeBuddyNg.Core.User
         Task UpdateUserAsync(UserEntity user);
 
         Task<CreateOrUpdateUserResult> CreateOrUpdateUserAsync(CreateOrUpdateUserCommand user);
-
-        Task UpdateMonitoringInstanceAsync(string userId, string monitoringInstanceId);
     }
 }

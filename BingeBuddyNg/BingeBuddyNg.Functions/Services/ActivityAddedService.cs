@@ -140,7 +140,8 @@ namespace BingeBuddyNg.Functions.Services
 
                 // Start timer to remind user about entering his next drink.
                 var monitoringInstanceId = await durableClient.StartNewAsync(nameof(DrinkReminderFunction), currentUser);
-                await userRepository.UpdateMonitoringInstanceAsync(currentUser.Id, monitoringInstanceId);
+                currentUser.UpdateMonitoringInstance(monitoringInstanceId);
+                await userRepository.UpdateUserAsync(currentUser.ToEntity());
             }
             catch (Exception ex)
             {
