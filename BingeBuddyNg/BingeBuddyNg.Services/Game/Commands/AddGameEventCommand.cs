@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services
+namespace BingeBuddyNg.Core.Game.Commands
 {
     public class AddGameEventCommand : IRequest
     {

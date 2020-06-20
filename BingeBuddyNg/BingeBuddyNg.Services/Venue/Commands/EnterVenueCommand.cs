@@ -1,17 +1,18 @@
-﻿using MediatR;
+﻿using BingeBuddyNg.Core.Venue.DTO;
+using MediatR;
 using System;
 
-namespace BingeBuddyNg.Services.Venue.Commands
+namespace BingeBuddyNg.Core.Venue.Commands
 {
     public class EnterVenueCommand : IRequest
     {
-        public EnterVenueCommand(string userId, Venue venue)
+        public EnterVenueCommand(string userId, VenueDTO venue)
         {
             UserId = userId ?? throw new ArgumentNullException(nameof(userId));
             Venue = venue ?? throw new ArgumentNullException(nameof(venue));
         }
 
         public string UserId { get; }
-        public Venue Venue { get; }
+        public VenueDTO Venue { get; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.Invitation
+namespace BingeBuddyNg.Core.Invitation
 {
     public interface IInvitationRepository
     {

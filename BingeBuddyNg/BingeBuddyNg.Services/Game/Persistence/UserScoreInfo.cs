@@ -1,4 +1,5 @@
-﻿using BingeBuddyNg.Services.User;
+﻿using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Services.Game.Persistence
 {

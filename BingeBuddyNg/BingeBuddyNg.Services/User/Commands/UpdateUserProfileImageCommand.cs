@@ -1,14 +1,13 @@
-﻿using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Activity.Domain;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Services.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using static BingeBuddyNg.Shared.Constants;
 
-namespace BingeBuddyNg.Services.User.Commands
+namespace BingeBuddyNg.Core.User.Commands
 {
     public class UpdateUserProfileImageCommand : IRequest
     {
@@ -42,7 +41,7 @@ namespace BingeBuddyNg.Services.User.Commands
             {
                 await storageAccessService.SaveFileInBlobStorage(ContainerNames.ProfileImages, request.UserId, stream);
 
-                var activity = Activity.Activity.CreateProfileImageUpdateActivity(request.UserId, user.Name);
+                var activity = Activity.Domain.Activity.CreateProfileImageUpdateActivity(request.UserId, user.Name);
                 await activityRepository.AddActivityAsync(activity.ToEntity());
             }
             return Unit.Value;

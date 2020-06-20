@@ -1,4 +1,6 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
+﻿using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.Venue.DTO;
+using BingeBuddyNg.Services.Infrastructure;
 using System;
 using System.Collections.Generic;
 
@@ -13,7 +15,7 @@ namespace BingeBuddyNg.Services.User
         public string ProfileImageUrl { get; set; }
         public PushInfo PushInfo { get; set; }
         public List<UserInfo> Friends { get; set; }
-        public Venue.Venue CurrentVenue { get; set; }
+        public VenueDTO CurrentVenue { get; set; }
         public string Language { get; set; }
         public DateTime LastOnline { get; set; }
         public List<string> MutedFriendUserIds { get; set; }

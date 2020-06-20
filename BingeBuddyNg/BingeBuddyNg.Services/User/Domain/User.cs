@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BingeBuddyNg.Services.User
+namespace BingeBuddyNg.Core.User
 {
     public class User
     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Services.Infrastructure.Generated;
 using Newtonsoft.Json;
 
@@ -19,7 +19,7 @@ namespace BingeBuddyNg.Services.Infrastructure
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public async Task<AddressInfo> GetAddressFromLongLatAsync(Activity.Location location)
+        public async Task<AddressInfo> GetAddressFromLongLatAsync(Location location)
         {
             string lat = location.Latitude.ToString().Replace(',', '.');
             string lon = location.Longitude.ToString().Replace(',', '.');

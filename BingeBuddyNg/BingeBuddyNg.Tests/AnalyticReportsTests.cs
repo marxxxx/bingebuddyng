@@ -1,4 +1,5 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
+﻿using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.Statistics.Querys;
 using Moq;

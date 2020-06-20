@@ -1,13 +1,11 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using BingeBuddyNg.Core.Ranking.Queries;
 using BingeBuddyNg.Services.Ranking;
-using BingeBuddyNg.Services.Ranking.Querys;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 
 namespace BingeBuddyNg.Api.Controllers
 {
@@ -15,12 +13,10 @@ namespace BingeBuddyNg.Api.Controllers
     [Route("api/[controller]")]
     public class RankingController : Controller
     {
-        private readonly IIdentityService identityService;
         private readonly IMediator mediator;
 
-        public RankingController(IIdentityService identityService, IMediator mediator)
+        public RankingController(IMediator mediator)
         {
-            this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 

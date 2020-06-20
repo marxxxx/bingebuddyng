@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Functions.Services.Notifications;
 using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Activity.Domain;
 using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.DrinkEvent;
 using BingeBuddyNg.Services.Infrastructure;

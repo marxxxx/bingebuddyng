@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.Invitation;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace BingeBuddyNg.Services.Invitation
+namespace BingeBuddyNg.Core.Invitation
 {
     public class InvitationRepository : IInvitationRepository
     {
@@ -59,7 +60,6 @@ namespace BingeBuddyNg.Services.Invitation
 
         private async Task<InvitationTableEntity> FindInvitationEntityAsync(string invitationToken)
         {
-            var table = storageAccess.GetTableReference(TableName);
             var invitationEntity = await storageAccess.GetTableEntityAsync<InvitationTableEntity>(TableName, PartitionKeyValue, invitationToken);
             return invitationEntity;
         }

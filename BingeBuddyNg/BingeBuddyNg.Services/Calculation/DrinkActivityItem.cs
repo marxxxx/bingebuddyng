@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BingeBuddyNg.Services.Calculation
+namespace BingeBuddyNg.Core.Calculation
 {
     public class DrinkActivityItem
     {

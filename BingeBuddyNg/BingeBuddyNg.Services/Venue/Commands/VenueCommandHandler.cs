@@ -1,13 +1,13 @@
-﻿using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Activity.Domain;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
-using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Services.Venue;
+using MediatR;
 
-namespace BingeBuddyNg.Services.Venue.Commands
+namespace BingeBuddyNg.Core.Venue.Commands
 {
     public class VenueCommandHandler :
         IRequestHandler<EnterVenueCommand>,
@@ -28,9 +28,9 @@ namespace BingeBuddyNg.Services.Venue.Commands
         {
             var user = await this.userRepository.GetUserAsync(request.UserId);
 
-            if (user.CurrentVenue != request.Venue)
+            if (user.CurrentVenue?.Id != request.Venue.Id)
             {
-                user.EnterVenue(request.Venue);
+                user.EnterVenue(request.Venue.ToDomain());
 
                 var tasks = new[]
                 {
@@ -48,7 +48,7 @@ namespace BingeBuddyNg.Services.Venue.Commands
         public async Task<Unit> Handle(LeaveVenueCommand request, CancellationToken cancellationToken)
         {
             var user = await this.userRepository.GetUserAsync(request.UserId);
-            var currentVenue = user.CurrentVenue;
+            var currentVenue = user.CurrentVenue?.ToDto();
 
             if (currentVenue != null)
             {
@@ -70,10 +70,10 @@ namespace BingeBuddyNg.Services.Venue.Commands
         private async Task AddVenueActivityAsync(AddVenueActivityDTO venueActivity)
         {
             var user = await this.userRepository.GetUserAsync(venueActivity.UserId);
-            var activity = Activity.Activity.CreateVenueActivity(
+            var activity = Activity.Domain.Activity.CreateVenueActivity(
                 venueActivity.UserId,
                 user.Name,
-                venueActivity.Venue,
+                venueActivity.Venue.ToDomain(),
                 venueActivity.Action);
 
             var savedActivity = await this.activityRepository.AddActivityAsync(activity.ToEntity());

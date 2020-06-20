@@ -1,13 +1,15 @@
-﻿using BingeBuddyNg.Core.Activity.Queries;
-using BingeBuddyNg.Services.Activity;
-using MediatR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Activity.Queries;
+using BingeBuddyNg.Services.Ranking;
+using MediatR;
 
-namespace BingeBuddyNg.Services.Ranking.Querys
+namespace BingeBuddyNg.Core.Ranking.Queries
 {
     public class GetVenueRankingQuery : IRequest<IEnumerable<VenueRankingDTO>>
     {

@@ -3,14 +3,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Shared;
 using MediatR;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 
-namespace BingeBuddyNg.Services.Activity.Querys
+namespace BingeBuddyNg.Core.Activity.Queries
 {
     [DebuggerStepThrough]
     public class GetActivityFeedQuery : IRequest<PagedQueryResult<ActivityStatsDTO>>

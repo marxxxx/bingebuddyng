@@ -1,4 +1,5 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
+﻿using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Services.Infrastructure;
 using MediatR;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;

@@ -1,15 +1,15 @@
-﻿using BingeBuddyNg.Core.User.Commands;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.User.Messages;
 using BingeBuddyNg.Shared;
 using MediatR;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using static BingeBuddyNg.Shared.Constants;
 
-namespace BingeBuddyNg.Services.FriendsRequest.Commands
+namespace BingeBuddyNg.Core.FriendsRequest.Commands
 {
     public class AcceptFriendRequestCommand : IRequest
     {

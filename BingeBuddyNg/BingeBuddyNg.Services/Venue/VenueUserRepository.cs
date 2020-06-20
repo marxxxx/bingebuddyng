@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Venue;
 using BingeBuddyNg.Services.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;

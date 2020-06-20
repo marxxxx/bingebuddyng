@@ -1,14 +1,15 @@
-﻿using BingeBuddyNg.Services.Game.Persistence;
-using BingeBuddyNg.Services.Game.Queries;
-using BingeBuddyNg.Services.User;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Services.Game.DTO;
+using BingeBuddyNg.Services.Game.Persistence;
+using BingeBuddyNg.Services.User;
 
-namespace BingeBuddyNg.Services.Game
+namespace BingeBuddyNg.Core.Game
 {
     public static class Converter
     {
-        public static GameDTO ToDto(this Game game, IEnumerable<UserInfoDTO> players)
+        public static GameDTO ToDto(this Domain.Game game, IEnumerable<UserInfoDTO> players)
         {
             return new GameDTO()
             {
@@ -41,7 +42,7 @@ namespace BingeBuddyNg.Services.Game
             };
         }
 
-        public static GameEntity ToEntity(this Game game, IEnumerable<UserInfo> playerUserInfo)
+        public static GameEntity ToEntity(this Domain.Game game, IEnumerable<UserInfo> playerUserInfo)
         {
             return new GameEntity()
             {

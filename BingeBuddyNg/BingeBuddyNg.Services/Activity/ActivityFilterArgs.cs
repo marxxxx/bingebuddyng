@@ -1,4 +1,6 @@
-﻿namespace BingeBuddyNg.Services.Activity
+﻿using BingeBuddyNg.Core.Activity.Domain;
+
+namespace BingeBuddyNg.Core.Activity
 {
     public class ActivityFilterArgs
     {

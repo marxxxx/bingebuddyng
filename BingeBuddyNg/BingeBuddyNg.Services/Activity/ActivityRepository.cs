@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.Persistence;
 using BingeBuddyNg.Services.Activity.Messages;
 using BingeBuddyNg.Services.Activity.Persistence;
@@ -27,7 +28,7 @@ namespace BingeBuddyNg.Services.Activity
             this.eventGridService = eventGridService ?? throw new ArgumentNullException(nameof(eventGridService));
         }       
 
-        public async Task<IEnumerable<ActivityEntity>> GetUserActivitiesAsync(string userId, DateTime startTimeUtc, ActivityType activityType = ActivityType.None)
+        public async Task<IEnumerable<ActivityEntity>> GetUserActivitiesAsync(string userId, DateTime startTimeUtc, Core.Activity.Domain.ActivityType activityType = Core.Activity.Domain.ActivityType.None)
         {
             string startRowKey = ActivityKeyFactory.CreatePerUserRowKey(startTimeUtc);
             var whereClause =
@@ -36,7 +37,7 @@ namespace BingeBuddyNg.Services.Activity
                 TableOperators.And,
                 TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, startRowKey));
 
-            if (activityType != ActivityType.None)
+            if (activityType != Core.Activity.Domain.ActivityType.None)
             {
                 whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
                     TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.ActivityType), QueryComparisons.Equal, activityType.ToString()));
@@ -85,7 +86,7 @@ namespace BingeBuddyNg.Services.Activity
             }
         }
 
-        public async Task<Activity> GetActivityAsync(string id)
+        public async Task<Core.Activity.Domain.Activity> GetActivityAsync(string id)
         {
             var tableEntity = await GetActivityEntityAsync(id);
             var entity = tableEntity.Entity;

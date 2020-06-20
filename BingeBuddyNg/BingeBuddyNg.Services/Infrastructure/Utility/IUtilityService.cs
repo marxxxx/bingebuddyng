@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Core.Activity.Domain;
 
 namespace BingeBuddyNg.Services.Infrastructure
 {

@@ -1,4 +1,6 @@
-﻿namespace BingeBuddyNg.Services.Activity
+﻿using BingeBuddyNg.Core.Activity.Domain;
+
+namespace BingeBuddyNg.Services.Activity
 {
     public class AddReactionDTO
     {

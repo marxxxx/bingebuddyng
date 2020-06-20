@@ -3,7 +3,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.FriendsRequest.Commands
+namespace BingeBuddyNg.Core.FriendsRequest.Commands
 {
     public class DeclineFriendRequestCommand : IRequest
     {

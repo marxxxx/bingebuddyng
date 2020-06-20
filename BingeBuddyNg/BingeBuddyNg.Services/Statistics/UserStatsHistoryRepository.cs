@@ -1,4 +1,5 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
+﻿using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Services.Infrastructure;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;

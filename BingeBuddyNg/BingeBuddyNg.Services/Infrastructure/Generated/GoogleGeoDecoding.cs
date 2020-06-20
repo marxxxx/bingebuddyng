@@ -29,12 +29,12 @@ namespace BingeBuddyNg.Services.Infrastructure.Generated
 
     public class Geometry
     {
-        public Location location { get; set; }
+        public _Location location { get; set; }
         public string location_type { get; set; }
         public Viewport viewport { get; set; }
     }
 
-    public class Location
+    public class _Location
     {
         public float lat { get; set; }
         public float lng { get; set; }

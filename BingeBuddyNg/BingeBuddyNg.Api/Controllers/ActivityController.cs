@@ -1,16 +1,17 @@
-﻿using BingeBuddyNg.Core.Activity.Queries;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Commands;
+using BingeBuddyNg.Core.Activity.Queries;
 using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Activity.Commands;
-using BingeBuddyNg.Services.Activity.Querys;
 using BingeBuddyNg.Services.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Api.Controllers
 {

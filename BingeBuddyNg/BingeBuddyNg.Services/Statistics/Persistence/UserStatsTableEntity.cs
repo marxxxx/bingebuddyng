@@ -1,6 +1,6 @@
 ﻿using Microsoft.WindowsAzure.Storage.Table;
 
-namespace BingeBuddyNg.Services.Statistics
+namespace BingeBuddyNg.Core.Statistics
 {
     public class UserStatsTableEntity : TableEntity
     {

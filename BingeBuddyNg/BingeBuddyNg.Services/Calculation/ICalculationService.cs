@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.User;
 
-namespace BingeBuddyNg.Services.Calculation
+namespace BingeBuddyNg.Core.Calculation
 {
     public interface ICalculationService
     {

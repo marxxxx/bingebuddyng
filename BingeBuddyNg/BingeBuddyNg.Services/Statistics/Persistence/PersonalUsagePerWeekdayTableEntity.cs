@@ -1,9 +1,6 @@
 ﻿using Microsoft.WindowsAzure.Storage.Table;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BingeBuddyNg.Services.Statistics
+namespace BingeBuddyNg.Core.Statistics
 {
     public class PersonalUsagePerWeekdayTableEntity : TableEntity
     {

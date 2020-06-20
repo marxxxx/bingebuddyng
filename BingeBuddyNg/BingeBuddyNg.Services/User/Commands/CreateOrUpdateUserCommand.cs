@@ -1,15 +1,15 @@
-﻿using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Activity.Domain;
-using BingeBuddyNg.Services.Drink;
-using BingeBuddyNg.Services.Infrastructure;
-using MediatR;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Services.Drink;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.User;
+using MediatR;
 using static BingeBuddyNg.Shared.Constants;
 
-namespace BingeBuddyNg.Services.User.Commands
+namespace BingeBuddyNg.Core.User.Commands
 {
     public class CreateOrUpdateUserCommand : IRequest
     {
@@ -68,14 +68,14 @@ namespace BingeBuddyNg.Services.User.Commands
                     }
                 }
                
-                var activity = Activity.Activity.CreateRegistrationActivity(User.BingeBuddyUserId, User.BingeBuddyUserName, new UserInfo(request.UserId, request.Name));
+                var activity = Activity.Domain.Activity.CreateRegistrationActivity(User.BingeBuddyUserId, User.BingeBuddyUserName, new UserInfo(request.UserId, request.Name));
 
                 await activityRepository.AddActivityAsync(activity.ToEntity());
             }
 
             if (result.NameHasChanged)
             {
-                var activity = Activity.Activity.CreateRenameActivity(request.UserId, request.Name, result.OriginalUserName);
+                var activity = Activity.Domain.Activity.CreateRenameActivity(request.UserId, request.Name, result.OriginalUserName);
                 await activityRepository.AddActivityAsync(activity.ToEntity());
 
                 var renameMessage = new UserRenamedMessage(request.UserId, result.OriginalUserName, request.Name);

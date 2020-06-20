@@ -1,14 +1,15 @@
-﻿using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Activity.Domain;
-using BingeBuddyNg.Services.Calculation;
-using BingeBuddyNg.Services.Drink;
-using BingeBuddyNg.Services.User;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Calculation;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Services.Drink;
+using BingeBuddyNg.Services.Statistics;
+using Microsoft.Extensions.Logging;
 
-namespace BingeBuddyNg.Services.Statistics
+namespace BingeBuddyNg.Core.Statistics
 {
     public class UserStatisticsService : IUserStatisticsService
     {
@@ -40,7 +41,7 @@ namespace BingeBuddyNg.Services.Statistics
             var drinkActivityLastMonth = await activityRepository.GetUserActivitiesAsync(userId, startTimestamp, ActivityType.Drink);
 
             // filter non-alcoholic drinks and calculate count
-            var alcoholicDrinkCount = drinkActivityLastMonth.OfType<DrinkActivityInfo>().Count(d => d.DrinkType != DrinkType.Anti);
+            var alcoholicDrinkCount = drinkActivityLastMonth.Where(d=>d.ActivityType == ActivityType.Drink).Count(d => d.DrinkType != DrinkType.Anti);
 
             await userStatsRepository.UpdateTotalDrinkCountLastMonthAsync(userId, alcoholicDrinkCount);
         }

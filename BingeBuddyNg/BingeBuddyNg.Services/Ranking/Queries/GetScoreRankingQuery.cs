@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Statistics;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Services.Ranking;
 using BingeBuddyNg.Services.User.Queries;
 using MediatR;
 
-namespace BingeBuddyNg.Services.Ranking.Querys
+namespace BingeBuddyNg.Core.Ranking.Queries
 {
     public class GetScoreRankingQuery : IRequest<List<UserRankingDTO>>
     {

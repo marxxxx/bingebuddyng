@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BingeBuddyNg.Services.Game
+﻿namespace BingeBuddyNg.Core.Game.Domain
 {
     public enum GameStatus
     {

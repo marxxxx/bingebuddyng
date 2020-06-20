@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 
-namespace BingeBuddyNg.Services.Activity.Commands
+namespace BingeBuddyNg.Core.Activity.Commands
 {
     public class DeleteActivityCommand : IRequest
     {

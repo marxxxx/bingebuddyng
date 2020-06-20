@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BingeBuddyNg.Services.Invitation
+namespace BingeBuddyNg.Core.Invitation
 {
     public class Invitation
     {

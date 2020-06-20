@@ -2,15 +2,14 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Activity.Domain;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.User.Queries;
 using BingeBuddyNg.Shared;
 using Microsoft.Extensions.Hosting;
 
-namespace BingeBuddyNg.Services.Game
+namespace BingeBuddyNg.Core.Game
 {
     public class GameEndNotificationService : IHostedService
     {
@@ -67,7 +66,7 @@ namespace BingeBuddyNg.Services.Game
                     new WebPushNotificationMessage(gameOverMessage, gameOverTitle, url));
             }
 
-            var activity = Activity.Activity.CreateGameActivity(e.Game.ToEntity(users.Select(u=>u.ToUserInfo())), winnerUser?.ToUserInfo());
+            var activity = Core.Activity.Domain.Activity.CreateGameActivity(e.Game.ToEntity(users.Select(u=>u.ToUserInfo())), winnerUser?.ToUserInfo());
             
             var savedActivity = await this.activityRepository.AddActivityAsync(activity.ToEntity());
 

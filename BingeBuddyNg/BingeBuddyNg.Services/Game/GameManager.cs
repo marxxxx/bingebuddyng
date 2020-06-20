@@ -3,16 +3,17 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using BingeBuddyNg.Core.Game.Domain;
 
-namespace BingeBuddyNg.Services.Game
+namespace BingeBuddyNg.Core.Game
 {
     public class GameManager : IGameManager
     {
-        public ConcurrentDictionary<Guid, Game> Games { get; } = new ConcurrentDictionary<Guid, Game>();
+        public ConcurrentDictionary<Guid, Domain.Game> Games { get; } = new ConcurrentDictionary<Guid, Domain.Game>();
 
         public event EventHandler<GameEndedEventArgs> GameEnded;
 
-        public void StartGame(Game game)
+        public void StartGame(Domain.Game game)
         {
             if (game == null)
             {
@@ -31,11 +32,11 @@ namespace BingeBuddyNg.Services.Game
 
         private void OnGameElapsed(object state)
         {
-            var game = (Game)state;
+            var game = (Domain.Game)state;
             
             var winner = FindWinner(game.Id);
 
-            game.Status = GameStatus.Ended;
+            game.Status = Domain.GameStatus.Ended;
             game.Winner = winner;
 
             this.GameEnded?.Invoke(this, new GameEndedEventArgs(game, winner?.UserId));
@@ -46,9 +47,9 @@ namespace BingeBuddyNg.Services.Game
             }            
         }
 
-        public Game GetGame(Guid gameId)
+        public Domain.Game GetGame(Guid gameId)
         {
-            if(!this.Games.TryGetValue(gameId, out Game game))
+            if(!this.Games.TryGetValue(gameId, out Domain.Game game))
             {
                 throw new ArgumentException($"Game {gameId} not found!");
             }
@@ -58,7 +59,7 @@ namespace BingeBuddyNg.Services.Game
 
         public int AddUserScore(Guid gameId, string userId, int score)
         {
-            if (!this.Games.TryGetValue(gameId, out Game game))
+            if (!this.Games.TryGetValue(gameId, out Domain.Game game))
             {
                 throw new ArgumentException($"Game {gameId} not found!");
             }
@@ -70,7 +71,7 @@ namespace BingeBuddyNg.Services.Game
 
         public IReadOnlyList<UserScore> GetGameResult(Guid gameId)
         {
-            if (!this.Games.TryGetValue(gameId, out Game game))
+            if (!this.Games.TryGetValue(gameId, out Domain.Game game))
             {
                 throw new ArgumentException($"Game with Id {gameId} not found!");
             }
@@ -80,7 +81,7 @@ namespace BingeBuddyNg.Services.Game
 
         public UserScore FindWinner(Guid gameId)
         {
-            if (!this.Games.TryGetValue(gameId, out Game game))
+            if (!this.Games.TryGetValue(gameId, out Domain.Game game))
             {
                 throw new ArgumentException($"Game with Id {gameId} not found!");
             }

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Functions.Services.Notifications;
 using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Activity.Domain;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Statistics;
-using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Shared;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Extensions.Logging;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BingeBuddyNg.Services.Game
+namespace BingeBuddyNg.Core.Game
 {
     public class GameEndedMessage
     {

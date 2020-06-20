@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.User;
 
-namespace BingeBuddyNg.Services.Statistics
+namespace BingeBuddyNg.Core.Statistics
 {
     public interface IUserStatisticsService
     {

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.Activity.Persistence;
 
-namespace BingeBuddyNg.Services.Activity
+namespace BingeBuddyNg.Core.Activity
 {
     public interface IActivityRepository
     {
-        Task<IEnumerable<ActivityEntity>> GetUserActivitiesAsync(string userId, DateTime startTimeUtc, ActivityType activityType = ActivityType.None);
+        Task<IEnumerable<ActivityEntity>> GetUserActivitiesAsync(string userId, DateTime startTimeUtc, Domain.ActivityType activityType = Domain.ActivityType.None);
 
-        Task<Activity> GetActivityAsync(string id);
+        Task<Domain.Activity> GetActivityAsync(string id);
 
         Task<ActivityEntity> AddActivityAsync(ActivityEntity activity);
 

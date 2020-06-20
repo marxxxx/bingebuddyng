@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Linq;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Game;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.Venue;
+using BingeBuddyNg.Core.Venue.DTO;
+using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Activity.Persistence;
-using BingeBuddyNg.Services.Game;
 using BingeBuddyNg.Services.Venue;
 
-namespace BingeBuddyNg.Services.Activity
+namespace BingeBuddyNg.Core.Activity
 {
     public static class Converter
     {
@@ -23,7 +28,7 @@ namespace BingeBuddyNg.Services.Activity
                 AlcLevel = a.AlcLevel,
                 CountryLongName = a.CountryLongName,
                 CountryShortName = a.CountryShortName,
-                Venue = a.Venue != null ? new Venue.Venue(id: a.Venue.Id, location: a.Venue.Location, name: a.Venue.Name, distance: a.Venue.Distance) : null,
+                Venue = a.Venue?.ToDto(),
                 Likes = a.Likes.ConvertAll(aLike => new ReactionDTO()
                 {
                     Timestamp = aLike.Timestamp,
@@ -46,7 +51,7 @@ namespace BingeBuddyNg.Services.Activity
             };
         }
 
-        public static ActivityDTO ToDto(this Activity a)
+        public static ActivityDTO ToDto(this Domain.Activity a)
         {
             var dto = new ActivityDTO()
             {
@@ -61,7 +66,7 @@ namespace BingeBuddyNg.Services.Activity
                 AlcLevel = a.AlcLevel,
                 CountryLongName = a.CountryLongName,
                 CountryShortName = a.CountryShortName,
-                Venue = a.Venue,
+                Venue = a.Venue?.ToDto(),
                 Likes = a.Likes?.Select(l => new ReactionDTO() { Timestamp = l.Timestamp, UserId = l.UserId, UserName = l.UserName }).ToList(),
                 Cheers = a.Cheers?.Select(c => new ReactionDTO() { Timestamp = c.Timestamp, UserId = c.UserId, UserName = c.UserName }).ToList(),
                 Comments = a.Comments?.Select(c => new CommentReactionDTO() { Timestamp = c.Timestamp, UserId = c.UserId, UserName = c.UserName, Comment = c.Comment }).ToList()
@@ -69,7 +74,7 @@ namespace BingeBuddyNg.Services.Activity
 
             switch (a.ActivityType)
             {
-                case ActivityType.Drink:
+                case Domain.ActivityType.Drink:
                     {
                         dto.DrinkType = a.Drink.DrinkType;
                         dto.DrinkId = a.Drink.DrinkId;
@@ -78,32 +83,32 @@ namespace BingeBuddyNg.Services.Activity
                         dto.DrinkVolume = a.Drink.DrinkVolume;
                         break;
                     }
-                case ActivityType.Image:
+                case Domain.ActivityType.Image:
                     {
                         dto.ImageUrl = a.Image.ImageUrl;
                         break;
                     }
-                case ActivityType.GameResult:
+                case Domain.ActivityType.GameResult:
                     {
                         dto.GameInfo = a.Game.GameInfo.ToDto();
                         break;
                     }
-                case ActivityType.Rename:
+                case Domain.ActivityType.Rename:
                     {
                         dto.OriginalUserName = a.Rename.OriginalUserName;
                         break;
                     }
-                case ActivityType.Registration:
+                case Domain.ActivityType.Registration:
                     {
-                        dto.RegistrationUser = a.Registration.RegistrationUser;
+                        dto.RegistrationUser = a.Registration.RegistrationUser?.ToDto();
                         break;
                     }
-                case ActivityType.Message:
+                case Domain.ActivityType.Message:
                     {
                         dto.Message = a.Message.Message;
                         break;
                     }
-                case ActivityType.Notification:
+                case Domain.ActivityType.Notification:
                     {
                         dto.Message = a.Notification.Message;
                         break;
@@ -113,7 +118,7 @@ namespace BingeBuddyNg.Services.Activity
             return dto;
         }
 
-        public static ActivityEntity ToEntity(this Activity a)
+        public static ActivityEntity ToEntity(this Domain.Activity a)
         {
             var entity = new ActivityEntity()
             {
@@ -180,13 +185,13 @@ namespace BingeBuddyNg.Services.Activity
             return entity;
         }
 
-        public static Activity ToDomain(this ActivityEntity entity)
+        public static Domain.Activity ToDomain(this ActivityEntity entity)
         {
             switch (entity.ActivityType)
             {
                 case ActivityType.Drink:
                     {
-                        return Activity.CreateDrinkActivity(
+                        return Domain.Activity.CreateDrinkActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.Location,
@@ -201,7 +206,7 @@ namespace BingeBuddyNg.Services.Activity
                     }
                 case ActivityType.GameResult:
                     {
-                        return Activity.CreateGameActivity(
+                        return Domain.Activity.CreateGameActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.GameInfo,
@@ -209,7 +214,7 @@ namespace BingeBuddyNg.Services.Activity
                     }
                 case ActivityType.Image:
                     {
-                        return Activity.CreateImageActivity(
+                        return Domain.Activity.CreateImageActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.Location,
@@ -219,7 +224,7 @@ namespace BingeBuddyNg.Services.Activity
                     }
                 case ActivityType.Message:
                     {
-                        return Activity.CreateMessageActivity(
+                        return Domain.Activity.CreateMessageActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.Location,
@@ -230,7 +235,7 @@ namespace BingeBuddyNg.Services.Activity
                     }
                 case ActivityType.Notification:
                     {
-                        return Activity.CreateNotificationActivity(
+                        return Domain.Activity.CreateNotificationActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.UserId,
@@ -239,7 +244,7 @@ namespace BingeBuddyNg.Services.Activity
                     }
                 case ActivityType.ProfileImageUpdate:
                     {
-                        return Activity.CreateProfileImageUpdateActivity(
+                        return Domain.Activity.CreateProfileImageUpdateActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.UserId,
@@ -247,7 +252,7 @@ namespace BingeBuddyNg.Services.Activity
                     }
                 case ActivityType.Registration:
                     {
-                        return Activity.CreateRegistrationActivity(
+                        return Domain.Activity.CreateRegistrationActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.UserId,
@@ -256,7 +261,7 @@ namespace BingeBuddyNg.Services.Activity
                     }
                 case ActivityType.Rename:
                     {
-                        return Activity.CreateRenameActivity(
+                        return Domain.Activity.CreateRenameActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.UserId,
@@ -265,7 +270,7 @@ namespace BingeBuddyNg.Services.Activity
                     }
                 case ActivityType.VenueEntered:
                     {
-                        return Activity.CreateVenueActivity(
+                        return Domain.Activity.CreateVenueActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.UserId,
@@ -275,7 +280,7 @@ namespace BingeBuddyNg.Services.Activity
                     }
                 case ActivityType.VenueLeft:
                     {
-                        return Activity.CreateVenueActivity(
+                        return Domain.Activity.CreateVenueActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.UserId,

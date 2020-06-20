@@ -1,4 +1,6 @@
-﻿using BingeBuddyNg.Services.Game;
+﻿using BingeBuddyNg.Core.Game;
+using BingeBuddyNg.Core.Game.Domain;
+using BingeBuddyNg.Services.Game;
 using System;
 using System.Threading.Tasks;
 using Xunit;

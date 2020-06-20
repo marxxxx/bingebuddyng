@@ -1,12 +1,12 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
-using BingeBuddyNg.Shared;
-using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Shared;
+using MediatR;
 
-namespace BingeBuddyNg.Services.FriendsRequest.Commands
+namespace BingeBuddyNg.Core.FriendsRequest.Commands
 {
     public class AddFriendRequestCommand : IRequest
     {

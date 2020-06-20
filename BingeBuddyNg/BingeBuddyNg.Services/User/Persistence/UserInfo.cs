@@ -1,6 +1,7 @@
 ﻿using System;
+using BingeBuddyNg.Services.User;
 
-namespace BingeBuddyNg.Services.User
+namespace BingeBuddyNg.Core.User
 {
     public class UserInfo : IEquatable<UserInfo>
     {
@@ -41,6 +42,11 @@ namespace BingeBuddyNg.Services.User
         public override string ToString()
         {
             return $"{{{nameof(UserId)}={UserId}, {nameof(UserName)}={UserName}}}";
+        }
+
+        internal UserInfoDTO ToUserInfoDTO()
+        {
+            throw new NotImplementedException();
         }
     }
 }

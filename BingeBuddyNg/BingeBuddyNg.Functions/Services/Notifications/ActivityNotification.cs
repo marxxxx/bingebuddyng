@@ -1,5 +1,5 @@
 ﻿using System;
-using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Core.Activity.Domain;
 
 namespace BingeBuddyNg.Functions.Services.Notifications
 {

@@ -1,9 +1,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Functions.Services;
 using BingeBuddyNg.Functions.Services.Notifications;
-using BingeBuddyNg.Services.User;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Extensions.Logging;

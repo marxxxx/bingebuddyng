@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BingeBuddyNg.Services.Activity.Domain
+﻿namespace BingeBuddyNg.Core.Activity.Domain
 {
     public class NotificationActivityInfo
     {

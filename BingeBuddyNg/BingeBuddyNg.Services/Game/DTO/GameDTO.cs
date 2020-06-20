@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using BingeBuddyNg.Core.Game.Domain;
 
-namespace BingeBuddyNg.Services.Game.Queries
+namespace BingeBuddyNg.Services.Game.DTO
 {
     public class GameDTO
     {

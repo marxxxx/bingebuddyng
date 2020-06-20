@@ -1,12 +1,11 @@
-﻿using BingeBuddyNg.Services.Activity.Domain;
-using BingeBuddyNg.Services.User;
-using BingeBuddyNg.Services.Venue;
-using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Services.Venue;
+using MediatR;
 
-namespace BingeBuddyNg.Services.Activity.Commands
+namespace BingeBuddyNg.Core.Activity.Commands
 {
     public class AddVenueActivityCommand : IRequest<string>
     {
@@ -41,7 +40,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
         {
             var user = await this.userRepository.GetUserAsync(request.UserId);
 
-            var activity = Activity.CreateVenueActivity(
+            var activity = Domain.Activity.CreateVenueActivity(
                 request.UserId,
                 user.Name,
                 request.Venue,

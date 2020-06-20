@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Queries;
 using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Activity.Persistence;

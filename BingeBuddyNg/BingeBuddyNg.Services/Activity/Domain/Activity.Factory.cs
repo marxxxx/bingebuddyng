@@ -1,12 +1,11 @@
 ﻿using System;
 using BingeBuddyNg.Core.Activity.Persistence;
-using BingeBuddyNg.Services.Activity.Domain;
+using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Game.Persistence;
-using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.Venue;
 
-namespace BingeBuddyNg.Services.Activity
+namespace BingeBuddyNg.Core.Activity.Domain
 {
     public partial class Activity
     {

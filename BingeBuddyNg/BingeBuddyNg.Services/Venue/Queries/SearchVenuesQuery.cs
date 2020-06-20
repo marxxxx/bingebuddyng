@@ -1,18 +1,18 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Venue.Generated;
-using MediatR;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Venue.DTO;
+using BingeBuddyNg.Services.Venue.Generated;
+using MediatR;
+using Newtonsoft.Json;
 
-namespace BingeBuddyNg.Services.Venue.Queries
+namespace BingeBuddyNg.Core.Venue.Queries
 {
-    public class SearchVenuesQuery : IRequest<List<Venue>>
+    public class SearchVenuesQuery : IRequest<List<VenueDTO>>
     {
         public SearchVenuesQuery(float latitude, float longitude)
         {
@@ -24,7 +24,7 @@ namespace BingeBuddyNg.Services.Venue.Queries
         public float Longitude { get; }
     }
 
-    public class SearchVenuesQueryHandler : IRequestHandler<SearchVenuesQuery, List<Venue>>
+    public class SearchVenuesQueryHandler : IRequestHandler<SearchVenuesQuery, List<VenueDTO>>
     {
         private const string BaseUrl = "https://api.foursquare.com/v2";
 
@@ -37,7 +37,7 @@ namespace BingeBuddyNg.Services.Venue.Queries
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public async Task<List<Venue>> Handle(SearchVenuesQuery request, CancellationToken cancellationToken)
+        public async Task<List<VenueDTO>> Handle(SearchVenuesQuery request, CancellationToken cancellationToken)
         {
             var client = this.httpClientFactory.CreateClient();
 
@@ -52,7 +52,7 @@ namespace BingeBuddyNg.Services.Venue.Queries
             var venueResult = JsonConvert.DeserializeObject<VenueRootObject>(response);
 
             var venues = venueResult.Response.Venues
-                .Select(v => new Venue(v.Id, new Activity.Location(v.Location.Lat, v.Location.Lng), v.Name, v.Location.Distance))
+                .Select(v => new Venue(v.Id, new Activity.Domain.Location(v.Location.Lat, v.Location.Lng), v.Name, v.Location.Distance).ToDto())
                 .OrderBy(v => v.Distance)
                 .ToList();
             return venues;

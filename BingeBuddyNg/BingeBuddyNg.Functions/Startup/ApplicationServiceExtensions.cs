@@ -1,7 +1,10 @@
 ﻿using System;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Calculation;
+using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Queries;
 using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Calculation;
 using BingeBuddyNg.Services.DrinkEvent;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Infrastructure.EventGrid;

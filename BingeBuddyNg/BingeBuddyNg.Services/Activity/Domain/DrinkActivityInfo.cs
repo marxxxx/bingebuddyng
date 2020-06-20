@@ -1,7 +1,7 @@
 ﻿using System;
 using BingeBuddyNg.Services.Drink;
 
-namespace BingeBuddyNg.Services.Activity.Domain
+namespace BingeBuddyNg.Core.Activity.Domain
 {
     public class DrinkActivityInfo
     {

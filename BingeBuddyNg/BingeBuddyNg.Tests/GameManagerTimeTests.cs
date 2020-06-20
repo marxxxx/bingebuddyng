@@ -1,6 +1,7 @@
-﻿using BingeBuddyNg.Services.Game;
-using System;
+﻿using System;
 using System.Threading;
+using BingeBuddyNg.Core.Game;
+using BingeBuddyNg.Core.Game.Domain;
 using Xunit;
 
 namespace BingeBuddyNg.Tests

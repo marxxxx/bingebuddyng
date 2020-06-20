@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Functions.Services.Notifications;
-using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Activity.Domain;
 using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Shared;
 using Microsoft.Extensions.Logging;
 

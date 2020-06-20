@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BingeBuddyNg.Services.Game
+namespace BingeBuddyNg.Services.Game.DTO
 {
     public class StartGameDTO
     {

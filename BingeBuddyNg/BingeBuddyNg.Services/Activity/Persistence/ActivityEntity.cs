@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Game.Persistence;
 using BingeBuddyNg.Services.User;

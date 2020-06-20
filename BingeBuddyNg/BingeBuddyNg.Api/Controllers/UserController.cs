@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;

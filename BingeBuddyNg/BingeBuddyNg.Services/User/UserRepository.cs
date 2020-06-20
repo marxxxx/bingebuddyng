@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Commands;
+using BingeBuddyNg.Core.Venue;
 using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User.Commands;
 using BingeBuddyNg.Services.User.Persistence;
-using BingeBuddyNg.Services.Venue;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace BingeBuddyNg.Services.User
@@ -24,7 +23,7 @@ namespace BingeBuddyNg.Services.User
             this.cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
         }
 
-        public async Task<User> GetUserAsync(string id)
+        public async Task<Core.User.User> GetUserAsync(string id)
         {
             var result = await FindUserEntityAsync(id);
             if (result?.Entity == null)
@@ -39,7 +38,7 @@ namespace BingeBuddyNg.Services.User
                 user.LastOnline = result.Timestamp.UtcDateTime;
             }
 
-            return new User(user.Id, user.Name, user.Weight, user.Gender, user.ProfileImageUrl, user.PushInfo, user.Friends, user.MutedByFriendUserIds, user.MutedByFriendUserIds, user.MonitoringInstanceId, user.CurrentVenue?.ToDomain(), user.Language, user.LastOnline);
+            return new Core.User.User(user.Id, user.Name, user.Weight, user.Gender, user.ProfileImageUrl, user.PushInfo, user.Friends, user.MutedByFriendUserIds, user.MutedByFriendUserIds, user.MonitoringInstanceId, user.CurrentVenue?.ToDomain(), user.Language, user.LastOnline);
         }
 
         private async Task<JsonTableEntity<UserEntity>> FindUserEntityAsync(string id)
@@ -48,7 +47,7 @@ namespace BingeBuddyNg.Services.User
             {
                 var table = storageAccess.GetTableReference(TableName);
 
-                TableOperation retrieveOperation = TableOperation.Retrieve<JsonTableEntity<User>>(PartitionKeyValue, id);
+                TableOperation retrieveOperation = TableOperation.Retrieve<JsonTableEntity<Core.User.User>>(PartitionKeyValue, id);
 
                 var userResult = await table.ExecuteAsync(retrieveOperation);
 
@@ -100,7 +99,7 @@ namespace BingeBuddyNg.Services.User
                 {
                     Id = request.UserId,
                     Name = request.Name,
-                    Gender = Gender.Male,
+                    Gender = Core.User.Gender.Male,
                     Language = request.Language,
                     PushInfo = request.PushInfo,
                     Weight = 80,

@@ -4,11 +4,11 @@ using BingeBuddyNg.Services.Infrastructure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace BingeBuddyNg.Services.Activity
+namespace BingeBuddyNg.Core.Activity
 {
     public class ActivityTableEntity : JsonTableEntity<ActivityEntity>
     {
-        public ActivityType ActivityType { get; set; }
+        public Domain.ActivityType ActivityType { get; set; }
         public bool HasLocation { get; set; }
         public string UserId { get; set; }
         public int DrinkCount { get; set; }
@@ -39,7 +39,7 @@ namespace BingeBuddyNg.Services.Activity
             base.ReadEntity(properties, operationContext);
             if (properties.TryGetValue(nameof(ActivityType), out EntityProperty activityTypeValue))
             {
-                this.ActivityType = Util.SafeParseEnum<ActivityType>(activityTypeValue.StringValue, ActivityType.None);
+                this.ActivityType = Util.SafeParseEnum(activityTypeValue.StringValue, Domain.ActivityType.None);
             }
         }
 

@@ -3,7 +3,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.User.Commands
+namespace BingeBuddyNg.Core.User.Commands
 {
     public class SetFriendMuteStateCommand : IRequest
     {

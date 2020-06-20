@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Activity.Domain;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.User;
 
 
-namespace BingeBuddyNg.Services.Calculation
+namespace BingeBuddyNg.Core.Calculation
 {
     public class CalculationService : ICalculationService
     {

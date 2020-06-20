@@ -1,8 +1,8 @@
-﻿using BingeBuddyNg.Services.User;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using BingeBuddyNg.Core.User;
 
-namespace BingeBuddyNg.Services.Calculation
+namespace BingeBuddyNg.Core.Calculation
 {
     public class UserDrinkActivity
     {

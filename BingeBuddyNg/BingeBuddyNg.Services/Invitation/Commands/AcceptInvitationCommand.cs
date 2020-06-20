@@ -1,17 +1,16 @@
-﻿using BingeBuddyNg.Core.User.Commands;
-using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Activity.Domain;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Statistics;
-using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Shared;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.Invitation.Commands
+namespace BingeBuddyNg.Core.Invitation.Commands
 {
     public class AcceptInvitationCommand : IRequest
     {
@@ -76,7 +75,7 @@ namespace BingeBuddyNg.Services.Invitation.Commands
 
                     var message = await translationService.GetTranslationAsync(invitingUser.Language, "RecruitmentActivityMessage", acceptingUser.Name, Constants.Scores.FriendInvitation);
 
-                    var notificationActivity = Activity.Activity.CreateNotificationActivity(invitingUser.Id, invitingUser.Name, message);
+                    var notificationActivity = Activity.Domain.Activity.CreateNotificationActivity(invitingUser.Id, invitingUser.Name, message);
 
                     await this.activityRepository.AddActivityAsync(notificationActivity.ToEntity());
                 }

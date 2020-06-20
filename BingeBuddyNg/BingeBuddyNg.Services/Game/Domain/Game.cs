@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace BingeBuddyNg.Services.Game
+namespace BingeBuddyNg.Core.Game.Domain
 {
     public class Game
     {

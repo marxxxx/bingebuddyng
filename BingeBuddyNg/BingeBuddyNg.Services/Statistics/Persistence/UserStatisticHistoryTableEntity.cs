@@ -1,9 +1,7 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using Microsoft.WindowsAzure.Storage.Table;
 
-namespace BingeBuddyNg.Services.Statistics
+namespace BingeBuddyNg.Core.Statistics
 {
     public class UserStatisticHistoryTableEntity : TableEntity
     {

@@ -3,7 +3,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.Invitation.Commands
+namespace BingeBuddyNg.Core.Invitation.Commands
 {
     public class CreateInvitationCommand : IRequest<string>
     {

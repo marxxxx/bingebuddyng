@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BingeBuddyNg.Services.Activity.Domain;
 
-namespace BingeBuddyNg.Services.Activity
+namespace BingeBuddyNg.Core.Activity.Domain
 {
     public partial class Activity
     {

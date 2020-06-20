@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.Game;
+using BingeBuddyNg.Services.Game.DTO;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User.Queries;
 using BingeBuddyNg.Shared;
 using MediatR;
 
-namespace BingeBuddyNg.Services
+namespace BingeBuddyNg.Core.Game.Commands
 {
     public class StartGameCommand : IRequest<StartGameResultDTO>
     {
@@ -51,7 +52,7 @@ namespace BingeBuddyNg.Services
             var totalPlayers = new List<string>(command.PlayerUserIds);
             totalPlayers.Add(command.UserId);
 
-            this.manager.StartGame(new Game.Game(gameId, command.Title, totalPlayers));
+            this.manager.StartGame(new Domain.Game(gameId, command.Title, totalPlayers));
 
             var friendIds = command.PlayerUserIds.Select(f => f.ToString()).ToList();
             var allParticipents = new List<string>(friendIds);

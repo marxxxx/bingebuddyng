@@ -1,11 +1,13 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Shared;
 using MediatR;
 using Newtonsoft.Json;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Services.Activity.Commands
 {

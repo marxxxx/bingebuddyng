@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.Venue;
+using BingeBuddyNg.Core.Venue.DTO;
 using MediatR;
 
-namespace BingeBuddyNg.Services.Activity.Commands
+namespace BingeBuddyNg.Core.Activity.Commands
 {
     public class AddMessageActivityCommand :  IRequest<string>
     {
-        public AddMessageActivityCommand(string userId, string message, Location location, Venue.Venue venue)
+        public AddMessageActivityCommand(string userId, string message, Location location, VenueDTO venue)
         {
             UserId = userId ?? throw new ArgumentNullException(nameof(userId));
             Message = message ?? throw new ArgumentNullException(nameof(message));
@@ -19,7 +22,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
         public string UserId { get; }
         public string Message { get; }
         public Location Location { get; }
-        public Venue.Venue Venue { get; }
+        public VenueDTO Venue { get; }
     }
 
     public class AddMessageActivityCommandHandler :
@@ -40,7 +43,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
         {
             var user = await this.userRepository.GetUserAsync(request.UserId);
 
-            var activity = Activity.CreateMessageActivity(request.Location, request.UserId, user.Name, request.Message, request.Venue);
+            var activity = Domain.Activity.CreateMessageActivity(request.Location, request.UserId, user.Name, request.Message, request.Venue?.ToDomain());
 
             var savedActivity = await this.activityRepository.AddActivityAsync(activity.ToEntity());
             await activityRepository.AddToActivityAddedTopicAsync(savedActivity.Id);

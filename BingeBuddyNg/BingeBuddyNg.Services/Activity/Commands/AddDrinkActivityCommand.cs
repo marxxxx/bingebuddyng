@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Activity.Domain;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.Venue;
+using BingeBuddyNg.Core.Venue.DTO;
+using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Infrastructure.Messaging;
-using BingeBuddyNg.Services.User;
 using MediatR;
 
-namespace BingeBuddyNg.Services.Activity.Commands
+namespace BingeBuddyNg.Core.Activity.Commands
 {
     public class AddDrinkActivityCommand : IRequest<string>
     {
-        public AddDrinkActivityCommand(string userId, string drinkId, DrinkType drinkType, string drinkName, double alcPrc, double volume, Location location, Venue.Venue venue)
+        public AddDrinkActivityCommand(string userId, string drinkId, DrinkType drinkType, string drinkName, double alcPrc, double volume, Location location, VenueDTO venue)
         {
             UserId = userId ?? throw new ArgumentNullException(nameof(userId));
             DrinkId = drinkId ?? throw new ArgumentNullException(nameof(drinkId));
@@ -30,7 +33,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
         public double AlcPrc { get; }
         public double Volume { get; }
         public Location Location { get; }
-        public Venue.Venue Venue { get; }
+        public VenueDTO Venue { get; }
     }
 
     public class AddDrinkActivityCommandHandler :
@@ -54,8 +57,8 @@ namespace BingeBuddyNg.Services.Activity.Commands
         {
             var user = await this.userRepository.GetUserAsync(request.UserId);
 
-            var activity = Activity.CreateDrinkActivity(request.Location, request.UserId, user.Name,
-                request.DrinkType, request.DrinkId, request.DrinkName, request.AlcPrc, request.Volume, request.Venue);
+            var activity = Domain.Activity.CreateDrinkActivity(request.Location, request.UserId, user.Name,
+                request.DrinkType, request.DrinkId, request.DrinkName, request.AlcPrc, request.Volume, request.Venue?.ToDomain());
 
             var savedActivity = await this.activityRepository.AddActivityAsync(activity.ToEntity());
 

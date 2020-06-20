@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Drink;
 using MediatR;
 
-namespace BingeBuddyNg.Services.Activity.Querys
+namespace BingeBuddyNg.Core.Activity.Queries
 {
     public class GetDrinkActivityAggregationQuery : IRequest<List<ActivityAggregationDTO>>
     {

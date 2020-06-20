@@ -1,3 +1,4 @@
+using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Infrastructure;
 using Moq;
@@ -19,7 +20,7 @@ namespace BingeBuddyNg.Tests
             var utilityService = new UtilityService(httpClientFactoryMock.Object, new GoogleApiConfiguration("key"));
             double latitude = 48.3202861;
             double longitude = 14.2917983;
-            var address = await utilityService.GetAddressFromLongLatAsync(new Services.Activity.Location(latitude, longitude));
+            var address = await utilityService.GetAddressFromLongLatAsync(new Location(latitude, longitude));
             Assert.NotNull(address);
             Assert.NotNull(address.AddressText);
             Assert.NotNull(address.CountryLongName);

@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using BingeBuddyNg.Services.User.Commands;
+using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Services.User.Persistence;
 
-namespace BingeBuddyNg.Services.User
+namespace BingeBuddyNg.Core.User
 {
     public interface IUserRepository
     {

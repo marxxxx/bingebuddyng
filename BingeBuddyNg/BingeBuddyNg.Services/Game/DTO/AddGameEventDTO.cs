@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BingeBuddyNg.Services.Game.Commands
+namespace BingeBuddyNg.Services.Game.DTO
 {
     public class AddGameEventDTO
     {

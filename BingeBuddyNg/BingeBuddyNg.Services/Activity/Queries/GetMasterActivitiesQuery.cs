@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Activity.Persistence;
 using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Activity.Persistence;

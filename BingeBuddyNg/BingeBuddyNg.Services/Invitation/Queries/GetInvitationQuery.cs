@@ -1,11 +1,13 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
+﻿using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Services.Invitation;
 using BingeBuddyNg.Services.User;
 using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.Invitation.Querys
+namespace BingeBuddyNg.Core.Invitation.Querys
 {
     public class GetInvitationQuery : IRequest<InvitationDTO>
     {

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Venue.DTO;
 using BingeBuddyNg.Services.Drink;
-using BingeBuddyNg.Services.Game.Queries;
+using BingeBuddyNg.Services.Game.DTO;
 using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Services.Activity
@@ -17,7 +19,7 @@ namespace BingeBuddyNg.Services.Activity
         public string UserName { get; set; }
         public string CountryLongName { get; set; }
         public string CountryShortName { get; set; }
-        public Venue.Venue Venue { get; set; }
+        public VenueDTO Venue { get; set; }
 
         public string Message { get; set; }
         public DrinkType DrinkType { get; set; }
@@ -31,7 +33,7 @@ namespace BingeBuddyNg.Services.Activity
 
         public GameDTO GameInfo { get; set; }
 
-        public UserInfo RegistrationUser { get; set; }
+        public UserInfoDTO RegistrationUser { get; set; }
 
         public string OriginalUserName { get; set; }
 

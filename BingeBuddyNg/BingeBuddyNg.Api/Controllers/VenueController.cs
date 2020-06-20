@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Venue.Commands;
+using BingeBuddyNg.Core.Venue.DTO;
+using BingeBuddyNg.Core.Venue.Queries;
 using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Venue;
 using MediatR;
-using BingeBuddyNg.Services.Venue.Queries;
-using BingeBuddyNg.Services.Venue.Commands;
-
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BingeBuddyNg.Api.Controllers
 {
@@ -26,14 +25,14 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Venue>> SearchVenues(float latitude, float longitude)
+        public async Task<IEnumerable<VenueDTO>> SearchVenues(float latitude, float longitude)
         {
             var venues = await this.mediator.Send(new SearchVenuesQuery(latitude, longitude));
             return venues;
         }
 
         [HttpPost("update-current")]
-        public async Task UpdateCurrentVenue([FromBody]Venue venue)
+        public async Task UpdateCurrentVenue([FromBody]VenueDTO venue)
         {
             var userId = this.identityService.GetCurrentUserId();
             await this.mediator.Send(new EnterVenueCommand(userId, venue));

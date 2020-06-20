@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Services.FriendsRequest;
 
-namespace BingeBuddyNg.Services.FriendsRequest
+namespace BingeBuddyNg.Core.FriendsRequest
 {
     public interface IFriendRequestRepository
     {

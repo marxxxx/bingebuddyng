@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using System;
 
-namespace BingeBuddyNg.Services.Venue.Commands
+namespace BingeBuddyNg.Core.Venue.Commands
 {
     public class LeaveVenueCommand : IRequest
     {

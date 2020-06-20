@@ -1,4 +1,4 @@
-﻿namespace BingeBuddyNg.Services.Activity
+﻿namespace BingeBuddyNg.Core.Activity.Domain
 {
     public enum ActivityType
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BingeBuddyNg.Services.Game
+namespace BingeBuddyNg.Core.Game.Domain
 {
     public class UserScore
     {

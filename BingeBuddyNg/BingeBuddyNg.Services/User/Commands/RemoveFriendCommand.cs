@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using static BingeBuddyNg.Shared.Constants;
 
-namespace BingeBuddyNg.Services.User.Commands
+namespace BingeBuddyNg.Core.User.Commands
 {
     public class RemoveFriendCommand : IRequest
     {

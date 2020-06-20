@@ -1,6 +1,9 @@
-﻿using BingeBuddyNg.Services.User.Persistence;
+﻿using BingeBuddyNg.Core.Venue;
+using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Services.User.Persistence;
+using BingeBuddyNg.Services.Venue.Persistence;
 
-namespace BingeBuddyNg.Services.User
+namespace BingeBuddyNg.Core.User
 {
     public static class Converters
     {
@@ -38,7 +41,7 @@ namespace BingeBuddyNg.Services.User
                 MutedFriendUserIds = user.MutedFriendUserIds,
                 MutedByFriendUserIds = user.MutedByFriendUserIds,
                 MonitoringInstanceId = user.MonitoringInstanceId,
-                CurrentVenue = user.CurrentVenue != null ? new Venue.Persistence.VenueEntity()
+                CurrentVenue = user.CurrentVenue != null ? new VenueEntity()
                 {
                     Id = user.CurrentVenue.Id,
                     Location = user.CurrentVenue.Location,
@@ -62,10 +65,15 @@ namespace BingeBuddyNg.Services.User
                 Language = entity.Language,
                 LastOnline = entity.LastOnline,
                 Weight = entity.Weight,
-                CurrentVenue = entity.CurrentVenue,
+                CurrentVenue = entity.CurrentVenue?.ToDto(),
                 Friends = entity.Friends,
                 MutedFriendUserIds = entity.MutedFriendUserIds
             };
+        }
+
+        public static UserInfoDTO ToDto(this UserInfo userInfo)
+        {
+            return new UserInfoDTO(userId: userInfo.UserId, userName: userInfo.UserName);
         }
     }
 }
