@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.DrinkEvent
+namespace BingeBuddyNg.Core.DrinkEvent
 {
     public interface IDrinkEventRepository
     {
-        Task<DrinkEvent> FindCurrentDrinkEventAsync();
+        Task<Domain.DrinkEvent> FindCurrentDrinkEventAsync();
 
-        Task<DrinkEvent> CreateDrinkEventAsync(DateTime startTime, DateTime endTime);
+        Task<Domain.DrinkEvent> CreateDrinkEventAsync(DateTime startTime, DateTime endTime);
 
-        Task UpdateDrinkEventAsync(DrinkEvent drinkEvent);
+        Task UpdateDrinkEventAsync(Domain.DrinkEvent drinkEvent);
     }
 }

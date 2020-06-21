@@ -1,5 +1,5 @@
-﻿using BingeBuddyNg.Services.Drink;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using BingeBuddyNg.Core.Drink;
 
 namespace BingeBuddyNg.Services.Activity
 {

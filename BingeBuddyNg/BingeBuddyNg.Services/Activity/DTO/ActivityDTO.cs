@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Drink;
 using BingeBuddyNg.Core.Venue.DTO;
-using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Game.DTO;
 using BingeBuddyNg.Services.User;
 

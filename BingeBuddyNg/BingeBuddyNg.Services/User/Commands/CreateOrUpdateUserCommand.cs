@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
-using BingeBuddyNg.Services.Drink;
+using BingeBuddyNg.Core.Drink;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User;
 using MediatR;

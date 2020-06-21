@@ -1,23 +1,24 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
-using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAzure.Storage.Table;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Drink.DTO;
+using BingeBuddyNg.Core.Drink.Persistence;
+using BingeBuddyNg.Services.Infrastructure;
+using Microsoft.Extensions.Logging;
 
-namespace BingeBuddyNg.Services.Drink
+namespace BingeBuddyNg.Core.Drink
 {
     public class DrinkRepository : IDrinkRepository
     {
         private const string TableName = "drinks";
 
-        private static readonly IEnumerable<Drink> defaultDrinks = new List<Drink>()
+        private static readonly IEnumerable<DrinkDTO> DefaultDrinks = new List<DrinkDTO>()
             {
-            new Drink("1", DrinkType.Beer, "Beer", 5, 500 ),
-            new Drink("2", DrinkType.Wine, "Wine", 9, 125),
-            new Drink("3", DrinkType.Shot, "Shot", 20, 40),
-            new Drink("4", DrinkType.Anti, "Anti", 0, 250)
+            new DrinkDTO("1", DrinkType.Beer, "Beer", 5, 500 ),
+            new DrinkDTO("2", DrinkType.Wine, "Wine", 9, 125),
+            new DrinkDTO("3", DrinkType.Shot, "Shot", 20, 40),
+            new DrinkDTO("4", DrinkType.Anti, "Anti", 0, 250)
             };
 
         private readonly IStorageAccessService storageAccessService;
@@ -30,40 +31,39 @@ namespace BingeBuddyNg.Services.Drink
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<IEnumerable<Drink>> GetDrinksAsync(string userId)
+        public async Task<IEnumerable<DrinkDTO>> GetDrinksAsync(string userId)
         {
             var drinks = await this.storageAccessService.QueryTableAsync<DrinkTableEntity>(TableName, partitionKey: userId);
 
             if (drinks.ResultPage.Count == 0)
             {
-                return defaultDrinks;
+                return DefaultDrinks;
             }
             else
             {
-                return drinks.ResultPage.Select(d => d.ToDrink()).ToList();
+                return drinks.ResultPage.Select(d => d.ToDto()).ToList();
             }
         }
 
-        public async Task<Drink> GetDrinkAsync(string userId, string drinkId)
+        public async Task<DrinkDTO> GetDrinkAsync(string userId, string drinkId)
         {
             var drink = await this.storageAccessService.GetTableEntityAsync<DrinkTableEntity>(TableName, userId, drinkId);
-            return drink.ToDrink();
+            return drink.ToDto();
         }
 
-        public async Task SaveDrinksAsync(string userId, IEnumerable<Drink> drinks)
+        public async Task SaveDrinksAsync(string userId, IEnumerable<DrinkDTO> drinks)
         {
             foreach (var d in drinks.Where(d => string.IsNullOrEmpty(d.Id)))
             {
                 d.Id = Guid.NewGuid().ToString();
             }
-
-            var entities = drinks.Select(d => new DrinkTableEntity(userId, d));
+            var entities = drinks.Select(d => d.ToEntity(userId));
             await this.storageAccessService.InsertOrReplaceAsync(TableName, entities);
         }
 
         public async Task CreateDefaultDrinksForUserAsync(string userId)
         {
-            var defaultDrinksForUser = defaultDrinks.Select(d => new Drink(Guid.NewGuid().ToString(), d.DrinkType, d.Name, d.AlcPrc, d.Volume));
+            var defaultDrinksForUser = DefaultDrinks.Select(d => new DrinkDTO(Guid.NewGuid().ToString(), d.DrinkType, d.Name, d.AlcPrc, d.Volume));
             await SaveDrinksAsync(userId, defaultDrinksForUser);
         }
 

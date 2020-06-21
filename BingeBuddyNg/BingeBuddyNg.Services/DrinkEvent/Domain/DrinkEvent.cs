@@ -1,36 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BingeBuddyNg.Services.DrinkEvent
+namespace BingeBuddyNg.Core.DrinkEvent.Domain
 {
     public class DrinkEvent
     {
-        public DrinkEvent()
+        private List<string> _scoringUserIds = new List<string>();
+        public IReadOnlyList<string> ScoringUserIds => _scoringUserIds.AsReadOnly();
+
+        public DateTime StartUtc { get; }
+        public DateTime EndUtc { get; }
+
+        public DrinkEvent(DateTime startUtc, DateTime endUtc, IEnumerable<string> scoringUserIds = null)
         {
+            this.StartUtc = startUtc;
+            this.EndUtc = endUtc;
+
+            if(scoringUserIds != null)
+            {
+                foreach (var userId in scoringUserIds)
+                {
+                    this.AddScoringUserId(userId);
+                }
+            }            
         }
-
-        public DrinkEvent(DateTime startUtc, DateTime endUtc)
-        {
-            StartUtc = startUtc;
-            EndUtc = endUtc;
-        }
-
-        public DateTime StartUtc { get; set; }
-        public DateTime EndUtc { get; set; }
-
-        public List<string> ScoringUserIds { get; } = new List<string>();
 
         public bool AddScoringUserId(string userId)
         {
             bool isAdded = false;
-            if (this.ScoringUserIds.Contains(userId) == false)
+            if (this._scoringUserIds.Contains(userId) == false)
             {
-                this.ScoringUserIds.Add(userId);
+                this._scoringUserIds.Add(userId);
                 isAdded = true;
             }
 
             return isAdded;
-
-        }        
+        }
     }
 }

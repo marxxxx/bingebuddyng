@@ -4,9 +4,9 @@ namespace BingeBuddyNg.Core.Calculation
 {
     public class DrinkActivityItem
     {
-        public DateTime Timestamp { get; set; }
-        public double AlcPrc { get; set; }
-        public double VolMl { get; set; }
+        public DateTime Timestamp { get; }
+        public double AlcPrc { get; }
+        public double VolMl { get; }
 
         public DrinkActivityItem(DateTime timestamp)
         {

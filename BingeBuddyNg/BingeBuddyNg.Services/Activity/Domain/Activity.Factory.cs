@@ -1,7 +1,7 @@
 ﻿using System;
 using BingeBuddyNg.Core.Activity.Persistence;
+using BingeBuddyNg.Core.Drink;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Game.Persistence;
 using BingeBuddyNg.Services.Venue;
 

@@ -1,26 +1,31 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
+﻿using System;
+using System.Collections.Generic;
+using BingeBuddyNg.Core.Drink.DTO;
+using BingeBuddyNg.Services.Infrastructure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BingeBuddyNg.Services.Drink
+namespace BingeBuddyNg.Core.Drink.Persistence
 {
     public class DrinkTableEntity : TableEntity
     {
-        public string UserId { get; set; }
         public string Id { get; set; }
+
+        public string UserId { get; set; }
+
         public DrinkType DrinkType { get; set; }
+
         public string Name { get; set; }
+
         public double? AlcPrc { get; set; }
+
         public double? Volume { get; set; }
 
         public DrinkTableEntity()
         {
 
         }
-        public DrinkTableEntity(string userId, Drink drink) : base(userId, drink.Id)
+        public DrinkTableEntity(string userId, DrinkDTO drink) : base(userId, drink.Id)
         {
             if(drink == null)
             {
@@ -33,12 +38,6 @@ namespace BingeBuddyNg.Services.Drink
             this.DrinkType = drink.DrinkType;
             this.AlcPrc = drink.AlcPrc;
             this.Volume = drink.Volume;
-
-        }
-
-        public Drink ToDrink()
-        {
-            return new Drink(Id, DrinkType, Name, AlcPrc, Volume);
         }
 
         public override void ReadEntity(IDictionary<string, EntityProperty> properties, OperationContext operationContext)

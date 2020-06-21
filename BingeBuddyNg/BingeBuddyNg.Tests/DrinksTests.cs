@@ -1,13 +1,12 @@
-﻿using BingeBuddyNg.Services.Drink;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BingeBuddyNg.Core.Drink;
+using BingeBuddyNg.Core.Drink.Persistence;
 using BingeBuddyNg.Services.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace BingeBuddyNg.Tests

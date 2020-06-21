@@ -3,9 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Activity.Queries;
-using BingeBuddyNg.Services.Drink;
+using BingeBuddyNg.Core.Drink;
 using BingeBuddyNg.Services.Infrastructure;
-using Microsoft.WindowsAzure.Storage.Table;
 using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.Statistics.Commands

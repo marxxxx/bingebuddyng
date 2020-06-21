@@ -1,5 +1,5 @@
 ﻿using System;
-using BingeBuddyNg.Services.Drink;
+using BingeBuddyNg.Core.Drink;
 
 namespace BingeBuddyNg.Core.Activity.Domain
 {

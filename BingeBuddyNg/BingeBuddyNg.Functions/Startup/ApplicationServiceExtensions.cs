@@ -2,6 +2,7 @@
 using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.Commands;
 using BingeBuddyNg.Core.Calculation;
+using BingeBuddyNg.Core.DrinkEvent;
 using BingeBuddyNg.Core.Statistics;
 using BingeBuddyNg.Core.Statistics.Commands;
 using BingeBuddyNg.Core.User;
