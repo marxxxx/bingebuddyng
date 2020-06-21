@@ -50,29 +50,20 @@ namespace BingeBuddyNg.Core.Statistics.Commands
 
         private async Task AddStatisticHistoryAsync(UserStatisticHistory userStatistics)
         {
-            var table = storageAccessService.GetTableReference(TableNames.UserStatsHistory);
-
             var entity = new UserStatisticHistoryTableEntity(userStatistics.UserId, DateTime.UtcNow,
                 userStatistics.CurrentAlcLevel);
 
-            TableOperation saveOperation = TableOperation.Insert(entity);
-
-            await table.ExecuteAsync(saveOperation);
+            await storageAccessService.InsertAsync(TableNames.UserStatsHistory, entity);
         }
 
-        private Task SaveStatisticsForUserAsync(UserStatistics userStatistics)
+        private async Task SaveStatisticsForUserAsync(UserStatistics userStatistics)
         {
-            var table = storageAccessService.GetTableReference(TableNames.UserStats);
-
             var entity = new UserStatsTableEntity(StaticPartitionKeys.UserStats, userStatistics.UserId,
                 userStatistics.CurrentAlcoholization, userStatistics.CurrentNightDrinks,
                 userStatistics.Score,
                 userStatistics.TotalDrinksLastMonth);
 
-            TableOperation saveOperation = TableOperation.InsertOrMerge(entity);
-
-            return table.ExecuteAsync(saveOperation);
+            await storageAccessService.InsertOrMergeAsync(TableNames.UserStats, entity);
         }
-
     }
 }

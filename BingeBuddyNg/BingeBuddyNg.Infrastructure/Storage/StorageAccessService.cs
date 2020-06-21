@@ -13,7 +13,7 @@ namespace BingeBuddyNg.Services.Infrastructure
 {
     public class StorageAccessService : IStorageAccessService
     {
-        private StorageConfiguration config;
+        private readonly StorageConfiguration config;
 
         public StorageAccessService(StorageConfiguration config)
         {
@@ -177,6 +177,70 @@ namespace BingeBuddyNg.Services.Infrastructure
         private CloudStorageAccount GetStorageAccount()
         {
             return CloudStorageAccount.Parse(this.config.StorageConnectionString);
+        }
+
+        public async Task InsertAsync(string tableName, ITableEntity entity)
+        {
+            var table = this.GetTableReference(tableName);
+
+            TableOperation operation = TableOperation.Insert(entity);
+            await table.ExecuteAsync(operation);
+        }
+
+        
+
+        public async Task ReplaceAsync(string tableName, ITableEntity entity)
+        {
+            var table = this.GetTableReference(tableName);
+
+            TableOperation operation = TableOperation.Replace(entity);
+            await table.ExecuteAsync(operation);
+        }
+
+        public async Task DeleteAsync(string tableName, ITableEntity entity)
+        {
+            var table = this.GetTableReference(tableName);
+
+            TableOperation operation = TableOperation.Delete(entity);
+            await table.ExecuteAsync(operation);
+        }
+
+        public async Task DeleteAsync(string tableName, string partitionKey, string rowKey)
+        {
+            var entity = await GetTableEntityAsync<DynamicTableEntity>(tableName, partitionKey, rowKey);
+            if(entity != null)
+            {
+                await DeleteAsync(tableName, entity);
+            }            
+        }
+
+        public async Task InsertOrReplaceAsync(string tableName, IEnumerable<ITableEntity> entities)
+        {
+            TableBatchOperation batch = new TableBatchOperation();
+            foreach (var e in entities)
+            {
+                batch.Add(TableOperation.InsertOrReplace(e));
+            }
+
+            var table = GetTableReference(tableName);
+
+            await table.ExecuteBatchAsync(batch);
+        }
+
+        public async Task InsertOrReplaceAsync(string tableName, ITableEntity entity)
+        {
+            var table = this.GetTableReference(tableName);
+
+            TableOperation operation = TableOperation.InsertOrReplace(entity);
+            await table.ExecuteAsync(operation);
+        }
+
+        public async Task InsertOrMergeAsync(string tableName, ITableEntity entity)
+        {
+            var table = this.GetTableReference(tableName);
+
+            TableOperation operation = TableOperation.InsertOrMerge(entity);
+            await table.ExecuteAsync(operation);
         }
     }
 }

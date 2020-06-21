@@ -36,14 +36,10 @@ namespace BingeBuddyNg.Core.Statistics.Commands
 
         private async Task UpdateTotalDrinkCountLastMonthAsync(string userId, int count)
         {
-            var table = storageAccessService.GetTableReference(TableNames.UserStats);
+            var entity = await storageAccessService.GetTableEntityAsync<UserStatsTableEntity>(TableNames.UserStats, StaticPartitionKeys.UserStats, userId);
+            entity.TotalDrinksLastMonth = count;
 
-            var result = await storageAccessService.GetTableEntityAsync<UserStatsTableEntity>(TableNames.UserStats, StaticPartitionKeys.UserStats, userId);
-            result.TotalDrinksLastMonth = count;
-
-            TableOperation saveOperation = TableOperation.InsertOrReplace(result);
-
-            await table.ExecuteAsync(saveOperation);
+            await this.storageAccessService.InsertOrReplaceAsync(TableNames.UserStats, entity);
         }
     }
 }

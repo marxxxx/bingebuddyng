@@ -5,15 +5,12 @@ using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Core.Venue;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User.Persistence;
-using Microsoft.WindowsAzure.Storage.Table;
+using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Services.User
 {
     public class UserRepository : IUserRepository
     {
-        private const string TableName = "users";
-        private const string PartitionKeyValue = "User";
-
         private readonly IStorageAccessService storageAccess;
         private readonly ICacheService cacheService;
 
@@ -43,15 +40,9 @@ namespace BingeBuddyNg.Services.User
 
         private async Task<JsonTableEntity<UserEntity>> FindUserEntityAsync(string id)
         {
-            var result = await cacheService.GetOrCreateAsync<JsonTableEntity<UserEntity>>(GetUserCacheKey(id), async () =>
+            var result = await cacheService.GetOrCreateAsync(GetUserCacheKey(id), async () =>
             {
-                var table = storageAccess.GetTableReference(TableName);
-
-                TableOperation retrieveOperation = TableOperation.Retrieve<JsonTableEntity<Core.User.User>>(PartitionKeyValue, id);
-
-                var userResult = await table.ExecuteAsync(retrieveOperation);
-
-                return userResult?.Result as JsonTableEntity<UserEntity>;
+                return await this.storageAccess.GetTableEntityAsync<JsonTableEntity<UserEntity>>(TableNames.Users, StaticPartitionKeys.User, id);
             }, TimeSpan.FromMinutes(1));
 
             return result;
@@ -62,14 +53,12 @@ namespace BingeBuddyNg.Services.User
 
         public async Task<CreateOrUpdateUserResult> CreateOrUpdateUserAsync(CreateOrUpdateUserCommand request)
         {
-            var table = storageAccess.GetTableReference(TableName);
             bool profilePicHasChanged = true;
             bool nameHasChanged = false;
             var savedUser = await FindUserEntityAsync(request.UserId);
             bool isNewUser = false;
             string originalUserName = null;
 
-            TableOperation saveUserOperation;
             if (savedUser != null)
             {
                 originalUserName = savedUser.Entity.Name;
@@ -89,8 +78,7 @@ namespace BingeBuddyNg.Services.User
                     savedUser.Entity.Language = request.Language;
                 }
 
-                saveUserOperation = TableOperation.Replace(savedUser);
-
+                await this.storageAccess.ReplaceAsync(TableNames.Users, savedUser);
                 cacheService.Remove(GetUserCacheKey(request.UserId));
             }
             else
@@ -99,18 +87,16 @@ namespace BingeBuddyNg.Services.User
                 {
                     Id = request.UserId,
                     Name = request.Name,
-                    Gender = Core.User.Gender.Male,
+                    Gender = Gender.Male,
                     Language = request.Language,
                     PushInfo = request.PushInfo,
                     Weight = 80,
                     LastOnline = DateTime.UtcNow,
                     ProfileImageUrl = request.ProfileImageUrl
                 };
-                saveUserOperation = TableOperation.Insert(new JsonTableEntity<UserEntity>(PartitionKeyValue, request.UserId, user));
+                await this.storageAccess.InsertAsync(TableNames.Users, new JsonTableEntity<UserEntity>(StaticPartitionKeys.User, request.UserId, user));
                 isNewUser = true;
             }
-
-            await table.ExecuteAsync(saveUserOperation);
 
             return new CreateOrUpdateUserResult(isNewUser, profilePicHasChanged, nameHasChanged, originalUserName);
         }
@@ -120,10 +106,7 @@ namespace BingeBuddyNg.Services.User
             var userEntity = await FindUserEntityAsync(user.Id);
             userEntity.Entity = user;
 
-            var table = storageAccess.GetTableReference(TableName);
-            TableOperation saveUserOperation = TableOperation.Replace(userEntity);
-
-            await table.ExecuteAsync(saveUserOperation);
+            await this.storageAccess.ReplaceAsync(TableNames.Users, userEntity);
 
             cacheService.Remove(GetUserCacheKey(user.Id));
         }

@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using BingeBuddyNg.Services.Infrastructure;
-using Microsoft.WindowsAzure.Storage.Table;
 using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.Statistics.Commands
@@ -16,18 +15,14 @@ namespace BingeBuddyNg.Core.Statistics.Commands
 
         public async Task ExecuteAsync(string userId, int additionalScore)
         {
-            var table = storageAccessService.GetTableReference(TableNames.UserStats);
-
-            var result = await storageAccessService.GetTableEntityAsync<UserStatsTableEntity>(TableNames.UserStats, StaticPartitionKeys.UserStats, userId);
-            if (result.Score == null)
+            var entity = await storageAccessService.GetTableEntityAsync<UserStatsTableEntity>(TableNames.UserStats, StaticPartitionKeys.UserStats, userId);
+            if (entity.Score == null)
             {
-                result.Score = 0;
+                entity.Score = 0;
             }
-            result.Score += additionalScore;
+            entity.Score += additionalScore;
 
-            TableOperation saveOperation = TableOperation.Replace(result);
-
-            await table.ExecuteAsync(saveOperation);
+            await storageAccessService.ReplaceAsync(TableNames.UserStats, entity);
         }
     }
 }

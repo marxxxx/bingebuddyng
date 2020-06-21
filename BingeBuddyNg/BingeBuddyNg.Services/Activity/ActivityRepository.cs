@@ -25,28 +25,21 @@ namespace BingeBuddyNg.Services.Activity
 
         public async Task<ActivityEntity> AddActivityAsync(ActivityEntity activity)
         {
-            var activityTable = this.storageAccessService.GetTableReference(Constants.TableNames.Activity);
-
             string activityFeedRowKey = ActivityKeyFactory.CreateRowKey(activity.Timestamp, activity.UserId);
             var entity = new ActivityTableEntity(ActivityKeyFactory.CreatePartitionKey(activity.Timestamp), activityFeedRowKey, activity);
 
-            TableOperation operation = TableOperation.Insert(entity);
-            await activityTable.ExecuteAsync(operation);
-
-            var perUserActivityTable = this.storageAccessService.GetTableReference(Constants.TableNames.ActivityPerUser);
+            await this.storageAccessService.InsertAsync(Constants.TableNames.Activity, entity);
 
             string activityPerUserRowKey = ActivityKeyFactory.CreatePerUserRowKey(activity.Timestamp);
             var perUserEntity = new ActivityTableEntity(activity.UserId, activityPerUserRowKey, activity);
 
-            TableOperation perUserOperation = TableOperation.Insert(perUserEntity);
-            await perUserActivityTable.ExecuteAsync(perUserOperation);
+            await this.storageAccessService.InsertAsync(Constants.TableNames.ActivityPerUser, perUserEntity);
 
             return activity;
         }
 
         public async Task DeleteActivityAsync(string userId, string id)
         {
-            var activityTable = this.storageAccessService.GetTableReference(Constants.TableNames.Activity);
             var activity = await this.GetActivityEntityAsync(id);
             if (activity != null)
             {
@@ -55,29 +48,22 @@ namespace BingeBuddyNg.Services.Activity
                     throw new UnauthorizedAccessException($"User {userId} is not permitted to delete an activity of user {activity.UserId}");
                 }
 
-                await activityTable.ExecuteAsync(TableOperation.Delete(activity));
+                await storageAccessService.DeleteAsync(Constants.TableNames.Activity, activity);
 
                 // Delete activity in per-user table as well
-                var perUserTable = this.storageAccessService.GetTableReference(Constants.TableNames.ActivityPerUser);
                 var perUserActivity = await this.GetActivityPerUserEntityAsync(userId, activity.Entity.Timestamp);
                 if (perUserActivity != null)
                 {
-                    await perUserTable.ExecuteAsync(TableOperation.Delete(perUserActivity));
+                    await storageAccessService.DeleteAsync(Constants.TableNames.ActivityPerUser, perUserActivity);
                 }
             }
         }
 
         private async Task<ActivityTableEntity> GetActivityPerUserEntityAsync(string userId, DateTime timestamp)
         {
-            var table = this.storageAccessService.GetTableReference(Constants.TableNames.ActivityPerUser);
             var rowKey = ActivityKeyFactory.CreatePerUserRowKey(timestamp);
-
-            TableOperation retrieveOperation = TableOperation.Retrieve<ActivityTableEntity>(userId, rowKey);
-
-            var result = await table.ExecuteAsync(retrieveOperation);
-
-            var entity = (ActivityTableEntity)result.Result;
-            return entity;
+            var result = await this.storageAccessService.GetTableEntityAsync<ActivityTableEntity>(Constants.TableNames.ActivityPerUser, userId, rowKey);
+            return result;
         }
 
         public async Task<Core.Activity.Domain.Activity> GetActivityAsync(string id)
@@ -90,25 +76,15 @@ namespace BingeBuddyNg.Services.Activity
         public async Task<ActivityTableEntity> GetActivityEntityAsync(string id)
         {
             string partitionKey = ActivityKeyFactory.GetPartitionKeyFromRowKey(id);
-            var table = this.storageAccessService.GetTableReference(Constants.TableNames.Activity);
-
-            TableOperation retrieveOperation = TableOperation.Retrieve<ActivityTableEntity>(partitionKey, id);
-
-            var result = await table.ExecuteAsync(retrieveOperation);
-
-            var entity = (ActivityTableEntity)result.Result;
-            return entity;
+            return await this.storageAccessService.GetTableEntityAsync<ActivityTableEntity>(Constants.TableNames.Activity, partitionKey, id);
         }
 
         public async Task UpdateActivityAsync(ActivityEntity activity)
         {
-            var table = this.storageAccessService.GetTableReference(Constants.TableNames.Activity);
-
             ActivityTableEntity entity = await GetActivityEntityAsync(activity.Id);
             entity.Entity = activity;
 
-            TableOperation updateOperation = TableOperation.Replace(entity);
-            await table.ExecuteAsync(updateOperation);
+            await this.storageAccessService.ReplaceAsync(Constants.TableNames.Activity, entity);
         }
         
         public async Task AddToActivityAddedTopicAsync(string activityId)

@@ -19,24 +19,22 @@ namespace BingeBuddyNg.Core.FriendsRequest
 
         public FriendRequestRepository(IStorageAccessService storageAccessService)
         {
-            this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
+            this.storageAccessService = storageAccessService;
         }
 
         public async Task AddFriendRequestAsync(UserInfo friend, UserInfo requestingUser)
         {
-            var table = storageAccessService.GetTableReference(TableName);
-
             var requestingEntity = new FriendRequestEntity(friend.UserId, requestingUser.UserId, requestingUser, friend);
             var friendEntity = new FriendRequestEntity(requestingUser.UserId, friend.UserId, requestingUser, friend);
 
-            await table.ExecuteAsync(TableOperation.Insert(requestingEntity));
-            await table.ExecuteAsync(TableOperation.Insert(friendEntity));
+            await storageAccessService.InsertAsync(TableName, requestingEntity);
+            await storageAccessService.InsertAsync(TableName, friendEntity);
         }
 
         public async Task DeleteFriendRequestAsync(string userId, string requestingUserId)
         {
-            await this.storageAccessService.DeleteTableEntityAsync(TableName, userId, requestingUserId);
-            await this.storageAccessService.DeleteTableEntityAsync(TableName, requestingUserId, userId);
+            await this.storageAccessService.DeleteAsync(TableName, userId, requestingUserId);
+            await this.storageAccessService.DeleteAsync(TableName, requestingUserId, userId);
         }
 
         public async Task<List<FriendRequestDTO>> GetFriendRequestsAsync(string userId)

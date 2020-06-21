@@ -71,9 +71,8 @@ namespace BingeBuddyNg.Services.Activity.Commands
             await this.activityRepository.UpdateActivityAsync(activity.ToEntity());
 
             // add to queue
-            var queueClient = this.storageAccessService.GetQueueReference(Constants.QueueNames.ReactionAdded);
             var message = new ReactionAddedMessage(request.ActivityId, request.Type, request.UserId, request.Comment);
-            await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
+            await storageAccessService.AddQueueMessage(Constants.QueueNames.ReactionAdded, message);
 
             return Unit.Value;
         }

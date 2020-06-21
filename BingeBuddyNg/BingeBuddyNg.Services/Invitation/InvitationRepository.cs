@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Invitation;
-using Microsoft.WindowsAzure.Storage.Table;
 using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.Invitation
@@ -18,14 +17,10 @@ namespace BingeBuddyNg.Core.Invitation
 
         public async Task<string> CreateAsync(string userId)
         {
-            var table = storageAccess.GetTableReference(TableNames.Invitations);
-
             string invitationToken = Guid.NewGuid().ToString();
 
             var entity = new InvitationTableEntity(StaticPartitionKeys.Invitation, invitationToken, userId);
-            TableOperation saveOperation = TableOperation.Insert(entity);
-
-            await table.ExecuteAsync(saveOperation);
+            await this.storageAccess.InsertAsync(TableNames.Invitations, entity);
 
             return invitationToken;
         }

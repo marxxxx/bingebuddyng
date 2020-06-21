@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using BingeBuddyNg.Services.Infrastructure;
-using Microsoft.WindowsAzure.Storage.Table;
 using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.Activity.Commands
@@ -16,16 +15,11 @@ namespace BingeBuddyNg.Core.Activity.Commands
 
         public async Task ExecuteAsync(string userId, string id)
         {
-            var userFeedTable = this.storageAccessService.GetTableReference(TableNames.ActivityUserFeed);
-
-            TableOperation retrieveOperation = TableOperation.Retrieve<ActivityTableEntity>(userId, id);
-            var result = await userFeedTable.ExecuteAsync(retrieveOperation);
-
-            var entity = (ActivityTableEntity)result.Result;
+            var entity = await this.storageAccessService.GetTableEntityAsync<ActivityTableEntity>(TableNames.ActivityUserFeed, userId, id);
 
             if (entity != null)
             {
-                await userFeedTable.ExecuteAsync(TableOperation.Delete(entity));
+                await this.storageAccessService.DeleteAsync(TableNames.ActivityUserFeed, entity);
             }
         }
     }

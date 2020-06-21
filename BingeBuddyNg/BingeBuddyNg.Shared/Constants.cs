@@ -24,7 +24,7 @@ namespace BingeBuddyNg.Shared
         }
 
         public static class TableNames
-        {
+        {            
             public const string Activity = "activity";
             public const string ActivityPerUser = "activityperuser";
             public const string ActivityUserFeed = "activityuserfeed";
@@ -33,6 +33,7 @@ namespace BingeBuddyNg.Shared
             public const string UserStatsHistory = "userstatshistory";
             public const string Reports = "reports";
             public const string Invitations = "invitations";
+            public const string DrinkEvents = "drinkevents";
         }
 
         public static class StaticPartitionKeys
@@ -41,6 +42,7 @@ namespace BingeBuddyNg.Shared
             public const string UserStats = "UserStats";
             public const string PersonalUsagePerWeekdayReport = "personalusageperweekdayreport";
             public const string Invitation = "Invitation";
+            public const string DrinkEvent = "drinkevent";
         }
 
         public static class Urls

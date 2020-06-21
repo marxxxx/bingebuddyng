@@ -57,16 +57,8 @@ namespace BingeBuddyNg.Services.Drink
                 d.Id = Guid.NewGuid().ToString();
             }
 
-            TableBatchOperation batch = new TableBatchOperation();
-            foreach (var drink in drinks)
-            {
-                var entity = new DrinkTableEntity(userId, drink);
-                batch.Add(TableOperation.InsertOrReplace(entity));
-            }
-
-            var table = storageAccessService.GetTableReference(TableName);
-
-            await table.ExecuteBatchAsync(batch);
+            var entities = drinks.Select(d => new DrinkTableEntity(userId, d));
+            await this.storageAccessService.InsertOrReplaceAsync(TableName, entities);
         }
 
         public async Task CreateDefaultDrinksForUserAsync(string userId)
@@ -77,10 +69,7 @@ namespace BingeBuddyNg.Services.Drink
 
         public async Task DeleteDrinkAsync(string userId, string drinkId)
         {
-            var entity = await storageAccessService.GetTableEntityAsync<DrinkTableEntity>(TableName, userId, drinkId);
-
-            var table = storageAccessService.GetTableReference(TableName);
-            await table.ExecuteAsync(TableOperation.Delete(entity));
+            await this.storageAccessService.DeleteAsync(TableName, userId, drinkId);
         }
     }
 }
