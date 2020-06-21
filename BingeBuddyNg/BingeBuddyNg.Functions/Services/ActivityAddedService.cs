@@ -70,15 +70,16 @@ namespace BingeBuddyNg.Functions.Services
                     await HandleMonitoringAsync(durableClient, currentUser);
                 }
 
-                UserStatistics userStats = null;
+                
                 bool shouldUpdate = false;
-
+                UserStatistics userStats = null;
                 try
                 {
-                    if (activity.ActivityType == ActivityType.Drink && userStats != null)
-                    {
-                        // Immediately update Stats for current user
-                        userStats = await updateStatisticsCommand.ExecuteAsync(currentUser.Id, currentUser.Gender, currentUser.Weight);
+                    // Immediately update Stats for current user
+                    userStats = await updateStatisticsCommand.ExecuteAsync(currentUser.Id, currentUser.Gender, currentUser.Weight);
+
+                    if (activity.ActivityType == ActivityType.Drink)
+                    {   
                         await updateRankingCommand.ExecuteAsync(currentUser.Id);
 
                         activity.UpdateStats(userStats.CurrentNightDrinks, userStats.CurrentAlcoholization);

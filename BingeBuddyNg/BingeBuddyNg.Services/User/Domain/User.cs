@@ -1,5 +1,6 @@
 ﻿using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.User.Persistence;
+using BingeBuddyNg.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,14 +31,14 @@ namespace BingeBuddyNg.Core.User.Domain
             this.Name = name ?? throw new ArgumentNullException(nameof(name));
             this.Weight = weight;
             this.Gender = gender;
-            this.ProfileImageUrl = profileImageUrl ?? throw new ArgumentNullException(nameof(profileImageUrl));
-            this.PushInfo = pushInfo ?? throw new ArgumentNullException(nameof(pushInfo));
-            this.Friends = friends ?? throw new ArgumentNullException(nameof(friends));
-            this.MutedFriendUserIds = mutedFriendUserIds ?? throw new ArgumentNullException(nameof(mutedFriendUserIds));
-            this.MutedByFriendUserIds = mutedByFriendUserIds ?? throw new ArgumentNullException(nameof(mutedByFriendUserIds));
-            this.MonitoringInstanceId = monitoringInstanceId ?? throw new ArgumentNullException(nameof(monitoringInstanceId));
-            this.CurrentVenue = currentVenue ?? throw new ArgumentNullException(nameof(currentVenue));
-            this.Language = language ?? throw new ArgumentNullException(nameof(language));
+            this.ProfileImageUrl = profileImageUrl;
+            this.PushInfo = pushInfo;
+            this.Friends = friends ?? new List<UserInfo>();
+            this.MutedFriendUserIds = mutedFriendUserIds ?? new List<string>();
+            this.MutedByFriendUserIds = mutedByFriendUserIds ?? new List<string>();
+            this.MonitoringInstanceId = monitoringInstanceId;
+            this.CurrentVenue = currentVenue;
+            this.Language = language ?? Constants.DefaultLanguage;
             this.LastOnline = lastOnline;
         }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity.DTO;
+using BingeBuddyNg.Core.Activity.Persistence;
 using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.Statistics;
 using BingeBuddyNg.Core.Statistics.Queries;
@@ -61,9 +62,9 @@ namespace BingeBuddyNg.Core.Activity.Queries
 
         private async Task<PagedQueryResult<ActivityDTO>> GetActivityFeedAsync(string userId, TableContinuationToken continuationToken, string startActivityId)
         {
-            var result = await storageAccessService.QueryTableAsync<JsonTableEntity<ActivityDTO>>(Constants.TableNames.ActivityUserFeed, userId, startActivityId, 30, continuationToken);
+            var result = await storageAccessService.QueryTableAsync<JsonTableEntity<ActivityEntity>>(Constants.TableNames.ActivityUserFeed, userId, startActivityId, 30, continuationToken);
 
-            var activities = result.ResultPage.Select(r => r.Entity).ToList();
+            var activities = result.ResultPage.Select(r => r.Entity.ToDto()).ToList();
             return new PagedQueryResult<ActivityDTO>(activities, result.ContinuationToken);
         }
     }

@@ -1,7 +1,7 @@
-﻿using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace BingeBuddyNg.Core.FriendsRequest.Commands
 {

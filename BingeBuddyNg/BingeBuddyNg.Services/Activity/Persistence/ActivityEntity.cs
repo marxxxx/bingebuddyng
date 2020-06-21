@@ -59,5 +59,10 @@ namespace BingeBuddyNg.Core.Activity.Persistence
         public List<Reaction> Cheers { get; set; }
 
         public List<CommentReaction> Comments { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Id} - {ActivityType}";
+        }
     }
 }

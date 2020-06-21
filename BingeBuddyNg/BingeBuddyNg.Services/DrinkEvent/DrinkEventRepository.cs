@@ -40,6 +40,11 @@ namespace BingeBuddyNg.Core.DrinkEvent
             var queryResult = await storageAccessService.QueryTableAsync<JsonTableEntity<DrinkEventEntity>>(TableNames.DrinkEvents, StaticPartitionKeys.DrinkEvent, now, 1);
 
             var result = queryResult.ResultPage.FirstOrDefault()?.Entity;
+            if(result == null)
+            {
+                return null;
+            }
+
             return new Domain.DrinkEvent(result.StartUtc, result.EndUtc, result.ScoringUserIds);
         }
 
