@@ -1,6 +1,7 @@
 ﻿using System;
 using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.Commands;
+using BingeBuddyNg.Core.Activity.Queries;
 using BingeBuddyNg.Core.Calculation;
 using BingeBuddyNg.Core.DrinkEvent;
 using BingeBuddyNg.Core.Statistics;
@@ -35,6 +36,7 @@ namespace BingeBuddyNg.Functions
             services.AddScoped<IncreaseScoreCommand>();
             services.AddScoped<DeleteActivityFromPersonalizedFeedCommand>();
             services.AddScoped<DistributeActivityToPersonalizedFeedCommand>();
+            services.AddScoped<GetUserActivitiesQuery>();
 
             // Infrastructure
             services.AddHttpClient();

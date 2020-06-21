@@ -13,7 +13,7 @@ namespace BingeBuddyNg.Core.Activity.Queries
 {
     public class GetUserActivitiesQuery
     {
-        private IStorageAccessService storageAccessService;
+        private readonly IStorageAccessService storageAccessService;
 
         public GetUserActivitiesQuery(IStorageAccessService storageAccessService)
         {

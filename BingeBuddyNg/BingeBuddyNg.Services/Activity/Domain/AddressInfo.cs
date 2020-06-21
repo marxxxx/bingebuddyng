@@ -2,8 +2,8 @@
 {
     public class AddressInfo
     {
-        public string AddressText { get; internal set; }
-        public string CountryLongName { get; internal set; }
-        public string CountryShortName { get; internal set; }
+        public string AddressText { get; set; }
+        public string CountryLongName { get; set; }
+        public string CountryShortName { get; set; }
     }
 }

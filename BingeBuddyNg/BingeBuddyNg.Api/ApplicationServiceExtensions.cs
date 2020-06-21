@@ -6,6 +6,7 @@ using BingeBuddyNg.Core.DrinkEvent;
 using BingeBuddyNg.Core.FriendsRequest;
 using BingeBuddyNg.Core.Game;
 using BingeBuddyNg.Core.Invitation;
+using BingeBuddyNg.Core.Ranking.Queries;
 using BingeBuddyNg.Core.Statistics.Commands;
 using BingeBuddyNg.Core.Statistics.Queries;
 using BingeBuddyNg.Core.User;
@@ -17,6 +18,7 @@ using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Infrastructure.EventGrid;
 using BingeBuddyNg.Services.Infrastructure.Messaging;
+using BingeBuddyNg.Services.Statistics.Querys;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.User.Queries;
 using BingeBuddyNg.Services.Venue;
@@ -37,6 +39,7 @@ namespace BingeBuddyNg.Services
             services.AddLogging();
 
             services.AddMediatR(typeof(ActivityDTO).Assembly);
+
             services.AddScoped<AddFriendCommand>();
             services.AddScoped<SearchUsersQuery>();
             services.AddScoped<GetAllUserIdsQuery>();
@@ -45,6 +48,10 @@ namespace BingeBuddyNg.Services
             services.AddScoped<GetUserActivitiesQuery>();
             services.AddScoped<DeleteActivityFromPersonalizedFeedCommand>();
             services.AddScoped<DistributeActivityToPersonalizedFeedCommand>();
+            services.AddScoped<GetMasterActivitiesQuery>();
+            services.AddScoped<GetDrinksRankingQuery>();
+            services.AddScoped<GetScoreRankingQuery>();
+            services.AddScoped<GetStatisticHistoryForUserQuery>();
 
             // add infrastructure services
             services.AddScoped<IIdentityService, IdentityService>();

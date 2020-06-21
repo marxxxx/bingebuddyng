@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace BingeBuddyNg.Services.Infrastructure
 {
-    public static class ConversionExtensions
+    public static class Converters
     {
         public static TableContinuationToken ToContinuationToken(this string continuationToken)
         {
