@@ -6,20 +6,19 @@ using Xunit;
 
 namespace BingeBuddyNg.Tests
 {
-    public class GameManagerTimeTests
+    public class GameTimeTests
     {
-        private GameManager manager;
-        private Guid gameId;
+        private GameRepository manager;
+        private Game game;
         private string userId;
         private string friendUserId;
 
-        public GameManagerTimeTests()
+        public GameTimeTests()
         {
-            this.gameId = Guid.NewGuid();
             this.userId = Guid.NewGuid().ToString();
             this.friendUserId = Guid.NewGuid().ToString();
-            this.manager = new GameManager();
-            this.manager.StartGame(new Game(this.gameId, "my game", new[] { this.friendUserId }, TimeSpan.FromSeconds(1)));
+            this.manager = new GameRepository();
+            this.game = this.manager.Create("my game", new[] { this.friendUserId }, TimeSpan.FromSeconds(1));
         }
 
         [Fact]
@@ -27,7 +26,7 @@ namespace BingeBuddyNg.Tests
         {
             AutoResetEvent endedEvent = new AutoResetEvent(false);
             GameEndedEventArgs args = null;
-            manager.GameEnded += (o, e) =>
+            this.game.GameEnded += (o, e) =>
             {
                 ThreadPool.QueueUserWorkItem((state) =>
                 {
@@ -35,16 +34,17 @@ namespace BingeBuddyNg.Tests
                     endedEvent.Set();
                 });
             };
+            game.Start();
 
-            manager.AddUserScore(gameId, userId, 1);
-            manager.AddUserScore(gameId, friendUserId, 2);
-            manager.AddUserScore(gameId, userId, 3);
+            game.IncrementScore(userId, 1);
+            game.IncrementScore(friendUserId, 2);
+            game.IncrementScore(userId, 3);
 
             endedEvent.WaitOne(1500);
 
             Assert.NotNull(args);
             Assert.Equal(userId, args.WinnerUserId);
-            Assert.Equal(gameId, args.Game.Id);
+            Assert.Equal(game.Id, args.Game.Id);
         }
     }
 }

@@ -1,11 +1,10 @@
-﻿using BingeBuddyNg.Services.Game;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Shared;
-using MediatR;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Shared;
+using MediatR;
 
 namespace BingeBuddyNg.Core.Game.Commands
 {
@@ -26,9 +25,9 @@ namespace BingeBuddyNg.Core.Game.Commands
     public class AddGameEventCommandHandler : IRequestHandler<AddGameEventCommand>
     {
         private INotificationService notificationService;
-        private GameManager manager;
+        private GameRepository manager;
 
-        public AddGameEventCommandHandler(INotificationService notificationService, GameManager manager)
+        public AddGameEventCommandHandler(INotificationService notificationService, GameRepository manager)
         {
             this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
             this.manager = manager ?? throw new ArgumentNullException(nameof(manager));
@@ -36,9 +35,9 @@ namespace BingeBuddyNg.Core.Game.Commands
 
         public async Task<Unit> Handle(AddGameEventCommand command, CancellationToken cancellationToken)
         {
-            var currentScore = this.manager.AddUserScore(command.GameId, command.UserId, command.Count);
+            var currentScore = this.manager.Get(command.GameId).IncrementScore(command.UserId, command.Count);
 
-            var game = this.manager.GetGame(command.GameId);
+            var game = this.manager.Get(command.GameId);
 
             await this.notificationService.SendSignalRMessageAsync(
                 game.PlayerUserIds.Select(u => u.ToString()).ToList().AsReadOnly(),
