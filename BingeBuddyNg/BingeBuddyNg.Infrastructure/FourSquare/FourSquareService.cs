@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -14,6 +15,12 @@ namespace BingeBuddyNg.Infrastructure.FourSquare
 
         private readonly IHttpClientFactory httpClientFactory;
         private readonly FourSquareConfiguration configuration;
+
+        public FourSquareService(IHttpClientFactory httpClientFactory, FourSquareConfiguration configuration)
+        {
+            this.httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        }
 
         public async Task<List<Venue>> SearchVenuesAsync(float latitude, float longitude)
         {
