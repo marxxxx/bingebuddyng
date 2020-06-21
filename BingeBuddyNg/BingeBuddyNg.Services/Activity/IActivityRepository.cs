@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using BingeBuddyNg.Services.Activity.Persistence;
+using BingeBuddyNg.Core.Activity.Persistence;
 
 namespace BingeBuddyNg.Core.Activity
 {

@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using BingeBuddyNg.Services.Activity.Persistence;
 using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Services.Infrastructure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
-using BingeBuddyNg.Services.Infrastructure;
 
-namespace BingeBuddyNg.Core.Activity
+namespace BingeBuddyNg.Core.Activity.Persistence
 {
     public class ActivityTableEntity : JsonTableEntity<ActivityEntity>
     {

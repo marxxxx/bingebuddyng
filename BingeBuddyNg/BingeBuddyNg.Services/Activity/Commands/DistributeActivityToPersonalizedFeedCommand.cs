@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Activity.Persistence;
+using BingeBuddyNg.Core.Activity.Persistence;
 using BingeBuddyNg.Core.Infrastructure;
 using static BingeBuddyNg.Shared.Constants;
 

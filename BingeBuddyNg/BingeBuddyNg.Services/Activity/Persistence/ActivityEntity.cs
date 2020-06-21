@@ -6,7 +6,7 @@ using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.Game.Persistence;
 using BingeBuddyNg.Services.Venue.Persistence;
 
-namespace BingeBuddyNg.Services.Activity.Persistence
+namespace BingeBuddyNg.Core.Activity.Persistence
 {
     public class ActivityEntity
     {
