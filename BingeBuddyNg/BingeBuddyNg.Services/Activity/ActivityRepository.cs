@@ -24,13 +24,14 @@ namespace BingeBuddyNg.Core.Activity
         {
             string activityFeedRowKey = ActivityKeyFactory.CreateRowKey(activity.Timestamp, activity.UserId);
             var entity = new ActivityTableEntity(ActivityKeyFactory.CreatePartitionKey(activity.Timestamp), activityFeedRowKey, activity);
-
             await this.storageAccessService.InsertAsync(Constants.TableNames.Activity, entity);
 
             string activityPerUserRowKey = ActivityKeyFactory.CreatePerUserRowKey(activity.Timestamp);
             var perUserEntity = new ActivityTableEntity(activity.UserId, activityPerUserRowKey, activity);
-
             await this.storageAccessService.InsertAsync(Constants.TableNames.ActivityPerUser, perUserEntity);
+
+            var personalEntity = new ActivityTableEntity(activity.UserId, activity.Id, activity);
+            await this.storageAccessService.InsertAsync(Constants.TableNames.ActivityUserFeed, personalEntity);
 
             return activity;
         }
