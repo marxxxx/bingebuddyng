@@ -1,11 +1,10 @@
-﻿using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Invitation;
-using BingeBuddyNg.Services.User;
-using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.DTO;
+using BingeBuddyNg.Services.Invitation;
+using MediatR;
 
 namespace BingeBuddyNg.Core.Invitation.Querys
 {

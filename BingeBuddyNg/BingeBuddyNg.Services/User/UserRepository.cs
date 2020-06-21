@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Commands;
+using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Core.Venue;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User.Persistence;
@@ -20,7 +21,7 @@ namespace BingeBuddyNg.Services.User
             this.cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
         }
 
-        public async Task<Core.User.User> GetUserAsync(string id)
+        public async Task<Core.User.Domain.User> GetUserAsync(string id)
         {
             var result = await FindUserEntityAsync(id);
             if (result?.Entity == null)
@@ -35,7 +36,7 @@ namespace BingeBuddyNg.Services.User
                 user.LastOnline = result.Timestamp.UtcDateTime;
             }
 
-            return new Core.User.User(user.Id, user.Name, user.Weight, user.Gender, user.ProfileImageUrl, user.PushInfo, user.Friends, user.MutedByFriendUserIds, user.MutedByFriendUserIds, user.MonitoringInstanceId, user.CurrentVenue?.ToDomain(), user.Language, user.LastOnline);
+            return new Core.User.Domain.User(user.Id, user.Name, user.Weight, user.Gender, user.ProfileImageUrl, user.PushInfo, user.Friends, user.MutedByFriendUserIds, user.MutedByFriendUserIds, user.MonitoringInstanceId, user.CurrentVenue?.ToDomain(), user.Language, user.LastOnline);
         }
 
         private async Task<JsonTableEntity<UserEntity>> FindUserEntityAsync(string id)

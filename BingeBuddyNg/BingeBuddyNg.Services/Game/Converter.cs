@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.Game.DTO;
-using BingeBuddyNg.Services.Game.Persistence;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.DTO;
+using BingeBuddyNg.Core.Game.Persistence;
 
 namespace BingeBuddyNg.Core.Game
 {

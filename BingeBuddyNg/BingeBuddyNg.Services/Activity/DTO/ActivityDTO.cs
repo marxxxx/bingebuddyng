@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Drink;
-using BingeBuddyNg.Core.Venue.DTO;
 using BingeBuddyNg.Core.Game.DTO;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.User.DTO;
+using BingeBuddyNg.Core.Venue.DTO;
 
 namespace BingeBuddyNg.Services.Activity
 {

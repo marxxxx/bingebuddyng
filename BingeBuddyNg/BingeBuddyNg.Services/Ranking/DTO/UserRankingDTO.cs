@@ -1,6 +1,6 @@
 ﻿using System;
 using BingeBuddyNg.Core.Statistics.DTO;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.User.DTO;
 
 namespace BingeBuddyNg.Core.Ranking.DTO
 {

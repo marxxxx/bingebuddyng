@@ -1,10 +1,10 @@
-﻿using BingeBuddyNg.Core.User;
+﻿using System;
+using System.Collections.Generic;
+using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Core.Venue.DTO;
 using BingeBuddyNg.Services.Infrastructure;
-using System;
-using System.Collections.Generic;
 
-namespace BingeBuddyNg.Services.User
+namespace BingeBuddyNg.Core.User.DTO
 {
     public class UserDTO
     {

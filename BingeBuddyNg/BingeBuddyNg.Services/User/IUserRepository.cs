@@ -6,7 +6,7 @@ namespace BingeBuddyNg.Core.User
 {
     public interface IUserRepository
     {
-        Task<User> GetUserAsync(string id);
+        Task<Core.User.Domain.User> GetUserAsync(string id);
 
         Task UpdateUserAsync(UserEntity user);
 

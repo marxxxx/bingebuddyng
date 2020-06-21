@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Calculation;
-using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Statistics;
 using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAzure.Storage.Table;
 using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.Statistics.Commands

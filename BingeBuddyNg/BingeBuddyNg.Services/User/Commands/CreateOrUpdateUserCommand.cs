@@ -68,7 +68,7 @@ namespace BingeBuddyNg.Core.User.Commands
                     }
                 }
                
-                var activity = Activity.Domain.Activity.CreateRegistrationActivity(User.BingeBuddyUserId, User.BingeBuddyUserName, new UserInfo(request.UserId, request.Name));
+                var activity = Activity.Domain.Activity.CreateRegistrationActivity(BingeBuddyUser.Id, BingeBuddyUser.Name, new UserInfo(request.UserId, request.Name));
 
                 await activityRepository.AddActivityAsync(activity.ToEntity());
             }

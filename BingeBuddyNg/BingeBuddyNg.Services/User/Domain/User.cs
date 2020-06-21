@@ -2,14 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static BingeBuddyNg.Shared.Constants;
 
-namespace BingeBuddyNg.Core.User
+namespace BingeBuddyNg.Core.User.Domain
 {
     public class User
     {
-        public static readonly string BingeBuddyUserId = "bingebuddy";
-        public static readonly string BingeBuddyUserName = "Binge Buddy";
-
         public string Id { get; }
         public string Name { get; }
         public int? Weight { get; private set; }
@@ -62,7 +60,7 @@ namespace BingeBuddyNg.Core.User
             var visibleUserIds = Friends.Select(f => f.UserId).Except(MutedByFriendUserIds);
             if (includeMe)
             {
-                visibleUserIds = visibleUserIds.Union(new[] { this.Id, BingeBuddyUserId });
+                visibleUserIds = visibleUserIds.Union(new[] { this.Id, BingeBuddyUser.Id });
             }
             return visibleUserIds.ToList();
         }

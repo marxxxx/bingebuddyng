@@ -1,5 +1,5 @@
-﻿using BingeBuddyNg.Core.Venue;
-using BingeBuddyNg.Services.User;
+﻿using BingeBuddyNg.Core.User.DTO;
+using BingeBuddyNg.Core.Venue;
 using BingeBuddyNg.Services.User.Persistence;
 using BingeBuddyNg.Services.Venue.Persistence;
 
@@ -7,12 +7,12 @@ namespace BingeBuddyNg.Core.User
 {
     public static class Converters
     {
-        public static UserInfo ToUserInfo(this User user)
+        public static UserInfo ToUserInfo(this Domain.User user)
         {
             return new UserInfo(user.Id, user.Name);
         }
 
-        public static UserInfoDTO ToUserInfoDTO(this User user)
+        public static UserInfoDTO ToUserInfoDTO(this Domain.User user)
         {
             return new UserInfoDTO(userId: user.Id, userName: user.Name);
         }
@@ -27,7 +27,7 @@ namespace BingeBuddyNg.Core.User
             return new UserInfo(entity.Id, entity.Name);
         }
 
-        public static UserEntity ToEntity(this User user)
+        public static UserEntity ToEntity(this Domain.User user)
         {
             return new UserEntity()
             {
@@ -53,7 +53,7 @@ namespace BingeBuddyNg.Core.User
             };
         }
 
-        public static UserDTO ToDto(this User entity)
+        public static UserDTO ToDto(this Domain.User entity)
         {
             return new UserDTO()
             {

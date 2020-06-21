@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using BingeBuddyNg.Core.Game.Domain;
 
-namespace BingeBuddyNg.Services.Game.Persistence
+namespace BingeBuddyNg.Core.Game.Persistence
 {
     public class GameEntity
     {

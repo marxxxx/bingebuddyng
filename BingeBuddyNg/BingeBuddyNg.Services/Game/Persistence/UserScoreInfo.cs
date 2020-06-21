@@ -1,6 +1,6 @@
 ﻿using BingeBuddyNg.Core.User;
 
-namespace BingeBuddyNg.Services.Game.Persistence
+namespace BingeBuddyNg.Core.Game.Persistence
 {
     public class UserScoreInfo
     {

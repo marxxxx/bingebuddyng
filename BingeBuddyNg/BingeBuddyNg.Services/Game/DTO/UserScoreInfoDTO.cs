@@ -1,4 +1,4 @@
-﻿using BingeBuddyNg.Services.User;
+﻿using BingeBuddyNg.Core.User.DTO;
 
 namespace BingeBuddyNg.Core.Game.DTO
 {

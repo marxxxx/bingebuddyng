@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Domain;
 
 namespace BingeBuddyNg.Core.Calculation
 {

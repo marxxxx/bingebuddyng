@@ -6,9 +6,11 @@ namespace BingeBuddyNg.Core.DrinkEvent.Domain
     public class DrinkEvent
     {
         private List<string> _scoringUserIds = new List<string>();
+
         public IReadOnlyList<string> ScoringUserIds => _scoringUserIds.AsReadOnly();
 
         public DateTime StartUtc { get; }
+
         public DateTime EndUtc { get; }
 
         public DrinkEvent(DateTime startUtc, DateTime endUtc, IEnumerable<string> scoringUserIds = null)

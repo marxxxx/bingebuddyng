@@ -1,11 +1,10 @@
 ﻿using System;
-using BingeBuddyNg.Services.Game.Persistence;
+using BingeBuddyNg.Core.Game.Persistence;
 
 namespace BingeBuddyNg.Core.Activity.Domain
 {
     public class GameResultActivityInfo
     {
-        // TODO: This should be a domain object
         public GameEntity GameInfo { get; }
 
         public GameResultActivityInfo(GameEntity game) 

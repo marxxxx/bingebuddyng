@@ -1,4 +1,5 @@
 ﻿using System;
+using BingeBuddyNg.Core.User.DTO;
 using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Core.User

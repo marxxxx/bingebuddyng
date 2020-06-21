@@ -1,4 +1,4 @@
-﻿namespace BingeBuddyNg.Core.User
+﻿namespace BingeBuddyNg.Core.User.Domain
 {
     public enum Gender
     {

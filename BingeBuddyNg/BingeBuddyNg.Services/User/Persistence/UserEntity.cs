@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.Venue.Persistence;
 

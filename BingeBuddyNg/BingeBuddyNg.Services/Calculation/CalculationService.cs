@@ -3,8 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Activity.Queries;
-using BingeBuddyNg.Core.User;
-
+using BingeBuddyNg.Core.User.Domain;
 
 namespace BingeBuddyNg.Core.Calculation
 {

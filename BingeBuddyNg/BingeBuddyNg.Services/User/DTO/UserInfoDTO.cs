@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BingeBuddyNg.Services.User
+namespace BingeBuddyNg.Core.User.DTO
 {
     public class UserInfoDTO
     {

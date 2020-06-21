@@ -64,5 +64,11 @@ namespace BingeBuddyNg.Shared
 
             public const string ActivityReceivedMethodName = "activity-received";
         }
+
+        public static class BingeBuddyUser
+        {
+            public static readonly string Id = "bingebuddy";
+            public static readonly string Name = "Binge Buddy";
+        }
     }
 }

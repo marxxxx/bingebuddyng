@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Drink;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Services.Game.Persistence;
+using BingeBuddyNg.Core.Game.Persistence;
 using BingeBuddyNg.Services.Venue.Persistence;
 
 namespace BingeBuddyNg.Services.Activity.Persistence

@@ -1,5 +1,5 @@
 ﻿using System;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.User.DTO;
 
 namespace BingeBuddyNg.Services.Invitation
 {
