@@ -1,5 +1,5 @@
 ﻿using BingeBuddyNg.Core.DrinkEvent.DTO;
-using BingeBuddyNg.Services.DrinkEvent.Persistence;
+using BingeBuddyNg.Core.DrinkEvent.Persistence;
 
 namespace BingeBuddyNg.Core.DrinkEvent
 {

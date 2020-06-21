@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BingeBuddyNg.Core.Venue;
 using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.Venue.Persistence;
 using Microsoft.Extensions.Logging;
 
-namespace BingeBuddyNg.Services.Venue
+namespace BingeBuddyNg.Core.Venue
 {
     public class VenueUserRepository : IVenueUserRepository
     {

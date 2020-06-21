@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.DrinkEvent.Persistence;
+using BingeBuddyNg.Core.DrinkEvent.Persistence;
 using BingeBuddyNg.Core.Infrastructure;
 using Microsoft.Extensions.Logging;
 using static BingeBuddyNg.Shared.Constants;

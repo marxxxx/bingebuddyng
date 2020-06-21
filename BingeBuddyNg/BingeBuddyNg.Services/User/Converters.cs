@@ -2,7 +2,7 @@
 using BingeBuddyNg.Core.User.DTO;
 using BingeBuddyNg.Core.User.Persistence;
 using BingeBuddyNg.Core.Venue;
-using BingeBuddyNg.Services.Venue.Persistence;
+using BingeBuddyNg.Core.Venue.Persistence;
 
 namespace BingeBuddyNg.Core.User
 {

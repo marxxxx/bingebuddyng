@@ -1,6 +1,6 @@
 ﻿using BingeBuddyNg.Core.Activity.Domain;
 
-namespace BingeBuddyNg.Services.Venue.Persistence
+namespace BingeBuddyNg.Core.Venue.Persistence
 {
     public class VenueEntity
     {

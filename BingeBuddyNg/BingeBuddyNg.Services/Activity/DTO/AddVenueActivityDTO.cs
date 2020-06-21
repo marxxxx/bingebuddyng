@@ -1,6 +1,6 @@
 ﻿using System;
+using BingeBuddyNg.Core.Venue;
 using BingeBuddyNg.Core.Venue.DTO;
-using BingeBuddyNg.Services.Venue;
 
 namespace BingeBuddyNg.Core.Activity.DTO
 {

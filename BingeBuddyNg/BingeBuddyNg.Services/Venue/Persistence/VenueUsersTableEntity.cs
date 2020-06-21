@@ -1,6 +1,6 @@
 ﻿using Microsoft.WindowsAzure.Storage.Table;
 
-namespace BingeBuddyNg.Services.Venue
+namespace BingeBuddyNg.Core.Venue.Persistence
 {
     public class VenueUsersTableEntity : TableEntity
     {

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Services.Venue.Persistence;
+using BingeBuddyNg.Core.User.Domain;
+using BingeBuddyNg.Core.Venue.Persistence;
 
 namespace BingeBuddyNg.Core.User.Persistence
 {

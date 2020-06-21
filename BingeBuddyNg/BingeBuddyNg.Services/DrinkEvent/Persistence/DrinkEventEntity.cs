@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BingeBuddyNg.Services.DrinkEvent.Persistence
+namespace BingeBuddyNg.Core.DrinkEvent.Persistence
 {
     public class DrinkEventEntity
     {

@@ -1,6 +1,5 @@
-﻿using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Core.Venue.DTO;
-using BingeBuddyNg.Services.Venue.Persistence;
+﻿using BingeBuddyNg.Core.Venue.DTO;
+using BingeBuddyNg.Core.Venue.Persistence;
 
 namespace BingeBuddyNg.Core.Venue
 {
