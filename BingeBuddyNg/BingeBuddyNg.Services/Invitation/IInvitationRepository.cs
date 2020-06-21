@@ -1,13 +1,12 @@
 ﻿using System.Threading.Tasks;
+using BingeBuddyNg.Services.Invitation;
 
 namespace BingeBuddyNg.Core.Invitation
 {
     public interface IInvitationRepository
     {
-        Task<Invitation> GetInvitationAsync(string invitationToken);
+        Task<InvitationTableEntity> GetAsync(string invitationToken);
 
-        Task<string> CreateInvitationAsync(string userId);
-
-        Task<Invitation> AcceptInvitationAsync(string userId, string token);
+        Task<string> CreateAsync(string userId);
     }
 }

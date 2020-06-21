@@ -32,6 +32,7 @@ namespace BingeBuddyNg.Shared
             public const string UserStats = "userstats";
             public const string UserStatsHistory = "userstatshistory";
             public const string Reports = "reports";
+            public const string Invitations = "invitations";
         }
 
         public static class StaticPartitionKeys
@@ -39,6 +40,7 @@ namespace BingeBuddyNg.Shared
             public const string User = "User";
             public const string UserStats = "UserStats";
             public const string PersonalUsagePerWeekdayReport = "personalusageperweekdayreport";
+            public const string Invitation = "Invitation";
         }
 
         public static class Urls

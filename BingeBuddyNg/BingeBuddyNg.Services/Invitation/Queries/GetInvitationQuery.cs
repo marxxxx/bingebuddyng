@@ -33,7 +33,7 @@ namespace BingeBuddyNg.Core.Invitation.Querys
 
         public async Task<InvitationDTO> Handle(GetInvitationQuery request, CancellationToken cancellationToken)
         {
-            var invitation = await this.invitationRepository.GetInvitationAsync(request.InvitationToken);
+            var invitation = await this.invitationRepository.GetAsync(request.InvitationToken);
             var user = await this.userRepository.GetUserAsync(invitation.InvitingUserId);
 
             var result = new InvitationDTO(invitation.InvitationToken, invitation.InvitingUserId, new UserInfoDTO(user.Id, user.Name));

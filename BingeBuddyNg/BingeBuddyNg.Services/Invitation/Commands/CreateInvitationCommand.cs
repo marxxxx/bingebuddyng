@@ -26,7 +26,7 @@ namespace BingeBuddyNg.Core.Invitation.Commands
 
         public async Task<string> Handle(CreateInvitationCommand request, CancellationToken cancellationToken)
         {
-            var invitationToken = await invitationRepository.CreateInvitationAsync(request.UserId);
+            var invitationToken = await invitationRepository.CreateAsync(request.UserId);
             return invitationToken;
         }
     }

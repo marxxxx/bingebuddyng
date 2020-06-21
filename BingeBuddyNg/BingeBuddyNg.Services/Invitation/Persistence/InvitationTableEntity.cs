@@ -5,7 +5,7 @@ namespace BingeBuddyNg.Services.Invitation
 {
     public class InvitationTableEntity : TableEntity
     {
-        public string InviationToken { get; set; }
+        public string InvitationToken { get; set; }
         public string InvitingUserId { get; set; }
 
         public InvitationTableEntity()
@@ -14,7 +14,7 @@ namespace BingeBuddyNg.Services.Invitation
         public InvitationTableEntity(string partitionKey, string invitationToken, string invitingUserId)
             :base(partitionKey, invitationToken)
         {
-            this.InviationToken = invitationToken ?? throw new ArgumentNullException(nameof(invitationToken));
+            this.InvitationToken = invitationToken ?? throw new ArgumentNullException(nameof(invitationToken));
             this.InvitingUserId = invitingUserId ?? throw new ArgumentNullException(nameof(invitingUserId));
         }
     }

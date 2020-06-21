@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
-using BingeBuddyNg.Core.Statistics;
 using BingeBuddyNg.Core.Statistics.Commands;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Commands;
@@ -10,6 +9,7 @@ using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Shared;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.Invitation.Commands
 {
@@ -37,7 +37,8 @@ namespace BingeBuddyNg.Core.Invitation.Commands
         private readonly IncreaseScoreCommand increaseScoreCommand;
         private readonly AddFriendCommand addFriendCommand;
 
-        public AcceptInvitationCommandHandler(IInvitationRepository invitationRepository,
+        public AcceptInvitationCommandHandler(
+            IInvitationRepository invitationRepository,
             IUserRepository userRepository,
             INotificationService notificationService,
             IActivityRepository activityRepository,
@@ -54,12 +55,12 @@ namespace BingeBuddyNg.Core.Invitation.Commands
             this.increaseScoreCommand = increaseScoreCommand;
             this.addFriendCommand = addFriendCommand;
 
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.logger = logger;
         }
 
         public async Task<Unit> Handle(AcceptInvitationCommand request, CancellationToken cancellationToken)
         {
-            var invitation = await this.invitationRepository.AcceptInvitationAsync(request.AcceptingUserId, request.InvitationToken);
+            var invitation = await this.invitationRepository.GetAsync(request.InvitationToken);
             if (request.AcceptingUserId != invitation.InvitingUserId)
             {
                 var invitingUser = await this.userRepository.GetUserAsync(invitation.InvitingUserId);
@@ -72,7 +73,7 @@ namespace BingeBuddyNg.Core.Invitation.Commands
 
                 try
                 {
-                    await this.increaseScoreCommand.ExecuteAsync(invitingUser.Id, Constants.Scores.FriendInvitation);
+                    await this.increaseScoreCommand.ExecuteAsync(invitingUser.Id, Scores.FriendInvitation);
 
                     var message = await translationService.GetTranslationAsync(invitingUser.Language, "RecruitmentActivityMessage", acceptingUser.Name, Constants.Scores.FriendInvitation);
 
@@ -91,7 +92,7 @@ namespace BingeBuddyNg.Core.Invitation.Commands
                     string userName = acceptingUser?.Name ?? await translationService.GetTranslationAsync(invitingUser.Language, "Somebody");
                     string messageContent = await translationService.GetTranslationAsync(invitingUser.Language, "AcceptedInvitation", userName);
 
-                    var message = new WebPushNotificationMessage(Constants.Urls.ApplicationIconUrl, Constants.Urls.ApplicationIconUrl, Constants.Urls.ApplicationUrl,
+                    var message = new WebPushNotificationMessage(Urls.ApplicationIconUrl, Urls.ApplicationIconUrl, Urls.ApplicationUrl,
                         "Binge Buddy", messageContent);
                     this.notificationService.SendWebPushMessage(new[] { invitingUser.PushInfo }, message);
                 }
