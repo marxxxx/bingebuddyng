@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Services.Game.DTO;
+using BingeBuddyNg.Core.Game.DTO;
 using BingeBuddyNg.Services.User.Queries;
 using MediatR;
 

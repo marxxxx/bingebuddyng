@@ -81,11 +81,11 @@ namespace BingeBuddyNg.Tests
                 .ReturnsAsync((ActivityEntity _a) => _a);
 
             var startGameCommand = new StartGameCommandHandler(
-                notificationServiceMock.Object,
-                gameManager,                
+                gameManager,
                 searchUsersQuery,
-                new Mock<ITranslationService>().Object,
-                activityRepositoryMock.Object);
+                activityRepositoryMock.Object,
+                notificationServiceMock.Object,
+                new Mock<ITranslationService>().Object);
 
             return startGameCommand;
         }

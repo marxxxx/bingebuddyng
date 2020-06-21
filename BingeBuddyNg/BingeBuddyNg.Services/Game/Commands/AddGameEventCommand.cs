@@ -25,19 +25,19 @@ namespace BingeBuddyNg.Core.Game.Commands
     public class AddGameEventCommandHandler : IRequestHandler<AddGameEventCommand>
     {
         private INotificationService notificationService;
-        private GameRepository manager;
+        private GameRepository gameRepository;
 
-        public AddGameEventCommandHandler(INotificationService notificationService, GameRepository manager)
+        public AddGameEventCommandHandler(INotificationService notificationService, GameRepository gameRepository)
         {
-            this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
-            this.manager = manager ?? throw new ArgumentNullException(nameof(manager));
+            this.notificationService = notificationService;
+            this.gameRepository = gameRepository;
         }
 
         public async Task<Unit> Handle(AddGameEventCommand command, CancellationToken cancellationToken)
         {
-            var currentScore = this.manager.Get(command.GameId).IncrementScore(command.UserId, command.Count);
+            var game = this.gameRepository.Get(command.GameId);
 
-            var game = this.manager.Get(command.GameId);
+            var currentScore = game.IncrementScore(command.UserId, command.Count);
 
             await this.notificationService.SendSignalRMessageAsync(
                 game.PlayerUserIds.Select(u => u.ToString()).ToList().AsReadOnly(),

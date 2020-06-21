@@ -7,7 +7,7 @@ using BingeBuddyNg.Core.Game;
 using BingeBuddyNg.Core.Game.Commands;
 using BingeBuddyNg.Core.Game.Domain;
 using BingeBuddyNg.Core.Game.Queries;
-using BingeBuddyNg.Services.Game.DTO;
+using BingeBuddyNg.Core.Game.DTO;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User.Persistence;
 using BingeBuddyNg.Services.User.Queries;
@@ -34,7 +34,7 @@ namespace BingeBuddyNg.Tests
             var searchUsersQuery = SetupHelpers.SetupSearchUsersQuery(friendUserIds.Concat(new[] { myUserId }));
             
             var command = new StartGameCommand(myUserId, gameTitle, friendUserIds);
-            var handler = new StartGameCommandHandler(notificationServiceMock.Object, manager, searchUsersQuery, new Mock<ITranslationService>().Object, new Mock<IActivityRepository>().Object);
+            var handler = new StartGameCommandHandler(manager, searchUsersQuery, new Mock<IActivityRepository>().Object, notificationServiceMock.Object, new Mock<ITranslationService>().Object);
 
             // Act
             StartGameResultDTO result = await handler.Handle(command, CancellationToken.None);

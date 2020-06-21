@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BingeBuddyNg.Services.Game.DTO
+namespace BingeBuddyNg.Core.Game.DTO
 {
     public class StartGameResultDTO
     {

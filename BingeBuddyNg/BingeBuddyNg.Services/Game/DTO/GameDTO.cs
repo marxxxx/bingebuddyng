@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using BingeBuddyNg.Core.Game.Domain;
 
-namespace BingeBuddyNg.Services.Game.DTO
+namespace BingeBuddyNg.Core.Game.DTO
 {
     public class GameDTO
     {

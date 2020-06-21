@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Services.Game.DTO;
+using BingeBuddyNg.Core.Game.DTO;
 using BingeBuddyNg.Services.Game.Persistence;
 using BingeBuddyNg.Services.User;
 

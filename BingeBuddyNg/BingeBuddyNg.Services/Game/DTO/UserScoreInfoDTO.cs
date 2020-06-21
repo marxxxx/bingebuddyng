@@ -1,6 +1,6 @@
 ﻿using BingeBuddyNg.Services.User;
 
-namespace BingeBuddyNg.Services.Game.DTO
+namespace BingeBuddyNg.Core.Game.DTO
 {
     public class UserScoreInfoDTO
     {

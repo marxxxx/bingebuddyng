@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Services.Game.DTO;
+using BingeBuddyNg.Core.Game.DTO;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User.Queries;
 using BingeBuddyNg.Shared;
@@ -31,16 +30,16 @@ namespace BingeBuddyNg.Core.Game.Commands
     {
         private readonly GameRepository gameRepository;
         private readonly SearchUsersQuery getUsersQuery;
-        private readonly INotificationService notificationService;
-        private readonly ITranslationService translationService;
         private readonly IActivityRepository activityRepository;
+        private readonly INotificationService notificationService;
+        private readonly ITranslationService translationService;        
 
         public StartGameCommandHandler(
-            INotificationService notificationService,
             GameRepository gameRepository,
             SearchUsersQuery getUsersQuery,
-            ITranslationService translationService,
-            IActivityRepository activityRepository)
+            IActivityRepository activityRepository,
+            INotificationService notificationService,
+            ITranslationService translationService)
         {
             this.notificationService = notificationService;
             this.gameRepository = gameRepository;
