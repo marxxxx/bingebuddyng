@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.Infrastructure.Messaging
+namespace BingeBuddyNg.Core.Infrastructure
 {
     public interface IMessagingService
     {

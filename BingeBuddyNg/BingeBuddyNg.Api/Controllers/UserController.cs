@@ -6,7 +6,7 @@ using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Core.User.DTO;
 using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Services.User.Commands;
 using BingeBuddyNg.Services.User.Queries;
 using MediatR;

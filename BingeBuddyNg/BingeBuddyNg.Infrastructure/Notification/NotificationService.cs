@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Infrastructure;
 using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using WebPush;
 
-namespace BingeBuddyNg.Services.Infrastructure
+namespace BingeBuddyNg.Infrastructure
 {
     public class NotificationService : INotificationService
     {

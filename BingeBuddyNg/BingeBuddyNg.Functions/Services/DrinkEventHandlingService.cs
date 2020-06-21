@@ -9,7 +9,7 @@ using BingeBuddyNg.Core.Statistics.Commands;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Functions.Services.Notifications;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Services.User.Queries;
 using BingeBuddyNg.Shared;
 using Microsoft.Extensions.Logging;

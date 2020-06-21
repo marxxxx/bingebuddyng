@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using BingeBuddyNg.Services.Activity.Persistence;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
+using BingeBuddyNg.Services.Infrastructure;
 
 namespace BingeBuddyNg.Core.Activity
 {

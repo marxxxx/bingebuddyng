@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.Infrastructure.EventGrid
+namespace BingeBuddyNg.Core.Infrastructure
 {
     public interface IEventGridService
     {

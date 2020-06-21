@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Shared;
 using MediatR;
 using Newtonsoft.Json;

@@ -2,11 +2,9 @@
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.Persistence;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Services.Activity.Persistence;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Infrastructure.EventGrid;
 using BingeBuddyNg.Shared;
-using Microsoft.WindowsAzure.Storage.Table;
 
 namespace BingeBuddyNg.Services.Activity
 {

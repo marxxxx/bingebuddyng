@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BingeBuddyNg.Services.Infrastructure.Messaging
+namespace BingeBuddyNg.Infrastructure
 {
     public class MessagingConfiguration
     {

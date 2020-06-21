@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Activity.Queries;
 using BingeBuddyNg.Core.Drink;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.Statistics.Commands

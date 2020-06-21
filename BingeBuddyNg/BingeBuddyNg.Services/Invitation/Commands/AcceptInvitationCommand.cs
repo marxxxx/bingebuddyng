@@ -5,7 +5,7 @@ using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Statistics.Commands;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Commands;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Shared;
 using MediatR;
 using Microsoft.Extensions.Logging;

@@ -1,4 +1,4 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
+﻿using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Shared;
 using MediatR;
 using System;

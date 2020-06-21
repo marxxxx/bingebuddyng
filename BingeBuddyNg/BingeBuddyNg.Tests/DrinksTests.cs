@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Drink;
 using BingeBuddyNg.Core.Drink.Persistence;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
 using Moq;

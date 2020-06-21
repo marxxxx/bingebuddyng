@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 
-namespace BingeBuddyNg.Services.Infrastructure
+namespace BingeBuddyNg.Infrastructure
 {
     public class TranslationService : ITranslationService
     {

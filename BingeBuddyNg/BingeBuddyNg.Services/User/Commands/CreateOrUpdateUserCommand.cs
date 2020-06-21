@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Drink;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Services.User;
 using MediatR;
 using static BingeBuddyNg.Shared.Constants;

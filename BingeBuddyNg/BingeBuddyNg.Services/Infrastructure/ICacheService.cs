@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.Infrastructure
+namespace BingeBuddyNg.Core.Infrastructure
 {
     public interface ICacheService
     {

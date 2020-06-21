@@ -1,10 +1,11 @@
-﻿using Microsoft.Azure.EventGrid;
+﻿using BingeBuddyNg.Core.Infrastructure;
+using Microsoft.Azure.EventGrid;
 using Microsoft.Azure.EventGrid.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.Infrastructure.EventGrid
+namespace BingeBuddyNg.Infrastructure
 {
     public class EventGridService : IEventGridService
     {

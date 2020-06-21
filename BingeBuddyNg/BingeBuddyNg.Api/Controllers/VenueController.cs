@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Core.Venue.Commands;
 using BingeBuddyNg.Core.Venue.DTO;
 using BingeBuddyNg.Core.Venue.Queries;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,10 +1,11 @@
-﻿using Microsoft.Azure.EventHubs;
+﻿using BingeBuddyNg.Core.Infrastructure;
+using Microsoft.Azure.EventHubs;
 using Newtonsoft.Json;
 using System;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.Infrastructure.Messaging
+namespace BingeBuddyNg.Infrastructure
 {
     public class MessagingService : IMessagingService
     {

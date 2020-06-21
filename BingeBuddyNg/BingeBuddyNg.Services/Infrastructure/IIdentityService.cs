@@ -1,4 +1,4 @@
-﻿namespace BingeBuddyNg.Services.Infrastructure
+﻿namespace BingeBuddyNg.Core.Infrastructure
 {
     public interface IIdentityService
     {

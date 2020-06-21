@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Drink.DTO;
 using BingeBuddyNg.Core.Drink.Persistence;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using Microsoft.Extensions.Logging;
 
 namespace BingeBuddyNg.Core.Drink

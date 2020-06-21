@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Venue;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using Microsoft.Extensions.Logging;
 
 namespace BingeBuddyNg.Services.Venue

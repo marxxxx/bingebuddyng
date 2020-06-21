@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Core.Venue.DTO;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 
 namespace BingeBuddyNg.Core.User.DTO
 {

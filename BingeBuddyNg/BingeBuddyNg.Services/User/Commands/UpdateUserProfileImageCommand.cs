@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using static BingeBuddyNg.Shared.Constants;

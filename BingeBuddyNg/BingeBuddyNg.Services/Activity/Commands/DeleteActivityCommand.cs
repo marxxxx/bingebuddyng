@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity.Persistence;
 using BingeBuddyNg.Services.Activity.Messages;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Shared;
 using MediatR;
 using Microsoft.WindowsAzure.Storage.Table;

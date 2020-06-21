@@ -1,7 +1,8 @@
 ﻿using System;
+using BingeBuddyNg.Core.Infrastructure;
 using Microsoft.AspNetCore.Http;
 
-namespace BingeBuddyNg.Services.Infrastructure
+namespace BingeBuddyNg.Infrastructure
 {
     public class IdentityService : IIdentityService
     {

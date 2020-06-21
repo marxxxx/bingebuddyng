@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BingeBuddyNg.Services.Infrastructure
+namespace BingeBuddyNg.Infrastructure
 {
     public class WebPushConfiguration
     {

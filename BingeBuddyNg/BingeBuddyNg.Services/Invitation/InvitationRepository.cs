@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Services.Invitation;
 using static BingeBuddyNg.Shared.Constants;
 

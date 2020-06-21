@@ -1,7 +1,7 @@
 ﻿using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 
-namespace BingeBuddyNg.Services.Infrastructure
+namespace BingeBuddyNg.Core.Infrastructure
 {
     public static class Converters
     {

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Invitation.Commands;
 using BingeBuddyNg.Core.Invitation.Querys;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Services.Invitation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

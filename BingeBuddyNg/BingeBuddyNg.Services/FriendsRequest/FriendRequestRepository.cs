@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.FriendsRequest.Persistence;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace BingeBuddyNg.Core.FriendsRequest

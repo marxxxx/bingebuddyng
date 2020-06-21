@@ -3,11 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Drink;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.Venue;
 using BingeBuddyNg.Core.Venue.DTO;
 using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Infrastructure.Messaging;
 using MediatR;
 
 namespace BingeBuddyNg.Core.Activity.Commands

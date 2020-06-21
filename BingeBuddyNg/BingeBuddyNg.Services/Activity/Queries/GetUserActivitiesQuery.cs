@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Activity.Persistence;
 using BingeBuddyNg.Services.Activity.Persistence;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Shared;
 using Microsoft.WindowsAzure.Storage.Table;
 

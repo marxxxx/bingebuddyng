@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using MediatR;
 
 namespace BingeBuddyNg.Core.Activity.Commands

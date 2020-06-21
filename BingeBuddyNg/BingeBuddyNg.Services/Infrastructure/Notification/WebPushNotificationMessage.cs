@@ -1,6 +1,6 @@
 ﻿using BingeBuddyNg.Shared;
 
-namespace BingeBuddyNg.Services.Infrastructure
+namespace BingeBuddyNg.Core.Infrastructure
 {
     public class WebPushNotificationMessage
     {

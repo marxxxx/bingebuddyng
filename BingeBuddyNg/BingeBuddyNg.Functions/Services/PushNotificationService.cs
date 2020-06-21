@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Functions.Services.Notifications;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Shared;
 using Microsoft.Extensions.Logging;
 

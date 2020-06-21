@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BingeBuddyNg.Services.Infrastructure.Generated
+namespace BingeBuddyNg.Infrastructure.Generated
 {
     public class GoogleGeoCodeResponse
     {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BingeBuddyNg.Services.Infrastructure.EventGrid
+﻿namespace BingeBuddyNg.Infrastructure
 {
     public class EventGridConfiguration
     {

@@ -8,7 +8,7 @@ using BingeBuddyNg.Core.Game.Commands;
 using BingeBuddyNg.Core.Game.Domain;
 using BingeBuddyNg.Core.Game.Queries;
 using BingeBuddyNg.Core.Game.DTO;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Services.User.Persistence;
 using BingeBuddyNg.Services.User.Queries;
 using BingeBuddyNg.Tests.Helpers;

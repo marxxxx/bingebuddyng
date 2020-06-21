@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Infrastructure;
 
-namespace BingeBuddyNg.Services.Infrastructure
+namespace BingeBuddyNg.Infrastructure
 {
     public class NoCacheService : ICacheService
     {

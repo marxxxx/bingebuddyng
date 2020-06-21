@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Core.Game.Commands;
 using BingeBuddyNg.Core.Game.Queries;
 using BingeBuddyNg.Core.Game.DTO;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

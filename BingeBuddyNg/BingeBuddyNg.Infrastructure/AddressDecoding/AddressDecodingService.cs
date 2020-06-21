@@ -3,10 +3,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity.Domain;
-using BingeBuddyNg.Services.Infrastructure.Generated;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Infrastructure.Generated;
 using Newtonsoft.Json;
 
-namespace BingeBuddyNg.Services.Infrastructure
+namespace BingeBuddyNg.Infrastructure
 {
     public class AddressDecodingService : IAddressDecodingService
     {

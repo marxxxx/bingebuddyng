@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Drink;
 using BingeBuddyNg.Core.Drink.DTO;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

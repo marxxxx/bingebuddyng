@@ -7,7 +7,7 @@ using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Game;
 using BingeBuddyNg.Core.Game.Commands;
 using BingeBuddyNg.Services.Activity.Persistence;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Shared;
 using BingeBuddyNg.Tests.Helpers;
 using Moq;

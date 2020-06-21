@@ -4,15 +4,12 @@ using BingeBuddyNg.Core.Activity.Commands;
 using BingeBuddyNg.Core.Activity.Queries;
 using BingeBuddyNg.Core.Calculation;
 using BingeBuddyNg.Core.DrinkEvent;
-using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.Statistics.Commands;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Queries;
+using BingeBuddyNg.Infrastructure;
 using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.DrinkEvent;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Infrastructure.EventGrid;
-using BingeBuddyNg.Services.Statistics;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.User.Queries;
 using Microsoft.Azure.SignalR.Management;
@@ -46,9 +43,9 @@ namespace BingeBuddyNg.Functions
             services.AddStorage();
             services.AddEventGrid();
 
-            services.AddTransient<ICacheService, NoCacheService>();
+            services.AddScoped<ICacheService, NoCacheService>();
             services.AddSingleton<ITranslationService, TranslationService>();
-            services.AddTransient<IAddressDecodingService, AddressDecodingService>();
+            services.AddScoped<IAddressDecodingService, AddressDecodingService>();
         }
 
         public static void AddUser(this IServiceCollection services)

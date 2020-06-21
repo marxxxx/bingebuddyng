@@ -5,6 +5,7 @@ using BingeBuddyNg.Core.Drink;
 using BingeBuddyNg.Core.DrinkEvent;
 using BingeBuddyNg.Core.FriendsRequest;
 using BingeBuddyNg.Core.Game;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.Invitation;
 using BingeBuddyNg.Core.Ranking.Queries;
 using BingeBuddyNg.Core.Statistics.Commands;
@@ -14,10 +15,8 @@ using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Core.User.Queries;
 using BingeBuddyNg.Core.Venue;
 using BingeBuddyNg.Core.Venue.Queries;
+using BingeBuddyNg.Infrastructure;
 using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Infrastructure.EventGrid;
-using BingeBuddyNg.Services.Infrastructure.Messaging;
 using BingeBuddyNg.Services.Statistics.Querys;
 using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.User.Queries;
@@ -26,7 +25,6 @@ using MediatR;
 using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace BingeBuddyNg.Services
 {

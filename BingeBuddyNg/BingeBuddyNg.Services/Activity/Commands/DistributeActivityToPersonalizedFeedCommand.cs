@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BingeBuddyNg.Services.Activity.Persistence;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.Activity.Commands

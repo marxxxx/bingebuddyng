@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Calculation;
 using BingeBuddyNg.Core.User.Domain;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Services.Statistics;
 using Microsoft.Extensions.Logging;
 using static BingeBuddyNg.Shared.Constants;

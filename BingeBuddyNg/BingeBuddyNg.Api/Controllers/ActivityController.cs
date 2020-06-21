@@ -7,7 +7,7 @@ using BingeBuddyNg.Core.Activity.Commands;
 using BingeBuddyNg.Core.Activity.Queries;
 using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Activity.Commands;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
