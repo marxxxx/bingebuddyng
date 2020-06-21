@@ -13,7 +13,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace BingeBuddyNg.Core.Activity.Queries
 {
-    public class GetMasterActivitiesQuery : IGetMasterActivitiesQuery
+    public class GetMasterActivitiesQuery
     {
         private readonly IStorageAccessService storageAccessService;
 

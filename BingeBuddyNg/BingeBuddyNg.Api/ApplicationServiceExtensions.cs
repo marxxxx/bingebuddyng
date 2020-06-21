@@ -1,4 +1,6 @@
 ﻿using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Commands;
+using BingeBuddyNg.Core.Activity.Queries;
 using BingeBuddyNg.Core.FriendsRequest;
 using BingeBuddyNg.Core.Game;
 using BingeBuddyNg.Core.Invitation;
@@ -42,6 +44,9 @@ namespace BingeBuddyNg.Services
             services.AddScoped<GetAllUserIdsQuery>();
             services.AddScoped<GetStatisticsQuery>();
             services.AddScoped<GetPersonalUsagePerWeekdayQuery>();
+            services.AddScoped<GetUserActivitiesQuery>();
+            services.AddScoped<DeleteActivityFromPersonalizedFeedCommand>();
+            services.AddScoped<DistributeActivityToPersonalizedFeedCommand>();
 
             // add infrastructure services
             services.AddScoped<IIdentityService, IdentityService>();

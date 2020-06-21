@@ -17,11 +17,11 @@ namespace BingeBuddyNg.Core.Ranking.Queries
 
     public class GetVenueRankingQueryHandler : IRequestHandler<GetVenueRankingQuery, IEnumerable<VenueRankingDTO>>
     {
-        private readonly IGetMasterActivitiesQuery getMasterActivitiesQuery;
+        private readonly GetMasterActivitiesQuery getMasterActivitiesQuery;
 
-        public GetVenueRankingQueryHandler(IGetMasterActivitiesQuery getMasterActivitiesQuery)
+        public GetVenueRankingQueryHandler(GetMasterActivitiesQuery getMasterActivitiesQuery)
         {
-            this.getMasterActivitiesQuery = getMasterActivitiesQuery ?? throw new ArgumentNullException(nameof(getMasterActivitiesQuery));
+            this.getMasterActivitiesQuery = getMasterActivitiesQuery;
         }
 
         public async Task<IEnumerable<VenueRankingDTO>> Handle(GetVenueRankingQuery request, CancellationToken cancellationToken)

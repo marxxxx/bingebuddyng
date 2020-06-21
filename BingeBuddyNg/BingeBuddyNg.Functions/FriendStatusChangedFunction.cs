@@ -1,13 +1,12 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Commands;
+using BingeBuddyNg.Core.Activity.Queries;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Activity.Persistence;
-using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Services.User.Messages;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
@@ -18,13 +17,18 @@ namespace BingeBuddyNg.Functions
 {
     public class FriendStatusChangedFunction
     {
-        private readonly IUserRepository userRepository;
-        private readonly IActivityRepository activityRepository;
+        private readonly GetUserActivitiesQuery getUserActivitiesQuery;
+        private readonly DistributeActivityToPersonalizedFeedCommand distributeActivityToPersonalizedFeedCommand;
+        private readonly DeleteActivityFromPersonalizedFeedCommand deleteActivityFromPersonalizedFeedCommand;
 
-        public FriendStatusChangedFunction(IUserRepository userRepository, IActivityRepository activityRepository)
+        public FriendStatusChangedFunction(
+            GetUserActivitiesQuery getUserActivitiesQuery, 
+            DistributeActivityToPersonalizedFeedCommand distributeActivityToPersonalizedFeedCommand,
+            DeleteActivityFromPersonalizedFeedCommand deleteActivityFromPersonalizedFeedCommand)
         {
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.getUserActivitiesQuery = getUserActivitiesQuery;
+            this.distributeActivityToPersonalizedFeedCommand = distributeActivityToPersonalizedFeedCommand;
+            this.deleteActivityFromPersonalizedFeedCommand = deleteActivityFromPersonalizedFeedCommand;
         }
 
         [FunctionName(nameof(FriendStatusChangedFunction))]
@@ -35,8 +39,8 @@ namespace BingeBuddyNg.Functions
             var message = JsonConvert.DeserializeObject<FriendStatusChangedMessage>(myQueueItem);
 
             var startTime = DateTime.UtcNow.Subtract(TimeSpan.FromDays(30));
-            var userActivities = await activityRepository.GetUserActivitiesAsync(message.UserId, startTime);
-            var friendActivities = await activityRepository.GetUserActivitiesAsync(message.FriendUserId, startTime);
+            var userActivities = await getUserActivitiesQuery.ExecuteAsync(message.UserId, startTime);
+            var friendActivities = await getUserActivitiesQuery.ExecuteAsync(message.FriendUserId, startTime);
 
             switch (message.Status)
             {
@@ -61,7 +65,7 @@ namespace BingeBuddyNg.Functions
         {
             foreach (var a in activities)
             {
-                await this.activityRepository.DistributeActivityAsync(new[] { userId }, a);
+                await this.distributeActivityToPersonalizedFeedCommand.ExecuteAsync(new[] { userId }, a);
             }
         }
 
@@ -69,7 +73,7 @@ namespace BingeBuddyNg.Functions
         {
             foreach (var id in activityIds)
             {
-                await this.activityRepository.DeleteActivityFromPersonalizedFeedAsync(userId, id);
+                await this.deleteActivityFromPersonalizedFeedCommand.ExecuteAsync(userId, id);
             }
         }
     }

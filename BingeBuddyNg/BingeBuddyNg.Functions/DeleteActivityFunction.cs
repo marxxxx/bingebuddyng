@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Commands;
 using BingeBuddyNg.Core.User.Queries;
 using BingeBuddyNg.Services.Activity.Messages;
 using Microsoft.Azure.WebJobs;
@@ -12,13 +13,13 @@ namespace BingeBuddyNg.Functions
 {
     public class DeleteActivityFunction
     {
-        private readonly IActivityRepository activityRepository;
+        private readonly DeleteActivityFromPersonalizedFeedCommand deleteActivityFromPersonalizedFeedCommand;
         private readonly GetAllUserIdsQuery getAllUserIdsQuery;
 
-        public DeleteActivityFunction(IActivityRepository activityRepository, GetAllUserIdsQuery getAllUserIdsQuery)
+        public DeleteActivityFunction(DeleteActivityFromPersonalizedFeedCommand deleteActivityFromPersonalizedFeedCommand, GetAllUserIdsQuery getAllUserIdsQuery)
         {
-            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
-            this.getAllUserIdsQuery = getAllUserIdsQuery ?? throw new ArgumentNullException(nameof(getAllUserIdsQuery));
+            this.deleteActivityFromPersonalizedFeedCommand = deleteActivityFromPersonalizedFeedCommand;
+            this.getAllUserIdsQuery = getAllUserIdsQuery;
         }
 
         [FunctionName(nameof(DeleteActivityFunction))]
@@ -34,7 +35,7 @@ namespace BingeBuddyNg.Functions
             {
                 try
                 {
-                    await this.activityRepository.DeleteActivityFromPersonalizedFeedAsync(userId, message.ActivityId);
+                    await this.deleteActivityFromPersonalizedFeedCommand.ExecuteAsync(userId, message.ActivityId);
                 }
                 catch (Exception ex)
                 {

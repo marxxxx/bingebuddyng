@@ -1,5 +1,6 @@
 ﻿using System;
 using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Commands;
 using BingeBuddyNg.Core.Calculation;
 using BingeBuddyNg.Core.Statistics;
 using BingeBuddyNg.Core.Statistics.Commands;
@@ -31,6 +32,8 @@ namespace BingeBuddyNg.Functions
             services.AddScoped<UpdateRankingCommand>();
             services.AddScoped<UpdateStatisticsCommand>();
             services.AddScoped<IncreaseScoreCommand>();
+            services.AddScoped<DeleteActivityFromPersonalizedFeedCommand>();
+            services.AddScoped<DistributeActivityToPersonalizedFeedCommand>();
 
             // Infrastructure
             services.AddHttpClient();

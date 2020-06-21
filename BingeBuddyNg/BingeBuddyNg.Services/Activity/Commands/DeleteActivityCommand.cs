@@ -1,7 +1,13 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity.Persistence;
+using BingeBuddyNg.Services.Activity.Messages;
+using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Shared;
 using MediatR;
+using Microsoft.WindowsAzure.Storage.Table;
+using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.Activity.Commands
 {
@@ -20,16 +26,25 @@ namespace BingeBuddyNg.Core.Activity.Commands
     public class DeleteActivityCommandHandler : IRequestHandler<DeleteActivityCommand>
     {
         private readonly IActivityRepository activityRepository;
+        private readonly IStorageAccessService storageAccessService;
 
-        public DeleteActivityCommandHandler(IActivityRepository activityRepository)
+        public DeleteActivityCommandHandler(IActivityRepository activityRepository, IStorageAccessService storageAccessService)
         {
-            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.activityRepository = activityRepository;
+            this.storageAccessService = storageAccessService;
         }
 
         public async Task<Unit> Handle(DeleteActivityCommand request, CancellationToken cancellationToken)
         {
-            await activityRepository.DeleteActivityAsync(request.UserId, request.ActivityId);
+            await this.activityRepository.DeleteActivityAsync(request.UserId, request.ActivityId);
+
+            // Delete activity in personalized feeds
+            await storageAccessService.AddQueueMessage(QueueNames.DeleteActivity, new DeleteActivityMessage(request.ActivityId));
+
             return Unit.Value;
         }
+
+       
+      
     }
 }

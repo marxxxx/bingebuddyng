@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Activity.Queries;
 using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Infrastructure;
 using Microsoft.WindowsAzure.Storage.Table;
@@ -14,13 +12,13 @@ namespace BingeBuddyNg.Core.Statistics.Commands
 {
     public class UpdateRankingCommand
     {
-        private readonly IActivityRepository activityRepository;
+        private readonly GetUserActivitiesQuery getUserActivitiesQuery;
 
         private readonly IStorageAccessService storageAccessService;
 
-        public UpdateRankingCommand(IActivityRepository activityRepository, IStorageAccessService storageAccessService)
+        public UpdateRankingCommand(GetUserActivitiesQuery getUserActivitiesQuery, IStorageAccessService storageAccessService)
         {
-            this.activityRepository = activityRepository;
+            this.getUserActivitiesQuery = getUserActivitiesQuery;
             this.storageAccessService = storageAccessService;
         }
 
@@ -28,7 +26,7 @@ namespace BingeBuddyNg.Core.Statistics.Commands
         {
             DateTime startTimestamp = DateTime.UtcNow.Subtract(TimeSpan.FromDays(30));
 
-            var drinkActivityLastMonth = await activityRepository.GetUserActivitiesAsync(userId, startTimestamp, ActivityType.Drink);
+            var drinkActivityLastMonth = await getUserActivitiesQuery.ExecuteAsync(userId, startTimestamp, ActivityType.Drink);
 
             // filter non-alcoholic drinks and calculate count
             var alcoholicDrinkCount = drinkActivityLastMonth.Where(d => d.ActivityType == ActivityType.Drink).Count(d => d.DrinkType != DrinkType.Anti);
@@ -47,6 +45,5 @@ namespace BingeBuddyNg.Core.Statistics.Commands
 
             await table.ExecuteAsync(saveOperation);
         }
-
     }
 }
