@@ -4,6 +4,7 @@ using BingeBuddyNg.Core.Game.DTO;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.DTO;
 using BingeBuddyNg.Core.Game.Persistence;
+using BingeBuddyNg.Core.User.Persistence;
 
 namespace BingeBuddyNg.Core.Game
 {

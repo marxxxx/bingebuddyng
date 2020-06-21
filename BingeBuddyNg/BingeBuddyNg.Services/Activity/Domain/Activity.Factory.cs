@@ -1,8 +1,8 @@
 ﻿using System;
 using BingeBuddyNg.Core.Activity.Persistence;
 using BingeBuddyNg.Core.Drink;
-using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.Game.Persistence;
+using BingeBuddyNg.Core.User.Persistence;
 using BingeBuddyNg.Services.Venue;
 
 namespace BingeBuddyNg.Core.Activity.Domain

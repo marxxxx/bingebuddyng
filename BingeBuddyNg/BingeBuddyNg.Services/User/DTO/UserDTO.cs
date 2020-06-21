@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Core.Venue.DTO;
-using BingeBuddyNg.Core.Infrastructure;
 
 namespace BingeBuddyNg.Core.User.DTO
 {
@@ -14,7 +14,7 @@ namespace BingeBuddyNg.Core.User.DTO
         public Gender Gender { get; set; }
         public string ProfileImageUrl { get; set; }
         public PushInfo PushInfo { get; set; }
-        public List<UserInfo> Friends { get; set; }
+        public List<UserInfoDTO> Friends { get; set; }
         public VenueDTO CurrentVenue { get; set; }
         public string Language { get; set; }
         public DateTime LastOnline { get; set; }

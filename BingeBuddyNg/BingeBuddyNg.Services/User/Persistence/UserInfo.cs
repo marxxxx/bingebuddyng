@@ -1,8 +1,7 @@
 ﻿using System;
 using BingeBuddyNg.Core.User.DTO;
-using BingeBuddyNg.Services.User;
 
-namespace BingeBuddyNg.Core.User
+namespace BingeBuddyNg.Core.User.Persistence
 {
     public class UserInfo : IEquatable<UserInfo>
     {

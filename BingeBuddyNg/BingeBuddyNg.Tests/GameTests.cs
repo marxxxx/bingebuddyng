@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Game;
 using BingeBuddyNg.Core.Game.Commands;
-using BingeBuddyNg.Core.Game.Domain;
-using BingeBuddyNg.Core.Game.Queries;
 using BingeBuddyNg.Core.Game.DTO;
+using BingeBuddyNg.Core.Game.Queries;
 using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Services.User.Persistence;
-using BingeBuddyNg.Services.User.Queries;
 using BingeBuddyNg.Tests.Helpers;
 using Moq;
 using Xunit;
-using System.Linq;
-using BingeBuddyNg.Core.Activity;
 
 namespace BingeBuddyNg.Tests
 {

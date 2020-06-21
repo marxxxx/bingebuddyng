@@ -5,7 +5,7 @@ using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Services.Venue.Persistence;
 
-namespace BingeBuddyNg.Services.User.Persistence
+namespace BingeBuddyNg.Core.User.Persistence
 {
     public class UserEntity
     {

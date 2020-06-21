@@ -4,6 +4,7 @@ using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Activity.Persistence;
 using BingeBuddyNg.Core.Game;
 using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Persistence;
 using BingeBuddyNg.Core.Venue;
 using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Venue;
@@ -209,7 +210,7 @@ namespace BingeBuddyNg.Core.Activity
                             entity.Id,
                             entity.Timestamp,
                             entity.GameInfo,
-                            new User.UserInfo(entity.UserId, entity.UserName));
+                            new UserInfo(entity.UserId, entity.UserName));
                     }
                 case ActivityType.Image:
                     {

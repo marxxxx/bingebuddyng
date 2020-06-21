@@ -1,5 +1,5 @@
 ﻿using System;
-using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Persistence;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace BingeBuddyNg.Core.FriendsRequest.Persistence

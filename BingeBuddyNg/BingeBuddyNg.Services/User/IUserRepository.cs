@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
 using BingeBuddyNg.Core.User.Commands;
-using BingeBuddyNg.Services.User.Persistence;
+using BingeBuddyNg.Core.User.Persistence;
 
 namespace BingeBuddyNg.Core.User
 {
     public interface IUserRepository
     {
-        Task<Core.User.Domain.User> GetUserAsync(string id);
+        Task<Domain.User> GetUserAsync(string id);
 
         Task UpdateUserAsync(UserEntity user);
 

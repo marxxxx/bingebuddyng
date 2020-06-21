@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Services.User.Persistence;
+using BingeBuddyNg.Core.User.Persistence;
 using Microsoft.WindowsAzure.Storage.Table;
 using static BingeBuddyNg.Shared.Constants;
 

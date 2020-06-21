@@ -1,5 +1,5 @@
 ﻿using System;
-using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Persistence;
 
 namespace BingeBuddyNg.Core.Activity.Domain
 {

@@ -1,6 +1,7 @@
-﻿using BingeBuddyNg.Core.User.DTO;
+﻿using System.Linq;
+using BingeBuddyNg.Core.User.DTO;
+using BingeBuddyNg.Core.User.Persistence;
 using BingeBuddyNg.Core.Venue;
-using BingeBuddyNg.Services.User.Persistence;
 using BingeBuddyNg.Services.Venue.Persistence;
 
 namespace BingeBuddyNg.Core.User
@@ -66,9 +67,14 @@ namespace BingeBuddyNg.Core.User
                 LastOnline = entity.LastOnline,
                 Weight = entity.Weight,
                 CurrentVenue = entity.CurrentVenue?.ToDto(),
-                Friends = entity.Friends,
+                Friends = entity.Friends?.Select(f=>f.ToDto()).ToList(),
                 MutedFriendUserIds = entity.MutedFriendUserIds
             };
+        }
+
+        public static UserInfo ToUserInfo(this UserInfoDTO dto)
+        {
+            return new UserInfo(userId: dto.UserId, userName: dto.UserName);
         }
 
         public static UserInfoDTO ToDto(this UserInfo userInfo)

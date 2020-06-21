@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Core.User.Domain;
+using BingeBuddyNg.Core.User.Persistence;
 using BingeBuddyNg.Core.Venue;
-using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Services.User.Persistence;
 using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Services.User

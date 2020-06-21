@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.FriendsRequest.Persistence;
-using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Persistence;
 
 namespace BingeBuddyNg.Core.FriendsRequest
 {

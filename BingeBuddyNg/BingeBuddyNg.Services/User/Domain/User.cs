@@ -1,4 +1,5 @@
 ﻿using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.User.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
