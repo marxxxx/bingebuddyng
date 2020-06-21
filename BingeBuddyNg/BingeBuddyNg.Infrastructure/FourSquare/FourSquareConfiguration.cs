@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BingeBuddyNg.Core.Venue.Queries
+namespace BingeBuddyNg.Infrastructure
 {
     public class FourSquareConfiguration
     {

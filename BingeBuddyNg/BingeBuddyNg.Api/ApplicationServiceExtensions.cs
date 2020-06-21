@@ -16,9 +16,8 @@ using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Core.User.Queries;
 using BingeBuddyNg.Core.Venue;
-using BingeBuddyNg.Core.Venue.Queries;
 using BingeBuddyNg.Infrastructure;
-using BingeBuddyNg.Services.Venue;
+using BingeBuddyNg.Infrastructure.FourSquare;
 using MediatR;
 using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.Configuration;
@@ -54,6 +53,7 @@ namespace BingeBuddyNg.Api
             services.AddSingleton<ITranslationService, TranslationService>();
             services.AddSingleton<ICacheService, NoCacheService>();
             services.AddSingleton<IMessagingService, MessagingService>();
+            services.AddSingleton<IFourSquareService, FourSquareService>();
 
             services.AddNotification(configuration);
             services.AddAzureSignalRIntegration(configuration);

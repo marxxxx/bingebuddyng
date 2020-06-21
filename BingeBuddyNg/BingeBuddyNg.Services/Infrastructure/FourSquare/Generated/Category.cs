@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace BingeBuddyNg.Services.Venue.Generated
+namespace BingeBuddyNg.Core.Infrastructure.FourSquare
 {
 	public class Category
 	{

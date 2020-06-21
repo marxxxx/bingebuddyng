@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.DTO;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Services.Venue;
 using MediatR;
 
 namespace BingeBuddyNg.Core.Venue.Commands

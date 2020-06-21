@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.Venue;
-using BingeBuddyNg.Services.Venue;
 using MediatR;
 
 namespace BingeBuddyNg.Core.Activity.Commands

@@ -4,7 +4,6 @@ using BingeBuddyNg.Core.Drink;
 using BingeBuddyNg.Core.Game.Persistence;
 using BingeBuddyNg.Core.User.Persistence;
 using BingeBuddyNg.Core.Venue;
-using BingeBuddyNg.Services.Venue;
 
 namespace BingeBuddyNg.Core.Activity.Domain
 {

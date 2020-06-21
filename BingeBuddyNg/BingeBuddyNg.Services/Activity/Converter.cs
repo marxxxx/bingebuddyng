@@ -7,7 +7,6 @@ using BingeBuddyNg.Core.Game;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Persistence;
 using BingeBuddyNg.Core.Venue;
-using BingeBuddyNg.Services.Venue;
 
 namespace BingeBuddyNg.Core.Activity
 {
