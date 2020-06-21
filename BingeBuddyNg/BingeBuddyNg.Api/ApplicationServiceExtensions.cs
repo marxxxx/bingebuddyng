@@ -130,7 +130,7 @@ namespace BingeBuddyNg.Services
 
         public static void AddGame(this IServiceCollection services)
         {
-            services.AddSingleton<IGameManager, GameManager>();
+            services.AddSingleton<GameManager>();
             services.AddSingleton<IHostedService, GameEndNotificationService>();
         }
     }

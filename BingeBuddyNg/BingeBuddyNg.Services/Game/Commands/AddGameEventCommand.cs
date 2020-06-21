@@ -26,9 +26,9 @@ namespace BingeBuddyNg.Core.Game.Commands
     public class AddGameEventCommandHandler : IRequestHandler<AddGameEventCommand>
     {
         private INotificationService notificationService;
-        private IGameManager manager;
+        private GameManager manager;
 
-        public AddGameEventCommandHandler(INotificationService notificationService, IGameManager manager)
+        public AddGameEventCommandHandler(INotificationService notificationService, GameManager manager)
         {
             this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
             this.manager = manager ?? throw new ArgumentNullException(nameof(manager));

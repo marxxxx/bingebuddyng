@@ -13,14 +13,14 @@ namespace BingeBuddyNg.Core.Game
 {
     public class GameEndNotificationService : IHostedService
     {
-        private readonly IGameManager gameManager;
+        private readonly GameManager gameManager;
         private readonly INotificationService notificationService;
         private readonly SearchUsersQuery getUsersQuery;
         private readonly ITranslationService translationService;
         private readonly IActivityRepository activityRepository;
 
         public GameEndNotificationService(
-            IGameManager gameManager, 
+            GameManager gameManager, 
             INotificationService notificationService,
             SearchUsersQuery getUsersQuery,
             ITranslationService translationService,

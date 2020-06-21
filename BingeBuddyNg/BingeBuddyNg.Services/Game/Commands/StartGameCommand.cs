@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Game;
 using BingeBuddyNg.Services.Game.DTO;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User.Queries;
@@ -29,13 +28,13 @@ namespace BingeBuddyNg.Core.Game.Commands
     public class StartGameCommandHandler : IRequestHandler<StartGameCommand, StartGameResultDTO>
     {
         private readonly INotificationService notificationService;
-        private readonly IGameManager manager;
+        private readonly GameManager manager;
         private readonly SearchUsersQuery getUsersQuery;
         private readonly ITranslationService translationServie;
 
         public StartGameCommandHandler(
             INotificationService notificationService,
-            IGameManager manager,
+            GameManager manager,
             SearchUsersQuery getUsersQuery,
             ITranslationService translationService)
         {

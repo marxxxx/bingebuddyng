@@ -9,7 +9,7 @@ namespace BingeBuddyNg.Tests
 {
     public class GameManagerTests
     {
-        private IGameManager manager;
+        private GameManager manager;
         private Guid gameId;
         private string userId;
 
@@ -25,7 +25,7 @@ namespace BingeBuddyNg.Tests
         public void ShouldStartEmpty()
         {
             var emptyCalculator = new GameManager();
-            Assert.Empty(emptyCalculator.Games);
+            Assert.Equal(0, emptyCalculator.Count);
         }
 
         [Fact]

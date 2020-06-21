@@ -8,7 +8,7 @@ namespace BingeBuddyNg.Tests
 {
     public class GameManagerTimeTests
     {
-        private IGameManager manager;
+        private GameManager manager;
         private Guid gameId;
         private string userId;
         private string friendUserId;

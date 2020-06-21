@@ -7,11 +7,13 @@ using BingeBuddyNg.Core.Game.Domain;
 
 namespace BingeBuddyNg.Core.Game
 {
-    public class GameManager : IGameManager
+    public class GameManager
     {
-        public ConcurrentDictionary<Guid, Domain.Game> Games { get; } = new ConcurrentDictionary<Guid, Domain.Game>();
+        private ConcurrentDictionary<Guid, Domain.Game> Games { get; } = new ConcurrentDictionary<Guid, Domain.Game>();
 
         public event EventHandler<GameEndedEventArgs> GameEnded;
+
+        public int Count => Games.Count;
 
         public void StartGame(Domain.Game game)
         {

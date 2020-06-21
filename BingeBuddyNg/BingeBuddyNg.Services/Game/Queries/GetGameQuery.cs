@@ -26,10 +26,10 @@ namespace BingeBuddyNg.Core.Game.Queries
 
     public class GetGameQueryHandler : IRequestHandler<GetGameQuery, GameDTO>
     {
-        private readonly IGameManager manager;
+        private readonly GameManager manager;
         private readonly SearchUsersQuery getUsersQuery;
 
-        public GetGameQueryHandler(IGameManager manager, SearchUsersQuery getUsersQuery)
+        public GetGameQueryHandler(GameManager manager, SearchUsersQuery getUsersQuery)
         {
             this.manager = manager ?? throw new ArgumentNullException(nameof(manager));
             this.getUsersQuery = getUsersQuery ?? throw new ArgumentNullException(nameof(getUsersQuery));
