@@ -1,6 +1,7 @@
 ﻿using BingeBuddyNg.Services.Drink;
 using BingeBuddyNg.Services.Infrastructure;
 using Microsoft.Extensions.Logging;
+using Microsoft.WindowsAzure.Storage.Table;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -18,8 +19,9 @@ namespace BingeBuddyNg.Tests
         {
             string userId = "userId";
             var storageAccessServiceMock = new Mock<IStorageAccessService>();
-            storageAccessServiceMock.Setup(s => s.QueryTableAsync<DrinkTableEntity>("drinks", It.IsAny<string>())).ReturnsAsync(
-                new List<DrinkTableEntity>());
+            storageAccessServiceMock
+                .Setup(s => s.QueryTableAsync<DrinkTableEntity>("drinks", It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<TableContinuationToken>()))
+                .ReturnsAsync(new PagedQueryResult<DrinkTableEntity>(new List<DrinkTableEntity>(), (string)null));
             
             var drinkRepository = new DrinkRepository(storageAccessServiceMock.Object, new Mock<ILogger<DrinkRepository>>().Object);
 

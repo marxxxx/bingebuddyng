@@ -30,7 +30,7 @@ namespace BingeBuddyNg.Tests
             var notificationServiceMock = new Mock<INotificationService>();
             var manager = new GameManager();
 
-            var searchUsersQuery = SetupHelpers.SetupSearchUsersQuery(friendUserIds);
+            var searchUsersQuery = SetupHelpers.SetupSearchUsersQuery(friendUserIds.Concat(new[] { myUserId }));
             
             var command = new StartGameCommand(myUserId, gameTitle, friendUserIds);
             var handler = new StartGameCommandHandler(notificationServiceMock.Object, manager, searchUsersQuery, new Mock<ITranslationService>().Object);
