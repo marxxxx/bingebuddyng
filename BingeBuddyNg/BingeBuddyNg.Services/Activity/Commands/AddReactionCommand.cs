@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.Domain;
-using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.Activity.Messages;
 using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Shared;
 using MediatR;
-using Newtonsoft.Json;
 
-namespace BingeBuddyNg.Services.Activity.Commands
+namespace BingeBuddyNg.Core.Activity.Commands
 {
     public class AddReactionCommand : IRequest
     {

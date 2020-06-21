@@ -1,7 +1,7 @@
 ﻿using System;
 using BingeBuddyNg.Core.User.DTO;
 
-namespace BingeBuddyNg.Services.Invitation
+namespace BingeBuddyNg.Core.Invitation.DTO
 {
     public class InvitationDTO
     {

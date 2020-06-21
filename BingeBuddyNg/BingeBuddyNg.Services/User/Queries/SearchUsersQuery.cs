@@ -7,7 +7,7 @@ using BingeBuddyNg.Core.User.Persistence;
 using Microsoft.WindowsAzure.Storage.Table;
 using static BingeBuddyNg.Shared.Constants;
 
-namespace BingeBuddyNg.Services.User.Queries
+namespace BingeBuddyNg.Core.User.Queries
 {
     public class SearchUsersQuery
     {

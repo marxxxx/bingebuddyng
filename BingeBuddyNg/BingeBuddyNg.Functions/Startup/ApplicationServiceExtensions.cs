@@ -9,9 +9,6 @@ using BingeBuddyNg.Core.Statistics.Commands;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Queries;
 using BingeBuddyNg.Infrastructure;
-using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.User;
-using BingeBuddyNg.Services.User.Queries;
 using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.DependencyInjection;
 

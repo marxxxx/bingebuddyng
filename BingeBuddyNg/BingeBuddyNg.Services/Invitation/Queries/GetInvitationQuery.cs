@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Invitation.DTO;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.DTO;
-using BingeBuddyNg.Services.Invitation;
 using MediatR;
 
 namespace BingeBuddyNg.Core.Invitation.Querys

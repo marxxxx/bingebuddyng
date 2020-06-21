@@ -2,7 +2,7 @@
 using BingeBuddyNg.Core.Venue.DTO;
 using BingeBuddyNg.Services.Venue;
 
-namespace BingeBuddyNg.Services.Activity
+namespace BingeBuddyNg.Core.Activity.DTO
 {
     public class AddVenueActivityDTO : AddActivityBaseDTO
     {

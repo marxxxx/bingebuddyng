@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using BingeBuddyNg.Services.Invitation;
+using BingeBuddyNg.Core.Invitation.Persistence;
 
 namespace BingeBuddyNg.Core.Invitation
 {

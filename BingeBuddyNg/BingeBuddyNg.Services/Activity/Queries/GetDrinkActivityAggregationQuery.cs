@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Activity.DTO;
 using BingeBuddyNg.Core.Drink;
-using BingeBuddyNg.Services.Activity;
 using MediatR;
 
 namespace BingeBuddyNg.Core.Activity.Queries

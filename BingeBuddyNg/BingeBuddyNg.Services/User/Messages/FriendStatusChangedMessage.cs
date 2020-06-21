@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BingeBuddyNg.Services.User.Messages
+namespace BingeBuddyNg.Core.User.Messages
 {
     public enum FriendStatus
     {

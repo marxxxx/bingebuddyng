@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
-using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.Game.DTO;
 using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Services.User.Queries;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Queries;
 using BingeBuddyNg.Shared;
 using MediatR;
 

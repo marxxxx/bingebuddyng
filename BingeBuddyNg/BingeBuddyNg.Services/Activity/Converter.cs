@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Activity.DTO;
 using BingeBuddyNg.Core.Activity.Persistence;
 using BingeBuddyNg.Core.Game;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Persistence;
 using BingeBuddyNg.Core.Venue;
-using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Venue;
 
 namespace BingeBuddyNg.Core.Activity

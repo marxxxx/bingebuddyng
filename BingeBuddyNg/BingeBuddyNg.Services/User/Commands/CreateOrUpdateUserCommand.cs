@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Drink;
 using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.User.Messages;
 using BingeBuddyNg.Core.User.Persistence;
-using BingeBuddyNg.Services.User;
 using MediatR;
 using static BingeBuddyNg.Shared.Constants;
 

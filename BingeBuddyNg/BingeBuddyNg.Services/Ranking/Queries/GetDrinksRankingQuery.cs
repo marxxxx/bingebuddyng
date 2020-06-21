@@ -5,7 +5,7 @@ using BingeBuddyNg.Core.Ranking.DTO;
 using BingeBuddyNg.Core.Statistics;
 using BingeBuddyNg.Core.User.DTO;
 using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Services.User.Queries;
+using BingeBuddyNg.Core.User.Queries;
 using Microsoft.WindowsAzure.Storage.Table;
 using static BingeBuddyNg.Shared.Constants;
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.User;
 
 namespace BingeBuddyNg.Core.User.Commands
 {

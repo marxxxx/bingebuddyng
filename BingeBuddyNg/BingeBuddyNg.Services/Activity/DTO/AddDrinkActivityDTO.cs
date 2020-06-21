@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BingeBuddyNg.Core.Drink;
 
-namespace BingeBuddyNg.Services.Activity
+namespace BingeBuddyNg.Core.Activity.DTO
 {
     public class AddDrinkActivityDTO : AddActivityBaseDTO
     {

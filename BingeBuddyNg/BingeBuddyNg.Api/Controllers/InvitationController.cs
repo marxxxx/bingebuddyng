@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BingeBuddyNg.Core.Invitation.Commands;
-using BingeBuddyNg.Core.Invitation.Querys;
 using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Services.Invitation;
+using BingeBuddyNg.Core.Invitation.Commands;
+using BingeBuddyNg.Core.Invitation.DTO;
+using BingeBuddyNg.Core.Invitation.Querys;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

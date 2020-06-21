@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Services.Invitation;
+using BingeBuddyNg.Core.Invitation.Persistence;
 using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.Invitation

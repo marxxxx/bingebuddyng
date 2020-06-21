@@ -1,6 +1,6 @@
 ﻿using BingeBuddyNg.Core.Activity.Domain;
 
-namespace BingeBuddyNg.Core.Activity
+namespace BingeBuddyNg.Core.Activity.Messages
 {
     public class ReactionAddedMessage
     {

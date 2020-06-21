@@ -6,7 +6,7 @@ using BingeBuddyNg.Core.Game.DTO;
 using BingeBuddyNg.Core.User.DTO;
 using BingeBuddyNg.Core.Venue.DTO;
 
-namespace BingeBuddyNg.Services.Activity
+namespace BingeBuddyNg.Core.Activity.DTO
 {
     public class ActivityDTO
     {

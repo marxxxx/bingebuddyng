@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Messages;
 using BingeBuddyNg.Core.Activity.Persistence;
 using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Shared;
 
-namespace BingeBuddyNg.Services.Activity
+namespace BingeBuddyNg.Core.Activity
 {
     public class ActivityRepository : IActivityRepository
     {

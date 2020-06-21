@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Activity.Queries;
-using BingeBuddyNg.Services.Ranking;
+using BingeBuddyNg.Core.Ranking.DTO;
 using MediatR;
 
 namespace BingeBuddyNg.Core.Ranking.Queries

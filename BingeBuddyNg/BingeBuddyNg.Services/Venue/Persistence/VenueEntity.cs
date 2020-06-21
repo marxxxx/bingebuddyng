@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using BingeBuddyNg.Core.Activity.Domain;
-using BingeBuddyNg.Services.Activity;
+﻿using BingeBuddyNg.Core.Activity.Domain;
 
 namespace BingeBuddyNg.Services.Venue.Persistence
 {

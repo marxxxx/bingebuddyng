@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity.Commands;
 using BingeBuddyNg.Core.Activity.Persistence;
 using BingeBuddyNg.Core.Activity.Queries;
-using BingeBuddyNg.Services.User.Messages;
+using BingeBuddyNg.Core.User.Messages;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;

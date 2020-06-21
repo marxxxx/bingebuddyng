@@ -2,7 +2,7 @@
 using System.Linq;
 using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.User.Persistence;
-using BingeBuddyNg.Services.User.Queries;
+using BingeBuddyNg.Core.User.Queries;
 using Moq;
 using static BingeBuddyNg.Shared.Constants;
 

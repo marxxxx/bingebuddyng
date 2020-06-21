@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Ranking.DTO;
 using BingeBuddyNg.Core.Ranking.Queries;
-using BingeBuddyNg.Services.Ranking;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

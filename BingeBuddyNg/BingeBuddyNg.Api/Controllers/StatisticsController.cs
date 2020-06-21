@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Statistics.DTO;
 using BingeBuddyNg.Core.Statistics.Queries;
-using BingeBuddyNg.Services.Statistics.Querys;
-using MediatR;
+using BingeBuddyNg.Core.Statistics.Querys;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BingeBuddyNg.Api.Controllers

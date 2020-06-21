@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BingeBuddyNg.Core.Statistics;
-using BingeBuddyNg.Core.Statistics.DTO;
 using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.Statistics.DTO;
 using Microsoft.WindowsAzure.Storage.Table;
 using static BingeBuddyNg.Shared.Constants;
 
-namespace BingeBuddyNg.Services.Statistics.Querys
+namespace BingeBuddyNg.Core.Statistics.Querys
 {
     public class GetStatisticHistoryForUserQuery
     {

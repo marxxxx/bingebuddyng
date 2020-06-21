@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity.DTO;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Core.User.DTO;
-using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Services.User.Commands;
-using BingeBuddyNg.Services.User.Queries;
+using BingeBuddyNg.Core.User.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

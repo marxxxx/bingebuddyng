@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.Game.DTO;
-using BingeBuddyNg.Services.User.Queries;
+using BingeBuddyNg.Core.User.Queries;
 using MediatR;
 
 namespace BingeBuddyNg.Core.Game.Queries

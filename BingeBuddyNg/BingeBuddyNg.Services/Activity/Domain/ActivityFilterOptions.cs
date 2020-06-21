@@ -1,4 +1,4 @@
-﻿namespace BingeBuddyNg.Core.Activity
+﻿namespace BingeBuddyNg.Core.Activity.Domain
 {
     public enum ActivityFilterOptions
     {

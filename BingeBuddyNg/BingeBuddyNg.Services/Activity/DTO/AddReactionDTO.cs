@@ -1,6 +1,6 @@
 ﻿using BingeBuddyNg.Core.Activity.Domain;
 
-namespace BingeBuddyNg.Services.Activity
+namespace BingeBuddyNg.Core.Activity.DTO
 {
     public class AddReactionDTO
     {

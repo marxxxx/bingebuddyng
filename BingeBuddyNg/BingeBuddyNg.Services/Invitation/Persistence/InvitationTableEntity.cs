@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace BingeBuddyNg.Services.Invitation
+namespace BingeBuddyNg.Core.Invitation.Persistence
 {
     public class InvitationTableEntity : TableEntity
     {

@@ -1,5 +1,6 @@
 ﻿using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.Commands;
+using BingeBuddyNg.Core.Activity.DTO;
 using BingeBuddyNg.Core.Activity.Queries;
 using BingeBuddyNg.Core.Drink;
 using BingeBuddyNg.Core.DrinkEvent;
@@ -10,23 +11,20 @@ using BingeBuddyNg.Core.Invitation;
 using BingeBuddyNg.Core.Ranking.Queries;
 using BingeBuddyNg.Core.Statistics.Commands;
 using BingeBuddyNg.Core.Statistics.Queries;
+using BingeBuddyNg.Core.Statistics.Querys;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Core.User.Queries;
 using BingeBuddyNg.Core.Venue;
 using BingeBuddyNg.Core.Venue.Queries;
 using BingeBuddyNg.Infrastructure;
-using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Statistics.Querys;
-using BingeBuddyNg.Services.User;
-using BingeBuddyNg.Services.User.Queries;
 using BingeBuddyNg.Services.Venue;
 using MediatR;
 using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BingeBuddyNg.Services
+namespace BingeBuddyNg.Api
 {
     public static class ApplicationServiceExtensions
     {

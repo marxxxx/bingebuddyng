@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.User.Messages;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;

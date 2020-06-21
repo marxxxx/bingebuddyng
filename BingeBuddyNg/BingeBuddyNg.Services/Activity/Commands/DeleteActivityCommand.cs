@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using BingeBuddyNg.Core.Activity.Persistence;
-using BingeBuddyNg.Services.Activity.Messages;
+using BingeBuddyNg.Core.Activity.Messages;
 using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Shared;
 using MediatR;
-using Microsoft.WindowsAzure.Storage.Table;
 using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.Activity.Commands
@@ -43,8 +40,5 @@ namespace BingeBuddyNg.Core.Activity.Commands
 
             return Unit.Value;
         }
-
-       
-      
     }
 }

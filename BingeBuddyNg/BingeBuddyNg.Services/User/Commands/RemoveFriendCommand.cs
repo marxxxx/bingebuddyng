@@ -1,9 +1,9 @@
-﻿using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Services.User.Messages;
-using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.User.Messages;
+using MediatR;
 using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.User.Commands

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BingeBuddyNg.Services.Activity.Messages
+namespace BingeBuddyNg.Core.Activity.Messages
 {
     public class DeleteActivityMessage
     {

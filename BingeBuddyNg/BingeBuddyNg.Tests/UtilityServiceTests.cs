@@ -1,4 +1,4 @@
-using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Core.Activity.DTO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Xunit;

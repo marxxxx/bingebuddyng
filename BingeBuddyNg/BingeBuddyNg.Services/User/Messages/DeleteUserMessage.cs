@@ -1,4 +1,4 @@
-﻿namespace BingeBuddyNg.Services.User
+﻿namespace BingeBuddyNg.Core.User.Messages
 {
     public class DeleteUserMessage
     {

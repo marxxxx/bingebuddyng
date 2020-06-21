@@ -1,8 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using BingeBuddyNg.Core.Statistics;
 using BingeBuddyNg.Core.Statistics.Commands;
-using BingeBuddyNg.Services.User.Queries;
+using BingeBuddyNg.Core.User.Queries;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 

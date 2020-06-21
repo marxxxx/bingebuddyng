@@ -1,15 +1,10 @@
-﻿using BingeBuddyNg.Core.Statistics;
-using BingeBuddyNg.Core.Statistics.Queries;
-using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Services.Statistics;
-using BingeBuddyNg.Services.Statistics.Querys;
-using Moq;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.Statistics.Queries;
+using Moq;
 using Xunit;
 
 namespace BingeBuddyNg.Tests

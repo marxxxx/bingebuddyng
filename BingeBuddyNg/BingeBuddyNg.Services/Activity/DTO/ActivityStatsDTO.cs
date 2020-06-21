@@ -1,8 +1,7 @@
-﻿using BingeBuddyNg.Core.Statistics.DTO;
-using BingeBuddyNg.Services.Statistics;
-using System;
+﻿using System;
+using BingeBuddyNg.Core.Statistics.DTO;
 
-namespace BingeBuddyNg.Services.Activity
+namespace BingeBuddyNg.Core.Activity.DTO
 {
     public class ActivityStatsDTO
     {

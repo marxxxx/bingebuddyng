@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BingeBuddyNg.Services.Infrastructure
+namespace BingeBuddyNg.Core
 {
     public static class Util
     {

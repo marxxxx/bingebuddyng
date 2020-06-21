@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using BingeBuddyNg.Core.Drink.DTO;
-using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Services.Infrastructure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
