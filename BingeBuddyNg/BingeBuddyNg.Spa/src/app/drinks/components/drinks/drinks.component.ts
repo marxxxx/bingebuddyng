@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DrinkService } from 'src/app/drinks/services/drink.service';
-import { Drink } from 'src/models/Drink';
+import { DrinkDTO } from 'src/models/DrinkDTO';
 import { ShellInteractionService } from 'src/app/@core/services/shell-interaction.service';
 import { ConfirmationDialogArgs } from 'src/app/@shared/components/confirmation-dialog/ConfirmationDialogArgs';
 import { filter } from 'rxjs/operators';
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 })
 export class DrinksComponent implements OnInit {
 
-  drinks: Drink[] = [];
+  drinks: DrinkDTO[] = [];
   isBusy = false;
 
   constructor(private drinkService: DrinkService,
@@ -37,7 +37,7 @@ export class DrinksComponent implements OnInit {
     });
   }
 
-  onDelete(d: Drink) {
+  onDelete(d: DrinkDTO) {
     const args: ConfirmationDialogArgs = {
       title: 'DeleteDrink',
       icon: 'delete',
@@ -56,7 +56,7 @@ export class DrinksComponent implements OnInit {
       });
   }
 
-  onDrink(d: Drink) {
+  onDrink(d: DrinkDTO) {
     this.drinkActivityService.drink(d).subscribe(_ => this.router.navigateByUrl('/activity-feed'),
       e => console.error('Error drinking drink', d, e));
   }

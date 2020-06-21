@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Drink } from 'src/models/Drink';
+import { DrinkDTO } from 'src/models/DrinkDTO';
 import { Observable } from 'rxjs';
 
 
@@ -12,15 +12,15 @@ export class DrinkService {
 
   constructor(private http: HttpClient) { }
 
-  getDrinks(): Observable<Drink[]> {
-    return this.http.get<Drink[]>(this.baseUrl);
+  getDrinks(): Observable<DrinkDTO[]> {
+    return this.http.get<DrinkDTO[]>(this.baseUrl);
   }
 
-  getDrink(drinkId: string): Observable<Drink> {
-    return this.http.get<Drink>(`${this.baseUrl}/${drinkId}`);
+  getDrink(drinkId: string): Observable<DrinkDTO> {
+    return this.http.get<DrinkDTO>(`${this.baseUrl}/${drinkId}`);
   }
 
-  saveDrinks(drinks: Drink[]): Observable<any> {
+  saveDrinks(drinks: DrinkDTO[]): Observable<any> {
     return this.http.post(this.baseUrl, drinks);
   }
 

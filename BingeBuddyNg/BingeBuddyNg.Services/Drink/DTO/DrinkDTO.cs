@@ -21,10 +21,10 @@ namespace BingeBuddyNg.Core.Drink.DTO
 
         public DrinkType DrinkType { get; set; }
 
-        public string Name { get; }
+        public string Name { get; set; }
 
-        public double? AlcPrc { get; }
+        public double? AlcPrc { get; set; }
 
-        public double? Volume { get; }
+        public double? Volume { get; set; }
     }
 }

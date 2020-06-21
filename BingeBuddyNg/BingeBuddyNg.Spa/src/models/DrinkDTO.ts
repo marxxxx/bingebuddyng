@@ -1,6 +1,6 @@
 import { DrinkType } from './DrinkType';
 
-export class Drink {
+export class DrinkDTO {
   id?: string;
   drinkType: DrinkType;
   name: string;

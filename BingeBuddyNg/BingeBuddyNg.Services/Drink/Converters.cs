@@ -3,18 +3,14 @@ using BingeBuddyNg.Core.Drink.Persistence;
 
 namespace BingeBuddyNg.Core.Drink
 {
-    internal static class Converters
+    public static class Converters
     {
-        internal static DrinkDTO ToDto(this DrinkTableEntity entity)
+        public static DrinkDTO ToDto(this DrinkTableEntity entity)
         {
-            return new DrinkDTO()
-            {
-                Id = entity.Id,
-                DrinkType = entity.DrinkType
-            };
+            return new DrinkDTO(id: entity.Id, drinkType: entity.DrinkType, name: entity.Name, alcPrc: entity.AlcPrc, volume: entity.Volume);
         }
 
-        internal static DrinkTableEntity ToEntity(this DrinkDTO drink, string userId)
+        public static DrinkTableEntity ToEntity(this DrinkDTO drink, string userId)
         {
             return new DrinkTableEntity(userId, drink);
         }

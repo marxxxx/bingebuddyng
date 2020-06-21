@@ -4,7 +4,7 @@ import { LocationService } from './location.service';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, timer } from 'rxjs';
 import { AddDrinkActivityDTO } from 'src/models/AddDrinkActivityDTO';
-import { Drink } from 'src/models/Drink';
+import { DrinkDTO } from 'src/models/DrinkDTO';
 import { DrinkType } from 'src/models/DrinkType';
 import { DrinkDialogArgs } from '../components/drink-dialog/DrinkDialogArgs';
 import { DrinkDialogComponent } from '../components/drink-dialog/drink-dialog.component';
@@ -16,7 +16,7 @@ export class DrinkActivityService {
     private activityService: ActivityService,
     private dialog: MatDialog) { }
 
-  drink(drink: Drink, displayDialog: boolean = true): Observable<[any, string]> {
+  drink(drink: DrinkDTO, displayDialog: boolean = true): Observable<[any, string]> {
 
     const activity = this.buildAddDrinkDto(drink);
 
@@ -27,7 +27,7 @@ export class DrinkActivityService {
     return observable;
   }
 
-  buildAddDrinkDto(drink: Drink): AddDrinkActivityDTO {
+  buildAddDrinkDto(drink: DrinkDTO): AddDrinkActivityDTO {
     const activity: AddDrinkActivityDTO = {
       drinkId: drink.id,
       drinkType: drink.drinkType,
