@@ -23,10 +23,10 @@ namespace BingeBuddyNg.Functions
         public static void AddBingeBuddy(this IServiceCollection services)
         {
             // Domain Services
-            services.AddTransient<IActivityRepository, ActivityRepository>();
+            services.AddScoped<IActivityRepository, ActivityRepository>();
             services.AddUser();
-            services.AddTransient<ICalculationService, CalculationService>();
-            services.AddTransient<IDrinkEventRepository, DrinkEventRepository>();
+            services.AddScoped<CalculationService>();
+            services.AddScoped<IDrinkEventRepository, DrinkEventRepository>();
             
             // Commands & Queries
             services.AddScoped<UpdateRankingCommand>();
@@ -45,7 +45,7 @@ namespace BingeBuddyNg.Functions
 
             services.AddTransient<ICacheService, NoCacheService>();
             services.AddSingleton<ITranslationService, TranslationService>();
-            services.AddTransient<IUtilityService, UtilityService>();
+            services.AddTransient<IAddressDecodingService, AddressDecodingService>();
         }
 
         public static void AddUser(this IServiceCollection services)
@@ -81,7 +81,7 @@ namespace BingeBuddyNg.Functions
             string googleApiKey = Environment.GetEnvironmentVariable("GoogleApiKey", EnvironmentVariableTarget.Process);
             services.AddSingleton(new GoogleApiConfiguration(googleApiKey));
 
-            services.AddTransient<IUtilityService, UtilityService>();
+            services.AddTransient<IAddressDecodingService, AddressDecodingService>();
         }
 
         public static void AddStorage(this IServiceCollection services)

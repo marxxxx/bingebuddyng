@@ -3,7 +3,7 @@ using BingeBuddyNg.Core.Activity.Domain;
 
 namespace BingeBuddyNg.Services.Infrastructure
 {
-    public interface IUtilityService
+    public interface IAddressDecodingService
     {
         Task<AddressInfo> GetAddressFromLongLatAsync(Location location);
     }

@@ -18,7 +18,7 @@ namespace BingeBuddyNg.Functions.Services
 {
     public class ActivityAddedService
     {
-        private readonly IUtilityService utilityService;
+        private readonly IAddressDecodingService utilityService;
         private readonly IActivityRepository activityRepository;
         private readonly IUserRepository userRepository;
         private readonly INotificationService notificationService;
@@ -30,7 +30,7 @@ namespace BingeBuddyNg.Functions.Services
         private readonly ILogger<ActivityAddedService> logger;
 
         public ActivityAddedService(
-            IUtilityService utilityService,
+            IAddressDecodingService utilityService,
             IActivityRepository activityRepository,
             IUserRepository userRepository,
             INotificationService notificationService,

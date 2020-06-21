@@ -10,7 +10,6 @@ namespace BingeBuddyNg.Services.Infrastructure
                 return defaultValue;
 
             return result;
-        }
-    
+        }    
     }
 }

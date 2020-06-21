@@ -12,12 +12,12 @@ namespace BingeBuddyNg.Core.Statistics.Commands
 {
     public class UpdateStatisticsCommand
     {
-        private readonly ICalculationService calculationService;
+        private readonly CalculationService calculationService;
         private readonly IStorageAccessService storageAccessService;
         private readonly ILogger<UpdateStatisticsCommand> logger;
 
         public UpdateStatisticsCommand(
-            ICalculationService calculationService,
+            CalculationService calculationService,
             IStorageAccessService storageAccessService, 
             ILogger<UpdateStatisticsCommand> logger)
         {

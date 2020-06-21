@@ -8,7 +8,7 @@ using BingeBuddyNg.Core.User;
 
 namespace BingeBuddyNg.Core.Calculation
 {
-    public class CalculationService : ICalculationService
+    public class CalculationService
     {
         private const int DefaultWeight = 80;
         private const int NightConsiderationTimespanInHours = 14;

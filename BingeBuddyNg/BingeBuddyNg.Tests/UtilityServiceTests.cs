@@ -17,7 +17,7 @@ namespace BingeBuddyNg.Tests
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
             httpClientFactoryMock.Setup(m => m.CreateClient(It.IsAny<string>())).Returns(new HttpClient());
 
-            var utilityService = new UtilityService(httpClientFactoryMock.Object, new GoogleApiConfiguration("key"));
+            var utilityService = new AddressDecodingService(httpClientFactoryMock.Object, new GoogleApiConfiguration("key"));
             double latitude = 48.3202861;
             double longitude = 14.2917983;
             var address = await utilityService.GetAddressFromLongLatAsync(new Location(latitude, longitude));

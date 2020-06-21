@@ -112,7 +112,7 @@ namespace BingeBuddyNg.Services
             string googleApiKey = configuration.GetValue<string>("GoogleApiKey");
             services.AddSingleton(new GoogleApiConfiguration(googleApiKey));
 
-            services.AddTransient<IUtilityService, UtilityService>();
+            services.AddTransient<IAddressDecodingService, AddressDecodingService>();
         }
 
         public static void AddStorage(this IServiceCollection services, IConfiguration configuration)

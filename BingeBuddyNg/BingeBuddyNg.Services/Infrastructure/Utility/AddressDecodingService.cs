@@ -8,12 +8,12 @@ using Newtonsoft.Json;
 
 namespace BingeBuddyNg.Services.Infrastructure
 {
-    public class UtilityService : IUtilityService
+    public class AddressDecodingService : IAddressDecodingService
     {
         private readonly IHttpClientFactory httpClientFactory;
         private readonly GoogleApiConfiguration configuration;
 
-        public UtilityService(IHttpClientFactory httpClientFactory, GoogleApiConfiguration configuration)
+        public AddressDecodingService(IHttpClientFactory httpClientFactory, GoogleApiConfiguration configuration)
         {
             this.httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
