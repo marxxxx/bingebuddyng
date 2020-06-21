@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.FriendsRequest.Persistence;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Core.User.DTO;
-using BingeBuddyNg.Services.FriendsRequest;
-using BingeBuddyNg.Services.FriendsRequest.Persistence;
 using BingeBuddyNg.Services.Infrastructure;
 using Microsoft.WindowsAzure.Storage.Table;
 
@@ -36,13 +34,11 @@ namespace BingeBuddyNg.Core.FriendsRequest
             await this.storageAccessService.DeleteAsync(TableName, requestingUserId, userId);
         }
 
-        public async Task<List<FriendRequestDTO>> GetFriendRequestsAsync(string userId)
+        public async Task<List<FriendRequestEntity>> GetFriendRequestsAsync(string userId)
         {
             var queryResult = await this.storageAccessService.QueryTableAsync<FriendRequestEntity>(TableName, partitionKey: userId, minRowKey: null, pageSize: 50);
 
-            var result = queryResult.ResultPage.Select(r => new FriendRequestDTO(
-                new UserInfoDTO(r.RequestingUserId, r.RequestingUserName),
-                new UserInfoDTO(r.FriendUserId, r.FriendUserName))).ToList();
+            var result = queryResult.ResultPage;
             return result;
         }
 

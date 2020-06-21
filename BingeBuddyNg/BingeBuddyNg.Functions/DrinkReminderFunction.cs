@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Functions.Services;
 using BingeBuddyNg.Functions.Services.Notifications;
 using Microsoft.Azure.WebJobs;
@@ -26,7 +27,7 @@ namespace BingeBuddyNg.Functions
         {
             log.LogInformation($"Running drink reminder function ...");
 
-            User user = context.GetInput<User>();
+            var user = context.GetInput<User>();
 
             log.LogInformation($"Got user {user} ");
 

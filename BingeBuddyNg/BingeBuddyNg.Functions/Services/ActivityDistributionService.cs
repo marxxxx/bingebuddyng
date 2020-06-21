@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity.Commands;
 using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Core.User.Queries;
 using BingeBuddyNg.Services.Activity.Persistence;
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using BingeBuddyNg.Core.User.DTO;
 
-namespace BingeBuddyNg.Services.FriendsRequest
+namespace BingeBuddyNg.Core.FriendsRequest.DTO
 {
     public class FriendRequestDTO
     {

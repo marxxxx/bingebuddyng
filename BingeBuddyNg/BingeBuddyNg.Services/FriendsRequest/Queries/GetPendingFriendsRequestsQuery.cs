@@ -1,9 +1,10 @@
-﻿using BingeBuddyNg.Services.FriendsRequest;
-using MediatR;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.FriendsRequest.DTO;
+using MediatR;
 
 namespace BingeBuddyNg.Core.FriendsRequest.Querys
 {
@@ -34,7 +35,7 @@ namespace BingeBuddyNg.Core.FriendsRequest.Querys
         public async Task<List<FriendRequestDTO>> Handle(GetPendingFriendsRequestsQuery request, CancellationToken cancellationToken)
         {
             var result = await friendRequestRepository.GetFriendRequestsAsync(request.UserId);
-            return result;
+            return result.Select(r=>r.ToDto()).ToList();
         }
     }
 }

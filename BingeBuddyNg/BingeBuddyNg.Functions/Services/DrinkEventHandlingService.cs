@@ -7,6 +7,7 @@ using BingeBuddyNg.Core.Drink;
 using BingeBuddyNg.Core.DrinkEvent;
 using BingeBuddyNg.Core.Statistics.Commands;
 using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Functions.Services.Notifications;
 using BingeBuddyNg.Services.Infrastructure;
 using BingeBuddyNg.Services.User.Queries;

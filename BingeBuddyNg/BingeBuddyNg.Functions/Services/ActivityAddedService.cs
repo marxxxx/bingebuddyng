@@ -7,6 +7,7 @@ using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Statistics;
 using BingeBuddyNg.Core.Statistics.Commands;
 using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Functions.Services.Notifications;
 using BingeBuddyNg.Services.Activity;
 using BingeBuddyNg.Services.Infrastructure;
