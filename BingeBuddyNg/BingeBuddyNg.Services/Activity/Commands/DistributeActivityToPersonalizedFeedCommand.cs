@@ -28,8 +28,8 @@ namespace BingeBuddyNg.Core.Activity.Commands
                 try
                 {
                     var entity = new ActivityTableEntity(userId, activity.Id, activity);
-
-                    await this.storageAccessService.InsertAsync(TableNames.ActivityUserFeed, entity);
+                    
+                    await this.storageAccessService.InsertOrMergeAsync(TableNames.ActivityUserFeed, entity);
                 }
                 catch (Exception ex)
                 {
