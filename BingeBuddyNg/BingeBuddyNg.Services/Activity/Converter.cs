@@ -196,11 +196,13 @@ namespace BingeBuddyNg.Core.Activity
 
         public static Domain.Activity ToDomain(this ActivityEntity entity)
         {
+            Domain.Activity activity;
+
             switch (entity.ActivityType)
             {
                 case ActivityType.Drink:
                     {
-                        return Domain.Activity.CreateDrinkActivity(
+                        activity = Domain.Activity.CreateDrinkActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.Location,
@@ -212,28 +214,31 @@ namespace BingeBuddyNg.Core.Activity
                             entity.DrinkAlcPrc.GetValueOrDefault(),
                             entity.DrinkVolume.GetValueOrDefault(),
                             entity.Venue?.ToDomain());
+                        break;
                     }
                 case ActivityType.GameResult:
                     {
-                        return Domain.Activity.CreateGameActivity(
+                        activity = Domain.Activity.CreateGameActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.GameInfo,
                             new UserInfo(entity.UserId, entity.UserName));
+                        break;
                     }
                 case ActivityType.Image:
                     {
-                        return Domain.Activity.CreateImageActivity(
+                        activity = Domain.Activity.CreateImageActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.Location,
                             entity.UserId,
                             entity.UserName,
                             entity.ImageUrl);
+                        break;
                     }
                 case ActivityType.Message:
                     {
-                        return Domain.Activity.CreateMessageActivity(
+                        activity = Domain.Activity.CreateMessageActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.Location,
@@ -241,67 +246,78 @@ namespace BingeBuddyNg.Core.Activity
                             entity.UserName,
                             entity.Message,
                             entity.Venue?.ToDomain());
+                        break;
                     }
                 case ActivityType.Notification:
                     {
-                        return Domain.Activity.CreateNotificationActivity(
+                        activity = Domain.Activity.CreateNotificationActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.UserId,
                             entity.UserName,
                             entity.Message);
+                        break;
                     }
                 case ActivityType.ProfileImageUpdate:
                     {
-                        return Domain.Activity.CreateProfileImageUpdateActivity(
+                        activity = Domain.Activity.CreateProfileImageUpdateActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.UserId,
                             entity.UserName);
+                        break;
                     }
                 case ActivityType.Registration:
                     {
-                        return Domain.Activity.CreateRegistrationActivity(
+                        activity = Domain.Activity.CreateRegistrationActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.UserId,
                             entity.UserName,
                             entity.RegistrationUser);
+                        break;
                     }
                 case ActivityType.Rename:
                     {
-                        return Domain.Activity.CreateRenameActivity(
+                        activity = Domain.Activity.CreateRenameActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.UserId,
                             entity.UserName,
                             entity.OriginalUserName);
+                        break;
                     }
                 case ActivityType.VenueEntered:
                     {
-                        return Domain.Activity.CreateVenueActivity(
+                        activity = Domain.Activity.CreateVenueActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.UserId,
                             entity.UserName,
                             entity.Venue?.ToDomain(),
                             VenueAction.Enter);
+                        break;
                     }
                 case ActivityType.VenueLeft:
                     {
-                        return Domain.Activity.CreateVenueActivity(
+                        activity = Domain.Activity.CreateVenueActivity(
                             entity.Id,
                             entity.Timestamp,
                             entity.UserId,
                             entity.UserName,
                             entity.Venue?.ToDomain(),
                             VenueAction.Leave);
+                        break;
                     }
                 default:
                     {
                         throw new InvalidOperationException("Invalid activity type " + entity.ActivityType);
                     }
             }
+            activity.UpdateStats(entity.DrinkCount, entity.AlcLevel.GetValueOrDefault());
+            activity.UpdateLocation(entity.LocationAddress);
+
+            return activity;
         }
     }
 }

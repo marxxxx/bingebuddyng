@@ -105,7 +105,7 @@ namespace BingeBuddyNg.Core.Activity.Domain
             this.AlcLevel = alcLevel;
         }
 
-        public void UpdateLocation(string locationAddress, string countryShortName, string countryLongName)
+        public void UpdateLocation(string locationAddress, string countryShortName = null, string countryLongName = null)
         {
             this.LocationAddress = locationAddress;
             this.CountryShortName = countryShortName;
