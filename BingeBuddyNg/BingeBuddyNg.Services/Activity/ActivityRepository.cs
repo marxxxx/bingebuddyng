@@ -74,7 +74,13 @@ namespace BingeBuddyNg.Core.Activity
         public async Task<ActivityTableEntity> GetActivityEntityAsync(string id)
         {
             string partitionKey = ActivityKeyFactory.GetPartitionKeyFromRowKey(id);
-            return await this.storageAccessService.GetTableEntityAsync<ActivityTableEntity>(Constants.TableNames.Activity, partitionKey, id);
+            var entity = await this.storageAccessService.GetTableEntityAsync<ActivityTableEntity>(Constants.TableNames.Activity, partitionKey, id);
+            if (entity == null)
+            {
+                throw new NotFoundException($"Activity [{id}] not found!");
+            }
+
+            return entity;
         }
 
         public async Task UpdateActivityAsync(ActivityEntity activity)
@@ -84,7 +90,7 @@ namespace BingeBuddyNg.Core.Activity
 
             await this.storageAccessService.ReplaceAsync(Constants.TableNames.Activity, entity);
         }
-        
+
         public async Task AddToActivityAddedTopicAsync(string activityId)
         {
             await this.eventGridService.PublishAsync("ActivityAdded", new ActivityAddedMessage(activityId));
