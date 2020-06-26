@@ -50,7 +50,15 @@ export const beerGifs = ['https://media.giphy.com/media/92wsX8GEoNTYA/giphy.gif'
   'https://media.giphy.com/media/xT9IglmjCjsXFND3TG/200w_d.gif',
   'https://media.giphy.com/media/3osxYe1M2BlutlmgrS/200w_d.gif',
   'https://media.giphy.com/media/c1zviFHCf4pq0/200w_d.gif',
-  'https://media.giphy.com/media/oYdAs9ZzzmUlG/200w_d.gif'];
+  'https://media.giphy.com/media/oYdAs9ZzzmUlG/200w_d.gif',
+  'https://media1.giphy.com/media/l2Jhx6TQ6P3WAnv8c/giphy.gif',
+  'http://likegif.com/wp-content/uploads/2013/01/04/beer-gif-16.gif',
+  'https://i.chzbgr.com/full/7471102464/h4F82D2C2/how-to-open-beer-bottles-with-your-eyes',
+  'https://4.bp.blogspot.com/-TYdCVzgPHDA/T-FuUxkzLQI/AAAAAAAJBRo/2QSfE_gAajE/s1600/funny+animated+pictures+animals+%283%29.gif',
+  'https://media.giphy.com/media/fwcxWODNImfM8zPDwu/giphy.gif',
+'http://images4.fanpop.com/image/photos/21900000/Buffy-Funny-GIFS-buffy-the-vampire-slayer-21951383-350-262.gif',
+'https://kachory.com/wp-content/uploads/2019/11/injection-beer.gif',
+'https://media3.giphy.com/media/3o6Ztd5vx7mxQ4AkQU/giphy.gif'];
 export const wineGifs = ['https://media1.tenor.com/images/cf4393066940affd7a6cf7bca24d31c4/tenor.gif',
   'https://media.giphy.com/media/9U7YUWNqG5j56/giphy.gif',
   'https://media.tenor.com/images/9355518a227edcab65dd3fade726b029/tenor.gif',
