@@ -43,12 +43,11 @@
         <span>{{ 'RenameMessage' | transloco:activity.activity }}</span>
       </p>
       <!-- Venue -->
-      <p class="venue" *ngIf="activity.activity.activityType === ActivityType.VenueEntered ||
-    this.activity.activity.activityType === ActivityType.VenueLeft">
-        <span>{{ 'PersonalVenueEnterActivityMessage' | transloco:activity.activity.venue.name }}</span>
+      <p class="venue" *ngIf="activity.activity.activityType === ActivityType.VenueEntered">
+        <span>{{ 'PersonalVenueEnterActivityMessage' | transloco:activity.activity.venue }}</span>
       </p>
       <p class="venue" *ngIf="activity.activity.activityType === ActivityType.VenueLeft">
-        <span>{{ 'PersonalVenueLeaveActivityMessage' | transloco:activity.activity.venue.name }}</span>
+        <span>{{ 'PersonalVenueLeaveActivityMessage' | transloco:activity.activity.venue }}</span>
       </p>
 
       <!-- Message -->
