@@ -5,12 +5,7 @@
       "name": "app",
       "installMode": "prefetch",
       "resources": {
-        "files": [
-          "/favicon.ico",
-          "/index.html",
-          "/*.css",
-          "/*.js"
-        ]
+        "files": ["/favicon.ico", "/index.html", "/*.css", "/*.js"]
       }
     },
     {
@@ -18,18 +13,22 @@
       "installMode": "lazy",
       "updateMode": "prefetch",
       "resources": {
-        "files": [
-          "/assets/**"
-        ]
+        "files": ["/assets/**"]
+      }
+    },
+    {
+      "name": "drinkimages",
+      "installMode": "lazy",
+      "updateMode": "lazy",
+      "resources": {
+        "urls": ["https://bingebuddystorage.blob.core.windows.net/drinkimg/**"]
       }
     }
   ],
   "dataGroups": [
     {
       "name": "api",
-      "urls": [
-        "https://bingebuddyapi.azurewebsites.net/api/**"
-      ],
+      "urls": ["https://bingebuddyapi.azurewebsites.net/api/**"],
       "cacheConfig": {
         "strategy": "freshness",
         "maxSize": 100,

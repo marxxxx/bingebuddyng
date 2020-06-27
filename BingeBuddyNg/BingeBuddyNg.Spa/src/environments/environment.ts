@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  BaseDataUrl: 'https://localhost:5001/api'
+  BaseDataUrl: 'https://localhost:5001/api',
+  drinkImgBaseUrl: 'https://bingebuddystorage.blob.core.windows.net/drinkimg/'
 };
 
 /*

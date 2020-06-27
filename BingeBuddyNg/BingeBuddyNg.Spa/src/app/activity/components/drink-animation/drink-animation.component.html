@@ -1,5 +1,10 @@
- <div fxLayout="column" fxLayoutAlign="center center"  class="full-width">
-  <img *ngIf="imageUrl" [src]="imageUrl">
+<div fxLayout="column" fxLayoutAlign="center center" class="drink-image">
+  <picture *ngIf="imageUrl">
+    <source [srcset]="imageUrl" type="image/webp" />
+    <source [srcset]="fallbackImageUrl" type="image/gif" />
+    <img [src]="imageUrl" />
+  </picture>
+
 
   <video *ngIf="!imageUrl" autoplay loop muted playsinline>
     <source src="assets/img/funny_beers.webm" type="video/webm">
