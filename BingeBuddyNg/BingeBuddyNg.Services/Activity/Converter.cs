@@ -317,6 +317,21 @@ namespace BingeBuddyNg.Core.Activity
             activity.UpdateStats(entity.DrinkCount, entity.AlcLevel.GetValueOrDefault());
             activity.UpdateLocation(entity.LocationAddress);
 
+            foreach(var l in entity.Likes)
+            {
+                activity.AddLike(l);
+            }
+
+            foreach(var c in entity.Comments)
+            {
+                activity.AddComment(c);
+            }
+
+            foreach(var c in entity.Cheers)
+            {
+                activity.AddCheers(c);
+            }
+
             return activity;
         }
     }

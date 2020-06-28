@@ -67,7 +67,7 @@ namespace BingeBuddyNg.Core.Activity.Commands
                     break;
             }
 
-            await this.activityRepository.UpdateActivityAsync(activity.ToEntity());
+            await this.activityRepository.UpdateActivityAsync(request.UserId, activity.ToEntity());
 
             // add to queue
             var message = new ReactionAddedMessage(request.ActivityId, request.Type, request.UserId, request.Comment);

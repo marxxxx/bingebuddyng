@@ -13,6 +13,8 @@ namespace BingeBuddyNg.Core.Activity
 
         Task UpdateActivityAsync(ActivityEntity activity);
 
+        Task UpdateActivityAsync(string userId, ActivityEntity activity);
+
         Task AddToActivityAddedTopicAsync(string activityId);
     }
 }

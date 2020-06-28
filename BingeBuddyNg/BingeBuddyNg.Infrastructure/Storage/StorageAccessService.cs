@@ -7,6 +7,7 @@ using BingeBuddyNg.Core.Infrastructure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Queue;
+using Microsoft.WindowsAzure.Storage.RetryPolicies;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 
@@ -15,6 +16,7 @@ namespace BingeBuddyNg.Infrastructure
     public class StorageAccessService : IStorageAccessService
     {
         private readonly StorageConfiguration config;
+        private readonly TableRequestOptions DefaultRequestOptions = new TableRequestOptions() { RetryPolicy = new LinearRetry(TimeSpan.FromSeconds(1), 3) };
 
         public StorageAccessService(StorageConfiguration config)
         {
@@ -185,17 +187,15 @@ namespace BingeBuddyNg.Infrastructure
             var table = this.GetTableReference(tableName);
 
             TableOperation operation = TableOperation.Insert(entity);
-            await table.ExecuteAsync(operation);
-        }
-
-        
+            await table.ExecuteAsync(operation, DefaultRequestOptions, null);
+        }        
 
         public async Task ReplaceAsync(string tableName, ITableEntity entity)
         {
             var table = this.GetTableReference(tableName);
 
             TableOperation operation = TableOperation.Replace(entity);
-            await table.ExecuteAsync(operation);
+            await table.ExecuteAsync(operation, DefaultRequestOptions, null);
         }
 
         public async Task DeleteAsync(string tableName, ITableEntity entity)
@@ -203,7 +203,7 @@ namespace BingeBuddyNg.Infrastructure
             var table = this.GetTableReference(tableName);
 
             TableOperation operation = TableOperation.Delete(entity);
-            await table.ExecuteAsync(operation);
+            await table.ExecuteAsync(operation, DefaultRequestOptions, null);
         }
 
         public async Task DeleteAsync(string tableName, string partitionKey, string rowKey)
@@ -225,7 +225,7 @@ namespace BingeBuddyNg.Infrastructure
 
             var table = GetTableReference(tableName);
 
-            await table.ExecuteBatchAsync(batch);
+            await table.ExecuteBatchAsync(batch, DefaultRequestOptions, null);
         }
 
         public async Task InsertOrReplaceAsync(string tableName, ITableEntity entity)
@@ -233,7 +233,7 @@ namespace BingeBuddyNg.Infrastructure
             var table = this.GetTableReference(tableName);
 
             TableOperation operation = TableOperation.InsertOrReplace(entity);
-            await table.ExecuteAsync(operation);
+            await table.ExecuteAsync(operation, DefaultRequestOptions, null);
         }
 
         public async Task InsertOrMergeAsync(string tableName, ITableEntity entity)
@@ -241,7 +241,7 @@ namespace BingeBuddyNg.Infrastructure
             var table = this.GetTableReference(tableName);
 
             TableOperation operation = TableOperation.InsertOrMerge(entity);
-            await table.ExecuteAsync(operation);
+            await table.ExecuteAsync(operation, DefaultRequestOptions, null);
         }
     }
 }

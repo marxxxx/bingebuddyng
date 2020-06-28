@@ -98,6 +98,18 @@ namespace BingeBuddyNg.Core.Activity
             await this.storageAccessService.ReplaceAsync(Constants.TableNames.Activity, entity);
         }
 
+        public async Task UpdateActivityAsync(string userId, ActivityEntity activity)
+        {
+            await UpdateActivityAsync(activity);
+
+            var userFeedResult = await this.storageAccessService.GetTableEntityAsync<ActivityTableEntity>(Constants.TableNames.ActivityUserFeed, userId, activity.Id);
+            if(userFeedResult != null)
+            {
+                userFeedResult.Entity = activity;
+                await this.storageAccessService.ReplaceAsync(Constants.TableNames.ActivityUserFeed, userFeedResult);
+            }            
+        }
+
         public async Task AddToActivityAddedTopicAsync(string activityId)
         {
             await this.eventGridService.PublishAsync("ActivityAdded", new ActivityAddedMessage(activityId));
