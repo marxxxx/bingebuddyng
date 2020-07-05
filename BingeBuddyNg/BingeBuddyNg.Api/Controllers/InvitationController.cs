@@ -1,12 +1,12 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Invitation;
-using BingeBuddyNg.Services.Invitation.Commands;
-using BingeBuddyNg.Services.Invitation.Querys;
+﻿using System;
+using System.Threading.Tasks;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.Invitation.Commands;
+using BingeBuddyNg.Core.Invitation.DTO;
+using BingeBuddyNg.Core.Invitation.Querys;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Api.Controllers
 {

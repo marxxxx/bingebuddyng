@@ -1,16 +1,16 @@
 ﻿using System;
 
-namespace BingeBuddyNg.Services.Game
+namespace BingeBuddyNg.Core.Game
 {
     public class GameEndedEventArgs : EventArgs
     {
-        public GameEndedEventArgs(Game game, string winnerUserId)
+        public GameEndedEventArgs(Domain.Game game, string winnerUserId)
         {
             Game = game ?? throw new ArgumentNullException(nameof(game));
             WinnerUserId = winnerUserId;
         }
 
-        public Game Game { get; }
+        public Domain.Game Game { get; }
         public string WinnerUserId { get; }
     }
 }

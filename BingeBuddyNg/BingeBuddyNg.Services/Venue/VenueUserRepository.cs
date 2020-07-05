@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Infrastructure;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.Venue.Persistence;
 using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAzure.Storage.Table;
 
-namespace BingeBuddyNg.Services.Venue
+namespace BingeBuddyNg.Core.Venue
 {
     public class VenueUserRepository : IVenueUserRepository
     {
@@ -22,19 +22,14 @@ namespace BingeBuddyNg.Services.Venue
 
         public async Task AddUserToVenueAsync(string venueId, string venueName, string userId, string userName)
         {
-            var table = storageAccessService.GetTableReference(TableName);
             var entity = new VenueUsersTableEntity(venueId, venueName, userId, userName);
 
-            await table.ExecuteAsync(TableOperation.Insert(entity));
+            await this.storageAccessService.InsertAsync(TableName, entity);
         }
 
         public async Task RemoveUserFromVenueAsync(string venueId, string userId)
         {
-            var table = storageAccessService.GetTableReference(TableName);
-
-            var entity = await storageAccessService.GetTableEntityAsync<VenueUsersTableEntity>(TableName, venueId, userId);
-
-            await table.ExecuteAsync(TableOperation.Delete(entity));
+            await this.storageAccessService.DeleteAsync(TableName, venueId, userId);
         }
     }
 }

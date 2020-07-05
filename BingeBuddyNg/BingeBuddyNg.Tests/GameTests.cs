@@ -1,14 +1,16 @@
-﻿using BingeBuddyNg.Services;
-using BingeBuddyNg.Services.Game;
-using BingeBuddyNg.Services.Game.Queries;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Game;
+using BingeBuddyNg.Core.Game.Commands;
+using BingeBuddyNg.Core.Game.DTO;
+using BingeBuddyNg.Core.Game.Queries;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Tests.Helpers;
+using Moq;
 using Xunit;
 
 namespace BingeBuddyNg.Tests
@@ -20,34 +22,28 @@ namespace BingeBuddyNg.Tests
         {
             // Arrange
             string myUserId = Guid.NewGuid().ToString();
-            string[] friendUserIds = new[] { Guid.NewGuid().ToString(), Guid.NewGuid().ToString() };
-            string[] friendUserIdsAsString = friendUserIds.Select(f => f.ToString()).ToArray();
+            string[] friendUserIds = new [] { Guid.NewGuid().ToString(), Guid.NewGuid().ToString() };
             string gameTitle = "My Game";
             var notificationServiceMock = new Mock<INotificationService>();
-            var manager = new GameManager();
+            var manager = new GameRepository();
 
-            var userRepository = new Mock<IUserRepository>();
-            userRepository
-                .Setup(u => u.GetUsersAsync(It.IsAny<IEnumerable<string>>()))
-                .ReturnsAsync((IEnumerable<string> _userIds) =>
-                    _userIds.Select(u => new User() { Id = u, PushInfo = new PushInfo("url", "auth", "p256dh") }).ToList()
-                );
+            var searchUsersQuery = SetupHelpers.SetupSearchUsersQuery(friendUserIds.Concat(new[] { myUserId }));
             
             var command = new StartGameCommand(myUserId, gameTitle, friendUserIds);
-            var handler = new StartGameCommandHandler(notificationServiceMock.Object, manager, userRepository.Object, new Mock<ITranslationService>().Object);
+            var handler = new StartGameCommandHandler(manager, searchUsersQuery, new Mock<IActivityRepository>().Object, notificationServiceMock.Object, new Mock<ITranslationService>().Object);
 
             // Act
             StartGameResultDTO result = await handler.Handle(command, CancellationToken.None);
 
             // Assert
-            var game = manager.GetGame(result.GameId);
+            var game = manager.Get(result.GameId);
             Assert.Equal(result.GameId, game.Id);
 
             Assert.NotNull(result);
             Assert.NotEqual(default(Guid), result.GameId);
             notificationServiceMock.Verify(s =>
                 s.SendSignalRMessageAsync(
-                    It.Is<IReadOnlyList<string>>(u => AreEqual(u, friendUserIdsAsString)), 
+                    It.Is<IReadOnlyList<string>>(u => AreEqual(u, friendUserIds)), 
                     Shared.Constants.SignalR.NotificationHubName, 
                     HubMethodNames.GameStarted,
                     It.Is<GameStartedMessage>( m => m.GameId == result.GameId && m.Title ==  gameTitle && AreEqual<string>(friendUserIds, m.UserIds))), Times.Once);
@@ -60,15 +56,14 @@ namespace BingeBuddyNg.Tests
         public async Task ShouldSendMessageWithIncrementedScoreWhenGameEventWasSent()
         {
             // Arrange
-            Guid gameId = Guid.NewGuid();
             string userId = Guid.NewGuid().ToString();
             string[] friendUserIds = new[] { Guid.NewGuid().ToString(), Guid.NewGuid().ToString() };
             string[] friendUserIdsAsString = friendUserIds.Select(f => f.ToString()).ToArray();
             var notificationServiceMock = new Mock<INotificationService>();
-            var manager = new GameManager();
-            manager.StartGame(new Game(gameId, "my game", friendUserIds));
+            var manager = new GameRepository();
+            var game = manager.Create("my game", friendUserIds);
 
-            var command = new AddGameEventCommand(gameId, userId, 5);
+            var command = new AddGameEventCommand(game.Id, userId, 5);
             var handler = new AddGameEventCommandHandler(notificationServiceMock.Object, manager);
 
             // Act
@@ -80,9 +75,9 @@ namespace BingeBuddyNg.Tests
                     It.Is<IReadOnlyList<string>>(u => AreEqual(u, friendUserIdsAsString)),
                     Shared.Constants.SignalR.NotificationHubName,
                     HubMethodNames.GameUpdateReceived,
-                    It.Is<GameUpdateReceivedMessage>(m => m.GameId == gameId && m.UserId == userId && m.CurrentScore == 5)), Times.Once);
+                    It.Is<GameUpdateReceivedMessage>(m => m.GameId == game.Id && m.UserId == userId && m.CurrentScore == 5)), Times.Once);
 
-            var secondCommand = new AddGameEventCommand(gameId, userId, 3);
+            var secondCommand = new AddGameEventCommand(game.Id, userId, 3);
             await handler.Handle(secondCommand, CancellationToken.None);
 
             notificationServiceMock.Verify(s =>
@@ -90,25 +85,19 @@ namespace BingeBuddyNg.Tests
                     It.Is<IReadOnlyList<string>>(u => AreEqual(u, friendUserIdsAsString)),
                     Shared.Constants.SignalR.NotificationHubName,
                     HubMethodNames.GameUpdateReceived,
-                    It.Is<GameUpdateReceivedMessage>(m => m.GameId == gameId && m.UserId == userId && m.CurrentScore == 8)), Times.Once);
+                    It.Is<GameUpdateReceivedMessage>(m => m.GameId == game.Id && m.UserId == userId && m.CurrentScore == 8)), Times.Once);
         }
 
         [Fact]
         public async Task ShouldGetStatusOfExistingGame()
         {
             // Arrage
-            var gameId = Guid.NewGuid();
-            var manager = new GameManager();
-            var game = new Game(gameId, "my game", new[] { Guid.NewGuid().ToString() });
-            manager.StartGame(game);
-            var userRepositoryMock = new Mock<IUserRepository>();
-            userRepositoryMock
-                .Setup(r => r.GetUsersAsync(It.IsAny<IEnumerable<string>>()))
-                .ReturnsAsync((IEnumerable<string> _userIds) => _userIds.Select(_u => new User() { Id = _u, Name = _u })
-                .ToList());
+            var manager = new GameRepository();
+            var game = manager.Create("my game", new[] { Guid.NewGuid().ToString() });
+            var searchUsersQuery = SetupHelpers.SetupSearchUsersQuery(game.PlayerUserIds);
 
-            var query = new GetGameQuery(gameId);
-            var handler = new GetGameQueryHandler(manager, userRepositoryMock.Object);
+            var query = new GetGameQuery(game.Id);
+            var handler = new GetGameQueryHandler(manager, searchUsersQuery);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);

@@ -1,13 +1,13 @@
-﻿using BingeBuddyNg.Services.FriendsRequest;
-using BingeBuddyNg.Services.FriendsRequest.Commands;
-using BingeBuddyNg.Services.FriendsRequest.Querys;
-using BingeBuddyNg.Services.Infrastructure;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using BingeBuddyNg.Core.FriendsRequest.Commands;
+using BingeBuddyNg.Core.FriendsRequest.DTO;
+using BingeBuddyNg.Core.FriendsRequest.Querys;
+using BingeBuddyNg.Core.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Api.Controllers
 {

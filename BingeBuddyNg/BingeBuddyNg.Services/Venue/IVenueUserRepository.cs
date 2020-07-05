@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.Venue
+namespace BingeBuddyNg.Core.Venue
 {
     public interface IVenueUserRepository
     {

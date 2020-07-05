@@ -1,36 +1,37 @@
-﻿using BingeBuddyNg.Api.Dto;
-using MediatR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.Statistics.DTO;
+using Microsoft.WindowsAzure.Storage.Table;
+using static BingeBuddyNg.Shared.Constants;
 
-namespace BingeBuddyNg.Services.Statistics.Querys
+namespace BingeBuddyNg.Core.Statistics.Querys
 {
-    public class GetStatisticHistoryForUserQuery : IRequest<IEnumerable<UserStatisticHistoryDTO>>
+    public class GetStatisticHistoryForUserQuery
     {
-        public GetStatisticHistoryForUserQuery(string userId)
+        private readonly IStorageAccessService storageAccessService;
+
+        public GetStatisticHistoryForUserQuery(IStorageAccessService storageAccessService)
         {
-            UserId = userId ?? throw new ArgumentNullException(nameof(userId));
+            this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
         }
 
-        public string UserId { get; }
-    }
-
-    public class GetStatisticHistoryForUserQueryHandler : IRequestHandler<GetStatisticHistoryForUserQuery, IEnumerable<UserStatisticHistoryDTO>>
-    {
-        private readonly IUserStatsHistoryRepository userStatsHistoryRepository;
-
-        public GetStatisticHistoryForUserQueryHandler(IUserStatsHistoryRepository userStatsHistoryRepository)
+        public async Task<IEnumerable<UserStatisticHistoryDTO>> ExecuteAsync(string userId)
         {
-            this.userStatsHistoryRepository = userStatsHistoryRepository ?? throw new ArgumentNullException(nameof(userStatsHistoryRepository));
-        }
+            string whereClause =
+                TableQuery.CombineFilters(
+                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId),
+                TableOperators.And,
+                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, DateTime.UtcNow.Subtract(TimeSpan.FromDays(1))
+                .ToString("yyyyMMddHHmm")));
+            var queryResult = await storageAccessService.QueryTableAsync<UserStatisticHistoryTableEntity>(TableNames.UserStatsHistory, whereClause);
 
-        public async Task<IEnumerable<UserStatisticHistoryDTO>> Handle(GetStatisticHistoryForUserQuery request, CancellationToken cancellationToken)
-        {
-            var history = await userStatsHistoryRepository.GetStatisticHistoryForUserAsync(request.UserId);
-            var result = history.Select(h => new UserStatisticHistoryDTO(h.Timestamp, h.CurrentAlcLevel)).ToList();
+            var result = queryResult
+                .Select(r => new UserStatisticHistoryDTO(r.CalculationTimestamp, r.CurrentAlcLevel))
+                .ToList();
+
             return result;
         }
     }

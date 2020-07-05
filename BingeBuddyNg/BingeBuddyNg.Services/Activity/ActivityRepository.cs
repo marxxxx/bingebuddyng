@@ -1,212 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Activity.Messages;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Infrastructure.EventGrid;
-using Microsoft.WindowsAzure.Storage.Table;
-using static BingeBuddyNg.Shared.Constants;
+using BingeBuddyNg.Core.Activity.Messages;
+using BingeBuddyNg.Core.Activity.Persistence;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Shared;
 
-namespace BingeBuddyNg.Services.Activity
+namespace BingeBuddyNg.Core.Activity
 {
     public class ActivityRepository : IActivityRepository
     {
-        private const string ActivityTableName = "activity";
-        private const string ActivityPerUserTableName = "activityperuser";
-        private const string ActivityUserFeedTableName = "activityuserfeed";
-
-        private static readonly DateTime MaxTimestamp = new DateTime(2100, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
         private readonly IStorageAccessService storageAccessService;
-        private readonly ICacheService cacheService;
         private readonly IEventGridService eventGridService;
 
         public ActivityRepository(
             IStorageAccessService storageAccessService,
-            ICacheService cacheService,
             IEventGridService eventGridService)
         {
             this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
-            this.cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
             this.eventGridService = eventGridService ?? throw new ArgumentNullException(nameof(eventGridService));
         }
 
-        public string GetActivityCacheKey(string userId) => $"Activity:{userId}";
-
-        public async Task<PagedQueryResult<Activity>> GetActivityFeedAsync(GetActivityFilterArgs args)
+        public async Task<ActivityEntity> AddActivityAsync(ActivityEntity activity)
         {
-            string whereClause = null;
-            string tableName = null;
+            string activityFeedRowKey = ActivityKeyFactory.CreateRowKey(activity.Timestamp, activity.UserId);
+            var entity = new ActivityTableEntity(ActivityKeyFactory.CreatePartitionKey(activity.Timestamp), activityFeedRowKey, activity);
+            await this.storageAccessService.InsertAsync(Constants.TableNames.Activity, entity);
 
-            if (args.UserId != null)
-            {
-                tableName = ActivityUserFeedTableName;
-
-                whereClause = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, args.UserId);
-            }
-            else
-            {
-                tableName = ActivityTableName;
-
-                string currentPartition = GetPartitionKey(DateTime.UtcNow);
-                string previousPartition = GetPartitionKey(DateTime.UtcNow.AddDays(-(DateTime.UtcNow.Day + 1)));
-                whereClause =
-                    TableQuery.CombineFilters(
-                    TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, currentPartition),
-                    TableOperators.Or,
-                    TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, previousPartition));
-            }
-
-            if (string.IsNullOrEmpty(args.StartActivityId) == false)
-            {
-                whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
-                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, args.StartActivityId));
-            }
-
-            if ((args.FilterOptions & ActivityFilterOptions.WithLocation) == ActivityFilterOptions.WithLocation)
-            {
-                whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
-                        TableQuery.GenerateFilterConditionForBool(nameof(ActivityTableEntity.HasLocation), QueryComparisons.Equal, true));
-            }
-
-            if ((args.FilterOptions & ActivityFilterOptions.WithVenue) == ActivityFilterOptions.WithVenue)
-            {
-                whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
-                        TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.VenueId), QueryComparisons.NotEqual, null));
-            }
-
-            if (args.ActivityType != ActivityType.None)
-            {
-                whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
-                        TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.ActivityType), QueryComparisons.Equal, args.ActivityType.ToString()));
-            }
-
-            var result = await storageAccessService.QueryTableAsync<ActivityTableEntity>(tableName, whereClause, args.PageSize, args.ContinuationToken);
-
-            List<Activity> resultActivitys = result.ResultPage.Select(a=>a.Entity).ToList();
-            return new PagedQueryResult<Activity>(resultActivitys, result.ContinuationToken);
-        }
-
-        public async Task<List<Activity>> GetUserActivitiesAsync(string userId, DateTime startTimeUtc, ActivityType activityType = ActivityType.None)
-        {
-            string startRowKey = GetActivityPerUserRowKey(startTimeUtc);
-            var whereClause =
-                TableQuery.CombineFilters(
-                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId),
-                TableOperators.And,
-                TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, startRowKey));
-
-            if (activityType != ActivityType.None)
-            {
-                whereClause = TableQuery.CombineFilters(whereClause, TableOperators.And,
-                    TableQuery.GenerateFilterCondition(nameof(ActivityTableEntity.ActivityType), QueryComparisons.Equal, activityType.ToString()));
-            }
-
-            var result = await storageAccessService.QueryTableAsync<ActivityTableEntity>(ActivityPerUserTableName, whereClause);
-
-            var activitys = result.Select(a => a.Entity).ToList();
-            return activitys;
-        }
-
-        public async Task<Activity> AddActivityAsync(Activity activity)
-        {
-            var activityTable = this.storageAccessService.GetTableReference(ActivityTableName);
-
-            string activityFeedRowKey = GetActivityFeedRowKey(activity.Timestamp, activity.UserId);
-            activity.Id = activityFeedRowKey;
-            var entity = new ActivityTableEntity(GetPartitionKey(activity.Timestamp), activityFeedRowKey, activity);
-
-            TableOperation operation = TableOperation.Insert(entity);
-            await activityTable.ExecuteAsync(operation);
-
-            var perUserActivityTable = this.storageAccessService.GetTableReference(ActivityPerUserTableName);
-
-            string activityPerUserRowKey = GetActivityPerUserRowKey(activity.Timestamp);
+            string activityPerUserRowKey = ActivityKeyFactory.CreatePerUserRowKey(activity.Timestamp);
             var perUserEntity = new ActivityTableEntity(activity.UserId, activityPerUserRowKey, activity);
+            await this.storageAccessService.InsertAsync(Constants.TableNames.ActivityPerUser, perUserEntity);
 
-            TableOperation perUserOperation = TableOperation.Insert(perUserEntity);
-            await perUserActivityTable.ExecuteAsync(perUserOperation);
-
-            // store in own personalize feed first
-            await DistributeActivityAsync(new[] { activity.UserId }, activity);
-
-            cacheService.Remove(GetActivityCacheKey(activity.UserId));
+            var personalEntity = new ActivityTableEntity(activity.UserId, activity.Id, activity);
+            await this.storageAccessService.InsertAsync(Constants.TableNames.ActivityUserFeed, personalEntity);
 
             return activity;
         }
 
-        public async Task DistributeActivityAsync(IEnumerable<string> distributionUserIds, Activity activity)
-        {
-            var userFeedTable = this.storageAccessService.GetTableReference(ActivityUserFeedTableName);
-
-            foreach (var userId in distributionUserIds)
-            {
-                var entity = new ActivityTableEntity(userId, activity.Id, activity);
-
-                TableOperation operation = TableOperation.InsertOrReplace(entity);
-                await userFeedTable.ExecuteAsync(operation);
-            }
-        }
-
-        public async Task<Activity> GetActivityAsync(string id)
-        {
-            ActivityTableEntity entity = await GetActivityEntityAsync(id);
-
-            return entity.Entity;
-        }
-
-        private async Task<ActivityTableEntity> GetActivityEntityAsync(string id)
-        {
-            string partitionKey = GetPartitionKey(id);
-            var table = this.storageAccessService.GetTableReference(ActivityTableName);
-
-            TableOperation retrieveOperation = TableOperation.Retrieve<ActivityTableEntity>(partitionKey, id);
-
-            var result = await table.ExecuteAsync(retrieveOperation);
-
-            var entity = (ActivityTableEntity)result.Result;
-            return entity;
-        }
-
-        private async Task<ActivityTableEntity> GetActivityPerUserEntityAsync(string userId, DateTime timestamp)
-        {
-            var table = this.storageAccessService.GetTableReference(ActivityPerUserTableName);
-            var rowKey = GetActivityPerUserRowKey(timestamp);
-
-            TableOperation retrieveOperation = TableOperation.Retrieve<ActivityTableEntity>(userId, rowKey);
-
-            var result = await table.ExecuteAsync(retrieveOperation);
-
-            var entity = (ActivityTableEntity)result.Result;
-            return entity;
-        }
-
-        public async Task UpdateActivityAsync(Activity activity)
-        {
-            var table = this.storageAccessService.GetTableReference(ActivityTableName);
-
-            ActivityTableEntity entity = await GetActivityEntityAsync(activity.Id);
-
-            // extend to other propertys if needed
-            // Note to my future-self: Why do we need this? Just replace entity maybe and we're good?
-            entity.Entity.LocationAddress = activity.LocationAddress;
-            entity.Entity.Likes = activity.Likes;
-            entity.Entity.Comments = activity.Comments;
-            entity.Entity.Cheers = activity.Cheers;
-            entity.Entity.DrinkCount = activity.DrinkCount;
-            entity.Entity.AlcLevel = activity.AlcLevel;
-
-            TableOperation updateOperation = TableOperation.Replace(entity);
-            await table.ExecuteAsync(updateOperation);
-
-            // invalidate cache
-            cacheService.Remove(GetActivityCacheKey(activity.UserId));
-        }
-
         public async Task DeleteActivityAsync(string userId, string id)
         {
-            var activityTable = this.storageAccessService.GetTableReference(ActivityTableName);
             var activity = await this.GetActivityEntityAsync(id);
             if (activity != null)
             {
@@ -215,71 +46,73 @@ namespace BingeBuddyNg.Services.Activity
                     throw new UnauthorizedAccessException($"User {userId} is not permitted to delete an activity of user {activity.UserId}");
                 }
 
-                await activityTable.ExecuteAsync(TableOperation.Delete(activity));
+                await storageAccessService.DeleteAsync(Constants.TableNames.Activity, activity);
 
                 // Delete activity in per-user table as well
-                var perUserTable = this.storageAccessService.GetTableReference(ActivityPerUserTableName);
                 var perUserActivity = await this.GetActivityPerUserEntityAsync(userId, activity.Entity.Timestamp);
                 if (perUserActivity != null)
                 {
-                    await perUserTable.ExecuteAsync(TableOperation.Delete(perUserActivity));
+                    await storageAccessService.DeleteAsync(Constants.TableNames.ActivityPerUser, perUserActivity);
                 }
-            }            
+            }
 
-            // delete from own feed immediately
-            await DeleteActivityFromPersonalizedFeedAsync(userId, id);
-
-            // Delete activity in personalized feeds
-            await storageAccessService.AddQueueMessage(QueueNames.DeleteActivity, new DeleteActivityMessage(id));
-
-            cacheService.Remove(GetActivityCacheKey(userId));
+            var userFeedResult = await this.storageAccessService.GetTableEntityAsync<ActivityTableEntity>(Constants.TableNames.ActivityUserFeed, userId, id);
+            if(userFeedResult != null)
+            {
+                await storageAccessService.DeleteAsync(Constants.TableNames.ActivityUserFeed, userFeedResult);
+            }
         }
 
-        public async Task DeleteActivityFromPersonalizedFeedAsync(string userId, string id)
+        private async Task<ActivityTableEntity> GetActivityPerUserEntityAsync(string userId, DateTime timestamp)
         {
-            var userFeedTable = this.storageAccessService.GetTableReference(ActivityUserFeedTableName);
+            var rowKey = ActivityKeyFactory.CreatePerUserRowKey(timestamp);
+            var result = await this.storageAccessService.GetTableEntityAsync<ActivityTableEntity>(Constants.TableNames.ActivityPerUser, userId, rowKey);
+            return result;
+        }
 
-            TableOperation retrieveOperation = TableOperation.Retrieve<ActivityTableEntity>(userId, id);
-            var result = await userFeedTable.ExecuteAsync(retrieveOperation);
 
-            var entity = (ActivityTableEntity)result.Result;
+        public async Task<Core.Activity.Domain.Activity> GetActivityAsync(string id)
+        {
+            var tableEntity = await GetActivityEntityAsync(id);
+            var entity = tableEntity.Entity;
+            return entity.ToDomain();
+        }
 
-            if (entity != null)
+        public async Task<ActivityTableEntity> GetActivityEntityAsync(string id)
+        {
+            string partitionKey = ActivityKeyFactory.GetPartitionKeyFromRowKey(id);
+            var entity = await this.storageAccessService.GetTableEntityAsync<ActivityTableEntity>(Constants.TableNames.Activity, partitionKey, id);
+            if (entity == null)
             {
-                await userFeedTable.ExecuteAsync(TableOperation.Delete(entity));
+                throw new NotFoundException($"Activity [{id}] not found!");
             }
+
+            return entity;
+        }
+
+        public async Task UpdateActivityAsync(ActivityEntity activity)
+        {
+            ActivityTableEntity entity = await GetActivityEntityAsync(activity.Id);
+            entity.Entity = activity;
+
+            await this.storageAccessService.ReplaceAsync(Constants.TableNames.Activity, entity);
+        }
+
+        public async Task UpdateActivityAsync(string userId, ActivityEntity activity)
+        {
+            await UpdateActivityAsync(activity);
+
+            var userFeedResult = await this.storageAccessService.GetTableEntityAsync<ActivityTableEntity>(Constants.TableNames.ActivityUserFeed, userId, activity.Id);
+            if(userFeedResult != null)
+            {
+                userFeedResult.Entity = activity;
+                await this.storageAccessService.ReplaceAsync(Constants.TableNames.ActivityUserFeed, userFeedResult);
+            }            
         }
 
         public async Task AddToActivityAddedTopicAsync(string activityId)
         {
             await this.eventGridService.PublishAsync("ActivityAdded", new ActivityAddedMessage(activityId));
-        }
-
-        private string GetPartitionKey(DateTime timestampUtc)
-        {
-            int year = MaxTimestamp.Year - timestampUtc.Year;
-            int month = 12 - timestampUtc.Month;
-            return string.Format("{0:D2}-{1:D2}", year, month);
-        }
-
-        private string GetPartitionKey(string rowKey)
-        {
-            string[] tokens = rowKey.Split('|');
-            return tokens[0];
-        }
-
-
-        private string GetActivityPerUserRowKey(DateTime timestampUtc)
-        {
-            return timestampUtc.ToString("yyyyMMddHHmmss");
-        }
-
-        private string GetActivityFeedRowKey(DateTime timestampUtc, string userId)
-        {
-            long ticks = (MaxTimestamp - timestampUtc).Ticks;
-            string partitionKey = GetPartitionKey(timestampUtc);
-
-            return $"{partitionKey}|{ticks}|{userId}";
         }
     }
 }

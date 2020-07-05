@@ -1,7 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Messages;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -19,28 +20,21 @@ namespace BingeBuddyNg.Functions
         }
 
         [FunctionName(nameof(UserRenamedFunction))]
-        public async Task Run([QueueTrigger(QueueNames.UserRenamed, Connection = "AzureWebJobsStorage")]string message, ILogger log)
+        public async Task Run([QueueTrigger(QueueNames.UserRenamed, Connection = "AzureWebJobsStorage")] string message, ILogger log)
         {
             var userRenamedMessage = JsonConvert.DeserializeObject<UserRenamedMessage>(message);
 
-            var user = await this.userRepository.FindUserAsync(userRenamedMessage.UserId);
-            if(user == null)
-            {
-                log.LogWarning($"User [{userRenamedMessage.UserId}] not found.");
-                return;
-            }
+            var user = await this.userRepository.GetUserAsync(userRenamedMessage.UserId);
 
-            foreach(var friendUserInfo in user.Friends)
+            foreach (var friendUserInfo in user.Friends)
             {
-                var friendUser = await this.userRepository.FindUserAsync(friendUserInfo.UserId);
-                if(friendUser != null)
+                var friendUser = await this.userRepository.GetUserAsync(friendUserInfo.UserId);
+
+                var foundFriend = friendUser.Friends.FirstOrDefault(f => f.UserId == userRenamedMessage.UserId);
+                if (foundFriend != null)
                 {
-                    var foundFriend = friendUser.Friends.FirstOrDefault(f => f.UserId == userRenamedMessage.UserId);
-                    if(foundFriend != null)
-                    {
-                        foundFriend.UserName = userRenamedMessage.NewUserName;
-                        await this.userRepository.UpdateUserAsync(friendUser);
-                    }
+                    foundFriend.UserName = userRenamedMessage.NewUserName;
+                    await this.userRepository.UpdateUserAsync(friendUser.ToEntity());
                 }
             }
         }

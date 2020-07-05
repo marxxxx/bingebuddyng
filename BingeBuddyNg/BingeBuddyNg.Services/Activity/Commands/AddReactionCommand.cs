@@ -1,13 +1,14 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
-using BingeBuddyNg.Shared;
-using MediatR;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Activity.Messages;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Shared;
+using MediatR;
 
-namespace BingeBuddyNg.Services.Activity.Commands
+namespace BingeBuddyNg.Core.Activity.Commands
 {
     public class AddReactionCommand : IRequest
     {
@@ -50,7 +51,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
         {
             var activity = await this.activityRepository.GetActivityAsync(request.ActivityId);
 
-            var reactingUser = await this.userRepository.FindUserAsync(request.UserId);
+            var reactingUser = await this.userRepository.GetUserAsync(request.UserId);
 
             switch (request.Type)
             {
@@ -66,12 +67,11 @@ namespace BingeBuddyNg.Services.Activity.Commands
                     break;
             }
 
-            await this.activityRepository.UpdateActivityAsync(activity);
+            await this.activityRepository.UpdateActivityAsync(request.UserId, activity.ToEntity());
 
             // add to queue
-            var queueClient = this.storageAccessService.GetQueueReference(Constants.QueueNames.ReactionAdded);
             var message = new ReactionAddedMessage(request.ActivityId, request.Type, request.UserId, request.Comment);
-            await queueClient.AddMessageAsync(new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(JsonConvert.SerializeObject(message)));
+            await storageAccessService.AddQueueMessage(Constants.QueueNames.ReactionAdded, message);
 
             return Unit.Value;
         }

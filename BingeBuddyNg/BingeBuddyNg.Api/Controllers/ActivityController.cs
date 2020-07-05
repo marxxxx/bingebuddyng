@@ -1,14 +1,17 @@
-﻿using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Activity.Commands;
-using BingeBuddyNg.Services.Activity.Querys;
-using BingeBuddyNg.Services.Infrastructure;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Commands;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Activity.DTO;
+using BingeBuddyNg.Core.Activity.Queries;
+using BingeBuddyNg.Core.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Api.Controllers
 {
@@ -19,20 +22,26 @@ namespace BingeBuddyNg.Api.Controllers
     {
         private readonly IIdentityService identityService;
         private readonly IMediator mediator;
+        private readonly GetMasterActivitiesQuery getMasterActivitiesQuery;
 
         public ActivityController(
             IIdentityService identityService,
-            IMediator mediator)
+            IMediator mediator,
+            GetMasterActivitiesQuery getMasterActivitiesQuery)
         {
             this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.getMasterActivitiesQuery = getMasterActivitiesQuery ?? throw new ArgumentNullException(nameof(getMasterActivitiesQuery));
         }
 
         [HttpGet("map")]
         public async Task<ActionResult<IEnumerable<ActivityDTO>>> GetActivitysForMap()
         {
-            var result = await this.mediator.Send(new GetActivitysForMapQuery());
-            return result;
+            var args = new ActivityFilterArgs() { FilterOptions = ActivityFilterOptions.WithLocation, PageSize = 50 };
+
+            var result = await this.getMasterActivitiesQuery.ExecuteAsync(args);
+
+            return result.Select(r=>r.ToDto()).ToList();
         }
 
         [HttpGet("feed")]

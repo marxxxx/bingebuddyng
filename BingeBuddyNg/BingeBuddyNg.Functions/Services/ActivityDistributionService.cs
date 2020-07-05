@@ -1,29 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.Activity.Commands;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Activity.Persistence;
+using BingeBuddyNg.Core.User.Domain;
+using BingeBuddyNg.Core.User.Queries;
 
 namespace BingeBuddyNg.Functions.Services
 {
     public class ActivityDistributionService
     {
-        private readonly IUserRepository userRepository;
-        private readonly IActivityRepository activityRepository;
+        private readonly GetAllUserIdsQuery getAllUserIdsQuery;
+        private readonly DistributeActivityToPersonalizedFeedCommand distributeActivityToPersonalizedFeedCommand;
 
-        public ActivityDistributionService(IUserRepository userRepository, IActivityRepository activityRepository)
+        public ActivityDistributionService(GetAllUserIdsQuery getAllUserIdsQuery, DistributeActivityToPersonalizedFeedCommand distributeActivityToPersonalizedFeedCommand)
         {
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.getAllUserIdsQuery = getAllUserIdsQuery;
+            this.distributeActivityToPersonalizedFeedCommand = distributeActivityToPersonalizedFeedCommand;
         }
 
-        public async Task DistributeActivitiesAsync(User currentUser, Activity activity)
+        public async Task DistributeActivitiesAsync(User currentUser, ActivityEntity activity)
         {
             IEnumerable<string> userIds;
 
             if (activity.ActivityType == ActivityType.Registration)
             {
-                userIds = await this.userRepository.GetAllUserIdsAsync();
+                userIds = await this.getAllUserIdsQuery.ExecuteAsync();
             }
             else
             {
@@ -31,8 +33,7 @@ namespace BingeBuddyNg.Functions.Services
                 userIds = currentUser.GetVisibleFriendUserIds(true);
             }
 
-            await this.activityRepository.DistributeActivityAsync(userIds, activity);
+            await this.distributeActivityToPersonalizedFeedCommand.ExecuteAsync(userIds, activity);
         }
-
     }
 }

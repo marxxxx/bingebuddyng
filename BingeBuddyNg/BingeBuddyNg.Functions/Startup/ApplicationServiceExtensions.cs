@@ -1,11 +1,14 @@
 ﻿using System;
-using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Calculation;
-using BingeBuddyNg.Services.DrinkEvent;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Infrastructure.EventGrid;
-using BingeBuddyNg.Services.Statistics;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Commands;
+using BingeBuddyNg.Core.Activity.Queries;
+using BingeBuddyNg.Core.Calculation;
+using BingeBuddyNg.Core.DrinkEvent;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.Statistics.Commands;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Queries;
+using BingeBuddyNg.Infrastructure;
 using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,13 +19,18 @@ namespace BingeBuddyNg.Functions
         public static void AddBingeBuddy(this IServiceCollection services)
         {
             // Domain Services
-            services.AddTransient<IActivityRepository, ActivityRepository>();
-            services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<ICalculationService, CalculationService>();
-            services.AddTransient<IUserStatsRepository, UserStatsRepository>();
-            services.AddTransient<IDrinkEventRepository, DrinkEventRepository>();
-            services.AddTransient<IUserStatisticsService, UserStatisticsService>();
-            services.AddTransient<IUserStatsHistoryRepository, UserStatsHistoryRepository>();
+            services.AddScoped<IActivityRepository, ActivityRepository>();
+            services.AddUser();
+            services.AddScoped<CalculationService>();
+            services.AddScoped<IDrinkEventRepository, DrinkEventRepository>();
+            
+            // Commands & Queries
+            services.AddScoped<UpdateRankingCommand>();
+            services.AddScoped<UpdateStatisticsCommand>();
+            services.AddScoped<IncreaseScoreCommand>();
+            services.AddScoped<DeleteActivityFromPersonalizedFeedCommand>();
+            services.AddScoped<DistributeActivityToPersonalizedFeedCommand>();
+            services.AddScoped<GetUserActivitiesQuery>();
 
             // Infrastructure
             services.AddHttpClient();
@@ -32,9 +40,16 @@ namespace BingeBuddyNg.Functions
             services.AddStorage();
             services.AddEventGrid();
 
-            services.AddTransient<ICacheService, NoCacheService>();
+            services.AddScoped<ICacheService, NoCacheService>();
             services.AddSingleton<ITranslationService, TranslationService>();
-            services.AddTransient<IUtilityService, UtilityService>();
+            services.AddScoped<IAddressDecodingService, AddressDecodingService>();
+        }
+
+        public static void AddUser(this IServiceCollection services)
+        {
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<SearchUsersQuery>();
+            services.AddScoped<GetAllUserIdsQuery>();
         }
 
         public static void AddNotification(this IServiceCollection services)
@@ -63,7 +78,7 @@ namespace BingeBuddyNg.Functions
             string googleApiKey = Environment.GetEnvironmentVariable("GoogleApiKey", EnvironmentVariableTarget.Process);
             services.AddSingleton(new GoogleApiConfiguration(googleApiKey));
 
-            services.AddTransient<IUtilityService, UtilityService>();
+            services.AddTransient<IAddressDecodingService, AddressDecodingService>();
         }
 
         public static void AddStorage(this IServiceCollection services)

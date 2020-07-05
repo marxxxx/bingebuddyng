@@ -1,4 +1,4 @@
-﻿namespace BingeBuddyNg.Services.Venue
+﻿namespace BingeBuddyNg.Core.Venue
 {
     public enum VenueAction
     {

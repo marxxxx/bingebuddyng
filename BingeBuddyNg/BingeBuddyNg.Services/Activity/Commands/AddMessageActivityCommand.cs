@@ -1,15 +1,17 @@
-﻿using BingeBuddyNg.Services.User;
-using BingeBuddyNg.Services.Venue;
-using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.Venue;
+using BingeBuddyNg.Core.Venue.DTO;
+using MediatR;
 
-namespace BingeBuddyNg.Services.Activity.Commands
+namespace BingeBuddyNg.Core.Activity.Commands
 {
     public class AddMessageActivityCommand :  IRequest<string>
     {
-        public AddMessageActivityCommand(string userId, string message, Location location, Venue.Venue venue)
+        public AddMessageActivityCommand(string userId, string message, Location location, VenueDTO venue)
         {
             UserId = userId ?? throw new ArgumentNullException(nameof(userId));
             Message = message ?? throw new ArgumentNullException(nameof(message));
@@ -20,7 +22,7 @@ namespace BingeBuddyNg.Services.Activity.Commands
         public string UserId { get; }
         public string Message { get; }
         public Location Location { get; }
-        public Venue.Venue Venue { get; }
+        public VenueDTO Venue { get; }
     }
 
     public class AddMessageActivityCommandHandler :
@@ -39,12 +41,11 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
         public async Task<string> Handle(AddMessageActivityCommand request, CancellationToken cancellationToken)
         {
-            var user = await this.userRepository.FindUserAsync(request.UserId);
+            var user = await this.userRepository.GetUserAsync(request.UserId);
 
-            var activity = Activity.CreateMessageActivity(DateTime.UtcNow, request.Location, request.UserId, user.Name, request.Message);
-            activity.Venue = request.Venue;
+            var activity = Domain.Activity.CreateMessageActivity(request.Location, request.UserId, user.Name, request.Message, request.Venue?.ToDomain());
 
-            var savedActivity = await this.activityRepository.AddActivityAsync(activity);
+            var savedActivity = await this.activityRepository.AddActivityAsync(activity.ToEntity());
             await activityRepository.AddToActivityAddedTopicAsync(savedActivity.Id);
 
             return savedActivity.Id;

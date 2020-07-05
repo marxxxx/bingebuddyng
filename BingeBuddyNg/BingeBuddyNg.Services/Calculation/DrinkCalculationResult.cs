@@ -1,32 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace BingeBuddyNg.Services.Calculation
+﻿namespace BingeBuddyNg.Core.Calculation
 {
     public class DrinkCalculationResult
     {
-        public DrinkCalculationResult(string userName, int currentNightDrinks)
+        public DrinkCalculationResult(string userId, int currentNightDrinks)
         {
-            this.UserName = userName;
+            this.UserId = userId;
             this.CurrentNightDrinks = currentNightDrinks;
         }
 
-        public DrinkCalculationResult(string userName, double currentAlcLevel, int currentNightDrinks)
+        public DrinkCalculationResult(string userId, double currentAlcLevel, int currentNightDrinks)
         {
-            UserName = userName;
+            UserId = userId;
             CurrentAlcLevel = currentAlcLevel;
             CurrentNightDrinks = currentNightDrinks;
         }
 
-        public string UserName { get; set; }
-        public double CurrentAlcLevel { get; set; }
-        public int CurrentNightDrinks { get; set; }
+        public string UserId { get; }
+        public double CurrentAlcLevel { get; }
+        public int CurrentNightDrinks { get; }
 
         public override string ToString()
         {
-            return $"{{{nameof(UserName)}={UserName}, {nameof(CurrentAlcLevel)}={CurrentAlcLevel}, {nameof(CurrentNightDrinks)}={CurrentNightDrinks}}}";
+            return $"{{{nameof(UserId)}={UserId}, {nameof(CurrentAlcLevel)}={CurrentAlcLevel}, {nameof(CurrentNightDrinks)}={CurrentNightDrinks}}}";
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using BingeBuddyNg.Functions;
 using BingeBuddyNg.Functions.Services;
-using BingeBuddyNg.Services.Activity;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 

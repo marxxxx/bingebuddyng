@@ -1,9 +1,8 @@
-img {
+.drink-image {
   margin-top: 10px;
-  width: 90%;
-  height: 90%;
-}
-
-.full-width {
   width: 100%;
+
+  @media screen and (min-width: 800px ) {
+    width: 50%;
+  }
 }

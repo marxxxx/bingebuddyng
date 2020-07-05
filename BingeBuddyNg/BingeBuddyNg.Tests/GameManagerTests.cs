@@ -1,13 +1,12 @@
-﻿using BingeBuddyNg.Services.Game;
+﻿using BingeBuddyNg.Core.Game;
 using System;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace BingeBuddyNg.Tests
 {
     public class GameManagerTests
     {
-        private IGameManager manager;
+        private GameRepository manager;
         private Guid gameId;
         private string userId;
 
@@ -15,42 +14,37 @@ namespace BingeBuddyNg.Tests
         {
             this.gameId = Guid.NewGuid();
             this.userId = Guid.NewGuid().ToString();
-            this.manager = new GameManager();
-            this.manager.StartGame(new Game(this.gameId, "my game", new[] { this.userId }));
+            this.manager = new GameRepository();
+            var game = this.manager.Create("my game", new[] { this.userId });
+            this.gameId = game.Id;
         }
 
         [Fact]
         public void ShouldStartEmpty()
         {
-            var emptyCalculator = new GameManager();
-            Assert.Empty(emptyCalculator.Games);
+            var emptyCalculator = new GameRepository();
+            Assert.Equal(0, emptyCalculator.Count);
         }
 
         [Fact]
         public void ShouldThrowOnInvalidGameId()
         {
             Guid invalidGameId = Guid.NewGuid();
-            Assert.ThrowsAny<ArgumentException>(() => manager.GetGameResult(invalidGameId));
+            Assert.ThrowsAny<ArgumentException>(() => manager.Get(invalidGameId));
         }
 
         [Fact]
-        public void ShouldThrowWhenNullGameWasPassed()
+        public void ShouldThrowWhenNullTitleWasPassed()
         {
-            Assert.ThrowsAny<ArgumentNullException>(() => manager.StartGame(null));
-        }
-
-        [Fact]
-        public void ShouldThrowWhenTryingToCreateSameGameMultipleTimes()
-        {
-            Assert.ThrowsAny<ArgumentException>(() => manager.StartGame(new Game(this.gameId, "title", new[] { this.userId })));
+            Assert.ThrowsAny<ArgumentNullException>(() => manager.Create(null, new[] { Guid.NewGuid().ToString() }));
         }
 
         [Fact]
         public void ShouldGetResultForKnownGame()
         {
-            manager.AddUserScore(gameId, userId, 1);
+            manager.Get(gameId).IncrementScore(userId, 1);
 
-            var result = manager.GetGameResult(gameId);
+            var result = manager.Get(gameId).GetResult();
             Assert.NotNull(result);
             Assert.Collection(result,
                 (r) =>
@@ -63,19 +57,21 @@ namespace BingeBuddyNg.Tests
         [Fact]
         public void ShouldReturnCurrentScoreAfterIncrement()
         {
-            Assert.Equal(1, manager.AddUserScore(gameId, userId, 1));
-            Assert.Equal(2, manager.AddUserScore(gameId, userId, 1));
-            Assert.Equal(9, manager.AddUserScore(gameId, userId, 7));
+            var game = manager.Get(gameId);
+            Assert.Equal(1, game.IncrementScore(userId, 1));
+            Assert.Equal(2, game.IncrementScore(userId, 1));
+            Assert.Equal(9, game.IncrementScore(userId, 7));
         }
 
         [Fact]
         public void ShouldCalculateScoreCorrentlyAfterMultipleIncrementsForSingleUser()
         {
-            manager.AddUserScore(gameId, userId, 1);
-            manager.AddUserScore(gameId, userId, 3);
-            manager.AddUserScore(gameId, userId, 2);
+            var game = manager.Get(gameId);
+            game.IncrementScore(userId, 1);
+            game.IncrementScore(userId, 3);
+            game.IncrementScore(userId, 2);
 
-            var result = manager.GetGameResult(gameId);
+            var result = manager.Get(gameId).GetResult();
 
             Assert.NotNull(result);
             Assert.Collection(result, (r) =>
@@ -91,19 +87,21 @@ namespace BingeBuddyNg.Tests
             string userId2 = Guid.NewGuid().ToString();
             string userId3 = Guid.NewGuid().ToString();
 
-            manager.AddUserScore(gameId, userId, 1);
-            manager.AddUserScore(gameId, userId2, 4);
-            manager.AddUserScore(gameId, userId3, 1);
+            var game = manager.Get(gameId);
 
-            manager.AddUserScore(gameId, userId2, 1);
-            manager.AddUserScore(gameId, userId, 3);
-            manager.AddUserScore(gameId, userId3, 1);
+            game.IncrementScore(userId, 1);
+            game.IncrementScore(userId2, 4);
+            game.IncrementScore(userId3, 1);
 
-            manager.AddUserScore(gameId, userId3, 7);
-            manager.AddUserScore(gameId, userId, 2);
-            manager.AddUserScore(gameId, userId2, 3);
+            game.IncrementScore(userId2, 1);
+            game.IncrementScore(userId, 3);
+            game.IncrementScore(userId3, 1);
 
-            var result = manager.GetGameResult(gameId);
+            game.IncrementScore(userId3, 7);
+            game.IncrementScore(userId, 2);
+            game.IncrementScore(userId2, 3);
+
+            var result = game.GetResult();
 
             Assert.NotNull(result);
             Assert.Contains(result, r => r.UserId == userId && r.Score == 6);
@@ -117,11 +115,13 @@ namespace BingeBuddyNg.Tests
             string userId2 = Guid.NewGuid().ToString();
             string userId3 = Guid.NewGuid().ToString();
 
-            manager.AddUserScore(gameId, userId, 1);
-            manager.AddUserScore(gameId, userId2, 2);
-            manager.AddUserScore(gameId, userId3, 3);
+            var game = manager.Get(gameId);
 
-            var winner = manager.FindWinner(gameId);
+            game.IncrementScore(userId, 1);
+            game.IncrementScore(userId2, 2);
+            game.IncrementScore(userId3, 3);
+
+            var winner = game.FindWinner();
             Assert.NotNull(winner);
             Assert.Equal(userId3, winner.UserId);
             Assert.Equal(3, winner.Score);
@@ -130,7 +130,7 @@ namespace BingeBuddyNg.Tests
         [Fact]
         public void ShouldReturnNoWinnerIfNoScoresAreAvailable()
         {
-            var winner = manager.FindWinner(gameId);
+            var winner = manager.Get(gameId).FindWinner();
             Assert.Null(winner);
         }
     }

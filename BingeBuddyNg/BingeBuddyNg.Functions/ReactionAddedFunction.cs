@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Messages;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Persistence;
 using BingeBuddyNg.Functions.Services;
 using BingeBuddyNg.Functions.Services.Notifications;
-using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Shared;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
@@ -38,10 +40,10 @@ namespace BingeBuddyNg.Functions
             var reactionAddedMessage = JsonConvert.DeserializeObject<ReactionAddedMessage>(reactionQueueItem);
 
             var activity = await activityRepository.GetActivityAsync(reactionAddedMessage.ActivityId);
-            var reactingUser = await userRepository.FindUserAsync(reactionAddedMessage.UserId);
-            var originUser = await userRepository.FindUserAsync(activity.UserId);
+            var reactingUser = await userRepository.GetUserAsync(reactionAddedMessage.UserId);
+            var originUser = await userRepository.GetUserAsync(activity.UserId);
 
-            await this.activityDistributionService.DistributeActivitiesAsync(originUser, activity);
+            await this.activityDistributionService.DistributeActivitiesAsync(originUser, activity.ToEntity());
 
             List<NotificationBase> notifications = new List<NotificationBase>();
             var url = GetActivityUrlWithHighlightedActivityId(activity.Id);
@@ -63,6 +65,7 @@ namespace BingeBuddyNg.Functions
             // now other ones (with likes and cheers)
             var involvedUserNotifications = activity.Cheers?.Select(c => new UserInfo(c.UserId, c.UserName))
                 .Union(activity.Likes?.Select(l => new UserInfo(l.UserId, l.UserName)))
+                .Union(activity.Comments?.Select(c=>new UserInfo(c.UserId, c.UserName)))
                 .Distinct()
                 .Where(u => u.UserId != activity.UserId && u.UserId != reactingUser.Id)
                 .Select(u => new ReactionNotification(u.UserId, reactionAddedMessage.ReactionType, reactingUser.Name, activity.UserName, false, url));

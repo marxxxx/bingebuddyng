@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Activity.Messages;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.Activity.Commands;
+using BingeBuddyNg.Core.Activity.Messages;
+using BingeBuddyNg.Core.User.Queries;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -12,13 +12,13 @@ namespace BingeBuddyNg.Functions
 {
     public class DeleteActivityFunction
     {
-        private readonly IActivityRepository activityRepository;
-        private readonly IUserRepository userRepository;
+        private readonly DeleteActivityFromPersonalizedFeedCommand deleteActivityFromPersonalizedFeedCommand;
+        private readonly GetAllUserIdsQuery getAllUserIdsQuery;
 
-        public DeleteActivityFunction(IActivityRepository activityRepository, IUserRepository userRepository)
+        public DeleteActivityFunction(DeleteActivityFromPersonalizedFeedCommand deleteActivityFromPersonalizedFeedCommand, GetAllUserIdsQuery getAllUserIdsQuery)
         {
-            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.deleteActivityFromPersonalizedFeedCommand = deleteActivityFromPersonalizedFeedCommand;
+            this.getAllUserIdsQuery = getAllUserIdsQuery;
         }
 
         [FunctionName(nameof(DeleteActivityFunction))]
@@ -28,13 +28,13 @@ namespace BingeBuddyNg.Functions
 
             var message = JsonConvert.DeserializeObject<DeleteActivityMessage>(myQueueItem);
 
-            var allUserIds = await this.userRepository.GetAllUserIdsAsync();
+            var allUserIds = await this.getAllUserIdsQuery.ExecuteAsync();
 
             foreach (var userId in allUserIds)
             {
                 try
                 {
-                    await this.activityRepository.DeleteActivityFromPersonalizedFeedAsync(userId, message.ActivityId);
+                    await this.deleteActivityFromPersonalizedFeedCommand.ExecuteAsync(userId, message.ActivityId);
                 }
                 catch (Exception ex)
                 {

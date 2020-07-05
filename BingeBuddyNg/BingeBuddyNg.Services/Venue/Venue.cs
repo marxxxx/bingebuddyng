@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using BingeBuddyNg.Services.Activity;
+using BingeBuddyNg.Core.Activity.Domain;
 
-namespace BingeBuddyNg.Services.Venue
+namespace BingeBuddyNg.Core.Venue
 {
     public class Venue
     {

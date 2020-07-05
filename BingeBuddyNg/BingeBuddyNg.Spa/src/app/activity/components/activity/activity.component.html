@@ -43,10 +43,13 @@
         <span>{{ 'RenameMessage' | transloco:activity.activity }}</span>
       </p>
       <!-- Venue -->
-      <p class="venue" *ngIf="activity.activity.activityType === ActivityType.VenueEntered ||
-    this.activity.activity.activityType === ActivityType.VenueLeft">
-        <span>{{ activity.activity.message }}</span>
+      <p class="venue" *ngIf="activity.activity.activityType === ActivityType.VenueEntered">
+        <span>{{ 'PersonalVenueEnterActivityMessage' | transloco:activity.activity.venue }}</span>
       </p>
+      <p class="venue" *ngIf="activity.activity.activityType === ActivityType.VenueLeft">
+        <span>{{ 'PersonalVenueLeaveActivityMessage' | transloco:activity.activity.venue }}</span>
+      </p>
+
       <!-- Message -->
       <p class="message" *ngIf="activity.activity.activityType === ActivityType.Message">
         <span *ngIf="!isMessageLink(activity.activity.message)">{{
@@ -88,7 +91,7 @@
           <app-user-info [userInfo]="p.user" [showName]="true"></app-user-info>
           <p class="score">{{p.score}}</p>
         </div>
-        
+
 
         <div fxLayout fxLayoutAlign="end end">
           <button mat-raised-button color="accent"

@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Infrastructure;
-using Microsoft.WindowsAzure.Storage.Table;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.Invitation.Persistence;
+using static BingeBuddyNg.Shared.Constants;
 
-namespace BingeBuddyNg.Services.Invitation
+namespace BingeBuddyNg.Core.Invitation
 {
     public class InvitationRepository : IInvitationRepository
     {
-        private const string TableName = "invitations";
-        private const string PartitionKeyValue = "Invitation";
-
         private readonly IStorageAccessService storageAccess;
 
         public InvitationRepository(IStorageAccessService storageAccess)
@@ -17,50 +15,24 @@ namespace BingeBuddyNg.Services.Invitation
             this.storageAccess = storageAccess ?? throw new ArgumentNullException(nameof(storageAccess));
         }
 
-        public async Task<string> CreateInvitationAsync(string userId)
+        public async Task<string> CreateAsync(string userId)
         {
-            var table = storageAccess.GetTableReference(TableName);
-
             string invitationToken = Guid.NewGuid().ToString();
 
-            var entity = new InvitationTableEntity(PartitionKeyValue, invitationToken, userId);
-            TableOperation saveOperation = TableOperation.Insert(entity);
-            
-            await table.ExecuteAsync(saveOperation);
+            var entity = new InvitationTableEntity(StaticPartitionKeys.Invitation, invitationToken, userId);
+            await this.storageAccess.InsertAsync(TableNames.Invitations, entity);
 
             return invitationToken;
         }
 
-        public async Task<Invitation> AcceptInvitationAsync(string userId, string token)
+        public async Task<InvitationTableEntity> GetAsync(string invitationToken)
         {
-            var table = storageAccess.GetTableReference(TableName);
-            var invitationEntity = await FindInvitationEntityAsync(token);
-            
-            TableOperation operation = TableOperation.Replace(invitationEntity);
-
-            await table.ExecuteAsync(operation);
-
-            var result = new Invitation(invitationEntity.InviationToken, invitationEntity.InvitingUserId);
-            return result;
-        }
-
-        public async Task<Invitation> GetInvitationAsync(string invitationToken)
-        {
-            var invitationEntity = await FindInvitationEntityAsync(invitationToken);
-            if(invitationEntity == null)
+            var invitationEntity = await storageAccess.GetTableEntityAsync<InvitationTableEntity>(TableNames.Invitations, StaticPartitionKeys.Invitation, invitationToken);
+            if (invitationEntity == null)
             {
-                throw new NotFoundException($"Invitation {invitationToken} not found!");
+                throw new NotFoundException($"Invitation [{invitationToken}] not found!");
+
             }
-
-            var result = new Invitation(invitationToken, invitationEntity.InvitingUserId);
-            return result;
-            
-        }
-
-        private async Task<InvitationTableEntity> FindInvitationEntityAsync(string invitationToken)
-        {
-            var table = storageAccess.GetTableReference(TableName);
-            var invitationEntity = await storageAccess.GetTableEntityAsync<InvitationTableEntity>(TableName, PartitionKeyValue, invitationToken);
             return invitationEntity;
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace BingeBuddyNg.Services.Statistics
+﻿namespace BingeBuddyNg.Core.Statistics
 {
     public class UserStatistics
     {

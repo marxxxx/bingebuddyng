@@ -3,7 +3,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 
-namespace BingeBuddyNg.Services.Infrastructure
+namespace BingeBuddyNg.Core.Infrastructure
 {
     public class JsonTableEntity<T> : TableEntity
     {
@@ -29,7 +29,7 @@ namespace BingeBuddyNg.Services.Infrastructure
             {
                 if (string.IsNullOrEmpty(value.StringValue) == false)
                 {
-                    this.Entity = JsonConvert.DeserializeObject<T>(value.StringValue);
+                    this.Entity = this.DeserializeObject(properties, value);
                 }
             }
         }
@@ -50,5 +50,9 @@ namespace BingeBuddyNg.Services.Infrastructure
             return values;
         }
 
+        public virtual T DeserializeObject(IDictionary<string, EntityProperty> properties, EntityProperty jsonProperty)
+        {
+            return JsonConvert.DeserializeObject<T>(jsonProperty.StringValue);
+        }
     }
 }

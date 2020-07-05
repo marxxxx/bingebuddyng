@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.FriendsRequest.Persistence;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.User.Persistence;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace BingeBuddyNg.Services.FriendsRequest
+namespace BingeBuddyNg.Core.FriendsRequest
 {
     public class FriendRequestRepository : IFriendRequestRepository
     {
@@ -16,35 +16,29 @@ namespace BingeBuddyNg.Services.FriendsRequest
 
         public FriendRequestRepository(IStorageAccessService storageAccessService)
         {
-            this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
+            this.storageAccessService = storageAccessService;
         }
 
         public async Task AddFriendRequestAsync(UserInfo friend, UserInfo requestingUser)
         {
-            var table = storageAccessService.GetTableReference(TableName);
-
             var requestingEntity = new FriendRequestEntity(friend.UserId, requestingUser.UserId, requestingUser, friend);
             var friendEntity = new FriendRequestEntity(requestingUser.UserId, friend.UserId, requestingUser, friend);
 
-            await table.ExecuteAsync(TableOperation.Insert(requestingEntity));
-            await table.ExecuteAsync(TableOperation.Insert(friendEntity));
+            await storageAccessService.InsertAsync(TableName, requestingEntity);
+            await storageAccessService.InsertAsync(TableName, friendEntity);
         }
 
         public async Task DeleteFriendRequestAsync(string userId, string requestingUserId)
         {
-            await this.storageAccessService.DeleteTableEntityAsync(TableName, userId, requestingUserId);
-            await this.storageAccessService.DeleteTableEntityAsync(TableName, requestingUserId, userId);
+            await this.storageAccessService.DeleteAsync(TableName, userId, requestingUserId);
+            await this.storageAccessService.DeleteAsync(TableName, requestingUserId, userId);
         }
 
-        public async Task<List<FriendRequestDTO>> GetFriendRequestsAsync(string userId)
+        public async Task<List<FriendRequestEntity>> GetFriendRequestsAsync(string userId)
         {
-            var whereClause = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId);
+            var queryResult = await this.storageAccessService.QueryTableAsync<FriendRequestEntity>(TableName, partitionKey: userId, minRowKey: null, pageSize: 50);
 
-            var queryResult = await this.storageAccessService.QueryTableAsync<FriendRequestEntity>(TableName, whereClause);
-
-            var result = queryResult.Select(r => new FriendRequestDTO(
-                new UserInfoDTO(r.RequestingUserId, r.RequestingUserName),
-                new UserInfoDTO(r.FriendUserId, r.FriendUserName))).ToList();
+            var result = queryResult.ResultPage;
             return result;
         }
 

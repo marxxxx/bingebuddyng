@@ -1,4 +1,4 @@
-﻿namespace BingeBuddyNg.Services.Game
+﻿namespace BingeBuddyNg.Core.Game
 {
     public static class HubMethodNames
     {

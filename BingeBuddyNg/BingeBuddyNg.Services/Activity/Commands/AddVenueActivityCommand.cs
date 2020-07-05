@@ -1,11 +1,11 @@
-﻿using BingeBuddyNg.Services.User;
-using BingeBuddyNg.Services.Venue;
-using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.Venue;
+using MediatR;
 
-namespace BingeBuddyNg.Services.Activity.Commands
+namespace BingeBuddyNg.Core.Activity.Commands
 {
     public class AddVenueActivityCommand : IRequest<string>
     {
@@ -38,11 +38,15 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
         public async Task<string> Handle(AddVenueActivityCommand request, CancellationToken cancellationToken)
         {
-            var user = await this.userRepository.FindUserAsync(request.UserId);
-            var activityEntity = Activity.CreateVenueActivity(DateTime.UtcNow, request.UserId, user.Name,
-                request.Message, request.Venue, request.Action);
+            var user = await this.userRepository.GetUserAsync(request.UserId);
 
-            var savedActivity = await this.activityRepository.AddActivityAsync(activityEntity);
+            var activity = Domain.Activity.CreateVenueActivity(
+                request.UserId,
+                user.Name,
+                request.Venue,
+                request.Action);
+
+            var savedActivity = await this.activityRepository.AddActivityAsync(activity.ToEntity());
 
             await activityRepository.AddToActivityAddedTopicAsync(savedActivity.Id);
 

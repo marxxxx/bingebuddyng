@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.FriendsRequest.Persistence;
+using BingeBuddyNg.Core.User.Persistence;
 
-namespace BingeBuddyNg.Services.FriendsRequest
+namespace BingeBuddyNg.Core.FriendsRequest
 {
     public interface IFriendRequestRepository
     {
-        Task<List<FriendRequestDTO>> GetFriendRequestsAsync(string userId);
+        Task<List<FriendRequestEntity>> GetFriendRequestsAsync(string userId);
 
         Task AddFriendRequestAsync(UserInfo friend, UserInfo requestingUser);
 

@@ -1,35 +1,35 @@
-﻿using BingeBuddyNg.Api.Dto;
-using BingeBuddyNg.Services.Statistics;
-using BingeBuddyNg.Services.Statistics.Querys;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Statistics.DTO;
+using BingeBuddyNg.Core.Statistics.Queries;
+using BingeBuddyNg.Core.Statistics.Querys;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BingeBuddyNg.Api.Controllers
 {
     [Route("api/User/{userId}/statistics")]
     public class StatisticsController : Controller
     {
-        private readonly IMediator meditator;
+        private readonly GetStatisticHistoryForUserQuery getStatisticHistoryForUserQuery;
+        private readonly GetPersonalUsagePerWeekdayQuery getPersonalUsagePerWeekdayQuery;
         
-        public StatisticsController(IMediator mediator)
+        public StatisticsController(GetStatisticHistoryForUserQuery getStatisticHistoryForUserQuery, GetPersonalUsagePerWeekdayQuery getPersonalUsagePerWeekdayQuery)
         {
-            meditator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.getStatisticHistoryForUserQuery = getStatisticHistoryForUserQuery;
+            this.getPersonalUsagePerWeekdayQuery = getPersonalUsagePerWeekdayQuery;
         }
 
         [HttpGet("history")]
         public async Task<IEnumerable<UserStatisticHistoryDTO>> GetStatisticHistoryForUser(string userId)
         {
-            var result = await meditator.Send(new GetStatisticHistoryForUserQuery(userId));
+            var result = await getStatisticHistoryForUserQuery.ExecuteAsync(userId);
             return result;
         }
 
         [HttpGet("personalusageperweekday")]
         public async Task<IEnumerable<PersonalUsagePerWeekdayDTO>> GetPersonalUsagePerWeekday(string userId)
         {
-            var result = await meditator.Send(new GetPersonalUsagePerWeekdayQuery(userId));
+            var result = await getPersonalUsagePerWeekdayQuery.ExecuteAsync(userId);
             return result;
         }
     }

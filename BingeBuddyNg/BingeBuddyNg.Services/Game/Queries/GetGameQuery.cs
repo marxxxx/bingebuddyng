@@ -1,11 +1,13 @@
-﻿using BingeBuddyNg.Services.User;
-using MediatR;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.Game.DTO;
+using BingeBuddyNg.Core.User.Queries;
+using MediatR;
 
-namespace BingeBuddyNg.Services.Game.Queries
+namespace BingeBuddyNg.Core.Game.Queries
 {
     public class GetGameQuery : IRequest<GameDTO>
     {
@@ -24,19 +26,19 @@ namespace BingeBuddyNg.Services.Game.Queries
 
     public class GetGameQueryHandler : IRequestHandler<GetGameQuery, GameDTO>
     {
-        private readonly IGameManager manager;
-        private readonly IUserRepository userRepository;
+        private readonly GameRepository manager;
+        private readonly SearchUsersQuery getUsersQuery;
 
-        public GetGameQueryHandler(IGameManager manager, IUserRepository userRepository)
+        public GetGameQueryHandler(GameRepository manager, SearchUsersQuery getUsersQuery)
         {
             this.manager = manager ?? throw new ArgumentNullException(nameof(manager));
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.getUsersQuery = getUsersQuery ?? throw new ArgumentNullException(nameof(getUsersQuery));
         }
 
         public async Task<GameDTO> Handle(GetGameQuery request, CancellationToken cancellationToken)
         {
-            var game = this.manager.GetGame(request.GameId);
-            var users = await this.userRepository.GetUsersAsync(game.PlayerUserIds);
+            var game = this.manager.Get(request.GameId);
+            var users = await this.getUsersQuery.ExecuteAsync(game.PlayerUserIds);
             return game.ToDto(users.Select(u=>u.ToUserInfoDTO()));
         }
     }

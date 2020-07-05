@@ -1,6 +1,7 @@
 ﻿using System;
+using BingeBuddyNg.Core.Statistics.DTO;
 
-namespace BingeBuddyNg.Services.Statistics
+namespace BingeBuddyNg.Core.Statistics
 {
     public static class Converter
     {

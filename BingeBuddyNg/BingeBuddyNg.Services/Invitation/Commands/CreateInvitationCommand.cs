@@ -3,7 +3,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.Invitation.Commands
+namespace BingeBuddyNg.Core.Invitation.Commands
 {
     public class CreateInvitationCommand : IRequest<string>
     {
@@ -26,7 +26,7 @@ namespace BingeBuddyNg.Services.Invitation.Commands
 
         public async Task<string> Handle(CreateInvitationCommand request, CancellationToken cancellationToken)
         {
-            var invitationToken = await invitationRepository.CreateInvitationAsync(request.UserId);
+            var invitationToken = await invitationRepository.CreateAsync(request.UserId);
             return invitationToken;
         }
     }

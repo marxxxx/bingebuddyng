@@ -1,13 +1,12 @@
-﻿using BingeBuddyNg.Services;
-using BingeBuddyNg.Services.Game;
-using BingeBuddyNg.Services.Game.Commands;
-using BingeBuddyNg.Services.Game.Queries;
-using BingeBuddyNg.Services.Infrastructure;
+﻿using System;
+using System.Threading.Tasks;
+using BingeBuddyNg.Core.Game.Commands;
+using BingeBuddyNg.Core.Game.Queries;
+using BingeBuddyNg.Core.Game.DTO;
+using BingeBuddyNg.Core.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Api.Controllers
 {

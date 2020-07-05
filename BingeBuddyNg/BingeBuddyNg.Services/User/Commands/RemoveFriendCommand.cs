@@ -1,12 +1,12 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User.Messages;
-using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.User.Messages;
+using MediatR;
 using static BingeBuddyNg.Shared.Constants;
 
-namespace BingeBuddyNg.Services.User.Commands
+namespace BingeBuddyNg.Core.User.Commands
 {
     public class RemoveFriendCommand : IRequest
     {
@@ -33,8 +33,14 @@ namespace BingeBuddyNg.Services.User.Commands
 
         public async Task<Unit> Handle(RemoveFriendCommand request, CancellationToken cancellationToken)
         {
-            await this.userRepository.RemoveFriendAsync(request.UserId, request.FriendUserId);
-            await this.storageAccessService.AddQueueMessage(QueueNames.FriendStatusChanged, 
+            var results = await Task.WhenAll(userRepository.GetUserAsync(request.UserId), userRepository.GetUserAsync(request.FriendUserId));
+
+            results[0].RemoveFriend(request.FriendUserId);
+            results[1].RemoveFriend(request.UserId);
+
+            await Task.WhenAll(userRepository.UpdateUserAsync(results[0].ToEntity()), userRepository.UpdateUserAsync(results[1].ToEntity()));
+
+            await this.storageAccessService.AddQueueMessage(QueueNames.FriendStatusChanged,
                 new FriendStatusChangedMessage(FriendStatus.Removed, request.UserId, request.FriendUserId));
             return Unit.Value;
         }

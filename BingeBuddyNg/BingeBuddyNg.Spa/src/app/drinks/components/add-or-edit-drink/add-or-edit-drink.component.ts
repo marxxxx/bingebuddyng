@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Drink } from 'src/models/Drink';
+import { DrinkDTO } from 'src/models/DrinkDTO';
 import { DrinkService } from 'src/app/drinks/services/drink.service';
 import { ShellInteractionService } from 'src/app/@core/services/shell-interaction.service';
 import { DrinkType } from 'src/models/DrinkType';
@@ -19,7 +19,7 @@ export class AddOrEditDrinkComponent implements OnInit {
     drinkType: new FormControl(DrinkType.Beer, [Validators.required])
   });
 
-  drink: Drink;
+  drink: DrinkDTO;
   isBusy = false;
   isAdd = false;
 

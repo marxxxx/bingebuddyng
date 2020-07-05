@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
-import { Drink } from 'src/models/Drink';
+import { DrinkDTO } from 'src/models/DrinkDTO';
 
 @Injectable()
 export class DrinkRetrieverService {
@@ -10,7 +10,7 @@ export class DrinkRetrieverService {
 
   constructor(private http: HttpClient) {}
 
-  getDrinks(): Observable<Drink[]> {
-    return this.http.get<Drink[]>(this.baseUrl);
+  getDrinks(): Observable<DrinkDTO[]> {
+    return this.http.get<DrinkDTO[]>(this.baseUrl);
   }
 }

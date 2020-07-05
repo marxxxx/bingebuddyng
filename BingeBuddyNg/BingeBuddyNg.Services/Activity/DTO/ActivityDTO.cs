@@ -1,13 +1,12 @@
-﻿using BingeBuddyNg.Services.Drink;
-using BingeBuddyNg.Services.Game.Queries;
-using BingeBuddyNg.Services.User;
-using BingeBuddyNg.Services.Venue;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Drink;
+using BingeBuddyNg.Core.Game.DTO;
+using BingeBuddyNg.Core.User.DTO;
+using BingeBuddyNg.Core.Venue.DTO;
 
-namespace BingeBuddyNg.Services.Activity
+namespace BingeBuddyNg.Core.Activity.DTO
 {
     public class ActivityDTO
     {
@@ -18,6 +17,10 @@ namespace BingeBuddyNg.Services.Activity
         public string LocationAddress { get; set; }
         public string UserId { get; set; }
         public string UserName { get; set; }
+        public string CountryLongName { get; set; }
+        public string CountryShortName { get; set; }
+        public VenueDTO Venue { get; set; }
+
         public string Message { get; set; }
         public DrinkType DrinkType { get; set; }
         public string DrinkId { get; set; }
@@ -27,15 +30,11 @@ namespace BingeBuddyNg.Services.Activity
         public int DrinkCount { get; set; }
         public double? AlcLevel { get; set; }
         public string ImageUrl { get; set; }
-        public string CountryLongName { get; set; }
-        public string CountryShortName { get; set; }
-        public Venue.Venue Venue { get; set; }
 
         public GameDTO GameInfo { get; set; }
 
-        public UserInfo RegistrationUser { get; set; }
+        public UserInfoDTO RegistrationUser { get; set; }
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string OriginalUserName { get; set; }
 
         public List<ReactionDTO> Likes { get; set; } 

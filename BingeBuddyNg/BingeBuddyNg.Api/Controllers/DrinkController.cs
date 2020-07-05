@@ -1,10 +1,12 @@
-﻿using BingeBuddyNg.Services.Drink;
-using BingeBuddyNg.Services.Infrastructure;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BingeBuddyNg.Core.Drink;
+using BingeBuddyNg.Core.Drink.DTO;
+using BingeBuddyNg.Core.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Api.Controllers
 {
@@ -22,21 +24,22 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Drink>> Get()
+        public async Task<IEnumerable<DrinkDTO>> Get()
         {
             var userId = this.identityService.GetCurrentUserId();
-            return await this.drinkRepository.GetDrinksAsync(userId);
+            var result = await this.drinkRepository.GetDrinksAsync(userId);
+            return result;
         }
 
         [HttpGet("{drinkId}")]
-        public async Task<Drink> GetById(string drinkId)
+        public async Task<DrinkDTO> GetById(string drinkId)
         {
             var userId = this.identityService.GetCurrentUserId();
             return await this.drinkRepository.GetDrinkAsync(userId, drinkId);
         }
 
         [HttpPost]
-        public async Task SaveDrink([FromBody]IEnumerable<Drink> drinks)
+        public async Task SaveDrink([FromBody]IEnumerable<DrinkDTO> drinks)
         {
             var userId = this.identityService.GetCurrentUserId();
             await this.drinkRepository.SaveDrinksAsync(userId, drinks);

@@ -1,9 +1,10 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Functions.Services;
 using BingeBuddyNg.Functions.Services.Notifications;
-using BingeBuddyNg.Services.User;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Extensions.Logging;
@@ -26,13 +27,14 @@ namespace BingeBuddyNg.Functions
         {
             log.LogInformation($"Running drink reminder function ...");
 
-            User user = context.GetInput<User>();
+            var user = context.GetInput<User>();
 
             log.LogInformation($"Got user {user} ");
 
             if (user.PushInfo == null)
             {
-                await userRepository.UpdateMonitoringInstanceAsync(user.Id, null);
+                user.UpdateMonitoringInstance(null);
+                await userRepository.UpdateUserAsync(user.ToEntity());
                 return;
             }
 
@@ -42,7 +44,8 @@ namespace BingeBuddyNg.Functions
             var notification = new DrinkReminderNotification(user.Id);
             await notificationService.NotifyAsync(new[] { notification });
 
-            await userRepository.UpdateMonitoringInstanceAsync(user.Id, null);
+            user.UpdateMonitoringInstance(null);
+            await userRepository.UpdateUserAsync(user.ToEntity());
             log.LogInformation($"Terminating monitoring instance for user {user}");
         }
     }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BingeBuddyNg.Services.Infrastructure
+namespace BingeBuddyNg.Core.Infrastructure
 {
     public class NotFoundException : Exception
     {

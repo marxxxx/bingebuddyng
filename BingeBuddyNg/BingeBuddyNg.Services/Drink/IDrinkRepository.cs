@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Drink.DTO;
 
-namespace BingeBuddyNg.Services.Drink
+namespace BingeBuddyNg.Core.Drink
 {
     public interface IDrinkRepository
     {
-        Task<IEnumerable<Drink>> GetDrinksAsync(string userId);
+        Task<IEnumerable<DrinkDTO>> GetDrinksAsync(string userId);
 
-        Task<Drink> GetDrinkAsync(string userId, string drinkId);
+        Task<DrinkDTO> GetDrinkAsync(string userId, string drinkId);
 
         Task CreateDefaultDrinksForUserAsync(string userId);
 
-        Task SaveDrinksAsync(string userId, IEnumerable<Drink> drinks);
+        Task SaveDrinksAsync(string userId, IEnumerable<DrinkDTO> drinks);
 
         Task DeleteDrinkAsync(string userId, string drinkId);
     }

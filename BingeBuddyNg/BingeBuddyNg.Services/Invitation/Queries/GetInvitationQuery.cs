@@ -1,11 +1,12 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
-using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Invitation.DTO;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.DTO;
+using MediatR;
 
-namespace BingeBuddyNg.Services.Invitation.Querys
+namespace BingeBuddyNg.Core.Invitation.Querys
 {
     public class GetInvitationQuery : IRequest<InvitationDTO>
     {
@@ -31,12 +32,8 @@ namespace BingeBuddyNg.Services.Invitation.Querys
 
         public async Task<InvitationDTO> Handle(GetInvitationQuery request, CancellationToken cancellationToken)
         {
-            var invitation = await this.invitationRepository.GetInvitationAsync(request.InvitationToken);
-            var user = await this.userRepository.FindUserAsync(invitation.InvitingUserId);
-            if (user == null)
-            {
-                throw new NotFoundException($"Inviting user {invitation.InvitingUserId} not found!");
-            }
+            var invitation = await this.invitationRepository.GetAsync(request.InvitationToken);
+            var user = await this.userRepository.GetUserAsync(invitation.InvitingUserId);
 
             var result = new InvitationDTO(invitation.InvitationToken, invitation.InvitingUserId, new UserInfoDTO(user.Id, user.Name));
             return result;

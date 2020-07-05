@@ -1,35 +1,38 @@
-﻿using BingeBuddyNg.Services.Statistics;
-using BingeBuddyNg.Services.User;
-using MediatR;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Ranking.DTO;
+using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.User.DTO;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.User.Queries;
+using Microsoft.WindowsAzure.Storage.Table;
+using static BingeBuddyNg.Shared.Constants;
 
-namespace BingeBuddyNg.Services.Ranking.Querys
+namespace BingeBuddyNg.Core.Ranking.Queries
 {
-    public class GetDrinksRankingQuery : IRequest<List<UserRankingDTO>>
+    public class GetDrinksRankingQuery
     {
-    }
+        private readonly SearchUsersQuery getUsersQuery;
+        private readonly IStorageAccessService storageAccessService;
 
-    public class GetDrinksRankingQueryHandler :
-       IRequestHandler<GetDrinksRankingQuery, List<UserRankingDTO>>
-    {
-        private readonly IUserRepository userRepository;
-        private readonly IUserStatsRepository userStatsRepository;
-
-        public GetDrinksRankingQueryHandler(IUserRepository userRepository, IUserStatsRepository userStatsRepository)
+        public GetDrinksRankingQuery(SearchUsersQuery getUsersQuery, IStorageAccessService storageAccessService)
         {
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            this.userStatsRepository = userStatsRepository ?? throw new ArgumentNullException(nameof(userStatsRepository));
+            this.getUsersQuery = getUsersQuery;
+            this.storageAccessService = storageAccessService;
         }
 
-        public async Task<List<UserRankingDTO>> Handle(GetDrinksRankingQuery request, CancellationToken cancellationToken)
+        public async Task<List<UserRankingDTO>> ExecuteAsync()
         {
-            var userStats = await this.userStatsRepository.GetRankingStatisticsAsync();
+            string whereClause = TableQuery.GenerateFilterConditionForInt(nameof(UserStatsTableEntity.TotalDrinksLastMonth), QueryComparisons.GreaterThan, 0);
+            var queryResult = await storageAccessService.QueryTableAsync<UserStatsTableEntity>(TableNames.UserStats, whereClause);
+
+            var userStats = queryResult.OrderByDescending(r => r.TotalDrinksLastMonth)
+                .Select(r => new UserStatistics(r.RowKey, r.CurrentAlcoholization, r.CurrentNightDrinks, r.Score, r.TotalDrinksLastMonth))
+                .ToList();
+
             var userIds = userStats.Select(u => u.UserId).Distinct();
-            var users = await this.userRepository.GetUsersAsync(userIds);
+            var users = await this.getUsersQuery.ExecuteAsync(userIds);
 
             var result = userStats.Select(s => new UserRankingDTO(users.Select(u => new UserInfoDTO(u.Id, u.Name)).First(u => u.UserId == s.UserId), s.ToDto())).ToList();
             return result;

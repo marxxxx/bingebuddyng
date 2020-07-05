@@ -1,25 +1,15 @@
-﻿using BingeBuddyNg.Services.User.Commands;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using BingeBuddyNg.Core.User.Commands;
+using BingeBuddyNg.Core.User.Persistence;
 
-namespace BingeBuddyNg.Services.User
+namespace BingeBuddyNg.Core.User
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<User>> GetUsersAsync(IEnumerable<string> userIds = null);
+        Task<Domain.User> GetUserAsync(string id);
 
-        Task<IEnumerable<string>> GetAllUserIdsAsync();
-
-        Task<User> FindUserAsync(string id);
-
-        Task UpdateUserAsync(User user);
+        Task UpdateUserAsync(UserEntity user);
 
         Task<CreateOrUpdateUserResult> CreateOrUpdateUserAsync(CreateOrUpdateUserCommand user);
-
-        Task UpdateMonitoringInstanceAsync(string userId, string monitoringInstanceId);
-
-        Task AddFriendAsync(string userId, string friendUserId);
-
-        Task RemoveFriendAsync(string userId, string friendUserId);
     }
 }

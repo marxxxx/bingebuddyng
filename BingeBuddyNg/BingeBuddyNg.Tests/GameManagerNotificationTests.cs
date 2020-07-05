@@ -1,15 +1,16 @@
-﻿using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Game;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
-using BingeBuddyNg.Shared;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Game;
+using BingeBuddyNg.Core.Game.Commands;
+using BingeBuddyNg.Core.Activity.Persistence;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Shared;
+using BingeBuddyNg.Tests.Helpers;
+using Moq;
 using Xunit;
 
 namespace BingeBuddyNg.Tests
@@ -19,19 +20,15 @@ namespace BingeBuddyNg.Tests
         [Fact]
         public async Task ShouldSendNotificationsAfterGameEnded()
         {
-            Guid gameId = Guid.NewGuid();
             string playerOne = Guid.NewGuid().ToString();
             string playerTwo = Guid.NewGuid().ToString();
 
-            GameEndNotificationService gameNotificationService =             
-                SetupGameEndNotificationService(out var gameManager, out var notificationServiceMock, out var _);
+            var sut = SetupStartGameCommandHandler(new[] { playerOne, playerTwo }, out var gameManager, out var notificationServiceMock, out var _);
 
-            await gameNotificationService.StartAsync(CancellationToken.None);
+            var result = await sut.Handle(new StartGameCommand(playerOne, "my game", new string[] { playerOne, playerTwo }), CancellationToken.None);
 
-            gameManager.StartGame(new Game(gameId, "my game", new string[] { playerOne, playerTwo }, TimeSpan.FromSeconds(1)));
-
-            gameManager.AddUserScore(gameId, playerOne, 1);
-            gameManager.AddUserScore(gameId, playerTwo, 2);
+            gameManager.Get(result.GameId).IncrementScore(playerOne, 1);
+            gameManager.Get(result.GameId).IncrementScore(playerTwo, 2);
 
             await Task.Delay(2000);
 
@@ -46,59 +43,51 @@ namespace BingeBuddyNg.Tests
                  s.SendWebPushMessage(
                      It.IsAny<IEnumerable<PushInfo>>(),
                     It.IsAny<WebPushNotificationMessage>()));
-
-            await gameNotificationService.StopAsync(CancellationToken.None);
         }
 
         [Fact]
         public async Task ShouldWriteEndResultToActivitiesAfterGameEnded()
         {
-            Guid gameId = Guid.NewGuid();
             string playerOne = Guid.NewGuid().ToString();
             string playerTwo = Guid.NewGuid().ToString();
 
-            GameEndNotificationService gameNotificationService =
-                SetupGameEndNotificationService(out var gameManager, out var _, out var activityRepository);
+            var sut = SetupStartGameCommandHandler(new[] { playerOne, playerTwo }, out var gameRepository, out var _, out var activityRepository);
 
-            await gameNotificationService.StartAsync(CancellationToken.None);
+            var result = await sut.Handle(new StartGameCommand(playerOne, "new game", new[] { playerOne, playerTwo }), CancellationToken.None);
 
-            gameManager.StartGame(new Game(gameId, "my game", new string[] { playerOne, playerTwo }, TimeSpan.FromSeconds(1)));
-
-            gameManager.AddUserScore(gameId, playerOne, 1);
-            gameManager.AddUserScore(gameId, playerTwo, 2);
+            gameRepository.Get(result.GameId).IncrementScore(playerOne, 1);
+            gameRepository.Get(result.GameId).IncrementScore(playerTwo, 2);
 
             await Task.Delay(2000);
 
-            activityRepository.Verify(a => a.AddActivityAsync(It.Is<Activity>(a => a.ActivityType == ActivityType.GameResult && a.GameInfo != null && a.GameInfo.Id == gameId)));
+            activityRepository.Verify(a => a.AddActivityAsync(It.Is<ActivityEntity>(a => a.ActivityType == ActivityType.GameResult && a.GameInfo != null && a.GameInfo.Id == result.GameId)));
         }
 
-        private static GameEndNotificationService SetupGameEndNotificationService(
-            out GameManager gameManager,
+        private static StartGameCommandHandler SetupStartGameCommandHandler(
+            IEnumerable<string> testUserIds,
+            out GameRepository gameManager,
             out Mock<INotificationService> notificationServiceMock,
             out Mock<IActivityRepository> activityRepositoryMock)
         {
-            gameManager = new GameManager();
+            gameManager = new GameRepository();
+            gameManager.DefaultGameDuration = TimeSpan.FromSeconds(1);
             notificationServiceMock = new Mock<INotificationService>();
-            var userRepositoryMock = new Mock<IUserRepository>();
+
+            var searchUsersQuery = SetupHelpers.SetupSearchUsersQuery(testUserIds);
             activityRepositoryMock = new Mock<IActivityRepository>();
 
             activityRepositoryMock
-                .Setup(a => a.AddActivityAsync(It.IsAny<Activity>()))
-                .ReturnsAsync((Activity _a) => _a);
+                .Setup(a => a.AddActivityAsync(It.IsAny<ActivityEntity>()))
+                .ReturnsAsync((ActivityEntity _a) => _a);
 
-            userRepositoryMock
-                .Setup(s => s.GetUsersAsync(It.IsAny<IEnumerable<string>>()))
-                .ReturnsAsync((IEnumerable<string> _userIds) =>
-                    _userIds.Select(u => new User() { Id = u, Name = "username", PushInfo = new PushInfo("sub", "auth", "p256dh") }).ToList());
-
-            var gameNotificationService = new GameEndNotificationService(
+            var startGameCommand = new StartGameCommandHandler(
                 gameManager,
+                searchUsersQuery,
+                activityRepositoryMock.Object,
                 notificationServiceMock.Object,
-                userRepositoryMock.Object,
-                new Mock<ITranslationService>().Object,
-                activityRepositoryMock.Object);
+                new Mock<ITranslationService>().Object);
 
-            return gameNotificationService;
+            return startGameCommand;
         }
     }
 }

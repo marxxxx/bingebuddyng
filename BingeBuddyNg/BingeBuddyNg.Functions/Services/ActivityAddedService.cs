@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Activity.DTO;
+using BingeBuddyNg.Core.Activity.Messages;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.Statistics.Commands;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Functions.Services.Notifications;
-using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Statistics;
-using BingeBuddyNg.Services.User;
 using BingeBuddyNg.Shared;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Extensions.Logging;
@@ -15,36 +20,39 @@ namespace BingeBuddyNg.Functions.Services
 {
     public class ActivityAddedService
     {
-        private readonly IUtilityService utilityService;
+        private readonly IAddressDecodingService utilityService;
         private readonly IActivityRepository activityRepository;
         private readonly IUserRepository userRepository;
         private readonly INotificationService notificationService;
-        private readonly IUserStatisticsService userStatisticsService;
+        private readonly UpdateRankingCommand updateRankingCommand;
+        private readonly UpdateStatisticsCommand updateStatisticsCommand;
         private readonly ActivityDistributionService activityDistributionService;
         private readonly DrinkEventHandlingService drinkEventHandlingService;
         private readonly PushNotificationService pushNotificationService;
         private readonly ILogger<ActivityAddedService> logger;
 
         public ActivityAddedService(
-            IUtilityService utilityService,
+            IAddressDecodingService utilityService,
             IActivityRepository activityRepository,
             IUserRepository userRepository,
             INotificationService notificationService,
-            IUserStatisticsService userStatisticsService,
+            UpdateRankingCommand updateRankingCommand,
+            UpdateStatisticsCommand updateStatisticsCommand,
             ActivityDistributionService activityDistributionService,
             DrinkEventHandlingService drinkEventHandlingService,
             PushNotificationService pushNotificationService,
             ILogger<ActivityAddedService> logger)
         {
-            this.utilityService = utilityService ?? throw new ArgumentNullException(nameof(utilityService));
-            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
-            this.userStatisticsService = userStatisticsService ?? throw new ArgumentNullException(nameof(userStatisticsService));
-            this.activityDistributionService = activityDistributionService ?? throw new ArgumentNullException(nameof(activityDistributionService));
-            this.drinkEventHandlingService = drinkEventHandlingService ?? throw new ArgumentNullException(nameof(drinkEventHandlingService));
-            this.pushNotificationService = pushNotificationService ?? throw new ArgumentNullException(nameof(pushNotificationService));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.utilityService = utilityService;
+            this.activityRepository = activityRepository;
+            this.userRepository = userRepository;
+            this.notificationService = notificationService;
+            this.updateRankingCommand = updateRankingCommand;
+            this.updateStatisticsCommand = updateStatisticsCommand;
+            this.activityDistributionService = activityDistributionService;
+            this.drinkEventHandlingService = drinkEventHandlingService;
+            this.pushNotificationService = pushNotificationService;
+            this.logger = logger;
         }
 
         public async Task RunAsync(ActivityAddedMessage message, IDurableOrchestrationClient durableClient)
@@ -53,12 +61,7 @@ namespace BingeBuddyNg.Functions.Services
 
             logger.LogInformation($"Handling added activity [{activity}] ...");
 
-            var currentUser = await userRepository.FindUserAsync(activity.UserId);
-            if (currentUser == null)
-            {
-                logger.LogError($"User [{activity.UserId}] not found!");
-                return;
-            }
+            var currentUser = await userRepository.GetUserAsync(activity.UserId);
 
             try
             {                
@@ -67,20 +70,19 @@ namespace BingeBuddyNg.Functions.Services
                     await HandleMonitoringAsync(durableClient, currentUser);
                 }
 
-                UserStatistics userStats = null;
+                
                 bool shouldUpdate = false;
-
+                UserStatistics userStats = null;
                 try
                 {
-                    if (activity.ActivityType == ActivityType.Drink && userStats != null)
-                    {
-                        // Immediately update Stats for current user
-                        userStats = await userStatisticsService.UpdateStatsForUserAsync(currentUser);
-                        activity.DrinkCount = userStats.CurrentNightDrinks;
-                        await userStatisticsService.UpdateRankingForUserAsync(currentUser.Id);
+                    // Immediately update Stats for current user
+                    userStats = await updateStatisticsCommand.ExecuteAsync(currentUser.Id, currentUser.Gender, currentUser.Weight);
 
-                        activity.DrinkCount = userStats.CurrentNightDrinks;
-                        activity.AlcLevel = userStats.CurrentAlcoholization;
+                    if (activity.ActivityType == ActivityType.Drink)
+                    {   
+                        await updateRankingCommand.ExecuteAsync(currentUser.Id);
+
+                        activity.UpdateStats(userStats.CurrentNightDrinks, userStats.CurrentAlcoholization);
 
                         shouldUpdate = true;
                     }
@@ -96,19 +98,24 @@ namespace BingeBuddyNg.Functions.Services
                     shouldUpdate = true;
                 }
 
+                var entity = activity.ToEntity();
+
                 if (shouldUpdate)
                 {
-                    await activityRepository.UpdateActivityAsync(activity);
+                    await activityRepository.UpdateActivityAsync(entity);
                 }
 
-                await this.activityDistributionService.DistributeActivitiesAsync(currentUser, activity);
+                await this.activityDistributionService.DistributeActivitiesAsync(currentUser, entity);
 
                 await SendActivityUpdateAsync(currentUser, activity, userStats);
 
                 // check for drink events
                 try
                 {
-                    await this.drinkEventHandlingService.HandleDrinkEventsAsync(activity, currentUser);
+                    if(activity.ActivityType == ActivityType.Drink)
+                    {
+                        await this.drinkEventHandlingService.HandleDrinkEventsAsync(activity, currentUser);
+                    }                    
                 }
                 catch (Exception ex)
                 {
@@ -139,7 +146,8 @@ namespace BingeBuddyNg.Functions.Services
 
                 // Start timer to remind user about entering his next drink.
                 var monitoringInstanceId = await durableClient.StartNewAsync(nameof(DrinkReminderFunction), currentUser);
-                await userRepository.UpdateMonitoringInstanceAsync(currentUser.Id, monitoringInstanceId);
+                currentUser.UpdateMonitoringInstance(monitoringInstanceId);
+                await userRepository.UpdateUserAsync(currentUser.ToEntity());
             }
             catch (Exception ex)
             {
@@ -150,9 +158,7 @@ namespace BingeBuddyNg.Functions.Services
         private async Task HandleLocationUpdateAsync(Activity activity)
         {
             var address = await utilityService.GetAddressFromLongLatAsync(activity.Location);
-            activity.LocationAddress = address.AddressText;
-            activity.CountryLongName = address.CountryLongName;
-            activity.CountryShortName = address.CountryShortName;
+            activity.UpdateLocation(address.AddressText, address.CountryShortName, address.CountryLongName);
         }
 
         private async Task SendActivityUpdateAsync(User currentUser, Activity activity, UserStatistics userStats)

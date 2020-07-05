@@ -1,9 +1,6 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using BingeBuddyNg.Core.Infrastructure;
 
-namespace BingeBuddyNg.Services.Activity
+namespace BingeBuddyNg.Core.Activity.DTO
 {
     public class CreateOrUpdateUserDTO
     {

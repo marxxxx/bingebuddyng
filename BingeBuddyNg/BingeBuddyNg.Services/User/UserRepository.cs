@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User.Commands;
-using Microsoft.WindowsAzure.Storage.Table;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.User.Commands;
+using BingeBuddyNg.Core.User.Domain;
+using BingeBuddyNg.Core.User.Persistence;
+using BingeBuddyNg.Core.Venue;
+using static BingeBuddyNg.Shared.Constants;
 
-namespace BingeBuddyNg.Services.User
+namespace BingeBuddyNg.Core.User
 {
     public class UserRepository : IUserRepository
     {
-        private const string TableName = "users";
-        private const string PartitionKeyValue = "User";
-
         private readonly IStorageAccessService storageAccess;
         private readonly ICacheService cacheService;
 
@@ -22,30 +20,29 @@ namespace BingeBuddyNg.Services.User
             this.cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
         }
 
-        public async Task<User> FindUserAsync(string id)
+        public async Task<Core.User.Domain.User> GetUserAsync(string id)
         {
             var result = await FindUserEntityAsync(id);
-            User user = null;
+            if (result?.Entity == null)
+            {
+                throw new NotFoundException($"User {id} not found!");
+            }
+
+            UserEntity user = null;
             if (result != null)
             {
                 user = result.Entity;
                 user.LastOnline = result.Timestamp.UtcDateTime;
             }
 
-            return user;
+            return new Core.User.Domain.User(user.Id, user.Name, user.Weight, user.Gender, user.ProfileImageUrl, user.PushInfo, user.Friends, user.MutedByFriendUserIds, user.MutedByFriendUserIds, user.MonitoringInstanceId, user.CurrentVenue?.ToDomain(), user.Language, user.LastOnline);
         }
 
-        private async Task<JsonTableEntity<User>> FindUserEntityAsync(string id)
+        private async Task<JsonTableEntity<UserEntity>> FindUserEntityAsync(string id)
         {
-            var result = await cacheService.GetOrCreateAsync<JsonTableEntity<User>>(GetUserCacheKey(id), async () =>
+            var result = await cacheService.GetOrCreateAsync(GetUserCacheKey(id), async () =>
             {
-                var table = storageAccess.GetTableReference(TableName);
-
-                TableOperation retrieveOperation = TableOperation.Retrieve<JsonTableEntity<User>>(PartitionKeyValue, id);
-
-                var userResult = await table.ExecuteAsync(retrieveOperation);
-
-                return userResult?.Result as JsonTableEntity<User>;
+                return await this.storageAccess.GetTableEntityAsync<JsonTableEntity<UserEntity>>(TableNames.Users, StaticPartitionKeys.User, id);
             }, TimeSpan.FromMinutes(1));
 
             return result;
@@ -56,14 +53,12 @@ namespace BingeBuddyNg.Services.User
 
         public async Task<CreateOrUpdateUserResult> CreateOrUpdateUserAsync(CreateOrUpdateUserCommand request)
         {
-            var table = storageAccess.GetTableReference(TableName);
             bool profilePicHasChanged = true;
             bool nameHasChanged = false;
             var savedUser = await FindUserEntityAsync(request.UserId);
             bool isNewUser = false;
             string originalUserName = null;
 
-            TableOperation saveUserOperation;
             if (savedUser != null)
             {
                 originalUserName = savedUser.Entity.Name;
@@ -83,13 +78,12 @@ namespace BingeBuddyNg.Services.User
                     savedUser.Entity.Language = request.Language;
                 }
 
-                saveUserOperation = TableOperation.Replace(savedUser);
-
+                await this.storageAccess.ReplaceAsync(TableNames.Users, savedUser);
                 cacheService.Remove(GetUserCacheKey(request.UserId));
             }
             else
             {
-                var user = new User()
+                var user = new UserEntity()
                 {
                     Id = request.UserId,
                     Name = request.Name,
@@ -100,106 +94,21 @@ namespace BingeBuddyNg.Services.User
                     LastOnline = DateTime.UtcNow,
                     ProfileImageUrl = request.ProfileImageUrl
                 };
-                saveUserOperation = TableOperation.Insert(new JsonTableEntity<User>(PartitionKeyValue, request.UserId, user));
+                await this.storageAccess.InsertAsync(TableNames.Users, new JsonTableEntity<UserEntity>(StaticPartitionKeys.User, request.UserId, user));
                 isNewUser = true;
             }
-
-            await table.ExecuteAsync(saveUserOperation);
 
             return new CreateOrUpdateUserResult(isNewUser, profilePicHasChanged, nameHasChanged, originalUserName);
         }
 
-        public async Task UpdateUserAsync(User user)
-        {            
+        public async Task UpdateUserAsync(UserEntity user)
+        {
             var userEntity = await FindUserEntityAsync(user.Id);
             userEntity.Entity = user;
 
-            var table = storageAccess.GetTableReference(TableName);
-            TableOperation saveUserOperation = TableOperation.Replace(userEntity);
-
-            await table.ExecuteAsync(saveUserOperation);
+            await this.storageAccess.ReplaceAsync(TableNames.Users, userEntity);
 
             cacheService.Remove(GetUserCacheKey(user.Id));
-        }
-
-        public async Task<IEnumerable<User>> GetUsersAsync(IEnumerable<string> userIds = null)
-        {
-            string whereClause = BuildWhereClause(userIds);
-
-            var result = await storageAccess.QueryTableAsync<JsonTableEntity<User>>(TableName, whereClause);
-
-            var users = result.OrderByDescending(u => u.Timestamp).Select(r =>
-              {
-                  var user = r.Entity;
-                  user.LastOnline = r.Timestamp.UtcDateTime;
-                  return user;
-              }).ToList();
-            return users;
-        }
-
-        public async Task<IEnumerable<string>> GetAllUserIdsAsync()
-        {
-            return await this.storageAccess.GetRowKeysAsync(TableName, PartitionKeyValue);
-        }
-
-        private string BuildWhereClause(IEnumerable<string> userIds)
-        {
-            string whereClause = null;
-
-            if (userIds != null)
-            {
-                foreach (var u in userIds)
-                {
-                    string filter = TableQuery.GenerateFilterCondition(nameof(TableEntity.RowKey), QueryComparisons.Equal, u);
-                    if (whereClause != null)
-                    {
-                        whereClause = TableQuery.CombineFilters(whereClause, TableOperators.Or, filter);
-                    }
-                    else
-                    {
-                        whereClause = filter;
-                    }
-                }
-            }
-
-            return whereClause;
-        }
-
-        public async Task AddFriendAsync(string userId, string friendUserId)
-        {
-            var user = await FindUserAsync(userId);
-            var friend = await FindUserAsync(friendUserId);
-
-            user.AddFriend(friend.ToUserInfo());
-            friend.AddFriend(user.ToUserInfo());
-
-            await Task.WhenAll(UpdateUserAsync(user), UpdateUserAsync(friend));
-        }
-
-        public async Task RemoveFriendAsync(string userId, string friendUserId)
-        {
-            var results = await Task.WhenAll(FindUserAsync(userId), FindUserAsync(friendUserId));
-
-            results[0].RemoveFriend(friendUserId);
-            results[1].RemoveFriend(userId);
-
-            await Task.WhenAll(UpdateUserAsync(results[0]), UpdateUserAsync(results[1]));
-        }
-
-        public async Task UpdateMonitoringInstanceAsync(string userId, string monitoringInstanceId)
-        {
-            var user = await FindUserEntityAsync(userId);
-            if (user == null || user.Entity.MonitoringInstanceId == monitoringInstanceId)
-            {
-                return;
-            }
-
-            var table = storageAccess.GetTableReference(TableName);
-
-            user.Entity.MonitoringInstanceId = monitoringInstanceId;
-            TableOperation saveUserOperation = TableOperation.Replace(user);
-
-            await table.ExecuteAsync(saveUserOperation);
         }
     }
 }

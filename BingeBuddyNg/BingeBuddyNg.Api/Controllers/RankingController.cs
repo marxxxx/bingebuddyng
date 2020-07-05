@@ -1,13 +1,10 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.Ranking;
-using BingeBuddyNg.Services.Ranking.Querys;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using BingeBuddyNg.Core.Ranking.DTO;
+using BingeBuddyNg.Core.Ranking.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 
 namespace BingeBuddyNg.Api.Controllers
 {
@@ -15,26 +12,28 @@ namespace BingeBuddyNg.Api.Controllers
     [Route("api/[controller]")]
     public class RankingController : Controller
     {
-        private readonly IIdentityService identityService;
         private readonly IMediator mediator;
+        private readonly GetScoreRankingQuery getScoreRankingQuery;
+        private readonly GetDrinksRankingQuery getDrinksRankingQuery;
 
-        public RankingController(IIdentityService identityService, IMediator mediator)
+        public RankingController(IMediator mediator, GetScoreRankingQuery getScoreRankingQuery, GetDrinksRankingQuery getDrinksRankingQuery)
         {
-            this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
-            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.mediator = mediator;
+            this.getScoreRankingQuery = getScoreRankingQuery;
+            this.getDrinksRankingQuery = getDrinksRankingQuery;
         }
 
         [HttpGet("drinks")]
         public async Task<List<UserRankingDTO>> GetDrinkRanking()
         {
-            var result = await this.mediator.Send(new GetDrinksRankingQuery());
+            var result = await this.getDrinksRankingQuery.ExecuteAsync();
             return result;
         }
 
         [HttpGet("score")]
         public async Task<List<UserRankingDTO>> GetScoreRanking()
         {
-            var result = await this.mediator.Send(new GetScoreRankingQuery());
+            var result = await this.getScoreRankingQuery.ExecuteAsync();
             return result;
         }
 

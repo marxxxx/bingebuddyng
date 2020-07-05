@@ -1,6 +1,7 @@
 import { DrinkType } from 'src/models/DrinkType';
 import { Component, OnInit, Input } from '@angular/core';
 import { beerGifs, wineGifs, shotGifs, antiGifs } from './gifs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-drink-animation',
@@ -9,47 +10,56 @@ import { beerGifs, wineGifs, shotGifs, antiGifs } from './gifs';
 })
 export class DrinkAnimationComponent implements OnInit {
 
+  readonly gifCount = {
+    beer: 59,
+    wine: 11,
+    shot: 11,
+    anti: 4
+  };
+
   @Input() drinkType: DrinkType;
 
   imageUrl: string;
+  fallbackImageUrl: string;
 
   constructor() { }
 
   ngOnInit(): void {
-    this.imageUrl = this.getRandomDrinkImageUrl();
+    this.imageUrl = this.getRandomDrinkImageUrl('.webp');
+    this.fallbackImageUrl = this.getRandomDrinkImageUrl('.gif');
 
     const audio = new Audio('/assets/sound/bierflasche.wav');
     audio.play();
   }
 
-  getRandomDrinkImageUrl(): string {
-    let gifs: string[] = null;
+  getRandomDrinkImageUrl(extension: string): string {
+    let url = environment.drinkImgBaseUrl;
     switch (this.drinkType) {
       case DrinkType.Beer: {
-        gifs = beerGifs;
+        url += 'beer/' + this.getRandomNumber(this.gifCount.beer) + extension;
         break;
       }
       case DrinkType.Wine: {
-        gifs = wineGifs;
+        url += 'wine/' + this.getRandomNumber(this.gifCount.wine) + extension;
         break;
       }
       case DrinkType.Shot: {
-        gifs = shotGifs;
+        url += 'shot/' + this.getRandomNumber(this.gifCount.shot) + extension;
         break;
       }
       case DrinkType.Anti: {
-        gifs = antiGifs;
+        url += 'anti/' + this.getRandomNumber(this.gifCount.anti) + extension;
         break;
       }
       default:
-        return null;
+        url = null;
+        break;
     }
-
-    return this.getRandomLink(gifs);
+    return url;
   }
 
-  getRandomLink(gifs: string[]): string {
-    const index = Math.floor(Math.random() * (gifs.length - 1));
-    return gifs[index];
+  getRandomNumber(max: number): number {
+    const randomNumber = Math.floor(Math.random() * (max));
+    return randomNumber;
   }
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity.Messages;
 using BingeBuddyNg.Functions.Services;
-using BingeBuddyNg.Services.Activity;
 using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;

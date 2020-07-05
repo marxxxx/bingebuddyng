@@ -3,7 +3,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Services.User.Commands
+namespace BingeBuddyNg.Core.User.Commands
 {
     public class SetFriendMuteStateCommand : IRequest
     {
@@ -31,13 +31,13 @@ namespace BingeBuddyNg.Services.User.Commands
 
         public async Task<Unit> Handle(SetFriendMuteStateCommand request, CancellationToken cancellationToken)
         {
-            var user = await userRepository.FindUserAsync(request.UserId);
+            var user = await userRepository.GetUserAsync(request.UserId);
             user.SetFriendMuteState(request.FriendUserId, request.MuteState);
 
-            var mutedUser = await userRepository.FindUserAsync(request.FriendUserId);
+            var mutedUser = await userRepository.GetUserAsync(request.FriendUserId);
             mutedUser.SetMutedByFriendState(request.UserId, request.MuteState);
 
-            Task.WaitAll(userRepository.UpdateUserAsync(user), userRepository.UpdateUserAsync(mutedUser));
+            Task.WaitAll(userRepository.UpdateUserAsync(user.ToEntity()), userRepository.UpdateUserAsync(mutedUser.ToEntity()));
 
             return Unit.Value;
         }

@@ -1,9 +1,9 @@
-﻿using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 
-namespace BingeBuddyNg.Services.FriendsRequest.Commands
+namespace BingeBuddyNg.Core.FriendsRequest.Commands
 {
     public class DeclineFriendRequestCommand : IRequest
     {

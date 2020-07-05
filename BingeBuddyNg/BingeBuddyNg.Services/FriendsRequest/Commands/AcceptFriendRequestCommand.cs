@@ -1,14 +1,15 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
-using BingeBuddyNg.Services.User.Messages;
-using BingeBuddyNg.Shared;
-using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.Commands;
+using BingeBuddyNg.Core.User.Messages;
+using BingeBuddyNg.Shared;
+using MediatR;
 using static BingeBuddyNg.Shared.Constants;
 
-namespace BingeBuddyNg.Services.FriendsRequest.Commands
+namespace BingeBuddyNg.Core.FriendsRequest.Commands
 {
     public class AcceptFriendRequestCommand : IRequest
     {
@@ -26,6 +27,7 @@ namespace BingeBuddyNg.Services.FriendsRequest.Commands
     {
         private readonly IFriendRequestRepository friendRequestRepository;
         private readonly IUserRepository userRepository;
+        private readonly AddFriendCommand addFriendCommand;
         private readonly INotificationService notificationService;
         private readonly ITranslationService translationService;
         private readonly IStorageAccessService storageAccessService;
@@ -33,12 +35,14 @@ namespace BingeBuddyNg.Services.FriendsRequest.Commands
         public AcceptFriendRequestCommandHandler(
             IFriendRequestRepository friendRequestRepository, 
             IUserRepository userRepository, 
+            AddFriendCommand addFriendCommand,
             INotificationService notificationService, 
             ITranslationService translationService,
             IStorageAccessService storageAccessService)
         {
             this.friendRequestRepository = friendRequestRepository ?? throw new ArgumentNullException(nameof(friendRequestRepository));
             this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.addFriendCommand = addFriendCommand ?? throw new ArgumentNullException(nameof(addFriendCommand));
             this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
             this.translationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
             this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
@@ -46,12 +50,12 @@ namespace BingeBuddyNg.Services.FriendsRequest.Commands
 
         public async Task<Unit> Handle(AcceptFriendRequestCommand request, CancellationToken cancellationToken)
         {
-            await userRepository.AddFriendAsync(request.AcceptingUserId, request.RequestingUserId);
+            await this.addFriendCommand.ExecuteAsync(request.AcceptingUserId, request.RequestingUserId);            
 
             await friendRequestRepository.DeleteFriendRequestAsync(request.AcceptingUserId, request.RequestingUserId);
 
-            var acceptingUser = await userRepository.FindUserAsync(request.AcceptingUserId);
-            var requestingUser = await userRepository.FindUserAsync(request.RequestingUserId);
+            var acceptingUser = await userRepository.GetUserAsync(request.AcceptingUserId);
+            var requestingUser = await userRepository.GetUserAsync(request.RequestingUserId);
             if (requestingUser.PushInfo != null)
             {
                 var subject = await translationService.GetTranslationAsync(requestingUser.Language, "FriendsRequest");

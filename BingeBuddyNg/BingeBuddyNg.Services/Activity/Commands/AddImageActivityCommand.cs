@@ -1,12 +1,13 @@
-﻿using BingeBuddyNg.Services.Infrastructure;
-using BingeBuddyNg.Services.User;
-using MediatR;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.Infrastructure;
+using MediatR;
 
-namespace BingeBuddyNg.Services.Activity.Commands
+namespace BingeBuddyNg.Core.Activity.Commands
 {
     public class AddImageActivityCommand : IRequest<string>
     {
@@ -52,16 +53,16 @@ namespace BingeBuddyNg.Services.Activity.Commands
 
         public async Task<string> Handle(AddImageActivityCommand request, CancellationToken cancellationToken)
         {
-            var user = await this.userRepository.FindUserAsync(request.UserId);
+            var user = await this.userRepository.GetUserAsync(request.UserId);
 
             // store file in blob storage
             string imageUrlOriginal = await storageAccessService.SaveFileInBlobStorage("img", "activities", request.FileName, request.Stream);
 
-            var activity = Activity.CreateImageActivity(DateTime.UtcNow, request.Location, request.UserId, user.Name, imageUrlOriginal);
+            var activity = Domain.Activity.CreateImageActivity(request.Location, request.UserId, user.Name, imageUrlOriginal);
 
-            var savedActivity = await this.activityRepository.AddActivityAsync(activity);
+            var savedActivity = await this.activityRepository.AddActivityAsync(activity.ToEntity());
 
-            await activityRepository.AddToActivityAddedTopicAsync(savedActivity.Id);
+            await activityRepository.AddToActivityAddedTopicAsync(activity.Id);
 
             return savedActivity.Id;
         }

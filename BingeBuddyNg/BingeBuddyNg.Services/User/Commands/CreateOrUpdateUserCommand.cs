@@ -1,14 +1,16 @@
-﻿using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Drink;
-using BingeBuddyNg.Services.Infrastructure;
-using MediatR;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Drink;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.User.Messages;
+using BingeBuddyNg.Core.User.Persistence;
+using MediatR;
 using static BingeBuddyNg.Shared.Constants;
 
-namespace BingeBuddyNg.Services.User.Commands
+namespace BingeBuddyNg.Core.User.Commands
 {
     public class CreateOrUpdateUserCommand : IRequest
     {
@@ -53,6 +55,7 @@ namespace BingeBuddyNg.Services.User.Commands
         public async Task<Unit> Handle(CreateOrUpdateUserCommand request, CancellationToken cancellationToken)
         {
             var result = await this.userRepository.CreateOrUpdateUserAsync(request);
+
             if (result.IsNewUser)
             {
                 await this.drinkRepository.CreateDefaultDrinksForUserAsync(request.UserId);
@@ -65,15 +68,16 @@ namespace BingeBuddyNg.Services.User.Commands
                         await storageAccessService.SaveFileInBlobStorage(ContainerNames.ProfileImages, request.UserId, profileImageStream);
                     }
                 }
+               
+                var activity = Activity.Domain.Activity.CreateRegistrationActivity(BingeBuddyUser.Id, BingeBuddyUser.Name, new UserInfo(request.UserId, request.Name));
 
-                await activityRepository.AddActivityAsync(Activity.Activity.CreateRegistrationActivity(
-                    User.BingeBuddyUserId, User.BingeBuddyUserName, new UserInfo(request.UserId, request.Name)));
+                await activityRepository.AddActivityAsync(activity.ToEntity());
             }
 
             if (result.NameHasChanged)
             {
-                var activity = Activity.Activity.CreateRenameActivity(request.UserId, request.Name, result.OriginalUserName);
-                await activityRepository.AddActivityAsync(activity);
+                var activity = Activity.Domain.Activity.CreateRenameActivity(request.UserId, request.Name, result.OriginalUserName);
+                await activityRepository.AddActivityAsync(activity.ToEntity());
 
                 var renameMessage = new UserRenamedMessage(request.UserId, result.OriginalUserName, request.Name);
                 await storageAccessService.AddQueueMessage(QueueNames.UserRenamed, renameMessage);

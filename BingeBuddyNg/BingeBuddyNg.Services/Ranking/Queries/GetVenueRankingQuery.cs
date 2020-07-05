@@ -1,12 +1,14 @@
-﻿using BingeBuddyNg.Services.Activity;
-using MediatR;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
+using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Activity.Queries;
+using BingeBuddyNg.Core.Ranking.DTO;
+using MediatR;
 
-namespace BingeBuddyNg.Services.Ranking.Querys
+namespace BingeBuddyNg.Core.Ranking.Queries
 {
     public class GetVenueRankingQuery : IRequest<IEnumerable<VenueRankingDTO>>
     {
@@ -14,18 +16,18 @@ namespace BingeBuddyNg.Services.Ranking.Querys
 
     public class GetVenueRankingQueryHandler : IRequestHandler<GetVenueRankingQuery, IEnumerable<VenueRankingDTO>>
     {
-        private readonly IActivityRepository activityRepository;
+        private readonly GetMasterActivitiesQuery getMasterActivitiesQuery;
 
-        public GetVenueRankingQueryHandler(IActivityRepository activityRepository)
+        public GetVenueRankingQueryHandler(GetMasterActivitiesQuery getMasterActivitiesQuery)
         {
-            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.getMasterActivitiesQuery = getMasterActivitiesQuery;
         }
 
         public async Task<IEnumerable<VenueRankingDTO>> Handle(GetVenueRankingQuery request, CancellationToken cancellationToken)
         {
-            var args = new GetActivityFilterArgs() { FilterOptions = ActivityFilterOptions.WithVenue, PageSize = 100, ActivityType = ActivityType.Drink };
-            var activitys = await activityRepository.GetActivityFeedAsync(args);
-            var result = activitys.ResultPage.GroupBy(r => new { r.Venue.Id, r.Venue.Name })
+            var args = new ActivityFilterArgs() { FilterOptions = ActivityFilterOptions.WithVenue, PageSize = 100, ActivityType = ActivityType.Drink };
+            var activitys = await getMasterActivitiesQuery.ExecuteAsync(args);
+            var result = activitys.GroupBy(r => new { r.Venue.Id, r.Venue.Name })
                 .Select(r => new VenueRankingDTO(r.Key.Id, r.Key.Name, r.Count()))
                 .OrderByDescending(r => r.Count);
             return result;

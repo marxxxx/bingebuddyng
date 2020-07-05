@@ -1,8 +1,9 @@
-﻿using BingeBuddyNg.Services.DrinkEvent;
+﻿using System;
+using System.Threading.Tasks;
+using BingeBuddyNg.Core.DrinkEvent;
+using BingeBuddyNg.Core.DrinkEvent.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Api.Controllers
 {
@@ -18,11 +19,10 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
         [HttpGet("current")]
-        public async Task<DrinkEvent> GetCurrentDrinkEvent()
+        public async Task<DrinkEventDTO> GetCurrentDrinkEvent()
         {
             var result = await this.drinkEventRepository.FindCurrentDrinkEventAsync();
-
-            return result;
+            return result?.ToDto();
         }
     }
 }

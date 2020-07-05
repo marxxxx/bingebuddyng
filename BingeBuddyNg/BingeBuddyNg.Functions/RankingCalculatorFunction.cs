@@ -1,9 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using BingeBuddyNg.Services.Activity;
-using BingeBuddyNg.Services.Statistics;
-using BingeBuddyNg.Services.User;
+using BingeBuddyNg.Core.Statistics.Commands;
+using BingeBuddyNg.Core.User.Queries;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
@@ -11,19 +10,19 @@ namespace BingeBuddyNg.Functions
 {
     public class RankingCalculatorFunction
     {
-        private readonly IUserRepository userRepository;
-        private readonly IUserStatisticsService userStatisticsService;
+        private readonly SearchUsersQuery searchUsersQuery;
+        private readonly UpdateRankingCommand updateRankingCommand;
 
-        public RankingCalculatorFunction(IUserRepository userRepository, IUserStatisticsService userStatisticsService)
+        public RankingCalculatorFunction(SearchUsersQuery searchUsersQuery, UpdateRankingCommand updateRankingCommand)
         {
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            this.userStatisticsService = userStatisticsService ?? throw new ArgumentNullException(nameof(userStatisticsService));
+            this.searchUsersQuery = searchUsersQuery ?? throw new ArgumentNullException(nameof(searchUsersQuery));
+            this.updateRankingCommand = updateRankingCommand ?? throw new ArgumentNullException(nameof(updateRankingCommand));
         }
 
         [FunctionName(nameof(RankingCalculatorFunction))]
         public async Task Run([TimerTrigger("0 0 */6 * * *")]TimerInfo myTimer, ILogger log)
         {
-            var users = await userRepository.GetUsersAsync();
+            var users = await searchUsersQuery.ExecuteAsync();
 
             // Filter for active users
             var activeUsers = users.Where(u => u.LastOnline > DateTime.UtcNow.Subtract(TimeSpan.FromDays(30))).ToList();
@@ -33,7 +32,7 @@ namespace BingeBuddyNg.Functions
                 try
                 {
                     log.LogInformation($"Calculating ranking for user [{u}] ...");
-                    await userStatisticsService.UpdateRankingForUserAsync(u.Id);
+                    await updateRankingCommand.ExecuteAsync(u.Id);
                 }
                 catch (Exception ex)
                 {

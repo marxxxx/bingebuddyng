@@ -30,7 +30,7 @@ import { UserDTO } from '../../../../models/UserDTO';
 import { LocationService } from 'src/app/activity/services/location.service';
 import { VenueDialogMode } from '../venue-dialog/VenueDialogMode';
 import { VenueDialogResult } from '../venue-dialog/VenueDialogResult';
-import { Drink } from 'src/models/Drink';
+import { DrinkDTO } from 'src/models/DrinkDTO';
 import { DrinkRetrieverService } from '../../services/drink-retriever.service';
 import { ActivityType } from 'src/models/ActivityType';
 import { GameStartedMessage } from 'src/app/game/models/GameStartedMessage';
@@ -56,7 +56,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
   currentUser: UserDTO;
   DrinkType = DrinkType;
   isCommentOpen = false;
-  drinks: Drink[];
+  drinks: DrinkDTO[];
   highlightedActivityId: string;
   pendingDrinkType: DrinkType;
 
@@ -206,7 +206,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     }
   }
 
-  onDrink(drink: Drink) {
+  onDrink(drink: DrinkDTO) {
     this.pendingDrinkType = drink.drinkType;
     this.isBusyAdding = true;
 
