@@ -6,7 +6,7 @@ using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.User.Persistence;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace BingeBuddyNg.Core.FriendsRequest
+namespace BingeBuddyNg.Core.User
 {
     public class FriendRequestRepository : IFriendRequestRepository
     {

@@ -37,14 +37,14 @@ namespace BingeBuddyNg.Infrastructure
 
             var retrieveOperation = TableOperation.Retrieve(partitionKey, rowKey);
             var result = await table.ExecuteAsync(retrieveOperation);
-            if(result.Result != null)
+            if (result.Result != null)
             {
                 var deleteOperation = TableOperation.Delete((ITableEntity)result.Result);
                 await table.ExecuteAsync(deleteOperation);
             }
         }
 
-        public async Task<T> GetTableEntityAsync<T>(string tableName, string partitionKey, string rowKey) where T:ITableEntity, new()
+        public async Task<T> GetTableEntityAsync<T>(string tableName, string partitionKey, string rowKey) where T : ITableEntity, new()
         {
             var table = GetTableReference(tableName);
 
@@ -83,13 +83,13 @@ namespace BingeBuddyNg.Infrastructure
             return resultList;
         }
 
-        public async Task<PagedQueryResult<T>> QueryTableAsync<T>(string tableName, string whereClause, int pageSize, 
-            TableContinuationToken continuationToken=null) where T : ITableEntity, new()
+        public async Task<PagedQueryResult<T>> QueryTableAsync<T>(string tableName, string whereClause, int pageSize,
+            TableContinuationToken continuationToken = null) where T : ITableEntity, new()
         {
             var table = GetTableReference(tableName);
 
             TableQuery<T> tableQuery = new TableQuery<T>();
-            if(whereClause != null)
+            if (whereClause != null)
             {
                 tableQuery = tableQuery.Where(whereClause);
             }
@@ -147,11 +147,11 @@ namespace BingeBuddyNg.Infrastructure
         {
             var account = GetStorageAccount();
             var blobClient = account.CreateCloudBlobClient();
-            
+
             var container = blobClient.GetContainerReference(containerName);
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(fullPath);
 
-            var content =  await blockBlob.DownloadTextAsync();
+            var content = await blockBlob.DownloadTextAsync();
             return content;
         }
 
@@ -188,7 +188,7 @@ namespace BingeBuddyNg.Infrastructure
 
             TableOperation operation = TableOperation.Insert(entity);
             await table.ExecuteAsync(operation, DefaultRequestOptions, null);
-        }        
+        }
 
         public async Task ReplaceAsync(string tableName, ITableEntity entity)
         {
@@ -209,23 +209,28 @@ namespace BingeBuddyNg.Infrastructure
         public async Task DeleteAsync(string tableName, string partitionKey, string rowKey)
         {
             var entity = await GetTableEntityAsync<DynamicTableEntity>(tableName, partitionKey, rowKey);
-            if(entity != null)
+            if (entity != null)
             {
                 await DeleteAsync(tableName, entity);
-            }            
+            }
         }
 
         public async Task InsertOrReplaceAsync(string tableName, IEnumerable<ITableEntity> entities)
         {
-            TableBatchOperation batch = new TableBatchOperation();
-            foreach (var e in entities)
-            {
-                batch.Add(TableOperation.InsertOrReplace(e));
-            }
-
             var table = GetTableReference(tableName);
 
-            await table.ExecuteBatchAsync(batch, DefaultRequestOptions, null);
+            var partitionedBatches = entities.GroupBy(e => e.PartitionKey);
+            foreach (var partitionedBatch in partitionedBatches)
+            {
+                TableBatchOperation batch = new TableBatchOperation();
+
+                foreach (var e in partitionedBatch)
+                {
+                    batch.Add(TableOperation.InsertOrReplace(e));
+                }
+
+                await table.ExecuteBatchAsync(batch, DefaultRequestOptions, null);
+            }
         }
 
         public async Task InsertOrReplaceAsync(string tableName, ITableEntity entity)

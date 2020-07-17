@@ -81,5 +81,12 @@ namespace BingeBuddyNg.Core.User
         {
             return new UserInfoDTO(userId: userInfo.UserId, userName: userInfo.UserName);
         }
+
+        public static FriendRequestDTO ToDto(this FriendRequestEntity entity)
+        {
+            return new FriendRequestDTO(
+                new UserInfoDTO(entity.RequestingUserId, entity.RequestingUserName),
+                new UserInfoDTO(entity.FriendUserId, entity.FriendUserName));
+        }
     }
 }

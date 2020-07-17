@@ -32,12 +32,16 @@ namespace BingeBuddyNg.Core.User.Commands
         public async Task<Unit> Handle(SetFriendMuteStateCommand request, CancellationToken cancellationToken)
         {
             var user = await userRepository.GetUserAsync(request.UserId);
-            user.SetFriendMuteState(request.FriendUserId, request.MuteState);
+            if (request.MuteState)
+            {
+                user.MuteFriend(request.FriendUserId);
+            }
+            else
+            {
+                user.UnmuteFriend(request.FriendUserId);
+            }
 
-            var mutedUser = await userRepository.GetUserAsync(request.FriendUserId);
-            mutedUser.SetMutedByFriendState(request.UserId, request.MuteState);
-
-            Task.WaitAll(userRepository.UpdateUserAsync(user.ToEntity()), userRepository.UpdateUserAsync(mutedUser.ToEntity()));
+            await userRepository.UpdateUserAsync(user.ToEntity());
 
             return Unit.Value;
         }

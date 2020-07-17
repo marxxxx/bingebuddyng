@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Core.FriendsRequest.Persistence;
 using BingeBuddyNg.Core.User.Persistence;
 
-namespace BingeBuddyNg.Core.FriendsRequest
+namespace BingeBuddyNg.Core.User
 {
     public interface IFriendRequestRepository
     {

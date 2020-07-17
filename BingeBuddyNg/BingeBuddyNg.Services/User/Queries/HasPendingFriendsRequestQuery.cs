@@ -3,7 +3,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BingeBuddyNg.Core.FriendsRequest.Querys
+namespace BingeBuddyNg.Core.User.Querys
 {
     public class HasPendingFriendsRequestQuery : IRequest<bool>
     {

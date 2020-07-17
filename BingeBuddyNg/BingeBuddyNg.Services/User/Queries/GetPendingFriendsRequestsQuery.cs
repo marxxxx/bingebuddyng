@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Core.FriendsRequest.DTO;
 using MediatR;
 
-namespace BingeBuddyNg.Core.FriendsRequest.Querys
+namespace BingeBuddyNg.Core.User.Querys
 {
     public class GetPendingFriendsRequestsQuery : IRequest<List<FriendRequestDTO>>
     {

@@ -1,8 +1,7 @@
-﻿using System;
-using BingeBuddyNg.Core.User.Persistence;
-using Microsoft.WindowsAzure.Storage.Table;
+﻿using Microsoft.WindowsAzure.Storage.Table;
+using System;
 
-namespace BingeBuddyNg.Core.FriendsRequest.Persistence
+namespace BingeBuddyNg.Core.User.Persistence
 {
     public class FriendRequestEntity : TableEntity
     {

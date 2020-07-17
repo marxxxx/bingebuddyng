@@ -57,7 +57,7 @@ namespace BingeBuddyNg.Core.Activity
             }
 
             var userFeedResult = await this.storageAccessService.GetTableEntityAsync<ActivityTableEntity>(Constants.TableNames.ActivityUserFeed, userId, id);
-            if(userFeedResult != null)
+            if (userFeedResult != null)
             {
                 await storageAccessService.DeleteAsync(Constants.TableNames.ActivityUserFeed, userFeedResult);
             }
@@ -69,7 +69,6 @@ namespace BingeBuddyNg.Core.Activity
             var result = await this.storageAccessService.GetTableEntityAsync<ActivityTableEntity>(Constants.TableNames.ActivityPerUser, userId, rowKey);
             return result;
         }
-
 
         public async Task<Core.Activity.Domain.Activity> GetActivityAsync(string id)
         {
@@ -103,11 +102,11 @@ namespace BingeBuddyNg.Core.Activity
             await UpdateActivityAsync(activity);
 
             var userFeedResult = await this.storageAccessService.GetTableEntityAsync<ActivityTableEntity>(Constants.TableNames.ActivityUserFeed, userId, activity.Id);
-            if(userFeedResult != null)
+            if (userFeedResult != null)
             {
                 userFeedResult.Entity = activity;
                 await this.storageAccessService.ReplaceAsync(Constants.TableNames.ActivityUserFeed, userFeedResult);
-            }            
+            }
         }
 
         public async Task AddToActivityAddedTopicAsync(string activityId)

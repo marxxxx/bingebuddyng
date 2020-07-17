@@ -19,5 +19,6 @@ namespace BingeBuddyNg.Core.User.DTO
         public string Language { get; set; }
         public DateTime LastOnline { get; set; }
         public List<string> MutedFriendUserIds { get; set; }
+        public List<FriendRequestDTO> PendingFriendRequests { get; set; }
     }
 }
