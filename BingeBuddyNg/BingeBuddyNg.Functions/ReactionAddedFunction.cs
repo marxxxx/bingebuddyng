@@ -65,12 +65,21 @@ namespace BingeBuddyNg.Functions
             // now other ones (with likes and cheers)
             var involvedUserNotifications = activity.Cheers?.Select(c => new UserInfo(c.UserId, c.UserName))
                 .Union(activity.Likes?.Select(l => new UserInfo(l.UserId, l.UserName)))
-                .Union(activity.Comments?.Select(c=>new UserInfo(c.UserId, c.UserName)))
+                .Union(activity.Comments?.Select(c => new UserInfo(c.UserId, c.UserName)))
                 .Distinct()
                 .Where(u => u.UserId != activity.UserId && u.UserId != reactingUser.Id)
-                .Select(u => new ReactionNotification(u.UserId, reactionAddedMessage.ReactionType, reactingUser.Name, activity.UserName, false, url));
+                .ToList();
+            if (activity.Registration != null && activity.Registration.RegistrationUser != null)
+            {
+                involvedUserNotifications.Add(activity.Registration.RegistrationUser);
+            }
 
-            notifications.AddRange(involvedUserNotifications);
+            var involvedNotifications = involvedUserNotifications
+                .Select(u => new ReactionNotification(u.UserId, reactionAddedMessage.ReactionType, reactingUser.Name, activity.UserName, false, url))
+                .ToList();
+            
+
+            notifications.AddRange(involvedNotifications);
 
             await pushNotificationService.NotifyAsync(notifications);
         }
