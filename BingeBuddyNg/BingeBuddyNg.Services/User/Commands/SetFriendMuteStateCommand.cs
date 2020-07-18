@@ -28,7 +28,6 @@ namespace BingeBuddyNg.Core.User.Commands
             this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
-
         public async Task<Unit> Handle(SetFriendMuteStateCommand request, CancellationToken cancellationToken)
         {
             var user = await userRepository.GetUserAsync(request.UserId);

@@ -2,13 +2,9 @@
 {
     public class UpdateUserResponseDTO
     {
-        public bool IsWeightMissing { get; set; }
-        public bool IsGenderMissing { get; set; }
+        public bool IsWeightMissing { get; }
 
-        public UpdateUserResponseDTO()
-        {
-
-        }
+        public bool IsGenderMissing { get; }
 
         public UpdateUserResponseDTO(bool isWeightMissing, bool isGenderMissing)
         {

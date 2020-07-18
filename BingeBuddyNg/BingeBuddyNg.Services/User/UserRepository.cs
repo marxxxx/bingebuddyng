@@ -20,7 +20,7 @@ namespace BingeBuddyNg.Core.User
             this.cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
         }
 
-        public async Task<Core.User.Domain.User> GetUserAsync(string id)
+        public async Task<Domain.User> GetUserAsync(string id)
         {
             var result = await FindUserEntityAsync(id);
             if (result?.Entity == null)
@@ -28,14 +28,9 @@ namespace BingeBuddyNg.Core.User
                 throw new NotFoundException($"User {id} not found!");
             }
 
-            UserEntity user = null;
-            if (result != null)
-            {
-                user = result.Entity;
-                user.LastOnline = result.Timestamp.UtcDateTime;
-            }
+            UserEntity entity = result.Entity;
 
-            return new Core.User.Domain.User(user.Id, user.Name, user.Weight, user.Gender, user.ProfileImageUrl, user.PushInfo, user.Friends, user.MutedByFriendUserIds, user.MutedByFriendUserIds, user.MonitoringInstanceId, user.CurrentVenue?.ToDomain(), user.Language, user.LastOnline);
+            return new Domain.User(entity.Id, entity.Name, entity.Weight, entity.Gender, entity.ProfileImageUrl, entity.PushInfo, entity.Friends, entity.CurrentVenue?.ToDomain(), entity.Language, entity.LastOnline, entity.PendingFriendRequests, entity.Invitations);
         }
 
         private async Task<JsonTableEntity<UserEntity>> FindUserEntityAsync(string id)
@@ -66,6 +61,7 @@ namespace BingeBuddyNg.Core.User
                 profilePicHasChanged = savedUser.Entity.ProfileImageUrl != request.ProfileImageUrl;
                 nameHasChanged = savedUser.Entity.Name != request.Name;
 
+                savedUser.Entity.LastOnline = DateTime.UtcNow;
                 savedUser.Entity.Name = request.Name;
                 savedUser.Entity.ProfileImageUrl = request.ProfileImageUrl;
                 if (request.PushInfo != null && request.PushInfo.HasValue())

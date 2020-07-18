@@ -1,16 +1,15 @@
-import { StateService } from '../../services/state.service';
-import { ShellIconInfo } from '../../../../models/ShellIconInfo';
-import { FriendRequestDTO } from '../../../../models/FriendRequestDTO';
-import { FriendRequestService } from '../../services/friendrequest.service';
-import { ShellInteractionService } from '../../services/shell-interaction.service';
-import { AuthService } from '../../services/auth/auth.service';
 import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { MatSidenav } from '@angular/material/sidenav';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
-import { MatSidenav } from '@angular/material/sidenav';
-import { Router } from '@angular/router';
-import { UserProfile } from 'src/models/UserProfile';
+
+import { ShellInteractionService } from '../../services/shell-interaction.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { UserDTO } from 'src/models/UserDTO';
+import { ShellIconInfo } from '../../../../models/ShellIconInfo';
 
 @Component({
   selector: 'app-nav-shell',
@@ -20,20 +19,18 @@ import { UserProfile } from 'src/models/UserProfile';
 export class NavShellComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
-  private currentUserId: string;
-  friendRequests: FriendRequestDTO[] = [];
-
+  currentUser: UserDTO;
 
   @ViewChild(MatSidenav, { static: true })
   sideNav: MatSidenav;
 
   isHandset$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
-  constructor(private breakpointObserver: BreakpointObserver,
-    public auth: AuthService, public shellInteraction: ShellInteractionService,
-    private friendRequestService: FriendRequestService,
-    private router: Router,
-    private state: StateService) {
+  constructor(
+    public auth: AuthService,
+    public shellInteraction: ShellInteractionService,
+    private breakpointObserver: BreakpointObserver,
+    private router: Router) {
     this.breakpointObserver.observe(Breakpoints.Handset)
       .pipe(
         map(result => result.matches)
@@ -46,29 +43,15 @@ export class NavShellComponent implements OnInit, OnDestroy {
     const loggedInSubScription = this.auth.currentUserProfile$
       .pipe(filter(profile => profile != null))
       .subscribe(profile => {
-        this.currentUserId = profile.sub;
-        this.updateUserAndFriendRequests(profile);
+        this.currentUser = profile.user;
       });
 
-    // update pending friend requests if something changed in this area
-    const sub = this.state.pendingFriendRequestsChanged$.subscribe(p => this.updatePendingFriendRequests(this.currentUserId));
 
-    this.subscriptions.push(sub, loggedInSubScription);
-  }
-
-  updateUserAndFriendRequests(profile: UserProfile) {
-    this.updatePendingFriendRequests(profile.sub);
+    this.subscriptions.push(loggedInSubScription);
   }
 
   ngOnDestroy() {
     this.subscriptions.forEach(s => s.unsubscribe());
-  }
-
-
-  private updatePendingFriendRequests(currentUserId: string) {
-    this.friendRequestService.getPendingFriendRequests().subscribe(r => {
-      this.friendRequests = r.filter(f => f.requestingUser.userId !== currentUserId);
-    });
   }
 
   onLogout() {
@@ -86,5 +69,4 @@ export class NavShellComponent implements OnInit, OnDestroy {
       this.router.navigate([icon.link]);
     }
   }
-
 }

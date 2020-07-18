@@ -35,14 +35,11 @@ namespace BingeBuddyNg.Api
 
             services.AddMediatR(typeof(ActivityDTO).Assembly);
 
-            services.AddScoped<AddFriendCommand>();
             services.AddScoped<SearchUsersQuery>();
             services.AddScoped<GetAllUserIdsQuery>();
             services.AddScoped<GetStatisticsQuery>();
             services.AddScoped<GetPersonalUsagePerWeekdayQuery>();
             services.AddScoped<GetUserActivitiesQuery>();
-            services.AddScoped<DeleteActivityFromPersonalizedFeedCommand>();
-            services.AddScoped<DistributeActivityToPersonalizedFeedCommand>();
             services.AddScoped<GetMasterActivitiesQuery>();
             services.AddScoped<GetDrinksRankingQuery>();
             services.AddScoped<GetScoreRankingQuery>();
@@ -64,7 +61,6 @@ namespace BingeBuddyNg.Api
             // add domain services
             services.AddSingleton<IActivityRepository, ActivityRepository>();
             services.AddSingleton<IUserRepository, UserRepository>();
-            services.AddSingleton<IFriendRequestRepository, FriendRequestRepository>();
             services.AddSingleton<IInvitationRepository, InvitationRepository>();
 
             services.AddSingleton<IDrinkEventRepository, DrinkEventRepository>();

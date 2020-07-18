@@ -1,4 +1,4 @@
-import { VenueModel } from 'src/models/VenueModel';
+import { VenueDTO } from 'src/models/VenueDTO';
 import { DrinkType } from './DrinkType';
 import { Location } from './Location';
 import { ActivityType } from './ActivityType';
@@ -21,7 +21,7 @@ export class ActivityDTO {
     drinkCount?: number;
     alcLevel?: number;
     imageUrl?: string;
-    venue?: VenueModel;
+    venue?: VenueDTO;
     likes: ReactionDTO[];
     cheers: ReactionDTO[];
     comments: CommentReactionDTO[];

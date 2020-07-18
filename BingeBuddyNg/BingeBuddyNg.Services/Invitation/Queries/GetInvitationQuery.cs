@@ -10,12 +10,12 @@ namespace BingeBuddyNg.Core.Invitation.Querys
 {
     public class GetInvitationQuery : IRequest<InvitationDTO>
     {
-        public GetInvitationQuery(string invitationToken)
-        {
-            InvitationToken = invitationToken ?? throw new ArgumentNullException(nameof(invitationToken));
-        }
+        public Guid InvitationToken { get; }
 
-        public string InvitationToken { get; }
+        public GetInvitationQuery(Guid invitationToken)
+        {
+            InvitationToken = invitationToken;
+        }        
     }
 
     public class GetInvitationQueryHandler :

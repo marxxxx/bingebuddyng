@@ -15,14 +15,15 @@ namespace BingeBuddyNg.Core.Invitation.Commands
 {
     public class AcceptInvitationCommand : IRequest
     {
-        public AcceptInvitationCommand(string acceptingUserId, string invitationToken)
+        public string AcceptingUserId { get; }
+
+        public Guid InvitationToken { get; }
+
+        public AcceptInvitationCommand(string acceptingUserId, Guid invitationToken)
         {
             AcceptingUserId = acceptingUserId ?? throw new ArgumentNullException(nameof(acceptingUserId));
-            InvitationToken = invitationToken ?? throw new ArgumentNullException(nameof(invitationToken));
-        }
-
-        public string AcceptingUserId { get; }
-        public string InvitationToken { get; }
+            InvitationToken = invitationToken;
+        }        
     }
 
     public class AcceptInvitationCommandHandler : IRequestHandler<AcceptInvitationCommand>
@@ -35,7 +36,6 @@ namespace BingeBuddyNg.Core.Invitation.Commands
         private readonly IActivityRepository activityRepository;
         private readonly ITranslationService translationService;
         private readonly IncreaseScoreCommand increaseScoreCommand;
-        private readonly AddFriendCommand addFriendCommand;
 
         public AcceptInvitationCommandHandler(
             IInvitationRepository invitationRepository,
@@ -44,7 +44,6 @@ namespace BingeBuddyNg.Core.Invitation.Commands
             IActivityRepository activityRepository,
             ITranslationService translationService,
             IncreaseScoreCommand increaseScoreCommand,
-            AddFriendCommand addFriendCommand,
             ILogger<AcceptInvitationCommandHandler> logger)
         {
             this.invitationRepository = invitationRepository;
@@ -53,7 +52,6 @@ namespace BingeBuddyNg.Core.Invitation.Commands
             this.activityRepository = activityRepository;
             this.translationService = translationService;
             this.increaseScoreCommand = increaseScoreCommand;
-            this.addFriendCommand = addFriendCommand;
 
             this.logger = logger;
         }
@@ -68,7 +66,11 @@ namespace BingeBuddyNg.Core.Invitation.Commands
 
                 if (invitingUser != null && acceptingUser != null)
                 {
-                    await this.addFriendCommand.ExecuteAsync(invitingUser.Id, acceptingUser.Id);
+                    invitingUser.AcceptInvitation(request.InvitationToken, acceptingUser.ToUserInfo());
+                    acceptingUser.AddFriend(invitingUser.ToUserInfo());
+
+                    await userRepository.UpdateUserAsync(invitingUser.ToEntity());
+                    await userRepository.UpdateUserAsync(acceptingUser.ToEntity());
                 }
 
                 try

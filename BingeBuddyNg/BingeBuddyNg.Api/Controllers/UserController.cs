@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity.DTO;
+using BingeBuddyNg.Core.FriendsRequest.Commands;
 using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Commands;
@@ -65,9 +66,8 @@ namespace BingeBuddyNg.Api.Controllers
         [HttpPost("profile-image")]
         public async Task UpdateUserProfileImage(IFormFile file)
         {
-            var currentUserId = this.identityService.GetCurrentUserId();
-
-            await this.mediator.Send(new UpdateUserProfileImageCommand(currentUserId, file));
+            var userId = this.identityService.GetCurrentUserId();
+            await this.mediator.Send(new UpdateUserProfileImageCommand(userId, file));
         }
 
         [HttpDelete("{friendUserId}/removefriend")]
@@ -75,6 +75,27 @@ namespace BingeBuddyNg.Api.Controllers
         {
             var userId = identityService.GetCurrentUserId();
             await mediator.Send(new RemoveFriendCommand(userId, friendUserId));
+        }
+
+        [HttpPost("{friendUserId}/request")]
+        public async Task AddFriendRequest(string friendUserId)
+        {
+            var userId = identityService.GetCurrentUserId();
+            await mediator.Send(new AddFriendRequestCommand(userId, friendUserId));
+        }
+
+        [HttpPut("{friendUserId}/accept")]
+        public async Task AcceptFriendRequest(string friendUserId)
+        {
+            var userId = identityService.GetCurrentUserId();
+            await mediator.Send(new AcceptFriendRequestCommand(userId, friendUserId));
+        }
+
+        [HttpPut("{friendUserId}/decline")]
+        public async Task DeclineFriendRequest(string friendUserId)
+        {
+            var userId = identityService.GetCurrentUserId();
+            await mediator.Send(new DeclineFriendRequestCommand(userId, friendUserId));
         }
 
         [HttpPut("{friendUserId}/mute")]

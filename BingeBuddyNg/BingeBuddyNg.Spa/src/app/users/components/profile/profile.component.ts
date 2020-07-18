@@ -10,13 +10,13 @@ import { TranslocoService } from '@ngneat/transloco';
 import { CreateOrUpdateUserDTO } from 'src/models/CreateOrUpdateUserDTO';
 import { ProfileImageDialogComponent } from './../profile-image-dialog/profile-image-dialog.component';
 import { ShellInteractionService } from '../../../@core/services/shell-interaction.service';
-import { FriendRequestService } from '../../../@core/services/friendrequest.service';
 
 import { UserService } from '../../../@core/services/user.service';
 import { AuthService } from '../../../@core/services/auth/auth.service';
 import { UserDTO } from '../../../../models/UserDTO';
 import { ProfileImageDialogArgs } from '../profile-image-dialog/ProfileImageDialogArgs';
 import { ConfirmationDialogArgs } from 'src/app/@shared/components/confirmation-dialog/ConfirmationDialogArgs';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
@@ -29,6 +29,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   user: UserDTO;
   originalUserName: string;
   currentUserId: string;
+  currentUser: UserDTO;
   userId: string;
   hasPendingRequest = false;
   isBusy = false;
@@ -43,7 +44,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
-    private friendRequests: FriendRequestService,
     private auth: AuthService,
     private translate: TranslocoService,
     private snackBar: MatSnackBar,
@@ -55,9 +55,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.initFileUploader();
     const sub = combineLatest([this.route.paramMap, this.auth.currentUserProfile$.pipe(filter(p => p != null))])
       .subscribe(([paramMap, profile]) => {
-        console.log('got information for profile page', profile);
         this.userId = decodeURIComponent(paramMap.get('userId'));
         this.currentUserId = profile.sub;
+        this.currentUser = profile.user;
 
         this.load();
       });
@@ -101,7 +101,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
     console.log('loading user profile', this.userId);
     this.isBusy = true;
 
-    this.userService.getUser(this.userId).subscribe(
+    this.userService.getUser(this.userId)
+    .pipe(finalize(() => this.isBusy = false))
+    .subscribe(
       r => {
         console.log('got user information', r);
 
@@ -109,25 +111,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.originalUserName = r.name;
 
         if (!this.isYou()) {
-          this.friendRequests.hasPendingFriendRequests(this.userId).subscribe(
-            hasRequest => {
-              this.hasPendingRequest = hasRequest;
-              this.isBusy = false;
-            },
-            e => {
-              this.isBusy = false;
-              console.error('error retrieving pending friend request status');
-              console.error(e);
-            }
-          );
-        } else {
-          this.isBusy = false;
-          // TODO: clean up this messy code!
+          this.hasPendingRequest = this.currentUser.outgoingFriendRequests?.some(i=>i.user.userId == this.userId);
         }
+
       },
       e => {
         console.error(e);
-        this.isBusy = false;
         this.shellInteraction.showErrorMessage();
       }
     );
@@ -151,7 +140,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onAddFriend() {
     this.hasPendingRequest = true;
-    this.friendRequests.addFriendRequest(this.userId).subscribe(
+    this.userService.addFriendRequest(this.userId).subscribe(
       r => {
         const message = this.translate.translate('SentFriendRequest');
         this.snackBar.open(message, 'OK', { duration: 2000 });
@@ -181,23 +170,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   isMutedFriend(userId: string): boolean {
-    return this.user && this.user.mutedFriendUserIds && this.user.mutedFriendUserIds.indexOf(userId) >= 0;
+    return this.currentUser?.friends.some(f=>f.userId === userId && f.muted);
   }
 
   setFriendMuteState(userId: string, mute: boolean) {
-    if (this.user.mutedFriendUserIds == null) {
-      this.user.mutedFriendUserIds = [];
-    }
 
-    console.log(`setting friend mute state ${userId} - ${mute}`);
-    if (mute) {
-      this.user.mutedFriendUserIds.push(userId);
-    } else {
-      const index = this.user.mutedFriendUserIds.findIndex(u => u === userId);
-      if (index >= 0) {
-        this.user.mutedFriendUserIds.splice(index, 1);
-      }
-    }
+    this.currentUser.friends.find(f=>f.userId === userId).muted = mute;
 
     this.userService.setFriendMuteState(userId, mute).subscribe(
       r => console.log('finished'),

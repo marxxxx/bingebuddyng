@@ -13,13 +13,13 @@ namespace BingeBuddyNg.Functions
 {
     public class DrinkReminderFunction
     {
-        private readonly IUserRepository userRepository;
+        private readonly IMonitoringRepository monitoringRepository;
         private readonly PushNotificationService notificationService;
 
-        public DrinkReminderFunction(IUserRepository userRepository, PushNotificationService notificationService)
+        public DrinkReminderFunction(IMonitoringRepository monitoringRepository, PushNotificationService notificationService)
         {
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+            this.monitoringRepository = monitoringRepository;
+            this.notificationService = notificationService;
         }
 
         [FunctionName(nameof(DrinkReminderFunction))]
@@ -27,26 +27,19 @@ namespace BingeBuddyNg.Functions
         {
             log.LogInformation($"Running drink reminder function ...");
 
-            var user = context.GetInput<User>();
+            var userId = context.GetInput<string>();
 
-            log.LogInformation($"Got user {user} ");
+            log.LogInformation($"Got user {userId} ");
 
-            if (user.PushInfo == null)
-            {
-                user.UpdateMonitoringInstance(null);
-                await userRepository.UpdateUserAsync(user.ToEntity());
-                return;
-            }
+            await this.monitoringRepository.DeleteAsync(userId);
 
             log.LogInformation($"Waiting for next drink to occur.");
             await context.CreateTimer(DateTime.UtcNow.AddHours(1), CancellationToken.None);
 
-            var notification = new DrinkReminderNotification(user.Id);
+            var notification = new DrinkReminderNotification(userId);
             await notificationService.NotifyAsync(new[] { notification });
 
-            user.UpdateMonitoringInstance(null);
-            await userRepository.UpdateUserAsync(user.ToEntity());
-            log.LogInformation($"Terminating monitoring instance for user {user}");
+            log.LogInformation($"Terminating monitoring instance for user {userId}");
         }
     }
 }

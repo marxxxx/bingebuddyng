@@ -5,12 +5,13 @@ using CSharpFunctionalExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.User.Domain
 {
     public class User
     {
+        private const int MaxCurrentInvitations = 10;
+
         public string Id { get; }
         public string Name { get; }
         public int? Weight { get; }
@@ -21,10 +22,6 @@ namespace BingeBuddyNg.Core.User.Domain
         private List<UserInfo> _friends = new List<UserInfo>();
         public IReadOnlyList<UserInfo> Friends => _friends.AsReadOnly();
 
-        private List<string> _mutedFriendUserIds = new List<string>();
-        public IReadOnlyList<string> MutedFriendUserIds => _mutedFriendUserIds.AsReadOnly();
-
-        //public string MonitoringInstanceId { get; private set; }
         public Venue.Venue CurrentVenue { get; private set; }
         public string Language { get; private set; }
         public DateTime LastOnline { get; private set; }
@@ -32,7 +29,10 @@ namespace BingeBuddyNg.Core.User.Domain
         private List<FriendRequest> _pendingFriendRequests = new List<FriendRequest>();
         public IReadOnlyList<FriendRequest> PendingFriendRequests => _pendingFriendRequests.AsReadOnly();
 
-        public User(string id, string name, int? weight, Gender gender, string profileImageUrl, PushInfo pushInfo, List<UserInfo> friends, List<string> mutedFriendUserIds, Venue.Venue currentVenue, string language, DateTime lastOnline)
+        private List<Guid> _invitations = new List<Guid>();
+        public IReadOnlyList<Guid> Invitations => _invitations.AsReadOnly();
+
+        public User(string id, string name, int? weight, Gender gender, string profileImageUrl, PushInfo pushInfo, List<UserInfo> friends, Venue.Venue currentVenue, string language, DateTime lastOnline, List<FriendRequest> friendRequests, List<Guid> invitations)
         {
             this.Id = id ?? throw new ArgumentNullException(nameof(id));
             this.Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -41,10 +41,11 @@ namespace BingeBuddyNg.Core.User.Domain
             this.ProfileImageUrl = profileImageUrl;
             this.PushInfo = pushInfo;
             this._friends = friends ?? new List<UserInfo>();
-            this._mutedFriendUserIds = mutedFriendUserIds ?? new List<string>();
             this.CurrentVenue = currentVenue;
             this.Language = language ?? Constants.DefaultLanguage;
             this.LastOnline = lastOnline;
+            this._pendingFriendRequests = friendRequests ?? new List<FriendRequest>();
+            this._invitations = invitations ?? new List<Guid>();
         }
 
         public void EnterVenue(Venue.Venue venue)
@@ -62,43 +63,54 @@ namespace BingeBuddyNg.Core.User.Domain
             this.CurrentVenue = null;
         }
 
-        public List<string> GetVisibleFriendUserIds(bool includeMe = true)
+        public IReadOnlyList<string> GetVisibleFriendUserIds(bool includeMe = true)
         {
-            var visibleUserIds = Friends.Select(f => f.UserId).Except(MutedFriendUserIds);
+            var visibleUserIds = Friends.Where(f => !f.Muted).Select(f => f.UserId).ToList();
+            visibleUserIds.Add(Constants.BingeBuddyUser.Id);
             if (includeMe)
             {
-                visibleUserIds = visibleUserIds.Union(new[] { this.Id, BingeBuddyUser.Id });
+                visibleUserIds.Add(this.Id);
             }
-            return visibleUserIds.ToList();
+
+            return visibleUserIds.AsReadOnly();
         }
 
         public Result AcceptFriendRequest(UserInfo user)
         {
-            if(!PendingFriendRequests.Any(f=>f.User == user))
+            if (!PendingFriendRequests.Any(f => f.User.UserId == user.UserId))
             {
                 return Result.Failure($"No pending friend request for {user} found!");
             }
 
-            this._pendingFriendRequests.RemoveAll(p => p.User == user);
-
-            if (!Friends.Any(f => f.UserId == user.UserId))
-            {
-                _friends.Add(user);
-            }
+            this._pendingFriendRequests.RemoveAll(p => p.User.UserId == user.UserId);
+            AddFriend(user);
 
             return Result.Ok();
         }
 
         public Result DeclineFriendRequest(UserInfo user)
         {
-            if (!PendingFriendRequests.Any(f => f.User == user))
+            if (!PendingFriendRequests.Any(f => f.User.UserId == user.UserId))
             {
                 return Result.Failure($"No pending friend request for {user} found!");
             }
 
-            this._pendingFriendRequests.RemoveAll(p => p.User == user);
+            this._pendingFriendRequests.RemoveAll(p => p.User.UserId == user.UserId);
             return Result.Ok();
         }
+
+        /// <summary>
+        /// TODO: This method should not be exposed as public method -> find another way to connect friends by accepting invitations
+        /// </summary>
+        /// <param name="user"></param>
+        public void AddFriend(UserInfo user)
+        {
+            if (!Friends.Any(f => f.UserId == user.UserId))
+            {
+                _friends.Add(user);
+            }
+        }
+
 
         public void RemoveFriend(string userId)
         {
@@ -111,37 +123,33 @@ namespace BingeBuddyNg.Core.User.Domain
 
         public Result MuteFriend(string friendUserId)
         {
-            if (!this.Friends.Any(f => f.UserId == friendUserId))
+            var friend = this.Friends.FirstOrDefault(f => f.UserId == friendUserId);
+            if (friend == null)
             {
                 Result.Failure($"Friend with id {friendUserId} was not found!");
             }
 
-            if (!this.MutedFriendUserIds.Contains(friendUserId))
-            {
-                this._mutedFriendUserIds.Add(friendUserId);
-            }
+            friend.Muted = true;
 
             return Result.Ok();
         }
 
         public Result UnmuteFriend(string friendUserId)
         {
-            if (!this.Friends.Any(f => f.UserId == friendUserId))
+            var friend = this.Friends.FirstOrDefault(f => f.UserId == friendUserId);
+            if (friend == null)
             {
                 Result.Failure($"Friend with id {friendUserId} was not found!");
             }
 
-            if (this.MutedFriendUserIds.Contains(friendUserId))
-            {
-                this._mutedFriendUserIds.Remove(friendUserId);
-            }
+            friend.Muted = false;
 
             return Result.Ok();
         }
 
         public Result AddFriendRequest(FriendRequest friendRequest)
         {
-            var existingRequest = PendingFriendRequests.FirstOrDefault(f => f.User == friendRequest.User);
+            var existingRequest = PendingFriendRequests.FirstOrDefault(f => f.User.UserId == friendRequest.User.UserId);
             if(existingRequest == null)
             {
                 _pendingFriendRequests.Add(friendRequest);
@@ -154,10 +162,29 @@ namespace BingeBuddyNg.Core.User.Domain
             return Result.Ok();
         }
 
-        //public void UpdateMonitoringInstance(string instanceId)
-        //{
-        //    this.MonitoringInstanceId = instanceId;
-        //}
+        public Guid IssueInvitation()
+        {
+            var invitationToken = Guid.NewGuid();
+            
+            if(this.Invitations.Count > MaxCurrentInvitations - 1)
+            {
+                this._invitations = new List<Guid>(this.Invitations.Skip(this.Invitations.Count - MaxCurrentInvitations + 1));
+                this._invitations.Add(invitationToken);
+            }
+
+            return invitationToken;
+        }
+
+        public Result AcceptInvitation(Guid invitation, UserInfo user)
+        {
+            if(!this.Invitations.Contains(invitation))
+            {
+                return Result.Failure("Invitation token unknown or expired!");
+            }
+
+            AddFriend(user);
+            return Result.Ok();
+        }
 
         public override string ToString()
         {

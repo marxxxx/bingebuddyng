@@ -18,7 +18,7 @@ namespace BingeBuddyNg.Functions
     {
         public static void AddBingeBuddy(this IServiceCollection services)
         {
-            // Domain Services
+            // Services
             services.AddScoped<IActivityRepository, ActivityRepository>();
             services.AddUser();
             services.AddScoped<CalculationService>();
@@ -28,8 +28,6 @@ namespace BingeBuddyNg.Functions
             services.AddScoped<UpdateRankingCommand>();
             services.AddScoped<UpdateStatisticsCommand>();
             services.AddScoped<IncreaseScoreCommand>();
-            services.AddScoped<DeleteActivityFromPersonalizedFeedCommand>();
-            services.AddScoped<DistributeActivityToPersonalizedFeedCommand>();
             services.AddScoped<GetUserActivitiesQuery>();
 
             // Infrastructure
@@ -39,7 +37,8 @@ namespace BingeBuddyNg.Functions
             services.AddUtility();
             services.AddStorage();
             services.AddEventGrid();
-
+            
+            services.AddScoped<IMonitoringRepository, MonitoringRepository>();
             services.AddScoped<ICacheService, NoCacheService>();
             services.AddSingleton<ITranslationService, TranslationService>();
             services.AddScoped<IAddressDecodingService, AddressDecodingService>();

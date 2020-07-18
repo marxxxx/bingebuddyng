@@ -1,6 +1,6 @@
 import { VenueService } from '../../services/venue.service';
 import { Component, OnInit, Inject } from '@angular/core';
-import { VenueModel } from 'src/models/VenueModel';
+import { VenueDTO } from 'src/models/VenueDTO';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { VenueDialogArgs } from './VenueDialogArgs';
 import { VenueDialogMode } from './VenueDialogMode';
@@ -14,8 +14,8 @@ import { VenueDialogResult } from './VenueDialogResult';
 export class VenueDialogComponent implements OnInit {
 
   isBusy = false;
-  venues: VenueModel[];
-  selectedVenue: VenueModel;
+  venues: VenueDTO[];
+  selectedVenue: VenueDTO;
 
   VenueDialogMode = VenueDialogMode;
 

@@ -50,8 +50,8 @@
         <!-- Drink Event counter-->
         <app-drink-event-counter></app-drink-event-counter>
         <!-- Friendsrequests -->
-        <button mat-icon-button *ngIf="friendRequests.length > 0" routerLink="/users/friendrequests">
-          <mat-icon [matBadge]="friendRequests.length" matBadgeColor="warn">sentiment_satisfied_alt</mat-icon>
+        <button mat-icon-button *ngIf="currentUser?.incomingFriendRequests.length > 0" routerLink="/users/friendrequests">
+          <mat-icon [matBadge]="currentUser.incomingFriendRequests.length" matBadgeColor="warn">sentiment_satisfied_alt</mat-icon>
         </button>
 
         <app-me></app-me>

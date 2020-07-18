@@ -15,6 +15,7 @@ namespace BingeBuddyNg.Infrastructure
 {
     public class StorageAccessService : IStorageAccessService
     {
+        private const int MaxQueryLimit = 250;
         private readonly StorageConfiguration config;
         private readonly TableRequestOptions DefaultRequestOptions = new TableRequestOptions() { RetryPolicy = new LinearRetry(TimeSpan.FromSeconds(1), 3) };
 
@@ -74,7 +75,7 @@ namespace BingeBuddyNg.Infrastructure
 
             do
             {
-                var result = await QueryTableAsync<T>(tableName, whereClause, 250, continuationToken);
+                var result = await QueryTableAsync<T>(tableName, whereClause, MaxQueryLimit, continuationToken);
 
                 resultList.AddRange(result.ResultPage);
                 continuationToken = result.ContinuationToken?.ToContinuationToken();
