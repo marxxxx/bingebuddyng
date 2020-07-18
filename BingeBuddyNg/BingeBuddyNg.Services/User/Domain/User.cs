@@ -66,7 +66,6 @@ namespace BingeBuddyNg.Core.User.Domain
         public IReadOnlyList<string> GetVisibleFriendUserIds(bool includeMe = true)
         {
             var visibleUserIds = Friends.Where(f => !f.Muted).Select(f => f.UserId).ToList();
-            visibleUserIds.Add(Constants.BingeBuddyUser.Id);
             if (includeMe)
             {
                 visibleUserIds.Add(this.Id);

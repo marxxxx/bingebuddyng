@@ -23,15 +23,17 @@ namespace BingeBuddyNg.Api.Controllers
         private readonly IIdentityService identityService;
         private readonly IMediator mediator;
         private readonly GetMasterActivitiesQuery getMasterActivitiesQuery;
+        private readonly IActivityRepository activityRepository;
 
         public ActivityController(
             IIdentityService identityService,
             IMediator mediator,
-            GetMasterActivitiesQuery getMasterActivitiesQuery)
+            GetMasterActivitiesQuery getMasterActivitiesQuery, IActivityRepository activityRepository)
         {
             this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.getMasterActivitiesQuery = getMasterActivitiesQuery ?? throw new ArgumentNullException(nameof(getMasterActivitiesQuery));
+            this.activityRepository = activityRepository;
         }
 
         [HttpGet("map")]
