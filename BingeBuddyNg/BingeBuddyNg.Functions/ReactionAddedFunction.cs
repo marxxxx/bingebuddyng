@@ -67,10 +67,6 @@ namespace BingeBuddyNg.Functions
                 .Distinct()
                 .Where(u => u.UserId != activity.UserId && u.UserId != reactingUser.Id)
                 .ToList();
-            if (activity.Registration != null && activity.Registration.RegistrationUser != null)
-            {
-                involvedUserNotifications.Add(activity.Registration.RegistrationUser);
-            }
 
             var involvedNotifications = involvedUserNotifications
                 .Select(u => new ReactionNotification(u.UserId, reactionAddedMessage.ReactionType, reactingUser.Name, activity.UserName, false, url))
