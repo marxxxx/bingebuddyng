@@ -1,19 +1,19 @@
 <app-progress-spinner *ngIf="isBusy"></app-progress-spinner>
 
 <h3>{{'PendingFriendRequests' | transloco }}</h3>
-<mat-card *ngFor="let r of pendingRequests">
+<mat-card *ngFor="let r of currentUser?.incomingFriendRequests">
 
   <mat-card-content fxLayout fxLayoutAlign="space-between center">
-    <app-user-info [userInfo]="r" [showName]="true"></app-user-info>
+    <app-user-info [userInfo]="r.user" [showName]="true"></app-user-info>
     <div>
-      <button mat-icon-button color="primary" (click)="onAccept(r)"><mat-icon>check</mat-icon></button>
-      <button mat-icon-button color="accent" (click)="onDecline(r)"><mat-icon>close</mat-icon></button>
+      <button mat-icon-button color="primary" (click)="onAccept(r.user)"><mat-icon>check</mat-icon></button>
+      <button mat-icon-button color="accent" (click)="onDecline(r.user)"><mat-icon>close</mat-icon></button>
     </div>
   </mat-card-content>
 
 </mat-card>
 
-<p *ngIf="pendingRequests.length == 0 && !isBusy" fxLayout fxLayoutAlign="start center">
+<p *ngIf="!currentUser?.incomingFriendRequests?.length && !isBusy" fxLayout fxLayoutAlign="start center">
   <mat-icon>warning</mat-icon>{{'NoPendingFriendRequests' | transloco}}
 </p>
 

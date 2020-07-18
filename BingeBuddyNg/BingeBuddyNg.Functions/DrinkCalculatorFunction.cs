@@ -19,8 +19,7 @@ namespace BingeBuddyNg.Functions
         }
 
         [FunctionName(nameof(DrinkCalculatorFunction))]
-        public async Task Run([TimerTrigger("0 */15 * * * *")]TimerInfo myTimer,
-            ILogger log)
+        public async Task Run([TimerTrigger("0 */15 * * * *")]TimerInfo myTimer, ILogger log)
         {
             var users = await getUsersQuery.ExecuteAsync();
 

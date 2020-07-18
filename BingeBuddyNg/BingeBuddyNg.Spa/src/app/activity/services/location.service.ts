@@ -1,6 +1,6 @@
 import { VenueService } from './venue.service';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
-import { VenueModel } from '../../../models/VenueModel';
+import { VenueDTO } from '../../../models/VenueDTO';
 import { Location } from 'src/models/Location';
 import { Injectable } from '@angular/core';
 
@@ -16,12 +16,12 @@ export class LocationService {
   currentLocation$ = new BehaviorSubject<Location>(null);
   locationChanged$ = new Subject();
 
-  currentVenue: VenueModel;
+  currentVenue: VenueDTO;
 
   constructor(private venueService: VenueService) { }
 
 
-  refreshLocation(currentVenue: VenueModel) {
+  refreshLocation(currentVenue: VenueDTO) {
     this.previousLocation = this.loadCurrentLocation();
     console.log('refreshing location');
     this.getLocation().then(l => {
@@ -38,7 +38,7 @@ export class LocationService {
     });
   }
 
-  setCurrentVenue(venue: VenueModel): Observable<{}> {
+  setCurrentVenue(venue: VenueDTO): Observable<{}> {
     this.currentVenue = venue;
     this.refreshLocation(venue);
 
@@ -52,11 +52,11 @@ export class LocationService {
   }
 
 
-  getCurrentVenue(): VenueModel {
+  getCurrentVenue(): VenueDTO {
     return this.currentVenue;
   }
 
-  hasVenueLocationChanged(previousLocation: Location, currentLocation: Location, currentVenue: VenueModel): boolean {
+  hasVenueLocationChanged(previousLocation: Location, currentLocation: Location, currentVenue: VenueDTO): boolean {
 
     if (!currentVenue) {
       return false;

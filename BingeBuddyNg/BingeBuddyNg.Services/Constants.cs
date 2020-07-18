@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BingeBuddyNg.Shared
+﻿namespace BingeBuddyNg.Shared
 {
     public static class Constants
     {
@@ -24,7 +22,7 @@ namespace BingeBuddyNg.Shared
         }
 
         public static class TableNames
-        {            
+        {
             public const string Activity = "activity";
             public const string ActivityPerUser = "activityperuser";
             public const string ActivityUserFeed = "activityuserfeed";
@@ -34,6 +32,7 @@ namespace BingeBuddyNg.Shared
             public const string Reports = "reports";
             public const string Invitations = "invitations";
             public const string DrinkEvents = "drinkevents";
+            public const string Monitoring = "monitoring";
         }
 
         public static class StaticPartitionKeys

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
-import { VenueModel } from '../../../models/VenueModel';
+import { VenueDTO } from '../../../models/VenueDTO';
 
 @Injectable({providedIn: 'root'})
 export class VenueService {
@@ -12,12 +12,12 @@ export class VenueService {
 
   constructor(private http: HttpClient) { }
 
-  searchVenues(location: Location): Observable<VenueModel[]> {
+  searchVenues(location: Location): Observable<VenueDTO[]> {
     const url = `${this.baseUrl}?latitude=${location.latitude}&longitude=${location.longitude}`;
-    return this.http.get<VenueModel[]>(url);
+    return this.http.get<VenueDTO[]>(url);
   }
 
-  updateCurrentVenue(venue: VenueModel): Observable<{}> {
+  updateCurrentVenue(venue: VenueDTO): Observable<{}> {
     const url = `${this.baseUrl}/update-current`;
     return this.http.post(url, venue);
   }

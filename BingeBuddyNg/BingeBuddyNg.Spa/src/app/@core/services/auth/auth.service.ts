@@ -9,13 +9,12 @@ import { UserService } from 'src/app/@core/services/user.service';
 import { UserProfile } from '../../../../models/UserProfile';
 import { SettingsService } from '../settings.service';
 import { ProfileInfoResult } from './ProfileInfoResult';
-
+import { StateService } from '../state.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   private userProfile: UserProfile;
   refreshSubscription: Subscription;
 
@@ -23,14 +22,13 @@ export class AuthService {
   readonly tokenStorageKey = 'token';
   readonly expiresAtStorageKey = 'expires_at';
 
-
   auth0 = new auth0.WebAuth({
     clientID: '97ShzYXlNSZRiRgoiTR5Ui1JyDs8KxcY',
     domain: 'bingebuddy.eu.auth0.com',
     responseType: 'token id_token',
     audience: 'https://bingebuddyngapi',
     redirectUri: location.protocol + '//' + location.host + '/callback',
-    scope: 'openid profile'
+    scope: 'openid profile',
   });
 
   private isLoggedInSource: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -39,19 +37,21 @@ export class AuthService {
   private currentUserProfileSource: BehaviorSubject<UserProfile> = new BehaviorSubject<UserProfile>(null);
   currentUserProfile$ = this.currentUserProfileSource.asObservable();
 
-  constructor(public router: Router, private userService: UserService, private settings: SettingsService) { }
+  constructor(private router: Router, private userService: UserService, private settings: SettingsService, private state: StateService) {
+    this.state.pendingFriendRequestsChanged$.subscribe(() => {
+      this.onFriendRequestsChanged();
+    });
+  }
 
   public login(): void {
     this.auth0.authorize();
   }
 
   public handleAuthentication(returnUrl?: string): Promise<void> {
-
     const promise = new Promise<void>((resolve, reject) => {
-
       console.log('handling authentication', returnUrl);
-      const successRoute = (returnUrl != null && returnUrl !== '/callback') ? returnUrl :
-        this.settings.getIsOnboarded() ? returnUrl : '/onboarding';
+      const successRoute =
+        returnUrl != null && returnUrl !== '/callback' ? returnUrl : this.settings.getIsOnboarded() ? returnUrl : '/onboarding';
       returnUrl = returnUrl || '/';
 
       this.auth0.parseHash(async (err, authResult) => {
@@ -92,7 +92,6 @@ export class AuthService {
   }
 
   public getProfile(): Promise<ProfileInfoResult> {
-
     const promise = new Promise<ProfileInfoResult>((resolve, reject) => {
       if (this.userProfile) {
         resolve(new ProfileInfoResult(this.userProfile, true));
@@ -109,15 +108,18 @@ export class AuthService {
       this.auth0.client.userInfo(accessToken, (err, profile) => {
         if (profile) {
           self.userProfile = profile;
-          this.userService.getUser(profile.sub).subscribe(u => {
-            profile.nickname = u.name;
-            profile.name = u.name;
-            profile.user = u;
-            resolve(new ProfileInfoResult(profile, true));
-          }, e => {
-            console.log('AuthService: user authenticated but not yet registered.', profile, e);
-            resolve(new ProfileInfoResult(profile, false));
-          });
+          this.userService.getUser(profile.sub).subscribe(
+            (u) => {
+              profile.nickname = u.name;
+              profile.name = u.name;
+              profile.user = u;
+              resolve(new ProfileInfoResult(profile, true));
+            },
+            (e) => {
+              console.log('AuthService: user authenticated but not yet registered.', profile, e);
+              resolve(new ProfileInfoResult(profile, false));
+            }
+          );
         } else {
           reject(err);
         }
@@ -131,7 +133,7 @@ export class AuthService {
     console.log('Setting session');
     console.log(authResult);
     // Set the time that the Access Token will expire at
-    const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
+    const expiresAt = JSON.stringify(authResult.expiresIn * 1000 + new Date().getTime());
     localStorage.setItem('access_token', authResult.accessToken);
     localStorage.setItem('id_token', authResult.idToken);
     localStorage.setItem('expires_at', expiresAt);
@@ -139,7 +141,6 @@ export class AuthService {
 
   public checkAuthenticated(): Promise<boolean> {
     const promise = new Promise<boolean>(async (resolve, reject) => {
-
       const isAuth = this.isAuthenticated();
       if (!isAuth) {
         resolve(false);
@@ -154,22 +155,25 @@ export class AuthService {
           result.profile.nickname,
           result.profile.picture,
           null,
-          this.settings.getLanguage());
-        this.userService.createOrUpdateUser(user).subscribe(() => {
-          console.log('registered user');
-          this.currentUserProfileSource.next(result.profile);
-          this.isLoggedInSource.next(true);
-          resolve(true);
-        }, (e) => {
-          console.error('Failed to register user', e);
-          reject(e);
-        });
+          this.settings.getLanguage()
+        );
+        this.userService.createOrUpdateUser(user).subscribe(
+          () => {
+            console.log('registered user');
+            this.currentUserProfileSource.next(result.profile);
+            this.isLoggedInSource.next(true);
+            resolve(true);
+          },
+          (e) => {
+            console.error('Failed to register user', e);
+            reject(e);
+          }
+        );
       } else {
         this.currentUserProfileSource.next(result.profile);
         this.isLoggedInSource.next(true);
         resolve(true);
       }
-
     });
 
     return promise;
@@ -225,25 +229,21 @@ export class AuthService {
     const expiresAt = this.getExpiresAt();
 
     const expiresIn$ = of(expiresAt).pipe(
-      mergeMap(
-        x => {
-          const now = Date.now();
-          // Use timer to track delay until expiration
-          // to run the refresh at the proper time
-          return timer(Math.max(1, x - now));
-        }
-      )
+      mergeMap((x) => {
+        const now = Date.now();
+        // Use timer to track delay until expiration
+        // to run the refresh at the proper time
+        return timer(Math.max(1, x - now));
+      })
     );
 
     // Once the delay time from above is
     // reached, get a new JWT and schedule
     // additional refreshes
-    this.refreshSubscription = expiresIn$.subscribe(
-      () => {
-        this.renewTokens();
-        this.scheduleRenewal();
-      }
-    );
+    this.refreshSubscription = expiresIn$.subscribe(() => {
+      this.renewTokens();
+      this.scheduleRenewal();
+    });
   }
 
   public unscheduleRenewal() {
@@ -259,7 +259,6 @@ export class AuthService {
   }
 
   handleTokenRefresh(): void {
-
     if (this.getAccessToken() != null) {
       console.log('AuthService: Handling token refresh');
 
@@ -274,5 +273,13 @@ export class AuthService {
     } else {
       console.warn('AuthService: Token expiration handling in progress');
     }
+  }
+
+  private onFriendRequestsChanged() {
+    this.userService.getUser(this.currentUserProfileSource.value.sub).subscribe((u) => {
+      const clonedUser = JSON.parse(JSON.stringify(this.currentUserProfileSource.value));
+      clonedUser.user = u;
+      this.currentUserProfileSource.next(clonedUser);
+    });
   }
 }

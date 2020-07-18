@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.Commands;
 using BingeBuddyNg.Core.Activity.Persistence;
 using BingeBuddyNg.Core.Activity.Queries;
@@ -16,26 +17,19 @@ namespace BingeBuddyNg.Functions
     public class FriendStatusChangedFunction
     {
         private readonly GetUserActivitiesQuery getUserActivitiesQuery;
-        private readonly DistributeActivityToPersonalizedFeedCommand distributeActivityToPersonalizedFeedCommand;
-        private readonly DeleteActivityFromPersonalizedFeedCommand deleteActivityFromPersonalizedFeedCommand;
+        private readonly IActivityRepository activityRepository;
 
         public FriendStatusChangedFunction(
             GetUserActivitiesQuery getUserActivitiesQuery, 
-            DistributeActivityToPersonalizedFeedCommand distributeActivityToPersonalizedFeedCommand,
-            DeleteActivityFromPersonalizedFeedCommand deleteActivityFromPersonalizedFeedCommand)
+            IActivityRepository activityRepository)
         {
             this.getUserActivitiesQuery = getUserActivitiesQuery;
-            this.distributeActivityToPersonalizedFeedCommand = distributeActivityToPersonalizedFeedCommand;
-            this.deleteActivityFromPersonalizedFeedCommand = deleteActivityFromPersonalizedFeedCommand;
+            this.activityRepository = activityRepository;
         }
 
         [FunctionName(nameof(FriendStatusChangedFunction))]
-        public async Task Run([QueueTrigger(QueueNames.FriendStatusChanged, Connection = "AzureWebJobsStorage")] string myQueueItem, ILogger log)
+        public async Task Run([QueueTrigger(QueueNames.FriendStatusChanged, Connection = "AzureWebJobsStorage")] FriendStatusChangedMessage message, ILogger log)
         {
-            log.LogInformation($"Updating personalized feeds as a result of a friendship status change: {myQueueItem}");
-
-            var message = JsonConvert.DeserializeObject<FriendStatusChangedMessage>(myQueueItem);
-
             var startTime = DateTime.UtcNow.Subtract(TimeSpan.FromDays(30));
             var userActivities = await getUserActivitiesQuery.ExecuteAsync(message.UserId, startTime);
             var friendActivities = await getUserActivitiesQuery.ExecuteAsync(message.FriendUserId, startTime);
@@ -56,14 +50,14 @@ namespace BingeBuddyNg.Functions
                     }
             }
 
-            log.LogInformation($"Successfully updated personalized feeds as a result of a friendship status change: {myQueueItem}");
+            log.LogInformation($"Successfully updated personalized feeds as a result of a friendship status change: {message}");
         }
 
         private async Task ImportActivities(string userId, IEnumerable<ActivityEntity> activities)
         {
             foreach (var a in activities)
             {
-                await this.distributeActivityToPersonalizedFeedCommand.ExecuteAsync(new[] { userId }, a);
+                await this.activityRepository.AddToPersonalizedFeedAsync(userId, a);
             }
         }
 
@@ -71,7 +65,7 @@ namespace BingeBuddyNg.Functions
         {
             foreach (var id in activityIds)
             {
-                await this.deleteActivityFromPersonalizedFeedCommand.ExecuteAsync(userId, id);
+                await this.activityRepository.DeleteFromPersonalizedFeedAsync(userId, id);
             }
         }
     }

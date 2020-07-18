@@ -151,10 +151,10 @@ namespace BingeBuddyNg.Core.Activity.Domain
             return activity;
         }
 
-        public static Activity CreateRegistrationActivity(string userId, string userName, UserInfo registrationUser)
+        public static Activity CreateRegistrationActivity(string userId, string userName)
         {
             var timestamp = DateTime.UtcNow;
-            return CreateRegistrationActivity(ActivityKeyFactory.CreateRowKey(timestamp, userId), timestamp, userId, userName, registrationUser);
+            return CreateRegistrationActivity(ActivityKeyFactory.CreateRowKey(timestamp, userId), timestamp, userId, userName, new UserInfo(userId, userName));
         }
 
         public static Activity CreateRegistrationActivity(string id, DateTime timestamp, string userId, string userName, UserInfo registrationUser)

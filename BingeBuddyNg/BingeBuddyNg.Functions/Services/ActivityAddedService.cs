@@ -24,6 +24,7 @@ namespace BingeBuddyNg.Functions.Services
         private readonly IActivityRepository activityRepository;
         private readonly IUserRepository userRepository;
         private readonly INotificationService notificationService;
+        private readonly IMonitoringRepository monitoringRepository;
         private readonly UpdateRankingCommand updateRankingCommand;
         private readonly UpdateStatisticsCommand updateStatisticsCommand;
         private readonly ActivityDistributionService activityDistributionService;
@@ -36,6 +37,7 @@ namespace BingeBuddyNg.Functions.Services
             IActivityRepository activityRepository,
             IUserRepository userRepository,
             INotificationService notificationService,
+            IMonitoringRepository monitoringRepository,
             UpdateRankingCommand updateRankingCommand,
             UpdateStatisticsCommand updateStatisticsCommand,
             ActivityDistributionService activityDistributionService,
@@ -47,6 +49,7 @@ namespace BingeBuddyNg.Functions.Services
             this.activityRepository = activityRepository;
             this.userRepository = userRepository;
             this.notificationService = notificationService;
+            this.monitoringRepository = monitoringRepository;
             this.updateRankingCommand = updateRankingCommand;
             this.updateStatisticsCommand = updateStatisticsCommand;
             this.activityDistributionService = activityDistributionService;
@@ -64,13 +67,13 @@ namespace BingeBuddyNg.Functions.Services
             var currentUser = await userRepository.GetUserAsync(activity.UserId);
 
             try
-            {                
-                if (activity.ActivityType == ActivityType.Drink)
+            {
+                // Notifying user makes only sense when he provided push infos
+                if (activity.ActivityType == ActivityType.Drink && currentUser.PushInfo != null)
                 {
-                    await HandleMonitoringAsync(durableClient, currentUser);
+                    await HandleMonitoringAsync(durableClient, currentUser.Id);
                 }
 
-                
                 bool shouldUpdate = false;
                 UserStatistics userStats = null;
                 try
@@ -79,7 +82,7 @@ namespace BingeBuddyNg.Functions.Services
                     userStats = await updateStatisticsCommand.ExecuteAsync(currentUser.Id, currentUser.Gender, currentUser.Weight);
 
                     if (activity.ActivityType == ActivityType.Drink)
-                    {   
+                    {
                         await updateRankingCommand.ExecuteAsync(currentUser.Id);
 
                         activity.UpdateStats(userStats.CurrentNightDrinks, userStats.CurrentAlcoholization);
@@ -112,10 +115,10 @@ namespace BingeBuddyNg.Functions.Services
                 // check for drink events
                 try
                 {
-                    if(activity.ActivityType == ActivityType.Drink)
+                    if (activity.ActivityType == ActivityType.Drink)
                     {
                         await this.drinkEventHandlingService.HandleDrinkEventsAsync(activity, currentUser);
-                    }                    
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -135,19 +138,19 @@ namespace BingeBuddyNg.Functions.Services
             }
         }
 
-        private async Task HandleMonitoringAsync(IDurableOrchestrationClient durableClient, User currentUser)
+        private async Task HandleMonitoringAsync(IDurableOrchestrationClient durableClient, string currentUserId)
         {
             try
             {
-                if (currentUser.MonitoringInstanceId != null)
+                var entity = await this.monitoringRepository.FindAsync(currentUserId);
+                if (entity != null && entity.MonitoringInstanceId != null)
                 {
-                    await durableClient.TerminateAsync(currentUser.MonitoringInstanceId, "Drank early enough.");
+                    await durableClient.TerminateAsync(entity.MonitoringInstanceId, "Drank early enough.");
                 }
 
                 // Start timer to remind user about entering his next drink.
-                var monitoringInstanceId = await durableClient.StartNewAsync(nameof(DrinkReminderFunction), currentUser);
-                currentUser.UpdateMonitoringInstance(monitoringInstanceId);
-                await userRepository.UpdateUserAsync(currentUser.ToEntity());
+                var monitoringInstanceId = await durableClient.StartNewAsync(nameof(DrinkReminderFunction), currentUserId);
+                await this.monitoringRepository.SaveAsync(currentUserId, monitoringInstanceId);
             }
             catch (Exception ex)
             {

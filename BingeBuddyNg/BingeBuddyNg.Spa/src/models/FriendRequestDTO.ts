@@ -1,5 +1,9 @@
 import { UserInfoDTO } from './UserInfoDTO';
+import { FriendRequestDirection } from './FriendRequestDirection';
 export class FriendRequestDTO {
-    requestingUser: UserInfoDTO;
-    friendUser: UserInfoDTO;
+  requestTimestamp: any;
+
+  user: UserInfoDTO;
+
+  direction: FriendRequestDirection;
 }

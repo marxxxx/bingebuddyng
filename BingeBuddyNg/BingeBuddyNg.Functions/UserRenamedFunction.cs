@@ -1,11 +1,10 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Messages;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Functions
@@ -20,10 +19,8 @@ namespace BingeBuddyNg.Functions
         }
 
         [FunctionName(nameof(UserRenamedFunction))]
-        public async Task Run([QueueTrigger(QueueNames.UserRenamed, Connection = "AzureWebJobsStorage")] string message, ILogger log)
+        public async Task Run([QueueTrigger(QueueNames.UserRenamed, Connection = "AzureWebJobsStorage")] UserRenamedMessage userRenamedMessage, ILogger log)
         {
-            var userRenamedMessage = JsonConvert.DeserializeObject<UserRenamedMessage>(message);
-
             var user = await this.userRepository.GetUserAsync(userRenamedMessage.UserId);
 
             foreach (var friendUserInfo in user.Friends)

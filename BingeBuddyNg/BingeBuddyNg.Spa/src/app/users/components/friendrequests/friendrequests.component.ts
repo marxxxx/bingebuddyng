@@ -6,7 +6,8 @@ import { filter, map } from 'rxjs/operators';
 import { StateService } from '../../../@core/services/state.service';
 import { AuthService } from '../../../@core/services/auth/auth.service';
 import { UserInfoDTO } from '../../../../models/UserInfoDTO';
-import { FriendRequestService } from '../../../@core/services/friendrequest.service';
+import { UserService } from 'src/app/@core/services/user.service';
+import { UserDTO } from 'src/models/UserDTO';
 
 @Component({
   selector: 'app-friendrequests',
@@ -16,23 +17,23 @@ import { FriendRequestService } from '../../../@core/services/friendrequest.serv
 export class FriendrequestsComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
-  private currentUserId: string;
-  pendingRequests: UserInfoDTO[] = [];
+  currentUser: UserDTO;
   isBusy = false;
 
-  constructor(private route: ActivatedRoute, private friendRequest: FriendRequestService,
+  constructor(
+    private userService: UserService,
     private state: StateService,
-    private auth: AuthService) { }
+    private auth: AuthService,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
 
-    // get current user id
+    // get current user
     const sub = combineLatest([
-      this.auth.currentUserProfile$.pipe(filter(p => p != null)).pipe(map(p => p.sub)),
+      this.auth.currentUserProfile$.pipe(filter(p => p != null)).pipe(map(p => p.user)),
       this.route.paramMap
-    ]).subscribe(r => {
-      this.currentUserId = r[0];
-      this.load();
+    ]).subscribe(([user, _]) => {
+      this.currentUser = user;
     });
 
     this.subscriptions.push(sub);
@@ -42,23 +43,10 @@ export class FriendrequestsComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-
-  load(): void {
-    this.isBusy = true;
-    this.friendRequest.getPendingFriendRequests().subscribe(r => {
-      this.pendingRequests = r.filter(f => f.requestingUser.userId !== this.currentUserId)
-        .map(f => f.requestingUser);
-      this.isBusy = false;
-    }, e => {
-      this.isBusy = false;
-      console.error(e);
-    });
-  }
-
   onAccept(user: UserInfoDTO) {
 
     this.removeUserFromList(user.userId);
-    this.friendRequest.acceptFriendRequest(user.userId).subscribe(r => {
+    this.userService.acceptFriendRequest(user.userId).subscribe(r => {
 
       // signal change in friend requests status
       this.state.raisePendingFriendRequestsChanged();
@@ -68,7 +56,7 @@ export class FriendrequestsComponent implements OnInit, OnDestroy {
 
   onDecline(user: UserInfoDTO) {
     this.removeUserFromList(user.userId);
-    this.friendRequest.declineFriendRequest(user.userId).subscribe(r => {
+    this.userService.declineFriendRequest(user.userId).subscribe(r => {
 
       // signal change in friend requests status
       this.state.raisePendingFriendRequestsChanged();
@@ -76,7 +64,7 @@ export class FriendrequestsComponent implements OnInit, OnDestroy {
   }
 
   removeUserFromList(userId: string) {
-    const index = this.pendingRequests.findIndex(r => r.userId === userId);
-    this.pendingRequests.splice(index, 1);
+    const index = this.currentUser.incomingFriendRequests.findIndex(r => r.user.userId === userId);
+    this.currentUser.incomingFriendRequests.splice(index, 1);
   }
 }

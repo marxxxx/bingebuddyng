@@ -40,7 +40,7 @@
   </p>
 </div>
 
-<div id="actions" fxLayout fxLayoutAlign="center space-between" *ngIf="!isYou() && !isBusy">
+<div id="actions" fxLayout fxLayoutAlign="center space-between" *ngIf="currentUser && !isYou() && !isBusy">
   <button *ngIf="!isYourFriend() && !hasPendingRequest" mat-raised-button color="primary" (click)="onAddFriend()">
     <mat-icon>add</mat-icon>{{'AddFriend' | transloco }}
   </button>

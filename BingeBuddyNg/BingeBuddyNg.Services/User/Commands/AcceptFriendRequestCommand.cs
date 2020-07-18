@@ -25,37 +25,43 @@ namespace BingeBuddyNg.Core.FriendsRequest.Commands
 
     public class AcceptFriendRequestCommandHandler : IRequestHandler<AcceptFriendRequestCommand>
     {
-        private readonly IFriendRequestRepository friendRequestRepository;
         private readonly IUserRepository userRepository;
-        private readonly AddFriendCommand addFriendCommand;
         private readonly INotificationService notificationService;
         private readonly ITranslationService translationService;
         private readonly IStorageAccessService storageAccessService;
 
         public AcceptFriendRequestCommandHandler(
-            IFriendRequestRepository friendRequestRepository, 
             IUserRepository userRepository, 
-            AddFriendCommand addFriendCommand,
             INotificationService notificationService, 
             ITranslationService translationService,
             IStorageAccessService storageAccessService)
         {
-            this.friendRequestRepository = friendRequestRepository ?? throw new ArgumentNullException(nameof(friendRequestRepository));
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            this.addFriendCommand = addFriendCommand ?? throw new ArgumentNullException(nameof(addFriendCommand));
-            this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
-            this.translationService = translationService ?? throw new ArgumentNullException(nameof(translationService));
-            this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
+            this.userRepository = userRepository;
+            this.notificationService = notificationService;
+            this.translationService = translationService;
+            this.storageAccessService = storageAccessService;
         }
 
         public async Task<Unit> Handle(AcceptFriendRequestCommand request, CancellationToken cancellationToken)
         {
-            await this.addFriendCommand.ExecuteAsync(request.AcceptingUserId, request.RequestingUserId);            
-
-            await friendRequestRepository.DeleteFriendRequestAsync(request.AcceptingUserId, request.RequestingUserId);
-
             var acceptingUser = await userRepository.GetUserAsync(request.AcceptingUserId);
             var requestingUser = await userRepository.GetUserAsync(request.RequestingUserId);
+
+            var acceptanceResult = acceptingUser.AcceptFriendRequest(requestingUser.ToUserInfo());
+            if(acceptanceResult.IsFailure)
+            {
+                throw new FriendshipException(acceptanceResult.Error);
+            }
+
+            var requestingResult = requestingUser.AcceptFriendRequest(acceptingUser.ToUserInfo());
+            if (requestingResult.IsFailure)
+            {
+                throw new FriendshipException(acceptanceResult.Error);
+            }
+
+            await userRepository.UpdateUserAsync(acceptingUser.ToEntity());
+            await userRepository.UpdateUserAsync(requestingUser.ToEntity());
+
             if (requestingUser.PushInfo != null)
             {
                 var subject = await translationService.GetTranslationAsync(requestingUser.Language, "FriendsRequest");

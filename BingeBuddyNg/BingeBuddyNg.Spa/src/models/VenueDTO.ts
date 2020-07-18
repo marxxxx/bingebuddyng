@@ -1,6 +1,6 @@
 import { Location } from './Location';
 
-export class VenueModel {
+export class VenueDTO {
     id: string;
     location: Location;
     name: string;

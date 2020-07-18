@@ -1,5 +1,4 @@
 ﻿using System;
-using BingeBuddyNg.Core.User.DTO;
 
 namespace BingeBuddyNg.Core.User.Persistence
 {
@@ -9,14 +8,17 @@ namespace BingeBuddyNg.Core.User.Persistence
 
         public string UserName { get; set; }
 
+        public bool Muted { get; set; }
+
         public UserInfo()
         {
         }
 
-        public UserInfo(string userId, string userName)
+        public UserInfo(string userId, string userName, bool muted = false)
         {
             UserId = userId ?? throw new ArgumentNullException(nameof(userId));
             UserName = userName ?? throw new ArgumentNullException(nameof(userName));
+            Muted = muted;
         }
 
         public bool Equals(UserInfo other)
@@ -42,11 +44,6 @@ namespace BingeBuddyNg.Core.User.Persistence
         public override string ToString()
         {
             return $"{{{nameof(UserId)}={UserId}, {nameof(UserName)}={UserName}}}";
-        }
-
-        internal UserInfoDTO ToUserInfoDTO()
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -1,6 +1,7 @@
-import { VenueModel } from 'src/models/VenueModel';
+import { VenueDTO } from 'src/models/VenueDTO';
 import { UserInfoDTO } from './UserInfoDTO';
 import { PushInfo } from './PushInfo';
+import { FriendRequestDTO } from './FriendRequestDTO';
 
 export class UserDTO {
     id: string;
@@ -9,7 +10,8 @@ export class UserDTO {
     weight?: number;
     pushInfo?: PushInfo;
     friends?: UserInfoDTO[];
-    mutedFriendUserIds?: string[];
-    currentVenue?: VenueModel;
+    currentVenue?: VenueDTO;
     language?: string;
+    incomingFriendRequests?: FriendRequestDTO[];
+    outgoingFriendRequests?: FriendRequestDTO[];
 }

@@ -1,5 +1,5 @@
-import { VenueModel } from 'src/models/VenueModel';
+import { VenueDTO } from 'src/models/VenueDTO';
 export class VenueDialogResult {
-    venue?: VenueModel;
+    venue?: VenueDTO;
     action: 'leave' | 'change' | 'cancel';
 }

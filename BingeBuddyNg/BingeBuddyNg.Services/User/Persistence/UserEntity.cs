@@ -15,11 +15,11 @@ namespace BingeBuddyNg.Core.User.Persistence
         public string ProfileImageUrl { get; set; }
         public PushInfo PushInfo { get; set; }
         public List<UserInfo> Friends { get; set; } = new List<UserInfo>();
-        public List<string> MutedFriendUserIds { get; set; } = new List<string>();
-        public List<string> MutedByFriendUserIds { get; set; } = new List<string>();
+        public List<FriendRequest> PendingFriendRequests = new List<FriendRequest>();
         public string MonitoringInstanceId { get; set; }
         public VenueEntity CurrentVenue { get; set; }
         public string Language { get; set; }
         public DateTime LastOnline { get; set; }
+        public List<Guid> Invitations { get; set; }
     }
 }

@@ -29,8 +29,19 @@ export class UserService {
     return this.http.get<UserDTO>(`${this.baseUrl}/${userId}`);
   }
 
-  addFriend(friendUserId: string): Observable<{}> {
-    return this.http.put(`${this.baseUrl}/${friendUserId}/add`, {});
+  addFriendRequest(userId: string): Observable<any> {
+    const url = `${this.baseUrl}/${userId}/request`;
+    return this.http.post(url, {});
+  }
+
+  acceptFriendRequest(userId: string): Observable<any> {
+    const url = `${this.baseUrl}/${userId}/accept`;
+    return this.http.put(url, {});
+  }
+
+  declineFriendRequest(userId: string): Observable<any> {
+    const url = `${this.baseUrl}/${userId}/decline`;
+    return this.http.put(url, {});
   }
 
   removeFriend(friendUserId: string): Observable<{}> {

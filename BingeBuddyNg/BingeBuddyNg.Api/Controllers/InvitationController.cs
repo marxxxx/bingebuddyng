@@ -25,7 +25,7 @@ namespace BingeBuddyNg.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet("{invitationToken}")]
-        public async Task<InvitationDTO> GetInvitation(string invitationToken)
+        public async Task<InvitationDTO> GetInvitation(Guid invitationToken)
         {
             var result = await mediator.Send(new GetInvitationQuery(invitationToken));
             return result;
@@ -40,7 +40,7 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
         [HttpPut("{invitationToken}/accept")]
-        public async Task AcceptInvitation(string invitationToken)
+        public async Task AcceptInvitation(Guid invitationToken)
         {
             var userId = identityService.GetCurrentUserId();
             await mediator.Send(new AcceptInvitationCommand(userId, invitationToken));

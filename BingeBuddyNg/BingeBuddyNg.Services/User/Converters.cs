@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Core.User.DTO;
 using BingeBuddyNg.Core.User.Persistence;
 using BingeBuddyNg.Core.Venue;
@@ -38,10 +39,7 @@ namespace BingeBuddyNg.Core.User
                 Gender = user.Gender,
                 ProfileImageUrl = user.ProfileImageUrl,
                 PushInfo = user.PushInfo,
-                Friends = user.Friends,
-                MutedFriendUserIds = user.MutedFriendUserIds,
-                MutedByFriendUserIds = user.MutedByFriendUserIds,
-                MonitoringInstanceId = user.MonitoringInstanceId,
+                Friends = user.Friends?.ToList(),
                 CurrentVenue = user.CurrentVenue != null ? new VenueEntity()
                 {
                     Id = user.CurrentVenue.Id,
@@ -50,7 +48,9 @@ namespace BingeBuddyNg.Core.User
                     Distance = user.CurrentVenue.Distance
                 } : null,
                 Language = user.Language,
-                LastOnline = user.LastOnline
+                LastOnline = user.LastOnline,
+                PendingFriendRequests = user.PendingFriendRequests?.ToList(),
+                Invitations = user.Invitations?.ToList()
             };
         }
 
@@ -68,7 +68,8 @@ namespace BingeBuddyNg.Core.User
                 Weight = entity.Weight,
                 CurrentVenue = entity.CurrentVenue?.ToDto(),
                 Friends = entity.Friends?.Select(f=>f.ToDto()).ToList(),
-                MutedFriendUserIds = entity.MutedFriendUserIds
+                IncomingFriendRequests = entity.PendingFriendRequests?.Where(p=>p.Direction == FriendRequestDirection.Incoming).Select(p=>p.ToDto()).ToList(),
+                OutgoingFriendRequests = entity.PendingFriendRequests?.Where(p => p.Direction == FriendRequestDirection.Outgoing).Select(p => p.ToDto()).ToList()
             };
         }
 
@@ -80,6 +81,16 @@ namespace BingeBuddyNg.Core.User
         public static UserInfoDTO ToDto(this UserInfo userInfo)
         {
             return new UserInfoDTO(userId: userInfo.UserId, userName: userInfo.UserName);
+        }
+
+        public static FriendRequestDTO ToDto(this FriendRequest friendRequest)
+        {
+            return new FriendRequestDTO(friendRequest.RequestTimestamp, friendRequest.User.ToDto(), friendRequest.Direction);
+        }
+
+        public static FriendRequest ToEntity(this FriendRequestDTO friendRequest)
+        {
+            return new FriendRequest(friendRequest.RequestTimestamp, new UserInfo(friendRequest.User.UserId, friendRequest.User.UserName, friendRequest.User.Muted), friendRequest.Direction);
         }
     }
 }

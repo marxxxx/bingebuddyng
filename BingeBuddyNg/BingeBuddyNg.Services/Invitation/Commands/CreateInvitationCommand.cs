@@ -1,32 +1,41 @@
-﻿using MediatR;
+﻿using BingeBuddyNg.Core.User;
+using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Core.Invitation.Commands
 {
-    public class CreateInvitationCommand : IRequest<string>
+    public class CreateInvitationCommand : IRequest<Guid>
     {
+        public string UserId { get; }
+
         public CreateInvitationCommand(string userId)
         {
             UserId = userId ?? throw new ArgumentNullException(nameof(userId));
         }
-
-        public string UserId { get; }
     }
 
-    public class CreateInvitationCommandHandler : IRequestHandler<CreateInvitationCommand, string>
+    public class CreateInvitationCommandHandler : IRequestHandler<CreateInvitationCommand, Guid>
     {
         private readonly IInvitationRepository invitationRepository;
+        private readonly IUserRepository userRepository;
 
-        public CreateInvitationCommandHandler(IInvitationRepository invitationRepository)
+        public CreateInvitationCommandHandler(
+            IInvitationRepository invitationRepository,
+            IUserRepository userRepository)
         {
-            this.invitationRepository = invitationRepository ?? throw new ArgumentNullException(nameof(invitationRepository));
-        }        
+            this.invitationRepository = invitationRepository;
+            this.userRepository = userRepository;
+        }
 
-        public async Task<string> Handle(CreateInvitationCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateInvitationCommand request, CancellationToken cancellationToken)
         {
-            var invitationToken = await invitationRepository.CreateAsync(request.UserId);
+            var invitingUser = await this.userRepository.GetUserAsync(request.UserId);
+            var invitationToken = invitingUser.IssueInvitation();
+            await invitationRepository.CreateAsync(invitationToken, request.UserId);
+            await this.userRepository.UpdateUserAsync(invitingUser.ToEntity());
+
             return invitationToken;
         }
     }
