@@ -72,6 +72,7 @@ namespace BingeBuddyNg.Core.User.Commands
                 var activity = Activity.Domain.Activity.CreateRegistrationActivity(BingeBuddyUser.Id, BingeBuddyUser.Name, new UserInfo(request.UserId, request.Name));
                 
                 await activityRepository.AddActivityAsync(activity.ToEntity());
+                await activityRepository.AddToPersonalizedFeedAsync(request.UserId, activity.ToEntity());
                 await activityRepository.AddToActivityAddedTopicAsync(activity.Id);
             }
 

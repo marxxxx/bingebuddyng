@@ -17,7 +17,7 @@ import { UserDTO } from 'src/models/UserDTO';
 export class FriendrequestsComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
-  private currentUser: UserDTO;
+  currentUser: UserDTO;
   isBusy = false;
 
   constructor(
