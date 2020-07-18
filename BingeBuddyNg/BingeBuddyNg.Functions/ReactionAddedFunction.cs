@@ -35,10 +35,8 @@ namespace BingeBuddyNg.Functions
         }
 
         [FunctionName(nameof(ReactionAddedFunction))]
-        public async Task Run([QueueTrigger(Shared.Constants.QueueNames.ReactionAdded, Connection = "AzureWebJobsStorage")]string reactionQueueItem, ILogger log)
+        public async Task Run([QueueTrigger(Shared.Constants.QueueNames.ReactionAdded, Connection = "AzureWebJobsStorage")] ReactionAddedMessage reactionAddedMessage, ILogger log)
         {
-            var reactionAddedMessage = JsonConvert.DeserializeObject<ReactionAddedMessage>(reactionQueueItem);
-
             var activity = await activityRepository.GetActivityAsync(reactionAddedMessage.ActivityId);
             var reactingUser = await userRepository.GetUserAsync(reactionAddedMessage.UserId);
             var originUser = await userRepository.GetUserAsync(activity.UserId);

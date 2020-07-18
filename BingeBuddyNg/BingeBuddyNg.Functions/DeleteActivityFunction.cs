@@ -23,11 +23,9 @@ namespace BingeBuddyNg.Functions
         }
 
         [FunctionName(nameof(DeleteActivityFunction))]
-        public async Task Run([QueueTrigger(QueueNames.DeleteActivity, Connection = "AzureWebJobsStorage")] string myQueueItem, ILogger log)
+        public async Task Run([QueueTrigger(QueueNames.DeleteActivity, Connection = "AzureWebJobsStorage")] DeleteActivityMessage message, ILogger log)
         {
-            log.LogInformation($"Deleting activity from personalized feeds: {myQueueItem}");
-
-            var message = JsonConvert.DeserializeObject<DeleteActivityMessage>(myQueueItem);
+            log.LogInformation($"Deleting activity from personalized feeds: {message}");
 
             var allUserIds = await this.getAllUserIdsQuery.ExecuteAsync();
 

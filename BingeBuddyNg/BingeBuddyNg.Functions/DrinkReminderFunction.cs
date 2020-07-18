@@ -1,13 +1,12 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Functions.Services;
 using BingeBuddyNg.Functions.Services.Notifications;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Functions
 {
