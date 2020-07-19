@@ -10,12 +10,15 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+- script: dotnet publish BingeBuddyNg.Api/BingeBuddyNg.Api.csproj --configuration $(buildConfiguration)
+  displayName: 'Publish Api'
+- script: dotnet publish BingeBuddyNg.Functions/BingeBuddyNg.Functions.csproj --configuration $(buildConfiguration)
+  displayName: 'Publish Functions'
 
 - script: |
     npm install -g @angular/cli
     npm install
     ng build --prod
+  workingDirectory: BingeBuddyNg/BingeBuddyNg.Spa
   displayName: 'npm install and build'
   
