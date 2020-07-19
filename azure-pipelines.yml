@@ -31,6 +31,13 @@ steps:
     npm run build
   workingDirectory: BingeBuddyNg/BingeBuddyNg.Spa
   displayName: 'Build Frontend'
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: 'BingeBuddyNg/BingeBuddyNg.Spa/dist'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/spa'
+    CleanTargetFolder: true
+    OverWrite: true
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifacts'
   inputs:
