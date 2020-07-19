@@ -23,12 +23,12 @@ steps:
 #  displayName: 'Build Frontend'
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(build.sourcesdirectory)/BingeBuddyNg/BingeBuddyNg.Api/bin/Release/netcoreapp3.1/publish/'
+    SourceFolder: '$(build.sourcesdirectory)/BingeBuddyNg/BingeBuddyNg.Api/bin/Release/netcoreapp3.1/publish'
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/Api'
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(build.sourcesdirectory)/BingeBuddyNg/BingeBuddyNg.Functions/bin/Release/netcoreapp3.1/publish/'
+    SourceFolder: '$(build.sourcesdirectory)/BingeBuddyNg/BingeBuddyNg.Functions/bin/Release/netcoreapp3.1/publish'
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/Functions'
 #- task: CopyFiles@2
