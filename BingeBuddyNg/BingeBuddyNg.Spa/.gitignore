@@ -40,4 +40,4 @@ Thumbs.db
 
 # secrets
 credentials.ts
-environments/environment.ts
+src/environments/environment.ts
