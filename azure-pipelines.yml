@@ -12,6 +12,7 @@ steps:
   displayName: 'Publish'
   inputs:
     command: 'publish'
+    configuration: 'Release'
     publishWebProjects: true
     projects: '**/*.csproj'
 - script: |
@@ -19,6 +20,16 @@ steps:
     npm run build
   workingDirectory: BingeBuddyNg/BingeBuddyNg.Spa
   displayName: 'Build Frontend'
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(build.sourcesdirectory)/BingeBuddyNg/BingeBuddyNg.Api/bin/Release/netcoreapp3.1/publish/'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/Api'
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(build.sourcesdirectory)/BingeBuddyNg/BingeBuddyNg.Functions/bin/Release/netcoreapp3.1/publish/'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/Functions'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifacts'
   inputs:
