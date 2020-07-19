@@ -24,6 +24,7 @@ jobs:
     - name: Test
       run: dotnet test BingeBuddyNg/BingeBuddyNg.Tests/BingeBuddyNg.Tests.csproj --verbosity normal
     - name: npm install and npm run build
+      working-directory: BingeBuddyNg/BingeBuddyNg.Spa
       run: |
         npm i
         npm run build
