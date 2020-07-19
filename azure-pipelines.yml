@@ -13,13 +13,13 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: true
-    arguments: 'bingebuddyng\BingeBuddyNg\BingeBuddyNg.Api'
+    arguments: 'bingebuddyng\BingeBuddyNg\BingeBuddyNg.Api\BingeBuddyNg.Api.csproj'
 - task: DotNetCoreCLI@2
   displayName: 'Publish Functions'
   inputs:
     command: 'publish'
     publishWebProjects: true
-    arguments: 'bingebuddyng\BingeBuddyNg\BingeBuddyNg.Functions'
+    arguments: 'bingebuddyng\BingeBuddyNg\BingeBuddyNg.Functions\BingeBuddyNg.Functions.csproj'
 - script: |
     npm install
     npm run build
