@@ -1,3 +1,5 @@
+
+
 export interface IEnvironment {
   production: boolean,
   BaseDataUrl: string,
@@ -7,3 +9,4 @@ export interface IEnvironment {
     googleMapsApiKey: string
   }
 }
+
