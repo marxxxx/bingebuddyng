@@ -1,4 +1,4 @@
-
+![Continuous Integration Build](https://github.com/marxxxx/bingebuddyng/workflows/Continuous%20Integration%20Build/badge.svg)
 ![Release](https://vsrm.dev.azure.com/markusstrobl/_apis/public/Release/badge/addb50f0-607a-48a3-bc82-de382e0c8fad/1/1)
 
 # Introduction
