@@ -10,10 +10,13 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet publish BingeBuddyNg/BingeBuddyNg.Api/BingeBuddyNg.Api.csproj --configuration $(buildConfiguration)
-  displayName: 'Publish Api'
-- script: dotnet publish BingeBuddyNg/BingeBuddyNg.Functions/BingeBuddyNg.Functions.csproj --configuration $(buildConfiguration)
-  displayName: 'Publish Functions'
+- task: VSBuild@1
+  displayName: 'Build Api and Functions'
+  inputs:
+    solution: '**\*.sln'
+    configuration: '$(buildConfiguration)'
+    restoreNugetPackages: true
+    msbuildArchitecture: 'x64'
 
 - script: |
     npm install
