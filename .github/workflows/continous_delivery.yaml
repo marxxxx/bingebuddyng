@@ -18,7 +18,7 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Build
-      run: dotnet build BingeBuddyNg/BingeBuddyNg.Api/BingeBuddyNg.Api.csproj --configuration Release --no-restore
+      run: dotnet build BingeBuddyNg/BingeBuddyNg.Api/BingeBuddyNg.Api.csproj --configuration Release
     - name: Test
-      run: dotnet test BingeBuddyNg/BingeBuddyNg.Tests/BingeBuddyNg.Tests.csproj --no-restore --verbosity normal
+      run: dotnet test BingeBuddyNg/BingeBuddyNg.Tests/BingeBuddyNg.Tests.csproj --verbosity normal
     
