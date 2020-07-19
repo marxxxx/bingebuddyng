@@ -16,22 +16,12 @@ steps:
     publishWebProjects: true
     zipAfterPublish: true
     projects: '**/*.csproj'
-    arguments: '--configuration Release -o output'
+    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
 #- script: |
 #    npm install
 #    npm run build
 #  workingDirectory: BingeBuddyNg/BingeBuddyNg.Spa
 #  displayName: 'Build Frontend'
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: '$(build.sourcesdirectory)/BingeBuddyNg/output'
-    Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-#- task: CopyFiles@2
-#  inputs:
-#    SourceFolder: '$(build.sourcesdirectory)/BingeBuddyNg/BingeBuddyNg.Spa/dist/'
-#    Contents: '**'
-#    TargetFolder: '$(Build.ArtifactStagingDirectory)/Spa'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifacts'
   inputs:
