@@ -17,8 +17,10 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
-    - name: Build
+    - name: Build API
       run: dotnet build BingeBuddyNg/BingeBuddyNg.Api/BingeBuddyNg.Api.csproj --configuration Release
+    - name: Build Functions
+      run: dotnet build BingeBuddyNg/BingeBuddyNg.Functions/BingeBuddyNg.Functions.csproj --configuration Release
     - name: Test
       run: dotnet test BingeBuddyNg/BingeBuddyNg.Tests/BingeBuddyNg.Tests.csproj --verbosity normal
     
