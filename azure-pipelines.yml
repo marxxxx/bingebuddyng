@@ -14,14 +14,16 @@ steps:
     command: 'publish'
     zipAfterPublish: true
     modifyOutputPath: true
-    arguments: 'BingeBuddyNg/BingeBuddyNg.Api/BingeBuddyNg.Api.csproj --configuration Release --output $(Build.ArtifactStagingDirectory)/api'
+    projects: 'BingeBuddyNg/BingeBuddyNg.Api/BingeBuddyNg.Api.csproj'
+    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/api'
 - task: DotNetCoreCLI@2
   displayName: 'Publish Functions'
   inputs:
     command: 'publish'
     zipAfterPublish: true
     modifyOutputPath: true
-    arguments: 'BingeBuddyNg/BingeBuddyNg.Functions/BingeBuddyNg.Functions.csproj --configuration Release --output $(Build.ArtifactStagingDirectory)/functions'
+    projects: 'BingeBuddyNg/BingeBuddyNg.Functions/BingeBuddyNg.Functions.csproj'
+    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/functions'
 - script: |
     npm install
     npm run build
