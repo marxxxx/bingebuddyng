@@ -9,17 +9,11 @@ pool:
 
 steps:
 - task: DotNetCoreCLI@2
-  displayName: 'Publish Api'
+  displayName: 'Publish'
   inputs:
     command: 'publish'
     publishWebProjects: true
-    arguments: 'BingeBuddyNg/BingeBuddyNg.Api/BingeBuddyNg.Api.csproj'
-- task: DotNetCoreCLI@2
-  displayName: 'Publish Functions'
-  inputs:
-    command: 'publish'
-    publishWebProjects: true
-    arguments: 'BingeBuddyNg/BingeBuddyNg.Functions/BingeBuddyNg.Functions.csproj'
+    projects: '**/*.csproj'
 - script: |
     npm install
     npm run build
