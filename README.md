@@ -1,3 +1,5 @@
+![Continuous Integration Build](https://github.com/marxxxx/bingebuddyng/workflows/Continuous%20Integration%20Build/badge.svg)
+
 # Introduction
 Binge Buddy - the social drinking network
 
