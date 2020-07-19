@@ -17,7 +17,7 @@ steps:
     zipAfterPublish: true
     modifyOutputPath: true
     projects: 'BingeBuddyNg/BingeBuddyNg.Api/BingeBuddyNg.Api.csproj'
-    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
+    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/api'
 - task: DotNetCoreCLI@2
   displayName: 'Publish Functions'
   inputs:
@@ -27,12 +27,12 @@ steps:
     zipAfterPublish: true
     projects: 'BingeBuddyNg/BingeBuddyNg.Functions/BingeBuddyNg.Functions.csproj'
     modifyOutputPath: true
-    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
-#- script: |
-#    npm install
-#    npm run build
-#  workingDirectory: BingeBuddyNg/BingeBuddyNg.Spa
-#  displayName: 'Build Frontend'
+    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/functions'
+- script: |
+    npm install
+    npm run build
+  workingDirectory: BingeBuddyNg/BingeBuddyNg.Spa
+  displayName: 'Build Frontend'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifacts'
   inputs:
