@@ -34,7 +34,7 @@ import { OnboardingModule } from './onboarding/onboarding.module';
     SharedModule,
     ActivityModule,
     OnboardingModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
+    ServiceWorkerModule.register('custom-service-worker.js', {
       enabled: environment.production
     }),
     TranslocoModule
