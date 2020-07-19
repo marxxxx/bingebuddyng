@@ -23,4 +23,8 @@ jobs:
       run: dotnet build BingeBuddyNg/BingeBuddyNg.Functions/BingeBuddyNg.Functions.csproj --configuration Release
     - name: Test
       run: dotnet test BingeBuddyNg/BingeBuddyNg.Tests/BingeBuddyNg.Tests.csproj --verbosity normal
-    
+    - name: npm install and npm run build
+      run: |
+        npm i
+        npm run build
+      
