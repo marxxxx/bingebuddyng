@@ -16,7 +16,7 @@ steps:
     modifyOutputPath: true
     publishWebProjects: false
     projects: 'BingeBuddyNg/BingeBuddyNg.Api/BingeBuddyNg.Api.csproj'
-    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/api'
+    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
 - task: DotNetCoreCLI@2
   displayName: 'Publish Functions'
   inputs:
@@ -25,7 +25,7 @@ steps:
     modifyOutputPath: true
     publishWebProjects: false
     projects: 'BingeBuddyNg/BingeBuddyNg.Functions/BingeBuddyNg.Functions.csproj'
-    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/functions'
+    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
 - script: |
     npm install
     npm run build
