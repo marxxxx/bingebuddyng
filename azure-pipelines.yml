@@ -9,13 +9,24 @@ pool:
 
 steps:
 - task: DotNetCoreCLI@2
-  displayName: 'Publish'
+  displayName: 'Publish Api'
   inputs:
     command: 'publish'
     configuration: 'Release'
     publishWebProjects: true
     zipAfterPublish: true
-    projects: '**/*.csproj'
+    modifyOutputPath: true
+    projects: '**/BingeBuddyNg.Api.csproj'
+    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Functions'
+  inputs:
+    command: 'publish'
+    configuration: 'Release'
+    publishWebProjects: true
+    zipAfterPublish: true
+    projects: '**/BingeBuddyNg.Functions.csproj'
+    modifyOutputPath: true
     arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
 #- script: |
 #    npm install
