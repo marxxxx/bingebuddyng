@@ -1,4 +1,4 @@
-name: .NET Core
+name: Continuous Integration Build
 
 on:
   push:
@@ -21,11 +21,13 @@ jobs:
       run: dotnet build BingeBuddyNg/BingeBuddyNg.Api/BingeBuddyNg.Api.csproj --configuration Release
     - name: Build Functions
       run: dotnet build BingeBuddyNg/BingeBuddyNg.Functions/BingeBuddyNg.Functions.csproj --configuration Release
-    - name: Test
+    - name: Run Unit Tests
       run: dotnet test BingeBuddyNg/BingeBuddyNg.Tests/BingeBuddyNg.Tests.csproj --verbosity normal
-    - name: npm install and npm run build
+    - name: Build and Test Frontend
       working-directory: BingeBuddyNg/BingeBuddyNg.Spa
       run: |
         npm i
         npm run build
+        npm run test
+
       
