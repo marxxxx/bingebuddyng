@@ -12,7 +12,6 @@ steps:
   displayName: 'Publish Api'
   inputs:
     command: 'publish'
-    configuration: 'Release'
     publishWebProjects: true
     zipAfterPublish: true
     modifyOutputPath: true
@@ -21,7 +20,6 @@ steps:
   displayName: 'Publish Functions'
   inputs:
     command: 'publish'
-    configuration: 'Release'
     publishWebProjects: true
     zipAfterPublish: true
     modifyOutputPath: true
