@@ -15,7 +15,7 @@ steps:
     configuration: 'Release'
     publishWebProjects: true
     projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
+    arguments: '--configuration Release'
 #- script: |
 #    npm install
 #    npm run build
