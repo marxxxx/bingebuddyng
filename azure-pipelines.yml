@@ -6,24 +6,27 @@
 pool:
   vmImage: 'Ubuntu 16.04'
 
-variables:
-  buildConfiguration: 'Release'
 
 steps:
-- task: VSBuild@1
-  displayName: 'Build Api and Functions'
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Api'
   inputs:
-    solution: '**\*.sln'
-    configuration: '$(buildConfiguration)'
-    restoreNugetPackages: true
-    msbuildArchitecture: 'x64'
-
+    command: 'publish'
+    publishWebProjects: true
+    arguments: 'bingebuddyng\BingeBuddyNg\BingeBuddyNg.Api'
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Functions'
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: 'bingebuddyng\BingeBuddyNg\BingeBuddyNg.Functions'
 - script: |
     npm install
     npm run build
   workingDirectory: BingeBuddyNg/BingeBuddyNg.Spa
-  displayName: 'npm install and build'
+  displayName: 'Build Frontend'
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifacts'
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
