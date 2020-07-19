@@ -17,13 +17,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
-    - name: Install dependencies
-      working-directory: 'BingeBuddyNg/BingeBuddyNg.Api'
-      run: dotnet restore 
     - name: Build
-      working-directory: 'BingeBuddyNg/BingeBuddyNg.Api'
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build BingeBuddyNg/BingeBuddyNg.Api/BingeBuddyNg.Api.csproj --configuration Release --no-restore
     - name: Test
-      working-directory: 'BingeBuddyNg/BingeBuddyNg.Api'
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test BingeBuddyNg/BingeBuddyNg.Tests/BingeBuddyNg.Tests.csproj --no-restore --verbosity normal
     
