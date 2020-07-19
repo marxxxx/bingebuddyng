@@ -332,4 +332,5 @@ ASALocalRun/
 # Secrets
 credentials.ts
 appsettings.Development.json
+environment.ts
 
