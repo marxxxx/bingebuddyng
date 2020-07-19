@@ -16,7 +16,7 @@ steps:
     publishWebProjects: true
     zipAfterPublish: true
     modifyOutputPath: true
-    projects: '**/BingeBuddyNg.Api.csproj'
+    projects: 'BingeBuddyNg/BingeBuddyNg.Api/BingeBuddyNg.Api.csproj'
     arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
 - task: DotNetCoreCLI@2
   displayName: 'Publish Functions'
@@ -25,7 +25,7 @@ steps:
     configuration: 'Release'
     publishWebProjects: true
     zipAfterPublish: true
-    projects: '**/BingeBuddyNg.Functions.csproj'
+    projects: 'BingeBuddyNg/BingeBuddyNg.Functions/BingeBuddyNg.Functions.csproj'
     modifyOutputPath: true
     arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
 #- script: |
