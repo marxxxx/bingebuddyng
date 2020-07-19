@@ -10,9 +10,9 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet publish BingeBuddyNg.Api/BingeBuddyNg.Api.csproj --configuration $(buildConfiguration)
+- script: dotnet publish BingeBuddyNg/BingeBuddyNg.Api/BingeBuddyNg.Api.csproj --configuration $(buildConfiguration)
   displayName: 'Publish Api'
-- script: dotnet publish BingeBuddyNg.Functions/BingeBuddyNg.Functions.csproj --configuration $(buildConfiguration)
+- script: dotnet publish BingeBuddyNg/BingeBuddyNg.Functions/BingeBuddyNg.Functions.csproj --configuration $(buildConfiguration)
   displayName: 'Publish Functions'
 
 - script: |
