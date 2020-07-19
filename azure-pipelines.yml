@@ -16,9 +16,12 @@ steps:
   displayName: 'Publish Functions'
 
 - script: |
-    npm install -g @angular/cli
     npm install
-    ng build --prod
+    npm run build
   workingDirectory: BingeBuddyNg/BingeBuddyNg.Spa
   displayName: 'npm install and build'
-  
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
