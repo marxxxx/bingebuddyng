@@ -180,6 +180,6 @@
     "WinnerMessage": "{0} hat gewonnen!",
     "NoWinnerMessage": "Niemand hat gewonnen!",
     "InvitationMessage": "Du wurdest von {0} eingeladen ein Spiel zu spielen!",
-    "ActivityMessage": "Ich habe das Spiel namens '{{title}}' gewonnen!"
+    "ActivityMessage": "Ich habe das Spiel '{{title}}' gewonnen!"
   }
 }
