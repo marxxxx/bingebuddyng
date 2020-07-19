@@ -13,7 +13,7 @@ import { NotificationService } from './@core/services/notification.service';
 import { InvitationService } from './invitation/services/invitation.service';
 import { SettingsService } from './@core/services/settings.service';
 import { CreateOrUpdateUserDTO } from 'src/models/CreateOrUpdateUserDTO';
-import { credentials } from 'src/environments/credentials';
+import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { GameStartedMessage } from './game/models/GameStartedMessage';
 
@@ -57,7 +57,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.auth.currentUserProfile$.pipe(filter(userProfile => userProfile != null)),
       from(this.pushService
         .requestSubscription({
-          serverPublicKey: credentials.vapidPublicKey
+          serverPublicKey: environment.credentials.vapidPublicKey
         }))
     ]).subscribe(([profile, pushSubscription]) => {
       console.log('ngOnInit - got user and subscription', profile, pushSubscription);

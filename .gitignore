@@ -330,6 +330,8 @@ ASALocalRun/
 .mfractor/
 
 # Secrets
+environment.ts
 credentials.ts
 appsettings.Development.json
 
+BingeBuddyNg/BingeBuddyNg.Spa/src/environments/environment.ts

@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { BingemapComponent } from './components/bingemap/bingemap.component';
 import { AgmCoreModule } from '@agm/core';
 import { SharedModule } from '../@shared/shared.module';
-import { credentials } from 'src/environments/credentials';
+import { environment } from 'src/environments/environment';
 
 const routes: Routes = [
   {
@@ -17,7 +17,7 @@ const routes: Routes = [
     SharedModule,
     RouterModule.forChild(routes),
     AgmCoreModule.forRoot({
-      apiKey: credentials.googleMapsApiKey
+      apiKey: environment.credentials.googleMapsApiKey
     })
   ],
   exports: [],
