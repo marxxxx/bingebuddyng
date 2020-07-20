@@ -20,6 +20,7 @@ https://play.google.com/store/apps/details?id=xyz.appmaker.zrvgly
 - Auth0
 - Angular 9 (Progressive Web App)
 - Angular Material 9
+- Web Push
 
 # Contributors wanted
 If you would like to contribute to the project please feel free to contact me!
