@@ -1,18 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using BingeBuddyNg.Core.Ranking.DTO;
-using BingeBuddyNg.Core.Statistics;
-using BingeBuddyNg.Core.User.DTO;
 using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Core.User.Queries;
+using BingeBuddyNg.Core.Statistics.DTO;
+using BingeBuddyNg.Core.User;
+using BingeBuddyNg.Core.User.DTO;
+using MediatR;
 using Microsoft.WindowsAzure.Storage.Table;
 using static BingeBuddyNg.Shared.Constants;
-using BingeBuddyNg.Core.User;
-using MediatR;
-using System.Threading;
 
-namespace BingeBuddyNg.Core.Ranking.Queries
+namespace BingeBuddyNg.Core.Statistics.Queries
 {
     public class GetDrinksRankingQuery : IRequest<List<UserRankingDTO>>
     {
@@ -39,7 +37,7 @@ namespace BingeBuddyNg.Core.Ranking.Queries
                 .ToList();
 
             var userIds = userStats.Select(u => u.UserId).Distinct();
-            var users = await this.userRepository.SearchUsersAsync(userIds);
+            var users = await userRepository.SearchUsersAsync(userIds);
 
             var result = userStats.Select(s => new UserRankingDTO(users.Select(u => new UserInfoDTO(u.Id, u.Name)).First(u => u.UserId == s.UserId), s.ToDto())).ToList();
             return result;

@@ -6,12 +6,11 @@ using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Calculation;
 using BingeBuddyNg.Core.Drink;
 using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Core.Statistics;
 using BingeBuddyNg.Core.User.Domain;
 using Microsoft.Extensions.Logging;
 using static BingeBuddyNg.Shared.Constants;
 
-namespace BingeBuddyNg.Core.Ranking
+namespace BingeBuddyNg.Core.Statistics
 {
     public class UserStatisticUpdateService
     {
@@ -30,7 +29,7 @@ namespace BingeBuddyNg.Core.Ranking
 
         public async Task<UserStatistics> UpdateStatisticsAsync(string userId, Gender gender, int? weight)
         {
-            var stats = await this.calculationService.CalculateStatsForUserAsync(userId, gender, weight);
+            var stats = await calculationService.CalculateStatsForUserAsync(userId, gender, weight);
             var userStats = new UserStatistics(userId, stats.CurrentAlcLevel, stats.CurrentNightDrinks);
 
             await SaveStatisticsForUserAsync(userStats);
@@ -72,7 +71,7 @@ namespace BingeBuddyNg.Core.Ranking
         {
             DateTime startTimestamp = DateTime.UtcNow.Subtract(TimeSpan.FromDays(30));
 
-            var drinkActivityLastMonth = await this.activityRepository.GetUserActivitiesAsync(userId, startTimestamp, ActivityType.Drink);
+            var drinkActivityLastMonth = await activityRepository.GetUserActivitiesAsync(userId, startTimestamp, ActivityType.Drink);
 
             // filter non-alcoholic drinks and calculate count
             var alcoholicDrinkCount = drinkActivityLastMonth.Where(d => d.ActivityType == ActivityType.Drink).Count(d => d.DrinkType != DrinkType.Anti);
@@ -97,7 +96,7 @@ namespace BingeBuddyNg.Core.Ranking
             var entity = await storageAccessService.GetTableEntityAsync<UserStatsTableEntity>(TableNames.UserStats, StaticPartitionKeys.UserStats, userId);
             entity.TotalDrinksLastMonth = count;
 
-            await this.storageAccessService.InsertOrReplaceAsync(TableNames.UserStats, entity);
+            await storageAccessService.InsertOrReplaceAsync(TableNames.UserStats, entity);
         }
     }
 }

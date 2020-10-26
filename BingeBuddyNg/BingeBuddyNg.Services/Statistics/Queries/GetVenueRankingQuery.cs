@@ -4,11 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.Domain;
-using BingeBuddyNg.Core.Activity.Queries;
-using BingeBuddyNg.Core.Ranking.DTO;
+using BingeBuddyNg.Core.Statistics.DTO;
 using MediatR;
 
-namespace BingeBuddyNg.Core.Ranking.Queries
+namespace BingeBuddyNg.Core.Statistics.Queries
 {
     public class GetVenueRankingQuery : IRequest<IEnumerable<VenueRankingDTO>>
     {

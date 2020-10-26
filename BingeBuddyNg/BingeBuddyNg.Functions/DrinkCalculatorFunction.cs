@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using BingeBuddyNg.Core.Ranking;
+using BingeBuddyNg.Core.Statistics;
 using BingeBuddyNg.Core.User;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;

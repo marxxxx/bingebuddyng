@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BingeBuddyNg.Core.Ranking.DTO
+namespace BingeBuddyNg.Core.Statistics.DTO
 {
     public class VenueRankingDTO
     {

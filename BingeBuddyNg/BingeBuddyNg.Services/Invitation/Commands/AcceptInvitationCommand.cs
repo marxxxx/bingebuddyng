@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Core.Ranking;
+using BingeBuddyNg.Core.Statistics;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Shared;
 using MediatR;

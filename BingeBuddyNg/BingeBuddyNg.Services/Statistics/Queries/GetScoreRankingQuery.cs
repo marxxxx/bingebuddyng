@@ -3,14 +3,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Core.Ranking.DTO;
-using BingeBuddyNg.Core.Statistics;
+using BingeBuddyNg.Core.Statistics.DTO;
 using BingeBuddyNg.Core.User;
 using MediatR;
 using Microsoft.WindowsAzure.Storage.Table;
 using static BingeBuddyNg.Shared.Constants;
 
-namespace BingeBuddyNg.Core.Ranking.Queries
+namespace BingeBuddyNg.Core.Statistics.Queries
 {
     public class GetScoreRankingQuery : IRequest<List<UserRankingDTO>>
     {
@@ -29,9 +28,9 @@ namespace BingeBuddyNg.Core.Ranking.Queries
 
         public async Task<List<UserRankingDTO>> Handle(GetScoreRankingQuery request, CancellationToken cancellationToken)
         {
-            var userStats = await this.GetScoreStatisticsAsync();
+            var userStats = await GetScoreStatisticsAsync();
             var userIds = userStats.Select(u => u.UserId).Distinct();
-            var users = await this.userRepository.SearchUsersAsync(userIds);
+            var users = await userRepository.SearchUsersAsync(userIds);
 
             var result = userStats.Select(s => new UserRankingDTO(users.First(u => u.Id == s.UserId).ToUserInfoDTO(), s.ToDto()))
                 .OrderByDescending(r => r.Statistics.Score)
@@ -44,7 +43,7 @@ namespace BingeBuddyNg.Core.Ranking.Queries
         {
             string whereClause = TableQuery.GenerateFilterConditionForInt(nameof(UserStatsTableEntity.Score), QueryComparisons.GreaterThan, 0);
 
-            var queryResult = await this.storageAccessService.QueryTableAsync<UserStatsTableEntity>(TableNames.UserStats, whereClause);
+            var queryResult = await storageAccessService.QueryTableAsync<UserStatsTableEntity>(TableNames.UserStats, whereClause);
 
             var result = queryResult.Where(s => s.Score.GetValueOrDefault() > 0)
                 .OrderByDescending(r => r.Score)

@@ -7,7 +7,6 @@ using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Activity.DTO;
 using BingeBuddyNg.Core.Activity.Messages;
 using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Core.Ranking;
 using BingeBuddyNg.Core.Statistics;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Domain;

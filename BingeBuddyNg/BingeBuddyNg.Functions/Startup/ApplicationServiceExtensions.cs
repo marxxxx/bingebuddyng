@@ -3,7 +3,7 @@ using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Calculation;
 using BingeBuddyNg.Core.DrinkEvent;
 using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Core.Ranking;
+using BingeBuddyNg.Core.Statistics;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Infrastructure;
 using Microsoft.Azure.SignalR.Management;
