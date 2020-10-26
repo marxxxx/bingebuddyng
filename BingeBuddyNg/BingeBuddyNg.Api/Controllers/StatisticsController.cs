@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BingeBuddyNg.Core.Statistics.DTO;
 using BingeBuddyNg.Core.Statistics.Queries;
 using BingeBuddyNg.Core.Statistics.Querys;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BingeBuddyNg.Api.Controllers
@@ -10,26 +11,23 @@ namespace BingeBuddyNg.Api.Controllers
     [Route("api/User/{userId}/statistics")]
     public class StatisticsController : Controller
     {
-        private readonly GetStatisticHistoryForUserQuery getStatisticHistoryForUserQuery;
-        private readonly GetPersonalUsagePerWeekdayQuery getPersonalUsagePerWeekdayQuery;
-        
-        public StatisticsController(GetStatisticHistoryForUserQuery getStatisticHistoryForUserQuery, GetPersonalUsagePerWeekdayQuery getPersonalUsagePerWeekdayQuery)
+        private readonly IMediator mediator;
+
+        public StatisticsController(IMediator mediator)
         {
-            this.getStatisticHistoryForUserQuery = getStatisticHistoryForUserQuery;
-            this.getPersonalUsagePerWeekdayQuery = getPersonalUsagePerWeekdayQuery;
+            this.mediator = mediator;
         }
 
         [HttpGet("history")]
         public async Task<IEnumerable<UserStatisticHistoryDTO>> GetStatisticHistoryForUser(string userId)
         {
-            var result = await getStatisticHistoryForUserQuery.ExecuteAsync(userId);
-            return result;
+            return await this.mediator.Send(new GetStatisticHistoryForUserQuery(userId));
         }
 
         [HttpGet("personalusageperweekday")]
         public async Task<IEnumerable<PersonalUsagePerWeekdayDTO>> GetPersonalUsagePerWeekday(string userId)
         {
-            var result = await getPersonalUsagePerWeekdayQuery.ExecuteAsync(userId);
+            var result = await mediator.Send(new GetPersonalUsagePerWeekdayQuery(userId));
             return result;
         }
     }

@@ -7,8 +7,8 @@ using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Activity.DTO;
 using BingeBuddyNg.Core.Activity.Messages;
 using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.Ranking;
 using BingeBuddyNg.Core.Statistics;
-using BingeBuddyNg.Core.Statistics.Commands;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Functions.Services.Notifications;
@@ -25,8 +25,7 @@ namespace BingeBuddyNg.Functions.Services
         private readonly IUserRepository userRepository;
         private readonly INotificationService notificationService;
         private readonly IMonitoringRepository monitoringRepository;
-        private readonly UpdateRankingCommand updateRankingCommand;
-        private readonly UpdateStatisticsCommand updateStatisticsCommand;
+        private readonly UserStatisticUpdateService statisticUpdateService;
         private readonly ActivityDistributionService activityDistributionService;
         private readonly DrinkEventHandlingService drinkEventHandlingService;
         private readonly PushNotificationService pushNotificationService;
@@ -38,8 +37,7 @@ namespace BingeBuddyNg.Functions.Services
             IUserRepository userRepository,
             INotificationService notificationService,
             IMonitoringRepository monitoringRepository,
-            UpdateRankingCommand updateRankingCommand,
-            UpdateStatisticsCommand updateStatisticsCommand,
+            UserStatisticUpdateService rankingService,
             ActivityDistributionService activityDistributionService,
             DrinkEventHandlingService drinkEventHandlingService,
             PushNotificationService pushNotificationService,
@@ -50,8 +48,7 @@ namespace BingeBuddyNg.Functions.Services
             this.userRepository = userRepository;
             this.notificationService = notificationService;
             this.monitoringRepository = monitoringRepository;
-            this.updateRankingCommand = updateRankingCommand;
-            this.updateStatisticsCommand = updateStatisticsCommand;
+            this.statisticUpdateService = rankingService;
             this.activityDistributionService = activityDistributionService;
             this.drinkEventHandlingService = drinkEventHandlingService;
             this.pushNotificationService = pushNotificationService;
@@ -79,11 +76,11 @@ namespace BingeBuddyNg.Functions.Services
                 try
                 {
                     // Immediately update Stats for current user
-                    userStats = await updateStatisticsCommand.ExecuteAsync(currentUser.Id, currentUser.Gender, currentUser.Weight);
+                    userStats = await statisticUpdateService.UpdateStatisticsAsync(currentUser.Id, currentUser.Gender, currentUser.Weight);
 
                     if (activity.ActivityType == ActivityType.Drink)
                     {
-                        await updateRankingCommand.ExecuteAsync(currentUser.Id);
+                        await statisticUpdateService.UpdateRankingAsync(currentUser.Id);
 
                         activity.UpdateStats(userStats.CurrentNightDrinks, userStats.CurrentAlcoholization);
 

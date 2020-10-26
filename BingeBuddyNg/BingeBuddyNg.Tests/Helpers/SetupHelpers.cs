@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Persistence;
-using BingeBuddyNg.Core.User.Queries;
 using Moq;
 using static BingeBuddyNg.Shared.Constants;
 
@@ -10,11 +10,11 @@ namespace BingeBuddyNg.Tests.Helpers
 {
     internal static class SetupHelpers
     {
-        internal static SearchUsersQuery SetupSearchUsersQuery(IEnumerable<string> testUserIds)
+        internal static IUserRepository SetupUserRepository(IEnumerable<string> testUserIds)
         {
             var storageAccessServiceMock = new Mock<IStorageAccessService>();
 
-            var query = new SearchUsersQuery(storageAccessServiceMock.Object);
+            var query = new UserRepository(storageAccessServiceMock.Object, new Mock<ICacheService>().Object);
 
             storageAccessServiceMock
                 .Setup(s => s.QueryTableAsync<JsonTableEntity<UserEntity>>(TableNames.Users, It.IsAny<string>()))

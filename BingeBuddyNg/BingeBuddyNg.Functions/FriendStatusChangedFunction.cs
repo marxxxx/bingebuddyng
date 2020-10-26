@@ -3,27 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
-using BingeBuddyNg.Core.Activity.Commands;
 using BingeBuddyNg.Core.Activity.Persistence;
-using BingeBuddyNg.Core.Activity.Queries;
 using BingeBuddyNg.Core.User.Messages;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Functions
 {
     public class FriendStatusChangedFunction
     {
-        private readonly GetUserActivitiesQuery getUserActivitiesQuery;
         private readonly IActivityRepository activityRepository;
 
-        public FriendStatusChangedFunction(
-            GetUserActivitiesQuery getUserActivitiesQuery, 
-            IActivityRepository activityRepository)
+        public FriendStatusChangedFunction(IActivityRepository activityRepository)
         {
-            this.getUserActivitiesQuery = getUserActivitiesQuery;
             this.activityRepository = activityRepository;
         }
 
@@ -31,8 +24,8 @@ namespace BingeBuddyNg.Functions
         public async Task Run([QueueTrigger(QueueNames.FriendStatusChanged, Connection = "AzureWebJobsStorage")] FriendStatusChangedMessage message, ILogger log)
         {
             var startTime = DateTime.UtcNow.Subtract(TimeSpan.FromDays(30));
-            var userActivities = await getUserActivitiesQuery.ExecuteAsync(message.UserId, startTime);
-            var friendActivities = await getUserActivitiesQuery.ExecuteAsync(message.FriendUserId, startTime);
+            var userActivities = await this.activityRepository.GetUserActivitiesAsync(message.UserId, startTime);
+            var friendActivities = await activityRepository.GetUserActivitiesAsync(message.FriendUserId, startTime);
 
             switch (message.Status)
             {

@@ -1,22 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Core.User.Persistence;
 using BingeBuddyNg.Core.Venue;
+using Microsoft.WindowsAzure.Storage.Table;
 using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.User
 {
     public class UserRepository : IUserRepository
     {
-        private readonly IStorageAccessService storageAccess;
+        private readonly IStorageAccessService storageAccessService;
         private readonly ICacheService cacheService;
 
         public UserRepository(IStorageAccessService storageAccess, ICacheService cacheService)
         {
-            this.storageAccess = storageAccess ?? throw new ArgumentNullException(nameof(storageAccess));
+            this.storageAccessService = storageAccess ?? throw new ArgumentNullException(nameof(storageAccess));
             this.cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
         }
 
@@ -37,7 +40,7 @@ namespace BingeBuddyNg.Core.User
         {
             var result = await cacheService.GetOrCreateAsync(GetUserCacheKey(id), async () =>
             {
-                return await this.storageAccess.GetTableEntityAsync<JsonTableEntity<UserEntity>>(TableNames.Users, StaticPartitionKeys.User, id);
+                return await this.storageAccessService.GetTableEntityAsync<JsonTableEntity<UserEntity>>(TableNames.Users, StaticPartitionKeys.User, id);
             }, TimeSpan.FromMinutes(1));
 
             return result;
@@ -74,7 +77,7 @@ namespace BingeBuddyNg.Core.User
                     savedUser.Entity.Language = request.Language;
                 }
 
-                await this.storageAccess.ReplaceAsync(TableNames.Users, savedUser);
+                await this.storageAccessService.ReplaceAsync(TableNames.Users, savedUser);
                 cacheService.Remove(GetUserCacheKey(request.UserId));
             }
             else
@@ -90,7 +93,7 @@ namespace BingeBuddyNg.Core.User
                     LastOnline = DateTime.UtcNow,
                     ProfileImageUrl = request.ProfileImageUrl
                 };
-                await this.storageAccess.InsertAsync(TableNames.Users, new JsonTableEntity<UserEntity>(StaticPartitionKeys.User, request.UserId, user));
+                await this.storageAccessService.InsertAsync(TableNames.Users, new JsonTableEntity<UserEntity>(StaticPartitionKeys.User, request.UserId, user));
                 isNewUser = true;
             }
 
@@ -102,9 +105,62 @@ namespace BingeBuddyNg.Core.User
             var userEntity = await FindUserEntityAsync(user.Id);
             userEntity.Entity = user;
 
-            await this.storageAccess.ReplaceAsync(TableNames.Users, userEntity);
+            await this.storageAccessService.ReplaceAsync(TableNames.Users, userEntity);
 
             cacheService.Remove(GetUserCacheKey(user.Id));
+        }
+
+        public async Task<IEnumerable<string>> GetAllUserIdsAsync()
+        {
+            return await this.storageAccessService.GetRowKeysAsync(TableNames.Users, StaticPartitionKeys.User);
+        }
+
+        public async Task<List<UserEntity>> SearchUsersAsync(IEnumerable<string> userIds = null, string filterText = null)
+        {
+            string whereClause = BuildWhereClause(userIds);
+
+            var result = await storageAccessService.QueryTableAsync<JsonTableEntity<UserEntity>>(TableNames.Users, whereClause);
+
+            var users = result.OrderByDescending(u => u.Timestamp).Select(r =>
+            {
+                var user = r.Entity;
+                user.LastOnline = r.Timestamp.UtcDateTime;
+                return user;
+            }).ToList();
+
+            // TODO: Should soon be improved!
+            if (!string.IsNullOrEmpty(filterText))
+            {
+                string lowerFilter = filterText.ToLower();
+                users = users.Where(u => u.Name.ToLower().Contains(lowerFilter)).ToList();
+            }
+
+            return users;
+        }
+
+        private string BuildWhereClause(IEnumerable<string> userIds)
+        {
+            if (userIds == null)
+            {
+                return null;
+            }
+
+            string whereClause = null;
+
+            foreach (var u in userIds)
+            {
+                string filter = TableQuery.GenerateFilterCondition(nameof(TableEntity.RowKey), QueryComparisons.Equal, u);
+                if (whereClause != null)
+                {
+                    whereClause = TableQuery.CombineFilters(whereClause, TableOperators.Or, filter);
+                }
+                else
+                {
+                    whereClause = filter;
+                }
+            }
+
+            return whereClause;
         }
     }
 }

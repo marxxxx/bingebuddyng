@@ -1,11 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Activity.Persistence;
 
 namespace BingeBuddyNg.Core.Activity
 {
     public interface IActivityRepository
     {
+        Task<IEnumerable<ActivityEntity>> GetMasterActivitiesAsync(ActivityFilterArgs args);
+
+        Task<IEnumerable<ActivityEntity>> GetUserActivitiesAsync(string userId, DateTime startTimeUtc, ActivityType activityType = ActivityType.None);
+
         Task<Domain.Activity> GetActivityAsync(string id);
 
         Task<ActivityEntity> AddActivityAsync(ActivityEntity activity);

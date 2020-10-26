@@ -22,26 +22,17 @@ namespace BingeBuddyNg.Api.Controllers
     {
         private readonly IIdentityService identityService;
         private readonly IMediator mediator;
-        private readonly GetMasterActivitiesQuery getMasterActivitiesQuery;
 
-        public ActivityController(
-            IIdentityService identityService,
-            IMediator mediator,
-            GetMasterActivitiesQuery getMasterActivitiesQuery)
+        public ActivityController(IIdentityService identityService, IMediator mediator)
         {
             this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            this.getMasterActivitiesQuery = getMasterActivitiesQuery ?? throw new ArgumentNullException(nameof(getMasterActivitiesQuery));
         }
 
         [HttpGet("map")]
-        public async Task<ActionResult<IEnumerable<ActivityDTO>>> GetActivitysForMap()
+        public async Task<IEnumerable<ActivityDTO>> GetActivitysForMap()
         {
-            var args = new ActivityFilterArgs() { FilterOptions = ActivityFilterOptions.WithLocation, PageSize = 50 };
-
-            var result = await this.getMasterActivitiesQuery.ExecuteAsync(args);
-
-            return result.Select(r=>r.ToDto()).ToList();
+            return await this.mediator.Send(new GetActivitiesForMapQuery());
         }
 
         [HttpGet("feed")]

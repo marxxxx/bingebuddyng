@@ -1,20 +1,13 @@
 ﻿using BingeBuddyNg.Core.Activity;
-using BingeBuddyNg.Core.Activity.Commands;
 using BingeBuddyNg.Core.Activity.DTO;
-using BingeBuddyNg.Core.Activity.Queries;
 using BingeBuddyNg.Core.Drink;
 using BingeBuddyNg.Core.DrinkEvent;
-using BingeBuddyNg.Core.FriendsRequest;
 using BingeBuddyNg.Core.Game;
 using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.Invitation;
+using BingeBuddyNg.Core.Ranking;
 using BingeBuddyNg.Core.Ranking.Queries;
-using BingeBuddyNg.Core.Statistics.Commands;
-using BingeBuddyNg.Core.Statistics.Queries;
-using BingeBuddyNg.Core.Statistics.Querys;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Core.User.Commands;
-using BingeBuddyNg.Core.User.Queries;
 using BingeBuddyNg.Core.Venue;
 using BingeBuddyNg.Infrastructure;
 using BingeBuddyNg.Infrastructure.FourSquare;
@@ -35,15 +28,8 @@ namespace BingeBuddyNg.Api
 
             services.AddMediatR(typeof(ActivityDTO).Assembly);
 
-            services.AddScoped<SearchUsersQuery>();
-            services.AddScoped<GetAllUserIdsQuery>();
-            services.AddScoped<GetStatisticsQuery>();
-            services.AddScoped<GetPersonalUsagePerWeekdayQuery>();
-            services.AddScoped<GetUserActivitiesQuery>();
-            services.AddScoped<GetMasterActivitiesQuery>();
             services.AddScoped<GetDrinksRankingQuery>();
             services.AddScoped<GetScoreRankingQuery>();
-            services.AddScoped<GetStatisticHistoryForUserQuery>();
 
             // add infrastructure services
             services.AddScoped<IIdentityService, IdentityService>();
@@ -58,7 +44,7 @@ namespace BingeBuddyNg.Api
             services.AddStorage(configuration);
             services.AddEventGrid(configuration);
             
-            // add domain services
+            // add repositories
             services.AddSingleton<IActivityRepository, ActivityRepository>();
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<IInvitationRepository, InvitationRepository>();
@@ -68,9 +54,7 @@ namespace BingeBuddyNg.Api
             services.AddSingleton<IVenueUserRepository, VenueUserRepository>();
 
             services.AddSingleton<IDrinkRepository, DrinkRepository>();
-            services.AddScoped<UpdateStatisticsCommand>();
-            services.AddScoped<UpdateRankingCommand>();
-            services.AddScoped<IncreaseScoreCommand>();
+            services.AddScoped<UserStatisticUpdateService>();
 
             services.AddGame();
         }

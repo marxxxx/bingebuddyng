@@ -6,7 +6,6 @@ using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Game.DTO;
 using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Core.User.Queries;
 using BingeBuddyNg.Shared;
 using MediatR;
 
@@ -29,21 +28,21 @@ namespace BingeBuddyNg.Core.Game.Commands
     public class StartGameCommandHandler : IRequestHandler<StartGameCommand, StartGameResultDTO>
     {
         private readonly GameRepository gameRepository;
-        private readonly SearchUsersQuery getUsersQuery;
+        private readonly IUserRepository userRepository;
         private readonly IActivityRepository activityRepository;
         private readonly INotificationService notificationService;
         private readonly ITranslationService translationService;        
 
         public StartGameCommandHandler(
             GameRepository gameRepository,
-            SearchUsersQuery getUsersQuery,
+            IUserRepository userRepository,
             IActivityRepository activityRepository,
             INotificationService notificationService,
             ITranslationService translationService)
         {
             this.notificationService = notificationService;
             this.gameRepository = gameRepository;
-            this.getUsersQuery = getUsersQuery;
+            this.userRepository = userRepository;
             this.translationService = translationService;
             this.activityRepository = activityRepository;
         }
@@ -60,7 +59,7 @@ namespace BingeBuddyNg.Core.Game.Commands
             var allParticipents = new List<string>(friendIds);
             allParticipents.Add(command.UserId.ToString());
 
-            var users = await this.getUsersQuery.ExecuteAsync(allParticipents);
+            var users = await this.userRepository.SearchUsersAsync(allParticipents);
             var pushInfosOfInvitedFriends = users
                 .Where(u => u.PushInfo != null && u.Id != command.UserId.ToString())
                 .Select(u => new { u.Language, u.PushInfo })
@@ -104,7 +103,7 @@ namespace BingeBuddyNg.Core.Game.Commands
                 HubMethodNames.GameEnded,
                 new GameEndedMessage(e.Game.Id, e.WinnerUserId));
 
-            var users = await this.getUsersQuery.ExecuteAsync(e.Game.PlayerUserIds);
+            var users = await this.userRepository.SearchUsersAsync(e.Game.PlayerUserIds);
             var pushInfos = users.Where(u => u.PushInfo != null).Select(u => new { u.Language, u.PushInfo });
             var winnerUser = users.FirstOrDefault(u => u.Id == e.WinnerUserId);
 

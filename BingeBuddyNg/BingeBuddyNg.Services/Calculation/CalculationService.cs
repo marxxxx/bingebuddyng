@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Activity.Queries;
 using BingeBuddyNg.Core.User.Domain;
@@ -12,11 +13,11 @@ namespace BingeBuddyNg.Core.Calculation
         private const int DefaultWeight = 80;
         private const int NightConsiderationTimespanInHours = 14;
 
-        private readonly GetUserActivitiesQuery getUserActivitiesQuery;
+        private readonly IActivityRepository activityRepository;
 
-        public CalculationService(GetUserActivitiesQuery getUserActivitiesQuery)
+        public CalculationService(IActivityRepository activityRepository)
         {
-            this.getUserActivitiesQuery = getUserActivitiesQuery;
+            this.activityRepository = activityRepository;
         }
 
         private DrinkCalculationResult CalculateStats(UserDrinkActivity userDrinkActivity)
@@ -60,7 +61,7 @@ namespace BingeBuddyNg.Core.Calculation
         public async Task<DrinkCalculationResult> CalculateStatsForUserAsync(string userId, Gender gender, int? weight)
         {
             DateTime startTimestamp = DateTime.UtcNow.Subtract(TimeSpan.FromHours(NightConsiderationTimespanInHours));
-            var activity = await this.getUserActivitiesQuery.ExecuteAsync(userId, startTimestamp, ActivityType.Drink);
+            var activity = await this.activityRepository.GetUserActivitiesAsync(userId, startTimestamp, ActivityType.Drink);
 
             var drinkActivity = activity
                 .Where(a=> a.ActivityType == ActivityType.Drink && a.Timestamp >= startTimestamp)

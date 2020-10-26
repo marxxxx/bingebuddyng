@@ -27,18 +27,18 @@ namespace BingeBuddyNg.Core.Game.Queries
     public class GetGameQueryHandler : IRequestHandler<GetGameQuery, GameDTO>
     {
         private readonly GameRepository manager;
-        private readonly SearchUsersQuery getUsersQuery;
+        private readonly IUserRepository userRepository;
 
-        public GetGameQueryHandler(GameRepository manager, SearchUsersQuery getUsersQuery)
+        public GetGameQueryHandler(GameRepository manager, IUserRepository userRepository)
         {
             this.manager = manager ?? throw new ArgumentNullException(nameof(manager));
-            this.getUsersQuery = getUsersQuery ?? throw new ArgumentNullException(nameof(getUsersQuery));
+            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
         public async Task<GameDTO> Handle(GetGameQuery request, CancellationToken cancellationToken)
         {
             var game = this.manager.Get(request.GameId);
-            var users = await this.getUsersQuery.ExecuteAsync(game.PlayerUserIds);
+            var users = await this.userRepository.SearchUsersAsync(game.PlayerUserIds);
             return game.ToDto(users.Select(u=>u.ToUserInfoDTO()));
         }
     }

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity.DTO;
 using BingeBuddyNg.Core.FriendsRequest.Commands;
 using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Core.User.DTO;
 using BingeBuddyNg.Core.User.Queries;
@@ -22,33 +20,23 @@ namespace BingeBuddyNg.Api.Controllers
     {
         private readonly IIdentityService identityService;
         private readonly IMediator mediator;
-        private readonly SearchUsersQuery getUsersQuery;
-        private readonly IUserRepository userRepository;
 
-        public UserController(IIdentityService identityService,
-            IMediator mediator,
-            SearchUsersQuery getUsersQuery, 
-            IUserRepository userRepository)
+        public UserController(IIdentityService identityService, IMediator mediator)
         {
             this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            this.getUsersQuery = getUsersQuery ?? throw new ArgumentNullException(nameof(getUsersQuery));
-            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
         [HttpGet]
         public async Task<List<UserInfoDTO>> GetAllUsers(string filterText = null)
         {
-            var result = await getUsersQuery.ExecuteAsync(filterText: filterText);
-
-            return result.Select(r=>r.ToUserInfoDTO()).ToList();
+            return await this.mediator.Send(new GetAllUsersQuery(filterText));         
         }
 
         [HttpGet("{userId}")]
         public async Task<ActionResult<UserDTO>> GetUser(string userId)
         {
-            var user = await userRepository.GetUserAsync(userId);
-            return user.ToDto();
+            return await this.mediator.Send(new GetUserQuery(userId));
         }
 
         [HttpPost]

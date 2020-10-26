@@ -27,7 +27,7 @@ namespace BingeBuddyNg.Tests
             var notificationServiceMock = new Mock<INotificationService>();
             var manager = new GameRepository();
 
-            var searchUsersQuery = SetupHelpers.SetupSearchUsersQuery(friendUserIds.Concat(new[] { myUserId }));
+            var searchUsersQuery = SetupHelpers.SetupUserRepository(friendUserIds.Concat(new[] { myUserId }));
             
             var command = new StartGameCommand(myUserId, gameTitle, friendUserIds);
             var handler = new StartGameCommandHandler(manager, searchUsersQuery, new Mock<IActivityRepository>().Object, notificationServiceMock.Object, new Mock<ITranslationService>().Object);
@@ -94,7 +94,7 @@ namespace BingeBuddyNg.Tests
             // Arrage
             var manager = new GameRepository();
             var game = manager.Create("my game", new[] { Guid.NewGuid().ToString() });
-            var searchUsersQuery = SetupHelpers.SetupSearchUsersQuery(game.PlayerUserIds);
+            var searchUsersQuery = SetupHelpers.SetupUserRepository(game.PlayerUserIds);
 
             var query = new GetGameQuery(game.Id);
             var handler = new GetGameQueryHandler(manager, searchUsersQuery);

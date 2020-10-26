@@ -2,10 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
-using BingeBuddyNg.Core.Statistics.Commands;
-using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.Ranking;
+using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Shared;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -35,7 +34,7 @@ namespace BingeBuddyNg.Core.Invitation.Commands
         private readonly INotificationService notificationService;
         private readonly IActivityRepository activityRepository;
         private readonly ITranslationService translationService;
-        private readonly IncreaseScoreCommand increaseScoreCommand;
+        private readonly UserStatisticUpdateService rankingService;
 
         public AcceptInvitationCommandHandler(
             IInvitationRepository invitationRepository,
@@ -43,7 +42,7 @@ namespace BingeBuddyNg.Core.Invitation.Commands
             INotificationService notificationService,
             IActivityRepository activityRepository,
             ITranslationService translationService,
-            IncreaseScoreCommand increaseScoreCommand,
+            UserStatisticUpdateService rankingService,
             ILogger<AcceptInvitationCommandHandler> logger)
         {
             this.invitationRepository = invitationRepository;
@@ -51,7 +50,7 @@ namespace BingeBuddyNg.Core.Invitation.Commands
             this.notificationService = notificationService;
             this.activityRepository = activityRepository;
             this.translationService = translationService;
-            this.increaseScoreCommand = increaseScoreCommand;
+            this.rankingService = rankingService;
 
             this.logger = logger;
         }
@@ -75,7 +74,7 @@ namespace BingeBuddyNg.Core.Invitation.Commands
 
                 try
                 {
-                    await this.increaseScoreCommand.ExecuteAsync(invitingUser.Id, Scores.FriendInvitation);
+                    await this.rankingService.IncreaseScoreAsync(invitingUser.Id, Scores.FriendInvitation);
 
                     var message = await translationService.GetTranslationAsync(invitingUser.Language, "RecruitmentActivityMessage", acceptingUser.Name, Constants.Scores.FriendInvitation);
 

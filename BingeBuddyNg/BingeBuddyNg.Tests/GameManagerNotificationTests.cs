@@ -73,7 +73,7 @@ namespace BingeBuddyNg.Tests
             gameManager.DefaultGameDuration = TimeSpan.FromSeconds(1);
             notificationServiceMock = new Mock<INotificationService>();
 
-            var searchUsersQuery = SetupHelpers.SetupSearchUsersQuery(testUserIds);
+            var searchUsersQuery = SetupHelpers.SetupUserRepository(testUserIds);
             activityRepositoryMock = new Mock<IActivityRepository>();
 
             activityRepositoryMock

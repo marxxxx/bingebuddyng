@@ -27,18 +27,18 @@ namespace BingeBuddyNg.Core.Activity.Queries
 
     public class GetDrinkActivityAggregationQueryHandler : IRequestHandler<GetDrinkActivityAggregationQuery, List<ActivityAggregationDTO>>
     {
-        private readonly GetUserActivitiesQuery getUserActivitiesQuery;
+        private readonly IActivityRepository activityRepository;
 
-        public GetDrinkActivityAggregationQueryHandler(GetUserActivitiesQuery getUserActivitiesQuery)
+        public GetDrinkActivityAggregationQueryHandler(IActivityRepository activityRepository)
         {
-            this.getUserActivitiesQuery = getUserActivitiesQuery;
+            this.activityRepository = activityRepository;
         }
 
         public async Task<List<ActivityAggregationDTO>> Handle(GetDrinkActivityAggregationQuery request, CancellationToken cancellationToken)
         {
             var startTime = DateTime.UtcNow.AddDays(-30).Date;
 
-            var result = await this.getUserActivitiesQuery.ExecuteAsync(request.UserId, startTime, ActivityType.Drink);
+            var result = await this.activityRepository.GetUserActivitiesAsync(request.UserId, startTime, ActivityType.Drink);
 
             var groupedByDay = result.Where(r=>r.ActivityType == ActivityType.Drink).GroupBy(t => t.Timestamp.Date)
                 .OrderBy(t => t.Key)

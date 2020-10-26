@@ -1,32 +1,37 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.Ranking.DTO;
 using BingeBuddyNg.Core.Statistics;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Core.User.Queries;
+using MediatR;
 using Microsoft.WindowsAzure.Storage.Table;
 using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.Ranking.Queries
 {
-    public class GetScoreRankingQuery
+    public class GetScoreRankingQuery : IRequest<List<UserRankingDTO>>
     {
-        private readonly SearchUsersQuery getAllUsersQuery;
+    }
+
+    public class GetScoreRankingQueryHandler : IRequestHandler<GetScoreRankingQuery, List<UserRankingDTO>>
+    {
+        private readonly IUserRepository userRepository;
         private readonly IStorageAccessService storageAccessService;
 
-        public GetScoreRankingQuery(SearchUsersQuery getAllUsersQuery, IStorageAccessService storageAccessService)
+        public GetScoreRankingQueryHandler(IUserRepository userRepository, IStorageAccessService storageAccessService)
         {
-            this.getAllUsersQuery = getAllUsersQuery;
+            this.userRepository = userRepository;
             this.storageAccessService = storageAccessService;
         }
 
-        public async Task<List<UserRankingDTO>> ExecuteAsync()
+        public async Task<List<UserRankingDTO>> Handle(GetScoreRankingQuery request, CancellationToken cancellationToken)
         {
             var userStats = await this.GetScoreStatisticsAsync();
             var userIds = userStats.Select(u => u.UserId).Distinct();
-            var users = await this.getAllUsersQuery.ExecuteAsync(userIds);
+            var users = await this.userRepository.SearchUsersAsync(userIds);
 
             var result = userStats.Select(s => new UserRankingDTO(users.First(u => u.Id == s.UserId).ToUserInfoDTO(), s.ToDto()))
                 .OrderByDescending(r => r.Statistics.Score)
@@ -49,5 +54,4 @@ namespace BingeBuddyNg.Core.Ranking.Queries
             return result;
         }
     }
-
 }

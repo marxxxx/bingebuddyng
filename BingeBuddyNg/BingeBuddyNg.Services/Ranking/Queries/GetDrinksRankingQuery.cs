@@ -8,21 +8,28 @@ using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.User.Queries;
 using Microsoft.WindowsAzure.Storage.Table;
 using static BingeBuddyNg.Shared.Constants;
+using BingeBuddyNg.Core.User;
+using MediatR;
+using System.Threading;
 
 namespace BingeBuddyNg.Core.Ranking.Queries
 {
-    public class GetDrinksRankingQuery
+    public class GetDrinksRankingQuery : IRequest<List<UserRankingDTO>>
     {
-        private readonly SearchUsersQuery getUsersQuery;
+    }
+
+    public class GetDrinksRankingQueryHandler : IRequestHandler<GetDrinksRankingQuery, List<UserRankingDTO>>
+    {
+        private readonly IUserRepository userRepository;
         private readonly IStorageAccessService storageAccessService;
 
-        public GetDrinksRankingQuery(SearchUsersQuery getUsersQuery, IStorageAccessService storageAccessService)
+        public GetDrinksRankingQueryHandler(IUserRepository userRepository, IStorageAccessService storageAccessService)
         {
-            this.getUsersQuery = getUsersQuery;
+            this.userRepository = userRepository;
             this.storageAccessService = storageAccessService;
         }
 
-        public async Task<List<UserRankingDTO>> ExecuteAsync()
+        public async Task<List<UserRankingDTO>> Handle(GetDrinksRankingQuery request, CancellationToken cancellationToken)
         {
             string whereClause = TableQuery.GenerateFilterConditionForInt(nameof(UserStatsTableEntity.TotalDrinksLastMonth), QueryComparisons.GreaterThan, 0);
             var queryResult = await storageAccessService.QueryTableAsync<UserStatsTableEntity>(TableNames.UserStats, whereClause);
@@ -32,7 +39,7 @@ namespace BingeBuddyNg.Core.Ranking.Queries
                 .ToList();
 
             var userIds = userStats.Select(u => u.UserId).Distinct();
-            var users = await this.getUsersQuery.ExecuteAsync(userIds);
+            var users = await this.userRepository.SearchUsersAsync(userIds);
 
             var result = userStats.Select(s => new UserRankingDTO(users.Select(u => new UserInfoDTO(u.Id, u.Name)).First(u => u.UserId == s.UserId), s.ToDto())).ToList();
             return result;

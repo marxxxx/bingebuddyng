@@ -45,6 +45,5 @@ namespace BingeBuddyNg.Api.Controllers
             var userId = identityService.GetCurrentUserId();
             await mediator.Send(new AcceptInvitationCommand(userId, invitationToken));
         }
-        
     }
 }

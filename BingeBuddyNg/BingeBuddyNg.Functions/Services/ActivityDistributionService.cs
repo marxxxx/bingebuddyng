@@ -1,21 +1,21 @@
-﻿using BingeBuddyNg.Core.Activity;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Activity.Persistence;
+using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.User.Domain;
-using BingeBuddyNg.Core.User.Queries;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BingeBuddyNg.Functions.Services
 {
     public class ActivityDistributionService
     {
-        private readonly GetAllUserIdsQuery getAllUserIdsQuery;
+        private readonly IUserRepository userRepository;
         private readonly IActivityRepository activityRepository;
 
-        public ActivityDistributionService(GetAllUserIdsQuery getAllUserIdsQuery, IActivityRepository activityRepository)
+        public ActivityDistributionService(IUserRepository userRepository, IActivityRepository activityRepository)
         {
-            this.getAllUserIdsQuery = getAllUserIdsQuery;
+            this.userRepository = userRepository;
             this.activityRepository = activityRepository;
         }
 
@@ -25,7 +25,7 @@ namespace BingeBuddyNg.Functions.Services
 
             if (activity.ActivityType == ActivityType.Registration)
             {
-                userIds = await this.getAllUserIdsQuery.ExecuteAsync();
+                userIds = await this.userRepository.GetAllUserIdsAsync();
             }
             else
             {

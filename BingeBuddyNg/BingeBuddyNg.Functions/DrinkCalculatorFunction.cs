@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using BingeBuddyNg.Core.Statistics.Commands;
-using BingeBuddyNg.Core.User.Queries;
+using BingeBuddyNg.Core.Ranking;
+using BingeBuddyNg.Core.User;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
@@ -9,25 +9,25 @@ namespace BingeBuddyNg.Functions
 {
     public class DrinkCalculatorFunction
     {
-        private readonly SearchUsersQuery getUsersQuery;
-        private readonly UpdateStatisticsCommand updateStatisticsCommand;
+        private readonly IUserRepository userRepository;
+        private readonly UserStatisticUpdateService statisticUpdateService;
 
-        public DrinkCalculatorFunction(SearchUsersQuery getUsersQuery, UpdateStatisticsCommand updateStatisticsCommand)
+        public DrinkCalculatorFunction(IUserRepository userRepository, UserStatisticUpdateService updateStatisticsCommand)
         {
-            this.getUsersQuery = getUsersQuery;
-            this.updateStatisticsCommand = updateStatisticsCommand;
+            this.userRepository = userRepository;
+            this.statisticUpdateService = updateStatisticsCommand;
         }
 
         [FunctionName(nameof(DrinkCalculatorFunction))]
         public async Task Run([TimerTrigger("0 */15 * * * *")]TimerInfo myTimer, ILogger log)
         {
-            var users = await getUsersQuery.ExecuteAsync();
+            var users = await userRepository.SearchUsersAsync();
 
             foreach (var u in users)
             {
                 try
                 {
-                    await updateStatisticsCommand.ExecuteAsync(u.Id, u.Gender, u.Weight);
+                    await this.statisticUpdateService.UpdateStatisticsAsync(u.Id, u.Gender, u.Weight);
                 }
                 catch (Exception ex)
                 {

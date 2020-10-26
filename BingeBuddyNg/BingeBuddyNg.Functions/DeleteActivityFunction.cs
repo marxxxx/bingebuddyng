@@ -1,12 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
-using BingeBuddyNg.Core.Activity.Commands;
 using BingeBuddyNg.Core.Activity.Messages;
-using BingeBuddyNg.Core.User.Queries;
+using BingeBuddyNg.Core.User;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Functions
@@ -14,12 +12,12 @@ namespace BingeBuddyNg.Functions
     public class DeleteActivityFunction
     {
         private readonly IActivityRepository activityRepository;
-        private readonly GetAllUserIdsQuery getAllUserIdsQuery;
+        private readonly IUserRepository userRepository;
 
-        public DeleteActivityFunction(IActivityRepository activityRepository, GetAllUserIdsQuery getAllUserIdsQuery)
+        public DeleteActivityFunction(IActivityRepository activityRepository, IUserRepository userRepository)
         {
             this.activityRepository = activityRepository;
-            this.getAllUserIdsQuery = getAllUserIdsQuery;
+            this.userRepository = userRepository;
         }
 
         [FunctionName(nameof(DeleteActivityFunction))]
@@ -27,7 +25,7 @@ namespace BingeBuddyNg.Functions
         {
             log.LogInformation($"Deleting activity from personalized feeds: {message}");
 
-            var allUserIds = await this.getAllUserIdsQuery.ExecuteAsync();
+            var allUserIds = await this.userRepository.GetAllUserIdsAsync();
 
             foreach (var userId in allUserIds)
             {

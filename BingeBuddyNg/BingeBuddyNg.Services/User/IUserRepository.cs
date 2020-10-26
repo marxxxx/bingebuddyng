@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Core.User.Persistence;
 
@@ -11,5 +12,9 @@ namespace BingeBuddyNg.Core.User
         Task UpdateUserAsync(UserEntity user);
 
         Task<CreateOrUpdateUserResult> CreateOrUpdateUserAsync(CreateOrUpdateUserCommand user);
+
+        Task<IEnumerable<string>> GetAllUserIdsAsync();
+
+        Task<List<UserEntity>> SearchUsersAsync(IEnumerable<string> userIds = null, string filterText = null);
     }
 }

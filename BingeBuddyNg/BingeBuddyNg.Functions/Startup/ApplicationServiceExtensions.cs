@@ -1,13 +1,10 @@
 ﻿using System;
 using BingeBuddyNg.Core.Activity;
-using BingeBuddyNg.Core.Activity.Commands;
-using BingeBuddyNg.Core.Activity.Queries;
 using BingeBuddyNg.Core.Calculation;
 using BingeBuddyNg.Core.DrinkEvent;
 using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Core.Statistics.Commands;
+using BingeBuddyNg.Core.Ranking;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Core.User.Queries;
 using BingeBuddyNg.Infrastructure;
 using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,12 +20,7 @@ namespace BingeBuddyNg.Functions
             services.AddUser();
             services.AddScoped<CalculationService>();
             services.AddScoped<IDrinkEventRepository, DrinkEventRepository>();
-            
-            // Commands & Queries
-            services.AddScoped<UpdateRankingCommand>();
-            services.AddScoped<UpdateStatisticsCommand>();
-            services.AddScoped<IncreaseScoreCommand>();
-            services.AddScoped<GetUserActivitiesQuery>();
+            services.AddScoped<UserStatisticUpdateService>();
 
             // Infrastructure
             services.AddHttpClient();
@@ -47,8 +39,6 @@ namespace BingeBuddyNg.Functions
         public static void AddUser(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<SearchUsersQuery>();
-            services.AddScoped<GetAllUserIdsQuery>();
         }
 
         public static void AddNotification(this IServiceCollection services)

@@ -13,27 +13,23 @@ namespace BingeBuddyNg.Api.Controllers
     public class RankingController : Controller
     {
         private readonly IMediator mediator;
-        private readonly GetScoreRankingQuery getScoreRankingQuery;
-        private readonly GetDrinksRankingQuery getDrinksRankingQuery;
 
-        public RankingController(IMediator mediator, GetScoreRankingQuery getScoreRankingQuery, GetDrinksRankingQuery getDrinksRankingQuery)
+        public RankingController(IMediator mediator)
         {
             this.mediator = mediator;
-            this.getScoreRankingQuery = getScoreRankingQuery;
-            this.getDrinksRankingQuery = getDrinksRankingQuery;
         }
 
         [HttpGet("drinks")]
         public async Task<List<UserRankingDTO>> GetDrinkRanking()
         {
-            var result = await this.getDrinksRankingQuery.ExecuteAsync();
+            var result = await this.mediator.Send(new GetDrinksRankingQuery());
             return result;
         }
 
         [HttpGet("score")]
         public async Task<List<UserRankingDTO>> GetScoreRanking()
         {
-            var result = await this.getScoreRankingQuery.ExecuteAsync();
+            var result = await this.mediator.Send(new GetScoreRankingQuery());
             return result;
         }
 
