@@ -1,9 +1,9 @@
-﻿using BingeBuddyNg.Core.Infrastructure;
+﻿using System;
+using System.Collections.Generic;
+using BingeBuddyNg.Core.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.SignalR.Management;
-using System;
-using System.Collections.Generic;
 
 namespace BingeBuddyNg.Api.Controllers
 {

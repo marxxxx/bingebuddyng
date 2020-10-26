@@ -15,7 +15,7 @@ namespace BingeBuddyNg.Core.Invitation.Querys
         public GetInvitationQuery(Guid invitationToken)
         {
             InvitationToken = invitationToken;
-        }        
+        }
     }
 
     public class GetInvitationQueryHandler :

@@ -98,7 +98,6 @@ namespace BingeBuddyNg.Functions.Services
             await this.pushNotificationService.NotifyAsync(notifications);
         }
 
-
         private int CalculateEventProbability()
         {
             int max = 30;

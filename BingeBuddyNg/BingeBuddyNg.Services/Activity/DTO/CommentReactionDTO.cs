@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BingeBuddyNg.Core.Activity.DTO
+﻿namespace BingeBuddyNg.Core.Activity.DTO
 {
     public class CommentReactionDTO : ReactionDTO
     {

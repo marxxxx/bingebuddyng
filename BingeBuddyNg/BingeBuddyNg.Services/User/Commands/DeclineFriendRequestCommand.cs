@@ -16,7 +16,7 @@ namespace BingeBuddyNg.Core.FriendsRequest.Commands
         {
             DecliningUserId = decliningUserId ?? throw new ArgumentNullException(nameof(decliningUserId));
             RequestingUserId = requestingUserId ?? throw new ArgumentNullException(nameof(requestingUserId));
-        }        
+        }
     }
 
     public class DeclineFriendRequestCommandHandler : IRequestHandler<DeclineFriendRequestCommand>
@@ -32,7 +32,7 @@ namespace BingeBuddyNg.Core.FriendsRequest.Commands
         {
             var decliningUser = await userRepository.GetUserAsync(request.DecliningUserId);
             var requestingUser = await userRepository.GetUserAsync(request.RequestingUserId);
-            
+
             decliningUser.DeclineFriendRequest(requestingUser.ToUserInfo());
             requestingUser.DeclineFriendRequest(decliningUser.ToUserInfo());
 

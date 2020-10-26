@@ -49,6 +49,5 @@ namespace BingeBuddyNg.Infrastructure
 
             return addressInfo;
         }
-
     }
 }

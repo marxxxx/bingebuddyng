@@ -1,9 +1,9 @@
-﻿using BingeBuddyNg.Core.Infrastructure;
-using Microsoft.Azure.EventHubs;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Infrastructure;
+using Microsoft.Azure.EventHubs;
+using Newtonsoft.Json;
 
 namespace BingeBuddyNg.Infrastructure
 {
@@ -38,7 +38,6 @@ namespace BingeBuddyNg.Infrastructure
             };
 
             var eventHubClient = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
-
 
             return eventHubClient;
         }

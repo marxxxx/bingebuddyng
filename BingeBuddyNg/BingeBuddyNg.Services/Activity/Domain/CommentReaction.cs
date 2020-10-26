@@ -8,17 +8,16 @@ namespace BingeBuddyNg.Core.Activity.Domain
 
         public CommentReaction()
         {
-
         }
 
-        public CommentReaction(string userId, string userName, string comment) 
+        public CommentReaction(string userId, string userName, string comment)
             : base(userId, userName)
         {
             this.Comment = comment;
         }
 
         public CommentReaction(DateTime timestamp, string userId, string userName, string comment)
-            :this(userId, userName, comment)
+            : this(userId, userName, comment)
         {
             this.Timestamp = timestamp;
         }

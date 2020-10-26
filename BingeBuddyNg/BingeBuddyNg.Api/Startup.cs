@@ -32,7 +32,6 @@ namespace BingeBuddyNg.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BingeBuddy API", Version = "v1" });
 
-
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
@@ -40,7 +39,6 @@ namespace BingeBuddyNg.Api
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey
                 });
-
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
                     {
@@ -58,7 +56,6 @@ namespace BingeBuddyNg.Api
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
             }).AddJwtBearer(options =>
             {
                 options.Authority = "https://bingebuddy.eu.auth0.com/";
@@ -88,7 +85,7 @@ namespace BingeBuddyNg.Api
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {

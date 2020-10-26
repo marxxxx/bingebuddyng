@@ -6,7 +6,6 @@ using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Drink;
 using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.User.Messages;
-using BingeBuddyNg.Core.User.Persistence;
 using MediatR;
 using static BingeBuddyNg.Shared.Constants;
 
@@ -39,10 +38,10 @@ namespace BingeBuddyNg.Core.User.Commands
         private readonly IStorageAccessService storageAccessService;
 
         public CreateOrUpdateUserCommandHandler(
-            IUserRepository userRepository, 
+            IUserRepository userRepository,
             IDrinkRepository drinkRepository,
-            IActivityRepository activityRepository, 
-            IHttpClientFactory httpClientFactory, 
+            IActivityRepository activityRepository,
+            IHttpClientFactory httpClientFactory,
             IStorageAccessService storageAccessService)
         {
             this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
@@ -68,9 +67,9 @@ namespace BingeBuddyNg.Core.User.Commands
                         await storageAccessService.SaveFileInBlobStorage(ContainerNames.ProfileImages, request.UserId, profileImageStream);
                     }
                 }
-               
+
                 var activity = Activity.Domain.Activity.CreateRegistrationActivity(request.UserId, request.Name);
-                
+
                 await activityRepository.AddActivityAsync(activity.ToEntity());
                 await activityRepository.AddToPersonalizedFeedAsync(request.UserId, activity.ToEntity());
                 await activityRepository.AddToActivityAddedTopicAsync(activity.Id);

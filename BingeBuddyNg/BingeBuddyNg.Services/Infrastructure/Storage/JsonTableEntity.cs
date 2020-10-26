@@ -13,7 +13,6 @@ namespace BingeBuddyNg.Core.Infrastructure
 
         public JsonTableEntity()
         {
-
         }
 
         public JsonTableEntity(string partitionKey, string rowKey, T entity) : base(partitionKey, rowKey)

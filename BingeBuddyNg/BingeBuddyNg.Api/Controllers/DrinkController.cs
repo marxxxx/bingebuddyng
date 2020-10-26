@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Drink;
 using BingeBuddyNg.Core.Drink.DTO;
@@ -39,7 +38,7 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
         [HttpPost]
-        public async Task SaveDrink([FromBody]IEnumerable<DrinkDTO> drinks)
+        public async Task SaveDrink([FromBody] IEnumerable<DrinkDTO> drinks)
         {
             var userId = this.identityService.GetCurrentUserId();
             await this.drinkRepository.SaveDrinksAsync(userId, drinks);

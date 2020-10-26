@@ -9,7 +9,7 @@ namespace BingeBuddyNg.Core.User.DTO
         public string UserName { get; }
 
         public bool Muted { get; }
-                
+
         public UserInfoDTO(string userId, string userName, bool muted = false)
         {
             UserId = userId ?? throw new ArgumentNullException(nameof(userId));

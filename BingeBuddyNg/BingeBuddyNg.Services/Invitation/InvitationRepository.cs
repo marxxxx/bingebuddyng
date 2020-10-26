@@ -27,7 +27,6 @@ namespace BingeBuddyNg.Core.Invitation
             if (invitationEntity == null)
             {
                 throw new NotFoundException($"Invitation [{invitationToken}] not found!");
-
             }
             return invitationEntity;
         }

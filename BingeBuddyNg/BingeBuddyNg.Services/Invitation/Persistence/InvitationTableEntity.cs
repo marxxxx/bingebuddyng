@@ -12,7 +12,7 @@ namespace BingeBuddyNg.Core.Invitation.Persistence
         { }
 
         public InvitationTableEntity(string partitionKey, string invitationToken, string invitingUserId)
-            :base(partitionKey, invitationToken)
+            : base(partitionKey, invitationToken)
         {
             this.InvitationToken = invitationToken ?? throw new ArgumentNullException(nameof(invitationToken));
             this.InvitingUserId = invitingUserId ?? throw new ArgumentNullException(nameof(invitingUserId));

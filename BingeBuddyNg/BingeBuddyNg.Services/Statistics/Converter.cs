@@ -23,7 +23,7 @@ namespace BingeBuddyNg.Core.Statistics
         }
 
         public static PersonalUsagePerWeekdayDTO ToDto(this PersonalUsagePerWeekdayTableEntity entity)
-        {            
+        {
             return new PersonalUsagePerWeekdayDTO()
             {
                 WeekDay = entity.WeekDay,
@@ -46,7 +46,7 @@ namespace BingeBuddyNg.Core.Statistics
 
         private static double ParseDouble(string value)
         {
-            double.TryParse(value, System.Globalization.NumberStyles.Float, numFormat, out double result);            
+            double.TryParse(value, System.Globalization.NumberStyles.Float, numFormat, out double result);
             return result;
         }
     }

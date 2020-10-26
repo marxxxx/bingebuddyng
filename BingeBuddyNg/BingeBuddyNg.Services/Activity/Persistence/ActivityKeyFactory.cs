@@ -30,6 +30,6 @@ namespace BingeBuddyNg.Core.Activity.Persistence
         public static string CreatePerUserRowKey(DateTime timestampUtc)
         {
             return timestampUtc.ToString("yyyyMMddHHmmss");
-        }        
+        }
     }
 }

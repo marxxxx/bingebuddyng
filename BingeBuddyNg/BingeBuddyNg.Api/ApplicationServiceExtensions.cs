@@ -43,7 +43,7 @@ namespace BingeBuddyNg.Api
             services.AddUtility(configuration);
             services.AddStorage(configuration);
             services.AddEventGrid(configuration);
-            
+
             // add repositories
             services.AddSingleton<IActivityRepository, ActivityRepository>();
             services.AddSingleton<IUserRepository, UserRepository>();
@@ -77,7 +77,6 @@ namespace BingeBuddyNg.Api
 
             services.AddTransient<INotificationService, NotificationService>();
         }
-
 
         public static void AddAzureSignalRIntegration(this IServiceCollection services, IConfiguration configuration)
         {

@@ -31,7 +31,7 @@ namespace BingeBuddyNg.Core.Game.Commands
         private readonly IUserRepository userRepository;
         private readonly IActivityRepository activityRepository;
         private readonly INotificationService notificationService;
-        private readonly ITranslationService translationService;        
+        private readonly ITranslationService translationService;
 
         public StartGameCommandHandler(
             GameRepository gameRepository,
@@ -79,12 +79,12 @@ namespace BingeBuddyNg.Core.Game.Commands
 
             var groupedByLanguage = pushInfosOfInvitedFriends.GroupBy(p => p.Language);
 
-            foreach(var lang in groupedByLanguage)
+            foreach (var lang in groupedByLanguage)
             {
                 var translatedMessage = await this.translationService.GetTranslationAsync(lang.Key, "Game.InvitationMessage", inviter.Name);
 
                 this.notificationService.SendWebPushMessage(
-                    lang.Select(l=>l.PushInfo),
+                    lang.Select(l => l.PushInfo),
                     new WebPushNotificationMessage(command.Title, translatedMessage, url));
             }
 

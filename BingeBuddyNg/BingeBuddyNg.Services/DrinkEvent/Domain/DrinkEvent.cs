@@ -18,13 +18,13 @@ namespace BingeBuddyNg.Core.DrinkEvent.Domain
             this.StartUtc = startUtc;
             this.EndUtc = endUtc;
 
-            if(scoringUserIds != null)
+            if (scoringUserIds != null)
             {
                 foreach (var userId in scoringUserIds)
                 {
                     this.AddScoringUserId(userId);
                 }
-            }            
+            }
         }
 
         public bool AddScoringUserId(string userId)

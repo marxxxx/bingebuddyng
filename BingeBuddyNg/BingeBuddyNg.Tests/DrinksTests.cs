@@ -21,7 +21,7 @@ namespace BingeBuddyNg.Tests
             storageAccessServiceMock
                 .Setup(s => s.QueryTableAsync<DrinkTableEntity>("drinks", It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<TableContinuationToken>()))
                 .ReturnsAsync(new PagedQueryResult<DrinkTableEntity>(new List<DrinkTableEntity>(), (string)null));
-            
+
             var drinkRepository = new DrinkRepository(storageAccessServiceMock.Object, new Mock<ILogger<DrinkRepository>>().Object);
 
             var result = await drinkRepository.GetDrinksAsync(userId);

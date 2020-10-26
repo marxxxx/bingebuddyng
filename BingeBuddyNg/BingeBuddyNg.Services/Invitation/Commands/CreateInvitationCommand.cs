@@ -1,8 +1,8 @@
-﻿using BingeBuddyNg.Core.User;
-using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.User;
+using MediatR;
 
 namespace BingeBuddyNg.Core.Invitation.Commands
 {

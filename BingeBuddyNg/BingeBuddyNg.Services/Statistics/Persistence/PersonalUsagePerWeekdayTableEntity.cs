@@ -14,4 +14,4 @@ namespace BingeBuddyNg.Core.Statistics
         public string Percentage { get; set; }
         public string Probability { get; set; }
     }
-}   
+}

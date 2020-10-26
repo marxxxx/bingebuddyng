@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.Domain;
-using BingeBuddyNg.Core.Activity.Queries;
 using BingeBuddyNg.Core.User.Domain;
 
 namespace BingeBuddyNg.Core.Calculation
@@ -25,7 +24,7 @@ namespace BingeBuddyNg.Core.Calculation
             if (userDrinkActivity.Weight == 0)
                 userDrinkActivity.Weight = DefaultWeight;
 
-            var orderedAlcoholicDrinks = userDrinkActivity.Drinks.Where(d=>d.AlcPrc > 0).OrderBy(d => d.Timestamp).ToList();
+            var orderedAlcoholicDrinks = userDrinkActivity.Drinks.Where(d => d.AlcPrc > 0).OrderBy(d => d.Timestamp).ToList();
             orderedAlcoholicDrinks.Add(new DrinkActivityItem(DateTime.UtcNow));
 
             double currentAlcoholization = 0.0;
@@ -55,7 +54,7 @@ namespace BingeBuddyNg.Core.Calculation
 
             currentAlcoholization = Math.Round(currentAlcoholization, 3);
 
-            return new DrinkCalculationResult(userDrinkActivity.UserId, currentAlcoholization, orderedAlcoholicDrinks.Count-1);
+            return new DrinkCalculationResult(userDrinkActivity.UserId, currentAlcoholization, orderedAlcoholicDrinks.Count - 1);
         }
 
         public async Task<DrinkCalculationResult> CalculateStatsForUserAsync(string userId, Gender gender, int? weight)
@@ -64,14 +63,14 @@ namespace BingeBuddyNg.Core.Calculation
             var activity = await this.activityRepository.GetUserActivitiesAsync(userId, startTimestamp, ActivityType.Drink);
 
             var drinkActivity = activity
-                .Where(a=> a.ActivityType == ActivityType.Drink && a.Timestamp >= startTimestamp)
-                .Select(a => 
+                .Where(a => a.ActivityType == ActivityType.Drink && a.Timestamp >= startTimestamp)
+                .Select(a =>
                     new DrinkActivityItem(a.Timestamp, a.DrinkAlcPrc.GetValueOrDefault(), a.DrinkVolume.GetValueOrDefault()));
-                        
+
             UserDrinkActivity userDrinkActivity = new UserDrinkActivity(userId, gender, weight.GetValueOrDefault(), drinkActivity);
 
             DrinkCalculationResult result = CalculateStats(userDrinkActivity);
-            
+
             return result;
         }
     }

@@ -22,11 +22,11 @@ namespace BingeBuddyNg.Core.Drink.Persistence
 
         public DrinkTableEntity()
         {
-
         }
+
         public DrinkTableEntity(string userId, DrinkDTO drink) : base(userId, drink.Id)
         {
-            if(drink == null)
+            if (drink == null)
             {
                 throw new ArgumentNullException(nameof(drink));
             }
@@ -44,7 +44,7 @@ namespace BingeBuddyNg.Core.Drink.Persistence
             base.ReadEntity(properties, operationContext);
             if (properties.TryGetValue(nameof(DrinkType), out EntityProperty activityTypeValue))
             {
-                this.DrinkType= Util.SafeParseEnum<DrinkType>(activityTypeValue.StringValue, DrinkType.Unknown);
+                this.DrinkType = Util.SafeParseEnum<DrinkType>(activityTypeValue.StringValue, DrinkType.Unknown);
             }
         }
 

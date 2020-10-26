@@ -40,7 +40,7 @@ namespace BingeBuddyNg.Core.Activity.Queries
     public class GetActivityFeedQueryHandler : IRequestHandler<GetActivityFeedQuery, PagedQueryResult<ActivityStatsDTO>>
     {
         private readonly IStorageAccessService storageAccessService;
-        
+
         public GetActivityFeedQueryHandler(
             IStorageAccessService storageAccessService)
         {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Shared;
 using MediatR;
 
@@ -18,7 +18,7 @@ namespace BingeBuddyNg.Core.FriendsRequest.Commands
         {
             RequestingUserId = requestingUserId ?? throw new ArgumentNullException(nameof(requestingUserId));
             FriendUserId = friendUserId ?? throw new ArgumentNullException(nameof(friendUserId));
-        }        
+        }
     }
 
     public class AddFriendRequestCommandHandler : IRequestHandler<AddFriendRequestCommand>
@@ -40,13 +40,13 @@ namespace BingeBuddyNg.Core.FriendsRequest.Commands
             var friendUser = await userRepository.GetUserAsync(request.FriendUserId);
 
             var incomingResult = friendUser.AddFriendRequest(new User.Domain.FriendRequest(DateTime.UtcNow, requestingUser.ToUserInfo(), User.Domain.FriendRequestDirection.Incoming));
-            if(incomingResult.IsFailure)
+            if (incomingResult.IsFailure)
             {
                 throw new FriendshipException(incomingResult.Error);
             }
 
             var outgoingResult = requestingUser.AddFriendRequest(new User.Domain.FriendRequest(DateTime.UtcNow, friendUser.ToUserInfo(), User.Domain.FriendRequestDirection.Outgoing));
-            if(outgoingResult.IsFailure)
+            if (outgoingResult.IsFailure)
             {
                 throw new FriendshipException(outgoingResult.Error);
             }

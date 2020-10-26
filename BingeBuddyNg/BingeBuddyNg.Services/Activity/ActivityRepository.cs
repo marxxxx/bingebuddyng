@@ -182,7 +182,6 @@ namespace BingeBuddyNg.Core.Activity
 
             var resultActivities = result.ResultPage.Select(a => a.Entity).ToList();
             return resultActivities;
-
         }
 
         public async Task<IEnumerable<ActivityEntity>> GetUserActivitiesAsync(string userId, DateTime startTimeUtc, ActivityType activityType = ActivityType.None)

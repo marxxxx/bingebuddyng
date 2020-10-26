@@ -1,5 +1,5 @@
-﻿using MediatR;
-using System;
+﻿using System;
+using MediatR;
 
 namespace BingeBuddyNg.Core.Venue.Commands
 {

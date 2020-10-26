@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using BingeBuddyNg.Core.Statistics.DTO;
 using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.Statistics.DTO;
+using MediatR;
 using Microsoft.WindowsAzure.Storage.Table;
 using static BingeBuddyNg.Shared.Constants;
-using MediatR;
-using System.Threading;
 
 namespace BingeBuddyNg.Core.Statistics.Queries
 {

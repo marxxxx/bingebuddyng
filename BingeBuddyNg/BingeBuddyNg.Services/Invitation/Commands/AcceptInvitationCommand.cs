@@ -22,7 +22,7 @@ namespace BingeBuddyNg.Core.Invitation.Commands
         {
             AcceptingUserId = acceptingUserId ?? throw new ArgumentNullException(nameof(acceptingUserId));
             InvitationToken = invitationToken;
-        }        
+        }
     }
 
     public class AcceptInvitationCommandHandler : IRequestHandler<AcceptInvitationCommand>

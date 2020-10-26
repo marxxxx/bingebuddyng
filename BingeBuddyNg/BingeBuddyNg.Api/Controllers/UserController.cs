@@ -30,7 +30,7 @@ namespace BingeBuddyNg.Api.Controllers
         [HttpGet]
         public async Task<List<UserInfoDTO>> GetAllUsers(string filterText = null)
         {
-            return await this.mediator.Send(new GetAllUsersQuery(filterText));         
+            return await this.mediator.Send(new GetAllUsersQuery(filterText));
         }
 
         [HttpGet("{userId}")]
@@ -40,7 +40,7 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateOrUpdateUser([FromBody]CreateOrUpdateUserDTO user)
+        public async Task<ActionResult> CreateOrUpdateUser([FromBody] CreateOrUpdateUserDTO user)
         {
             var userId = this.identityService.GetCurrentUserId();
             if (user.UserId != userId)

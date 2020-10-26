@@ -9,6 +9,6 @@ namespace BingeBuddyNg.Core.Activity.Domain
         public MessageActivityInfo(string message)
         {
             this.Message = message ?? throw new ArgumentNullException(nameof(message));
-        }        
+        }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
 [assembly: FunctionsStartup(typeof(Startup))]
+
 namespace BingeBuddyNg.Functions
 {
     public class Startup : FunctionsStartup
@@ -11,7 +12,7 @@ namespace BingeBuddyNg.Functions
         public override void Configure(IFunctionsHostBuilder builder)
         {
             var services = builder.Services;
-            
+
             services.AddBingeBuddy();
 
             services.AddScoped<ActivityAddedService>();

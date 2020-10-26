@@ -8,9 +8,9 @@ namespace BingeBuddyNg.Functions.Services.Notifications
         public Activity Activity { get; }
 
         public ActivityNotification(string userId, Activity activity)
-            :base(userId)
+            : base(userId)
         {
             this.Activity = activity ?? throw new ArgumentNullException(nameof(activity));
-        }        
+        }
     }
 }

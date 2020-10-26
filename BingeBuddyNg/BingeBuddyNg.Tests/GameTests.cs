@@ -22,13 +22,13 @@ namespace BingeBuddyNg.Tests
         {
             // Arrange
             string myUserId = Guid.NewGuid().ToString();
-            string[] friendUserIds = new [] { Guid.NewGuid().ToString(), Guid.NewGuid().ToString() };
+            string[] friendUserIds = new[] { Guid.NewGuid().ToString(), Guid.NewGuid().ToString() };
             string gameTitle = "My Game";
             var notificationServiceMock = new Mock<INotificationService>();
             var manager = new GameRepository();
 
             var searchUsersQuery = SetupHelpers.SetupUserRepository(friendUserIds.Concat(new[] { myUserId }));
-            
+
             var command = new StartGameCommand(myUserId, gameTitle, friendUserIds);
             var handler = new StartGameCommandHandler(manager, searchUsersQuery, new Mock<IActivityRepository>().Object, notificationServiceMock.Object, new Mock<ITranslationService>().Object);
 
@@ -43,10 +43,10 @@ namespace BingeBuddyNg.Tests
             Assert.NotEqual(default(Guid), result.GameId);
             notificationServiceMock.Verify(s =>
                 s.SendSignalRMessageAsync(
-                    It.Is<IReadOnlyList<string>>(u => AreEqual(u, friendUserIds)), 
-                    Shared.Constants.SignalR.NotificationHubName, 
+                    It.Is<IReadOnlyList<string>>(u => AreEqual(u, friendUserIds)),
+                    Shared.Constants.SignalR.NotificationHubName,
                     HubMethodNames.GameStarted,
-                    It.Is<GameStartedMessage>( m => m.GameId == result.GameId && m.Title ==  gameTitle && AreEqual<string>(friendUserIds, m.UserIds))), Times.Once);
+                    It.Is<GameStartedMessage>(m => m.GameId == result.GameId && m.Title == gameTitle && AreEqual<string>(friendUserIds, m.UserIds))), Times.Once);
 
             notificationServiceMock.Verify(s =>
                s.SendWebPushMessage(It.IsAny<IEnumerable<PushInfo>>(), It.Is<WebPushNotificationMessage>(m => m.data.url.Contains(game.Id.ToString()))), Times.Once);
@@ -105,7 +105,7 @@ namespace BingeBuddyNg.Tests
             // Assert
             Assert.Equal(game.Id, result.Id);
             Assert.Equal(game.Title, result.Title);
-            Assert.All(game.PlayerUserIds, p => result.UserScores.Any( p2 => p2.User.UserId == p));
+            Assert.All(game.PlayerUserIds, p => result.UserScores.Any(p2 => p2.User.UserId == p));
             Assert.Equal(game.Scores, game.Scores);
         }
 

@@ -11,7 +11,6 @@ using BingeBuddyNg.Functions.Services.Notifications;
 using BingeBuddyNg.Shared;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace BingeBuddyNg.Functions
 {
@@ -23,8 +22,8 @@ namespace BingeBuddyNg.Functions
         private readonly ActivityDistributionService activityDistributionService;
 
         public ReactionAddedFunction(
-            IActivityRepository activityRepository, 
-            IUserRepository userRepository, 
+            IActivityRepository activityRepository,
+            IUserRepository userRepository,
             PushNotificationService pushNotificationService,
             ActivityDistributionService activityDistributionService)
         {
@@ -71,7 +70,6 @@ namespace BingeBuddyNg.Functions
             var involvedNotifications = involvedUserNotifications
                 .Select(u => new ReactionNotification(u.UserId, reactionAddedMessage.ReactionType, reactingUser.Name, activity.UserName, false, url))
                 .ToList();
-            
 
             notifications.AddRange(involvedNotifications);
 

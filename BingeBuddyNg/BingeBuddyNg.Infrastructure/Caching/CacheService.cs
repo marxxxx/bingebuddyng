@@ -1,7 +1,7 @@
-﻿using BingeBuddyNg.Core.Infrastructure;
-using Microsoft.Extensions.Caching.Memory;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Infrastructure;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BingeBuddyNg.Infrastructure
 {

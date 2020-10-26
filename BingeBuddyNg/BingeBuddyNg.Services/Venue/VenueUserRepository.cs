@@ -19,7 +19,6 @@ namespace BingeBuddyNg.Core.Venue
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-
         public async Task AddUserToVenueAsync(string venueId, string venueName, string userId, string userName)
         {
             var entity = new VenueUsersTableEntity(venueId, venueName, userId, userName);

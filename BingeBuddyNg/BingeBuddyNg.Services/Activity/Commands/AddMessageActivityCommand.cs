@@ -9,7 +9,7 @@ using MediatR;
 
 namespace BingeBuddyNg.Core.Activity.Commands
 {
-    public class AddMessageActivityCommand :  IRequest<string>
+    public class AddMessageActivityCommand : IRequest<string>
     {
         public AddMessageActivityCommand(string userId, string message, Location location, VenueDTO venue)
         {

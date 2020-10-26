@@ -37,8 +37,8 @@ namespace BingeBuddyNg.Core.Activity.DTO
 
         public string OriginalUserName { get; set; }
 
-        public List<ReactionDTO> Likes { get; set; } 
+        public List<ReactionDTO> Likes { get; set; }
         public List<ReactionDTO> Cheers { get; set; }
-        public List<CommentReactionDTO> Comments { get; set; } 
+        public List<CommentReactionDTO> Comments { get; set; }
     }
 }

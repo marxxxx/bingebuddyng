@@ -28,9 +28,9 @@ namespace BingeBuddyNg.Infrastructure
             var translationObject = await translationTask;
 
             var val = translationObject.SelectToken(key);
-            
+
             var translationString = val.ToString();
-            if(values != null && values.Length > 0)
+            if (values != null && values.Length > 0)
             {
                 translationString = string.Format(translationString, values);
             }
@@ -43,6 +43,6 @@ namespace BingeBuddyNg.Infrastructure
             var fileContent = await this.storageAccessService.GetFileFromStorageAsync("$web", $"assets/i18n/{language}.json");
             JObject jObject = JObject.Parse(fileContent);
             return jObject;
-        }        
+        }
     }
 }

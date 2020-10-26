@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BingeBuddyNg.Core.Game.DTO;
-using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Core.User.DTO;
 using BingeBuddyNg.Core.Game.Persistence;
+using BingeBuddyNg.Core.User.DTO;
 using BingeBuddyNg.Core.User.Persistence;
 
 namespace BingeBuddyNg.Core.Game
@@ -51,7 +50,7 @@ namespace BingeBuddyNg.Core.Game
                 Title = game.Title,
                 Status = game.Status,
                 WinnerUserId = game.Winner.UserId,
-                UserScores = game.Scores.Select(s=>new UserScoreInfo() {  User = playerUserInfo.FirstOrDefault(p=>p.UserId == s.Key ), Score = s.Value}).ToArray()
+                UserScores = game.Scores.Select(s => new UserScoreInfo() { User = playerUserInfo.FirstOrDefault(p => p.UserId == s.Key), Score = s.Value }).ToArray()
             };
         }
     }

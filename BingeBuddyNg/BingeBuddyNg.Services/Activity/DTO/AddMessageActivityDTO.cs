@@ -2,9 +2,9 @@
 
 namespace BingeBuddyNg.Core.Activity.DTO
 {
-    public class AddMessageActivityDTO: AddActivityBaseDTO
+    public class AddMessageActivityDTO : AddActivityBaseDTO
     {
         [Required]
-        public string Message { get; set; }        
+        public string Message { get; set; }
     }
 }

@@ -10,11 +10,10 @@ namespace BingeBuddyNg.Core.Statistics
 
         public UserStatisticHistoryTableEntity()
         {
-
         }
 
         public UserStatisticHistoryTableEntity(string userId, DateTime timestamp, double currentAlcLevel)
-            :base(userId, timestamp.ToString("yyyyMMddHHmm"))
+            : base(userId, timestamp.ToString("yyyyMMddHHmm"))
         {
             this.CalculationTimestamp = timestamp;
             this.CurrentAlcLevel = currentAlcLevel;

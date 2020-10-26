@@ -3,8 +3,8 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity.Domain;
-using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.User;
 using MediatR;
 
 namespace BingeBuddyNg.Core.Activity.Commands
@@ -26,7 +26,7 @@ namespace BingeBuddyNg.Core.Activity.Commands
         public string UserId { get; }
         public Stream Stream { get; }
         public string FileName { get; }
-        public  Location Location { get; }
+        public Location Location { get; }
 
         public override string ToString()
         {

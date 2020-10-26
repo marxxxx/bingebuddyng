@@ -67,8 +67,8 @@ namespace BingeBuddyNg.Core.User
                 LastOnline = entity.LastOnline,
                 Weight = entity.Weight,
                 CurrentVenue = entity.CurrentVenue?.ToDto(),
-                Friends = entity.Friends?.Select(f=>f.ToDto()).ToList(),
-                IncomingFriendRequests = entity.PendingFriendRequests?.Where(p=>p.Direction == FriendRequestDirection.Incoming).Select(p=>p.ToDto()).ToList(),
+                Friends = entity.Friends?.Select(f => f.ToDto()).ToList(),
+                IncomingFriendRequests = entity.PendingFriendRequests?.Where(p => p.Direction == FriendRequestDirection.Incoming).Select(p => p.ToDto()).ToList(),
                 OutgoingFriendRequests = entity.PendingFriendRequests?.Where(p => p.Direction == FriendRequestDirection.Outgoing).Select(p => p.ToDto()).ToList()
             };
         }

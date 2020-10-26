@@ -40,7 +40,7 @@ namespace BingeBuddyNg.Core.DrinkEvent
             var queryResult = await storageAccessService.QueryTableAsync<JsonTableEntity<DrinkEventEntity>>(TableNames.DrinkEvents, StaticPartitionKeys.DrinkEvent, now, 1);
 
             var result = queryResult.ResultPage.FirstOrDefault()?.Entity;
-            if(result == null)
+            if (result == null)
             {
                 return null;
             }
@@ -51,7 +51,7 @@ namespace BingeBuddyNg.Core.DrinkEvent
         public async Task UpdateDrinkEventAsync(Domain.DrinkEvent drinkEvent)
         {
             string rowKey = GetRowKey(drinkEvent.EndUtc);
-            
+
             var entity = await storageAccessService.GetTableEntityAsync<JsonTableEntity<DrinkEventEntity>>(TableNames.DrinkEvents, StaticPartitionKeys.DrinkEvent, rowKey);
             entity.Entity = drinkEvent.ToEntity();
 

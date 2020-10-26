@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.Venue.Commands;
 using BingeBuddyNg.Core.Venue.DTO;
 using BingeBuddyNg.Core.Venue.Queries;
-using BingeBuddyNg.Core.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +32,7 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
         [HttpPost("update-current")]
-        public async Task UpdateCurrentVenue([FromBody]VenueDTO venue)
+        public async Task UpdateCurrentVenue([FromBody] VenueDTO venue)
         {
             var userId = this.identityService.GetCurrentUserId();
             await this.mediator.Send(new EnterVenueCommand(userId, venue));

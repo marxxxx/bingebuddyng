@@ -1,5 +1,5 @@
-﻿using BingeBuddyNg.Core.Game;
-using System;
+﻿using System;
+using BingeBuddyNg.Core.Game;
 using Xunit;
 
 namespace BingeBuddyNg.Tests

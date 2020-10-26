@@ -1,8 +1,5 @@
-﻿using BingeBuddyNg.Core.User.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using BingeBuddyNg.Core.User.Persistence;
 
 namespace BingeBuddyNg.Core.User
 {

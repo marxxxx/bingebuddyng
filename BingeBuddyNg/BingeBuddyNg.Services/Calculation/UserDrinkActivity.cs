@@ -14,7 +14,7 @@ namespace BingeBuddyNg.Core.Calculation
             this.Drinks = drinks != null ? drinks.ToList() : new List<DrinkActivityItem>();
         }
 
-        public string UserId { get;set; }
+        public string UserId { get; set; }
         public Gender Gender { get; set; }
         public int Weight { get; set; }
 

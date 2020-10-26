@@ -15,7 +15,7 @@ namespace BingeBuddyNg.Tests
                 NamingStrategy = new CamelCaseNamingStrategy()
             };
 
-            var str = JsonConvert.SerializeObject(activity, new JsonSerializerSettings() { ContractResolver = contractResolver } );
+            var str = JsonConvert.SerializeObject(activity, new JsonSerializerSettings() { ContractResolver = contractResolver });
             Assert.Contains(str, "id");
         }
     }

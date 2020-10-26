@@ -7,7 +7,7 @@ namespace BingeBuddyNg.Core.Activity.Domain
     {
         public GameEntity GameInfo { get; }
 
-        public GameResultActivityInfo(GameEntity game) 
+        public GameResultActivityInfo(GameEntity game)
         {
             this.GameInfo = game ?? throw new ArgumentNullException(nameof(game));
         }

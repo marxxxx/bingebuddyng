@@ -48,7 +48,6 @@ namespace BingeBuddyNg.Core.User
 
         private string GetUserCacheKey(string userId) => $"User:{userId}";
 
-
         public async Task<CreateOrUpdateUserResult> CreateOrUpdateUserAsync(CreateOrUpdateUserCommand request)
         {
             bool profilePicHasChanged = true;

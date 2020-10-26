@@ -35,17 +35,17 @@ namespace BingeBuddyNg.Core.Activity.Persistence
         public VenueEntity Venue { get; set; }
 
         public string Message { get; set; }
-        
+
         public DrinkType DrinkType { get; set; }
-        
+
         public string DrinkId { get; set; }
-        
+
         public string DrinkName { get; set; }
-        
+
         public double? DrinkAlcPrc { get; set; }
-        
+
         public double? DrinkVolume { get; set; }
-        
+
         public string ImageUrl { get; set; }
 
         public GameEntity GameInfo { get; set; }

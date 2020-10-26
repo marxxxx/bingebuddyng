@@ -81,7 +81,7 @@ namespace BingeBuddyNg.Core.Activity.Domain
 
         public void AddLike(Reaction reaction)
         {
-            if(this.Likes.Any(l=>l.UserId == reaction.UserId))
+            if (this.Likes.Any(l => l.UserId == reaction.UserId))
             {
                 throw new InvalidOperationException("User already liked this activity");
             }

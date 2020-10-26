@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BingeBuddyNg.Core.Game
 {
@@ -17,7 +15,7 @@ namespace BingeBuddyNg.Core.Game
 
         public string Title { get; }
 
-        public string[] UserIds { get;  }
+        public string[] UserIds { get; }
 
         public override string ToString()
         {

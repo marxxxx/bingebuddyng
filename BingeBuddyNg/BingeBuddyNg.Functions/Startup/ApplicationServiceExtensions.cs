@@ -29,7 +29,7 @@ namespace BingeBuddyNg.Functions
             services.AddUtility();
             services.AddStorage();
             services.AddEventGrid();
-            
+
             services.AddScoped<IMonitoringRepository, MonitoringRepository>();
             services.AddScoped<ICacheService, NoCacheService>();
             services.AddSingleton<ITranslationService, TranslationService>();
@@ -85,7 +85,7 @@ namespace BingeBuddyNg.Functions
             var topicKey = Environment.GetEnvironmentVariable("EventGrid__TopicKey", EnvironmentVariableTarget.Process);
 
             var config = new EventGridConfiguration() { Endpoint = endpoint, TopicKey = topicKey };
-            
+
             services.AddSingleton(config);
             services.AddSingleton<IEventGridService, EventGridService>();
         }

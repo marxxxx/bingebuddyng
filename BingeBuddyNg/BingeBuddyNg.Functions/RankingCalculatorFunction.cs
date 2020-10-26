@@ -16,11 +16,11 @@ namespace BingeBuddyNg.Functions
         public RankingCalculatorFunction(IUserRepository userRepository, UserStatisticUpdateService rankingService)
         {
             this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            this.rankingService = rankingService?? throw new ArgumentNullException(nameof(rankingService));
+            this.rankingService = rankingService ?? throw new ArgumentNullException(nameof(rankingService));
         }
 
         [FunctionName(nameof(RankingCalculatorFunction))]
-        public async Task Run([TimerTrigger("0 0 */6 * * *")]TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("0 0 */6 * * *")] TimerInfo myTimer, ILogger log)
         {
             var users = await userRepository.SearchUsersAsync();
 

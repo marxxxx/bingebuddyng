@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.User;
-using BingeBuddyNg.Core.User.Commands;
 using BingeBuddyNg.Core.User.Messages;
 using BingeBuddyNg.Shared;
 using MediatR;
@@ -31,8 +30,8 @@ namespace BingeBuddyNg.Core.FriendsRequest.Commands
         private readonly IStorageAccessService storageAccessService;
 
         public AcceptFriendRequestCommandHandler(
-            IUserRepository userRepository, 
-            INotificationService notificationService, 
+            IUserRepository userRepository,
+            INotificationService notificationService,
             ITranslationService translationService,
             IStorageAccessService storageAccessService)
         {
@@ -48,7 +47,7 @@ namespace BingeBuddyNg.Core.FriendsRequest.Commands
             var requestingUser = await userRepository.GetUserAsync(request.RequestingUserId);
 
             var acceptanceResult = acceptingUser.AcceptFriendRequest(requestingUser.ToUserInfo());
-            if(acceptanceResult.IsFailure)
+            if (acceptanceResult.IsFailure)
             {
                 throw new FriendshipException(acceptanceResult.Error);
             }

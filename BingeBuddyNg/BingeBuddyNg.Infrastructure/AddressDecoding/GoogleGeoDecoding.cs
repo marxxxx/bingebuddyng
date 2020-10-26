@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BingeBuddyNg.Infrastructure.Generated
+﻿namespace BingeBuddyNg.Infrastructure.Generated
 {
     public class GoogleGeoCodeResponse
     {
@@ -70,5 +66,4 @@ namespace BingeBuddyNg.Infrastructure.Generated
         public string short_name { get; set; }
         public string[] types { get; set; }
     }
-
 }

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using BingeBuddyNg.Core.Activity;
 using BingeBuddyNg.Core.Activity.Commands;
-using BingeBuddyNg.Core.Activity.Domain;
 using BingeBuddyNg.Core.Activity.DTO;
 using BingeBuddyNg.Core.Activity.Queries;
 using BingeBuddyNg.Core.Infrastructure;
@@ -98,7 +95,7 @@ namespace BingeBuddyNg.Api.Controllers
         }
 
         [HttpPost("{activityId}/reaction")]
-        public async Task AddReaction(string activityId, [FromBody]AddReactionDTO reaction)
+        public async Task AddReaction(string activityId, [FromBody] AddReactionDTO reaction)
         {
             string userId = this.identityService.GetCurrentUserId();
             await this.mediator.Send(new AddReactionCommand(userId, reaction.Type, activityId, reaction.Comment));

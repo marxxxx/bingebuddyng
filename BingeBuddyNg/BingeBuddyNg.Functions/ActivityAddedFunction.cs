@@ -22,8 +22,8 @@ namespace BingeBuddyNg.Functions
 
         [FunctionName(nameof(ActivityAddedFunction))]
         public async Task Run(
-            [EventGridTrigger]EventGridEvent gridEvent,
-            [DurableClient]IDurableOrchestrationClient starter,
+            [EventGridTrigger] EventGridEvent gridEvent,
+            [DurableClient] IDurableOrchestrationClient starter,
             ILogger log)
         {
             var activityAddedMessage = JsonConvert.DeserializeObject<ActivityAddedMessage>(gridEvent.Data.ToString());

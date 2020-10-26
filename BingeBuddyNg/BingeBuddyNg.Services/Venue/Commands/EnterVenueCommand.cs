@@ -1,6 +1,6 @@
-﻿using BingeBuddyNg.Core.Venue.DTO;
+﻿using System;
+using BingeBuddyNg.Core.Venue.DTO;
 using MediatR;
-using System;
 
 namespace BingeBuddyNg.Core.Venue.Commands
 {

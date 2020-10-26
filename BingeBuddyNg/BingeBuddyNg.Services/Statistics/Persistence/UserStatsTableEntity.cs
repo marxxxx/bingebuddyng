@@ -12,9 +12,9 @@ namespace BingeBuddyNg.Core.Statistics
         public UserStatsTableEntity()
         { }
 
-        public UserStatsTableEntity(string partitionKey, string rowKey, double currentAlcoholization, 
+        public UserStatsTableEntity(string partitionKey, string rowKey, double currentAlcoholization,
             int currentNightDrinks, int? score, int? totalDrinksLastMonth = null)
-            :base(partitionKey, rowKey)
+            : base(partitionKey, rowKey)
         {
             this.CurrentAlcoholization = currentAlcoholization;
             this.CurrentNightDrinks = currentNightDrinks;

@@ -11,5 +11,4 @@ namespace BingeBuddyNg.Core.Game.DTO
 
         public Guid GameId { get; set; }
     }
-
 }

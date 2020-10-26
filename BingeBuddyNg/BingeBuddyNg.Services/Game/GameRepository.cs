@@ -25,7 +25,7 @@ namespace BingeBuddyNg.Core.Game
                 throw new ArgumentNullException(nameof(title));
             }
 
-            if(playerUserIds == null || playerUserIds.Count() == 0)
+            if (playerUserIds == null || playerUserIds.Count() == 0)
             {
                 throw new ArgumentException("Please invite players to the game!");
             }
@@ -39,7 +39,7 @@ namespace BingeBuddyNg.Core.Game
 
         public Domain.Game Get(Guid gameId)
         {
-            if(!this.Games.TryGetValue(gameId, out Domain.Game game))
+            if (!this.Games.TryGetValue(gameId, out Domain.Game game))
             {
                 throw new ArgumentException($"Game {gameId} not found!");
             }

@@ -10,6 +10,6 @@ namespace BingeBuddyNg.Core
                 return defaultValue;
 
             return result;
-        }    
+        }
     }
 }

@@ -138,6 +138,7 @@ namespace BingeBuddyNg.Core.Activity.Domain
             var timestamp = DateTime.UtcNow;
             return CreateProfileImageUpdateActivity(ActivityKeyFactory.CreateRowKey(timestamp, userId), timestamp, userId, userName);
         }
+
         public static Activity CreateProfileImageUpdateActivity(string id, DateTime timestamp, string userId, string userName)
         {
             var activity = new Activity(

@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Core.Game.DTO;
-using BingeBuddyNg.Core.User.Queries;
+using BingeBuddyNg.Core.User;
 using MediatR;
 
 namespace BingeBuddyNg.Core.Game.Queries
@@ -39,7 +38,7 @@ namespace BingeBuddyNg.Core.Game.Queries
         {
             var game = this.manager.Get(request.GameId);
             var users = await this.userRepository.SearchUsersAsync(game.PlayerUserIds);
-            return game.ToDto(users.Select(u=>u.ToUserInfoDTO()));
+            return game.ToDto(users.Select(u => u.ToUserInfoDTO()));
         }
     }
 }

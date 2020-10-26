@@ -1,7 +1,7 @@
-﻿using BingeBuddyNg.Core.Infrastructure;
-using BingeBuddyNg.Core.User.Persistence;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.User.Persistence;
 using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.User

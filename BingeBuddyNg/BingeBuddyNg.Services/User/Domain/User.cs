@@ -1,10 +1,10 @@
-﻿using BingeBuddyNg.Core.Infrastructure;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.User.Persistence;
 using BingeBuddyNg.Shared;
 using CSharpFunctionalExtensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace BingeBuddyNg.Core.User.Domain
 {
@@ -110,7 +110,6 @@ namespace BingeBuddyNg.Core.User.Domain
             }
         }
 
-
         public void RemoveFriend(string userId)
         {
             var foundFriend = Friends.FirstOrDefault(f => f.UserId == userId);
@@ -149,7 +148,7 @@ namespace BingeBuddyNg.Core.User.Domain
         public Result AddFriendRequest(FriendRequest friendRequest)
         {
             var existingRequest = PendingFriendRequests.FirstOrDefault(f => f.User.UserId == friendRequest.User.UserId);
-            if(existingRequest == null)
+            if (existingRequest == null)
             {
                 _pendingFriendRequests.Add(friendRequest);
             }
@@ -164,8 +163,8 @@ namespace BingeBuddyNg.Core.User.Domain
         public Guid IssueInvitation()
         {
             var invitationToken = Guid.NewGuid();
-            
-            if(this.Invitations.Count > MaxCurrentInvitations - 1)
+
+            if (this.Invitations.Count > MaxCurrentInvitations - 1)
             {
                 this._invitations = new List<Guid>(this.Invitations.Skip(this.Invitations.Count - MaxCurrentInvitations + 1));
                 this._invitations.Add(invitationToken);
@@ -176,7 +175,7 @@ namespace BingeBuddyNg.Core.User.Domain
 
         public Result AcceptInvitation(Guid invitation, UserInfo user)
         {
-            if(!this.Invitations.Contains(invitation))
+            if (!this.Invitations.Contains(invitation))
             {
                 return Result.Failure("Invitation token unknown or expired!");
             }

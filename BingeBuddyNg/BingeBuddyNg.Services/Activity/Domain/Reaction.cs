@@ -12,10 +12,9 @@ namespace BingeBuddyNg.Core.Activity.Domain
         {
         }
 
-        public Reaction(string userId, string userName) 
+        public Reaction(string userId, string userName)
             : this(DateTime.UtcNow, userId, userName)
         {
-
         }
 
         public Reaction(DateTime timestamp, string userId, string userName)

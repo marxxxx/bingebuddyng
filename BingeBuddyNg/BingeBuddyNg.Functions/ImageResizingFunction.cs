@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
@@ -7,8 +9,6 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
-using System;
-using System.IO;
 
 namespace BingeBuddyNg.Functions
 {
@@ -35,7 +35,6 @@ namespace BingeBuddyNg.Functions
                 return;
             }
 
-
             if (img.Width > ResizeMaxWidth || img.Height > ResizeMaxHeight)
             {
                 double ratio = img.Width / (double)img.Height;
@@ -53,7 +52,6 @@ namespace BingeBuddyNg.Functions
                     img.Mutate(x => x.AutoOrient().Resize(new ResizeOptions() { Size = new Size(width, ResizeMaxHeight), Mode = ResizeMode.Max }));
                 }
 
-
                 IImageEncoder encoder = GetEncoderFromFileName(name);
                 MemoryStream resizedStream = new MemoryStream();
                 img.Save(resizedStream, encoder);
@@ -64,9 +62,7 @@ namespace BingeBuddyNg.Functions
                 log.LogInformation($"Image with measuremnts width {img.Width} and height {img.Height}. No resizing necessary.");
                 resizedData = null;
             }
-
         }
-
 
         private IImageEncoder GetEncoderFromFileName(string name)
         {
@@ -75,11 +71,14 @@ namespace BingeBuddyNg.Functions
             {
                 case ".png":
                     return new PngEncoder();
+
                 case ".jpg":
                 case ".jpeg":
                     return new JpegEncoder();
+
                 case ".gif":
                     return new GifEncoder();
+
                 default:
                     throw new InvalidOperationException($"Unsupported file format {ext}");
             }

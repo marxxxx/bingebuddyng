@@ -1,5 +1,5 @@
-﻿using BingeBuddyNg.Core.User.Domain;
-using System;
+﻿using System;
+using BingeBuddyNg.Core.User.Domain;
 
 namespace BingeBuddyNg.Core.User.DTO
 {

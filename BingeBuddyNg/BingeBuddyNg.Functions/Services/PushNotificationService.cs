@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BingeBuddyNg.Core.Activity.Domain;
+using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Core.User;
 using BingeBuddyNg.Functions.Services.Notifications;
-using BingeBuddyNg.Core.Infrastructure;
 using BingeBuddyNg.Shared;
 using Microsoft.Extensions.Logging;
 
@@ -18,11 +18,10 @@ namespace BingeBuddyNg.Functions.Services
         private readonly ITranslationService translationService;
         private readonly ILogger<PushNotificationService> logger;
 
-
         public PushNotificationService(
             IUserRepository userRepository,
-            INotificationService notificationService, 
-            ITranslationService translationService, 
+            INotificationService notificationService,
+            ITranslationService translationService,
             ILogger<PushNotificationService> logger)
         {
             this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
@@ -105,15 +104,19 @@ namespace BingeBuddyNg.Functions.Services
                 case ActivityType.Drink:
                     activityString = await translationService.GetTranslationAsync(language, "DrinkActivityMessage", activity.Drink.DrinkName, locationSnippet);
                     break;
+
                 case ActivityType.Image:
                     activityString = await translationService.GetTranslationAsync(language, "ImageActivityMessage");
                     break;
+
                 case ActivityType.Message:
                     activityString = await translationService.GetTranslationAsync(language, "MessageActivityMessage", activity.Message.Message);
                     break;
+
                 case ActivityType.VenueEntered:
                     activityString = await translationService.GetTranslationAsync(language, "VenueEnterActivityMessage", activity.Venue.Name);
                     break;
+
                 case ActivityType.VenueLeft:
                     activityString = await translationService.GetTranslationAsync(language, "VenueLeaveActivityMessage", activity.Venue.Name);
                     break;
@@ -121,7 +124,6 @@ namespace BingeBuddyNg.Functions.Services
 
             return new NotificationMessage(Constants.ApplicationName, $"{activity.UserName} {activityString}");
         }
-
 
         private async Task<NotificationMessage> BuildNotificationMessageAsync(string language, ReactionNotification notification)
         {
@@ -145,9 +147,11 @@ namespace BingeBuddyNg.Functions.Services
                 case ReactionType.Cheers:
                     message = await translationService.GetTranslationAsync(language, "CheersReactionMessage" + postFix, notification.OriginUserName);
                     break;
+
                 case ReactionType.Like:
                     message = await translationService.GetTranslationAsync(language, "LikeReactionMessage" + postFix, notification.OriginUserName);
                     break;
+
                 case ReactionType.Comment:
                     message = await translationService.GetTranslationAsync(language, "CommentReactionMessage" + postFix, notification.OriginUserName);
                     break;
@@ -156,7 +160,7 @@ namespace BingeBuddyNg.Functions.Services
             return new NotificationMessage(Constants.ApplicationName, $"{notification.ReactingUserName} {message}");
         }
 
-        private async Task <NotificationMessage> BuildNotificationMessageAsync(string language, DrinkEventCongratulationNotification congrats)
+        private async Task<NotificationMessage> BuildNotificationMessageAsync(string language, DrinkEventCongratulationNotification congrats)
         {
             string message = await translationService.GetTranslationAsync(language, "DrinkEventWinMessage", Constants.Scores.StandardDrinkAction);
 

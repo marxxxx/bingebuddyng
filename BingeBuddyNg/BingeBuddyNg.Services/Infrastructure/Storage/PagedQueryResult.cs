@@ -15,8 +15,8 @@ namespace BingeBuddyNg.Core.Infrastructure
         {
             this.ResultPage = resultPage;
             this.ContinuationToken = continuationToken;
-
         }
+
         public PagedQueryResult(List<T> resultPage, TableContinuationToken continuationToken)
         {
             this.ResultPage = resultPage;
