@@ -80,6 +80,6 @@ export class InviteFriendComponent implements OnInit, OnDestroy {
   }
 
   isSharingSupported(): boolean {
-    return navigator['share'];
+    return navigator.share != null;
   }
 }
