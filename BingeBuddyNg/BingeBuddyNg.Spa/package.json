@@ -31,7 +31,7 @@
     "@ecodev/fab-speed-dial": "^6.0.0",
     "@microsoft/signalr": "^5.0.0",
     "@ngneat/transloco": "^2.19.1",
-    "@types/googlemaps": "^3.38.1",
+    "@types/googlemaps": "^3.40.3",
     "auth0-js": "^9.13.2",
     "chart.js": "^2.9.3",
     "classlist.js": "^1.1.20150312",
