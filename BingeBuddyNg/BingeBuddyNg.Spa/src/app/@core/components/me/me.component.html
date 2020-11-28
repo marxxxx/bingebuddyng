@@ -1,9 +1,9 @@
 <div fxLayout fxLayoutAlign="center center" fxLayoutGap="10px">
-  <app-drink-stats [alcLevel]="stats?.currentAlcoholization"></app-drink-stats>
+  <app-drink-stats [alcLevel]="(stats$ | async)?.currentAlcoholization"></app-drink-stats>
   <app-user-info
     *ngIf="userInfo$ | async as user"
     [userInfo]="user"
     [showName]="false"
-    [currentAlcoholization]="stats?.currentAlcoholization"
+    [currentAlcoholization]="(stats$ | async)?.currentAlcoholization"
   ></app-user-info>
 </div>
