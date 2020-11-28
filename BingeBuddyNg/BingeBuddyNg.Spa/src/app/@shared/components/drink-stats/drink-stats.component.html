@@ -1,0 +1,11 @@
+<mat-chip-list class="stats">
+  <mat-chip class="chip" *ngIf="drinkCount > 0"
+    >{{ drinkCount }}
+    <mat-icon fxHide fxShow.gt-xs>local_drink</mat-icon>
+  </mat-chip>
+  <mat-chip class="chip" *ngIf="alcLevel > 0">
+    {{ alcLevel }}
+    <span fxHide fxShow.xs>‰</span>
+    <mat-icon fxHide fxShow.gt-xs>opacity</mat-icon>
+  </mat-chip>
+</mat-chip-list>

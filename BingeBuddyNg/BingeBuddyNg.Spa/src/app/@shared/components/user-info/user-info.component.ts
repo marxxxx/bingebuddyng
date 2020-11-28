@@ -18,7 +18,7 @@ export class UserInfoComponent implements OnInit {
   showName: boolean;
 
   @Input()
-  stats: UserStatisticsDTO;
+  currentAlcoholization: number;
 
   constructor(private userService: UserService) { }
 
@@ -33,16 +33,16 @@ export class UserInfoComponent implements OnInit {
   }
 
   getFilter(): string {
-    if (!this.stats?.currentAlcoholization) {
+    if (!this.currentAlcoholization) {
       return null;
     }
-    return `blur(${this.stats.currentAlcoholization}px)`;
+    return `blur(${this.currentAlcoholization}px)`;
   }
 
   getTransform(): string {
-    if (!this.stats?.currentAlcoholization) {
+    if (!this.currentAlcoholization) {
       return null;
     }
-    return `rotate(${this.stats.currentAlcoholization * 30}deg)`;
+    return `rotate(${this.currentAlcoholization * 30}deg)`;
   }
 }
