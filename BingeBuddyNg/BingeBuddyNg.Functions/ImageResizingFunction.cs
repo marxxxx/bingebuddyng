@@ -8,7 +8,6 @@ using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
 
 namespace BingeBuddyNg.Functions
 {
@@ -22,7 +21,7 @@ namespace BingeBuddyNg.Functions
                         [Blob("img/{name}", FileAccess.Write, Connection = "AzureWebJobsStorage")] out byte[] resizedData,
                         ILogger log)
         {
-            Image<SixLabors.ImageSharp.PixelFormats.Rgba32> img = null;
+            Image img = null;
 
             try
             {

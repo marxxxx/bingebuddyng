@@ -5,7 +5,7 @@
         [userInfo]="activity.activity.activityType === ActivityType.Registration ? activity.activity.registrationUser : userInfo"
         [showName]="true" [currentAlcoholization]="activity?.userStats?.currentAlcoholization"></app-user-info>
     </div>
-    <app-drink-stats [drinkCount]="activity.activity.drinkCount" [alcLevel]="activity.activity.alcLevel"></app-drink-stats>
+    <app-drink-stats class="stats" [drinkCount]="activity.activity.drinkCount" [alcLevel]="activity.activity.alcLevel"></app-drink-stats>
     <!-- Context Menu -->
     <div>
       <button mat-icon-button *ngIf="activity.activity.userId === currentUser.userId" [matMenuTriggerFor]="menu">

@@ -12,9 +12,9 @@ namespace BingeBuddyNg.Api.Controllers
     [Route("api/[controller]")]
     public class RankingController : Controller
     {
-        private readonly IMediator mediator;
+        private readonly ISender mediator;
 
-        public RankingController(IMediator mediator)
+        public RankingController(ISender mediator)
         {
             this.mediator = mediator;
         }

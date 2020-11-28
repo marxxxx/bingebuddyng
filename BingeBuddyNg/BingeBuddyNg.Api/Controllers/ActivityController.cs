@@ -18,9 +18,9 @@ namespace BingeBuddyNg.Api.Controllers
     public class ActivityController : ControllerBase
     {
         private readonly IIdentityService identityService;
-        private readonly IMediator mediator;
+        private readonly ISender mediator;
 
-        public ActivityController(IIdentityService identityService, IMediator mediator)
+        public ActivityController(IIdentityService identityService, ISender mediator)
         {
             this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
