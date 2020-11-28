@@ -84,7 +84,7 @@ namespace BingeBuddyNg.Core.User.Domain
             this._pendingFriendRequests.RemoveAll(p => p.User.UserId == user.UserId);
             AddFriend(user);
 
-            return Result.Ok();
+            return Result.Success();
         }
 
         public Result DeclineFriendRequest(UserInfo user)
@@ -95,7 +95,7 @@ namespace BingeBuddyNg.Core.User.Domain
             }
 
             this._pendingFriendRequests.RemoveAll(p => p.User.UserId == user.UserId);
-            return Result.Ok();
+            return Result.Success();
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace BingeBuddyNg.Core.User.Domain
 
             friend.Muted = true;
 
-            return Result.Ok();
+            return Result.Success();
         }
 
         public Result UnmuteFriend(string friendUserId)
@@ -142,7 +142,7 @@ namespace BingeBuddyNg.Core.User.Domain
 
             friend.Muted = false;
 
-            return Result.Ok();
+            return Result.Success();
         }
 
         public Result AddFriendRequest(FriendRequest friendRequest)
@@ -157,7 +157,7 @@ namespace BingeBuddyNg.Core.User.Domain
                 AcceptFriendRequest(friendRequest.User);
             }
 
-            return Result.Ok();
+            return Result.Success();
         }
 
         public Guid IssueInvitation()
@@ -181,7 +181,7 @@ namespace BingeBuddyNg.Core.User.Domain
             }
 
             AddFriend(user);
-            return Result.Ok();
+            return Result.Success();
         }
 
         public override string ToString()
