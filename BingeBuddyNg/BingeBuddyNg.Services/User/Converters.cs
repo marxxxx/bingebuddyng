@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using BingeBuddyNg.Core.Statistics;
 using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Core.User.DTO;
 using BingeBuddyNg.Core.User.Persistence;
@@ -54,7 +55,7 @@ namespace BingeBuddyNg.Core.User
             };
         }
 
-        public static UserDTO ToDto(this Domain.User entity)
+        public static UserDTO ToDto(this Domain.User entity, UserStatistics stats = null)
         {
             return new UserDTO()
             {
@@ -68,6 +69,7 @@ namespace BingeBuddyNg.Core.User
                 Weight = entity.Weight,
                 CurrentVenue = entity.CurrentVenue?.ToDto(),
                 Friends = entity.Friends?.Select(f => f.ToDto()).ToList(),
+                CurrentStats = stats?.ToDto(),
                 IncomingFriendRequests = entity.PendingFriendRequests?.Where(p => p.Direction == FriendRequestDirection.Incoming).Select(p => p.ToDto()).ToList(),
                 OutgoingFriendRequests = entity.PendingFriendRequests?.Where(p => p.Direction == FriendRequestDirection.Outgoing).Select(p => p.ToDto()).ToList()
             };

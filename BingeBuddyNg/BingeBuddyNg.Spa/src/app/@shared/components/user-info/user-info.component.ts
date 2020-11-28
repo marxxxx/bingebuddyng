@@ -2,6 +2,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../../../@core/services/user.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { UserInfoDTO } from '../../../../models/UserInfoDTO';
+import { UserStatisticsDTO } from 'src/models/UserStatisticsDTO';
 
 @Component({
   selector: 'app-user-info',
@@ -17,7 +18,7 @@ export class UserInfoComponent implements OnInit {
   showName: boolean;
 
   @Input()
-  currentAlcoholization: number;
+  stats: UserStatisticsDTO;
 
   constructor(private userService: UserService) { }
 
@@ -32,16 +33,16 @@ export class UserInfoComponent implements OnInit {
   }
 
   getFilter(): string {
-    if (!this.currentAlcoholization) {
+    if (!this.stats?.currentAlcoholization) {
       return null;
     }
-    return `blur(${this.currentAlcoholization}px)`;
+    return `blur(${this.stats.currentAlcoholization}px)`;
   }
 
   getTransform(): string {
-    if (!this.currentAlcoholization) {
+    if (!this.stats?.currentAlcoholization) {
       return null;
     }
-    return `rotate(${this.currentAlcoholization * 30}deg)`;
+    return `rotate(${this.stats.currentAlcoholization * 30}deg)`;
   }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -12,7 +11,6 @@ using BingeBuddyNg.Shared;
 using MediatR;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
-using static BingeBuddyNg.Shared.Constants;
 
 namespace BingeBuddyNg.Core.Activity.Queries
 {
@@ -40,11 +38,14 @@ namespace BingeBuddyNg.Core.Activity.Queries
     public class GetActivityFeedQueryHandler : IRequestHandler<GetActivityFeedQuery, PagedQueryResult<ActivityStatsDTO>>
     {
         private readonly IStorageAccessService storageAccessService;
+        private readonly StatisticService statisticService;
 
         public GetActivityFeedQueryHandler(
-            IStorageAccessService storageAccessService)
+            IStorageAccessService storageAccessService, 
+            StatisticService statisticService)
         {
             this.storageAccessService = storageAccessService ?? throw new ArgumentNullException(nameof(storageAccessService));
+            this.statisticService = statisticService ?? throw new ArgumentNullException(nameof(statisticService));
         }
 
         public async Task<PagedQueryResult<ActivityStatsDTO>> Handle(GetActivityFeedQuery request, CancellationToken cancellationToken)
@@ -52,7 +53,7 @@ namespace BingeBuddyNg.Core.Activity.Queries
             var activities = await this.GetActivityFeedAsync(request.UserId, request.ContinuationToken, request.StartActivityId);
 
             var userIds = activities.ResultPage.Select(a => a.UserId).Distinct();
-            var userStats = await this.GetStatisticsAsync(userIds);
+            var userStats = await this.statisticService.GetStatisticsAsync(userIds);
 
             var result = activities.ResultPage.Select(a => new ActivityStatsDTO(a, userStats.First(u => u.UserId == a.UserId).ToDto())).ToList();
             return new PagedQueryResult<ActivityStatsDTO>(result, activities.ContinuationToken);
@@ -64,26 +65,6 @@ namespace BingeBuddyNg.Core.Activity.Queries
 
             var activities = result.ResultPage.Select(r => r.Entity.ToDto()).ToList();
             return new PagedQueryResult<ActivityDTO>(activities, result.ContinuationToken);
-        }
-
-        private async Task<List<UserStatistics>> GetStatisticsAsync(IEnumerable<string> userId)
-        {
-            var tasks = userId.Select(u => GetStatisticsAsync(u));
-            var result = await Task.WhenAll(tasks);
-            return result.ToList();
-        }
-
-        private async Task<UserStatistics> GetStatisticsAsync(string userId)
-        {
-            var result = await storageAccessService.GetTableEntityAsync<UserStatsTableEntity>(TableNames.UserStats, StaticPartitionKeys.UserStats, userId);
-            if (result != null)
-            {
-                return new UserStatistics(userId, result.CurrentAlcoholization, result.CurrentNightDrinks, result.Score, result.TotalDrinksLastMonth);
-            }
-            else
-            {
-                return new UserStatistics(userId);
-            }
         }
     }
 }
