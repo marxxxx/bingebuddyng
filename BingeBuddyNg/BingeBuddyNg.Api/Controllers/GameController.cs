@@ -16,9 +16,9 @@ namespace BingeBuddyNg.Api.Controllers
     public class GameController : ControllerBase
     {
         private readonly IIdentityService identityService;
-        private readonly IMediator mediator;
+        private readonly ISender mediator;
 
-        public GameController(IIdentityService identityService, IMediator mediator)
+        public GameController(IIdentityService identityService, ISender mediator)
         {
             this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));

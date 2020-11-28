@@ -11,9 +11,9 @@ namespace BingeBuddyNg.Api.Controllers
     [Route("api/User/{userId}/statistics")]
     public class StatisticsController : Controller
     {
-        private readonly IMediator mediator;
+        private readonly ISender mediator;
 
-        public StatisticsController(IMediator mediator)
+        public StatisticsController(ISender mediator)
         {
             this.mediator = mediator;
         }

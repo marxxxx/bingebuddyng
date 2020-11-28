@@ -12,6 +12,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { RouterModule } from '@angular/router';
 import { EmptyListComponent } from './components/empty-list/empty-list.component';
 import { NoFriendsComponent } from './components/no-friends/no-friends.component';
+import { DrinkStatsComponent } from './components/drink-stats/drink-stats.component';
 
 
 
@@ -39,7 +40,8 @@ import { NoFriendsComponent } from './components/no-friends/no-friends.component
     DrinkIconComponent,
     ConfirmationDialogComponent,
     EmptyListComponent,
-    NoFriendsComponent
+    NoFriendsComponent,
+    DrinkStatsComponent
   ],
   declarations: [
     ProgressSpinnerComponent,
@@ -47,7 +49,8 @@ import { NoFriendsComponent } from './components/no-friends/no-friends.component
     DrinkIconComponent,
     ConfirmationDialogComponent,
     EmptyListComponent,
-    NoFriendsComponent
+    NoFriendsComponent,
+    DrinkStatsComponent
   ],
   entryComponents: [ConfirmationDialogComponent],
   providers: []

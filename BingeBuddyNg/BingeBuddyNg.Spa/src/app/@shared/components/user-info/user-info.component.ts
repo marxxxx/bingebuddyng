@@ -2,6 +2,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../../../@core/services/user.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { UserInfoDTO } from '../../../../models/UserInfoDTO';
+import { UserStatisticsDTO } from 'src/models/UserStatisticsDTO';
 
 @Component({
   selector: 'app-user-info',

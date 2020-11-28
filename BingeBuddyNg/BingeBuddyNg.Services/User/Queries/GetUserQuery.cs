@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BingeBuddyNg.Core.Statistics;
 using BingeBuddyNg.Core.User.DTO;
 using MediatR;
 
@@ -19,16 +20,20 @@ namespace BingeBuddyNg.Core.User.Queries
     public class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserDTO>
     {
         private readonly IUserRepository userRepository;
+        private readonly StatisticService statisticService;
 
-        public GetUserQueryHandler(IUserRepository userRepository)
+        public GetUserQueryHandler(IUserRepository userRepository, StatisticService statisticService)
         {
             this.userRepository = userRepository;
+            this.statisticService = statisticService;
         }
 
         public async Task<UserDTO> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
             var user = await userRepository.GetUserAsync(request.UserId);
-            return user.ToDto();
+            var stats = await statisticService.GetStatisticsAsync(request.UserId);
+
+            return user.ToDto(stats);
         }
     }
 }

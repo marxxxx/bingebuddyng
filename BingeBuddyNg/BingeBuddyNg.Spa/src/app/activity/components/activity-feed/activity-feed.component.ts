@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, ViewChildren } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, OnDestroy, ViewChildren } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltip } from '@angular/material/tooltip';
 
 import { Subscription } from 'rxjs';
-import { map, filter, finalize } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 import { TranslocoService } from '@ngneat/transloco';
 
 import { DrinkActivityService } from '../../services/drink-activity.service';
@@ -23,7 +23,7 @@ import { AuthService } from '../../../@core/services/auth/auth.service';
 import { AddMessageActivityDTO } from '../../../../models/AddMessageActivityDTO';
 
 import { ShellInteractionService } from '../../../@core/services/shell-interaction.service';
-import { FileUploader, FileItem, FileUploaderOptions } from 'ng2-file-upload';
+import { FileUploader, FileUploaderOptions } from 'ng2-file-upload';
 import { NotificationService } from '../../../@core/services/notification.service';
 import { UserInfoDTO } from '../../../../models/UserInfoDTO';
 import { UserDTO } from '../../../../models/UserDTO';
@@ -33,7 +33,7 @@ import { VenueDialogResult } from '../venue-dialog/VenueDialogResult';
 import { DrinkDTO } from 'src/models/DrinkDTO';
 import { DrinkRetrieverService } from '../../services/drink-retriever.service';
 import { ActivityType } from 'src/models/ActivityType';
-import { GameStartedMessage } from 'src/app/game/models/GameStartedMessage';
+import { StateService } from 'src/app/@core/services/state.service';
 
 @Component({
   selector: 'app-activity-feed',
@@ -72,12 +72,11 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     public locationService: LocationService,
     private drinkActivityService: DrinkActivityService,
     private drinkService: DrinkRetrieverService,
+    private stateService: StateService,
     private snackBar: MatSnackBar,
     private translateService: TranslocoService,
     private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private router: Router
-  ) { }
+    private route: ActivatedRoute  ) { }
 
   ngOnInit() {
     this.initFileUploader();
@@ -174,7 +173,6 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     );
   }
 
-
   loadDrinks() {
     this.drinkService.getDrinks().subscribe(
       d => {
@@ -194,15 +192,19 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     }
   }
 
-  onActivityReceived(as: ActivityStatsDTO, ignoreIfExists: boolean = false): void {
-    const foundIndex = this.activitys.findIndex(a => a.activity.id === as.activity.id);
+  onActivityReceived(activity: ActivityStatsDTO, ignoreIfExists: boolean = false): void {
+    if(activity.userStats) {
+      this.stateService.raiseActivityReceived(activity);
+    }
+
+    const foundIndex = this.activitys.findIndex(a => a.activity.id === activity.activity.id);
     if (foundIndex >= 0) {
       if (ignoreIfExists) {
         return;
       }
-      this.activitys.splice(foundIndex, 1, as);
+      this.activitys.splice(foundIndex, 1, activity);
     } else {
-      this.activitys.splice(0, 0, as);
+      this.activitys.splice(0, 0, activity);
     }
   }
 
@@ -275,7 +277,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
 
             this.onActivityReceived(newActivity, true);
           },
-          e => {
+          () => {
             this.isBusyAdding = false;
             this.shellInteraction.showErrorMessage();
           }
@@ -324,7 +326,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
       .subscribe(_ => this.locationService.resetCurrentVenue().subscribe(() => this.load()));
   }
 
-  onAfterAddingFile(fileItem: FileItem) {
+  onAfterAddingFile() {
     this.uploader.setOptions(this.getOptions());
 
     // upload
@@ -364,7 +366,7 @@ export class ActivityFeedComponent implements OnInit, OnDestroy {
     }
   }
 
-  trackByActivity(index, item: ActivityStatsDTO) {
-    return item.activity.id;
+  trackByActivity(item: ActivityStatsDTO) {
+    return item?.activity?.id;
   }
 }

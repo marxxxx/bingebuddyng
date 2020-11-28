@@ -1,1 +1,9 @@
-<app-user-info *ngIf="userInfo$ | async as user" [userInfo]="user" [showName]="false"></app-user-info>
+<div fxLayout fxLayoutAlign="center center" fxLayoutGap="10px">
+  <app-drink-stats [alcLevel]="(stats$ | async)?.currentAlcoholization"></app-drink-stats>
+  <app-user-info
+    *ngIf="userInfo$ | async as user"
+    [userInfo]="user"
+    [showName]="false"
+    [currentAlcoholization]="(stats$ | async)?.currentAlcoholization"
+  ></app-user-info>
+</div>

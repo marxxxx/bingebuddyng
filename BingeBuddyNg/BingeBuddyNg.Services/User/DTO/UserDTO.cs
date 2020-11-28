@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BingeBuddyNg.Core.Infrastructure;
+using BingeBuddyNg.Core.Statistics.DTO;
 using BingeBuddyNg.Core.User.Domain;
 using BingeBuddyNg.Core.Venue.DTO;
 
@@ -25,6 +26,8 @@ namespace BingeBuddyNg.Core.User.DTO
         public VenueDTO CurrentVenue { get; set; }
 
         public string Language { get; set; }
+
+        public UserStatisticsDTO CurrentStats { get; internal set; }
 
         public DateTime LastOnline { get; set; }
 

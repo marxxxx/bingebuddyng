@@ -1,0 +1,8 @@
+.stats {
+  margin-left: auto;
+}
+
+.chip {
+  background-color: rgba(247, 247, 247, .4) !important;
+  color: #fff;
+}

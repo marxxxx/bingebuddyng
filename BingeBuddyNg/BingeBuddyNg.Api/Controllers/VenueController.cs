@@ -15,10 +15,10 @@ namespace BingeBuddyNg.Api.Controllers
     [Route("api/[controller]")]
     public class VenueController : Controller
     {
-        private readonly IMediator mediator;
+        private readonly ISender mediator;
         private readonly IIdentityService identityService;
 
-        public VenueController(IIdentityService identityService, IMediator mediator)
+        public VenueController(IIdentityService identityService, ISender mediator)
         {
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));

@@ -55,6 +55,7 @@ namespace BingeBuddyNg.Api
 
             services.AddSingleton<IDrinkRepository, DrinkRepository>();
             services.AddScoped<UserStatisticUpdateService>();
+            services.AddScoped<StatisticService>();
 
             services.AddGame();
         }
