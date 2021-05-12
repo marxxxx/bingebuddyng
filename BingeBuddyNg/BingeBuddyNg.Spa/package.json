@@ -33,7 +33,7 @@
     "@ngneat/transloco": "^2.19.1",
     "@types/googlemaps": "3.39.12",
     "auth0-js": "^9.13.2",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "classlist.js": "^1.1.20150312",
     "core-js": "^3.4.5",
     "date-fns": "^2.8.1",
