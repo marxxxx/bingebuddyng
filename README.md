@@ -4,10 +4,6 @@
 # Introduction
 Binge Buddy - the social drinking network
 
-You can have a look at the application here:
-https://bingebuddy.azureedge.net or download it from Google Play Store 
-https://play.google.com/store/apps/details?id=xyz.appmaker.zrvgly
-
 # Technology Stack
 - ASP.NET Core 3.1
 - Azure Functions v3
